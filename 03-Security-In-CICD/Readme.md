@@ -77,7 +77,7 @@ pipeline that builds and deploys a web app (or App Service) from VSTS to an Azur
 
 Let us take a look at the steps needed to add the AzSK-SVT task to the release definition.
 
-![03_Create_Release_Defination](../Images/03_Create_Release_Defination.png)
+![03_Create_Release_Defination](../Images/03_Create_Release_Defination.PNG)
 
 **Step-2:** Add the AzSK-SVT release task to the pipeline.  
 Click on "Add Tasks", and select "AzSK Security Verification Test".  
@@ -88,7 +88,7 @@ Click on "Add" and "Close".
 > **Note:** The VSTS dialog doesn't provide a good visual indication but the task does 
 get added when you click "Add" once!
 
-![03_Task_Catalog](../Images/03_Task_Catalog.png)
+![03_Task_Catalog](../Images/03_Task_Catalog.PNG)
 
 **Step-3:** Specify the input parameters for the SVT task.  
 The "AzSK_SVTs" task starts showing in the "Run on Agent" list and displays some configuration inputs 
@@ -136,17 +136,17 @@ of these should correspond the corresponding info for your OMS workspace.
   
 Creating the variable group:
 
-![03_Creating_Variable_Group](../Images/03_Creating_Variable_Group.png)
+![03_Creating_Variable_Group](../Images/03_Creating_Variable_Group.PNG)
 
 Linking to the release definition:
 
-![03_Linking_To_Release](../Images/03_Linking_To_Release.png)
+![03_Linking_To_Release](../Images/03_Linking_To_Release.PNG)
 
 > **Note:** Variable groups can only be modified or added from the Library under VSTS instance.
 
 **Option-2:** Directly use variables in individual build definitions.
  
-![03_Directly_Use_Variable](../Images/03_Directly_Use_Variable.png)
+![03_Directly_Use_Variable](../Images/03_Directly_Use_Variable.PNG)
 
 Important: Ensure that the variable names used are exactly as above and the values correspond 
 to *your* OMS workspace. Moreover, when you specify the OMS shared key, click on the 'lock' icon 
@@ -175,14 +175,14 @@ The variable group name can be a unique name you can choose (and specify in the 
 The specific variable name for Policy URL  has to be exactly as shown below. 
   
 Creating the variable group:  
-![03_Online_Policy_Variable_Group](../Images/03_Online_Policy_Variable_Group.png)    
+![03_Online_Policy_Variable_Group](../Images/03_Online_Policy_Variable_Group.PNG)    
 
 Linking to the release definition:    
-![03_Online_Policy_Linking_Release](../Images/03_Online_Policy_Linking_Release.png) 
+![03_Online_Policy_Linking_Release](../Images/03_Online_Policy_Linking_Release.PNG) 
 > Note: Variable groups can only be modified or added from the Library under VSO instance.
 
 **Option-2**: Directly use variables in individual build definitions.  
-![03_Online_Policy_Directly_Use_Variable](../Images/03_Online_Policy_Directly_Use_Variable.png)    
+![03_Online_Policy_Directly_Use_Variable](../Images/03_Online_Policy_Directly_Use_Variable.PNG)    
 
 **Step-6**: Save the Release Definition.
   
@@ -195,25 +195,25 @@ Linking to the release definition:
 This can be done by adding a new release for an existing build (or trigger a new release via a minor/trial 
 check-in). 
 
-![03_Start_Release_Pipeline](../Images/03_Start_Release_Pipeline.png)
+![03_Start_Release_Pipeline](../Images/03_Start_Release_Pipeline.PNG)
 
 **Step-2:** Verify that the release pipeline has started. 
 Once the release is triggered, we can see that it is in progress by clicking on "Releases" (or via 
 "Build & Release" menu in the VSTS menu).
 
-![03_Verify_Pipeline](../Images/03_Verify_Pipeline.png)
+![03_Verify_Pipeline](../Images/03_Verify_Pipeline.PNG)
 
 **Step-3:** View the release outcome.  
 In a few minutes the release pipeline should complete and we can view the outcomes as shown below (in the 
 pic below we can see that the release pipeline has failed):
 
-![03_View_Release_OutCome](../Images/03_View_Release_OutCome.png)
+![03_View_Release_OutCome](../Images/03_View_Release_OutCome.PNG)
 
 **Step-4:** Look at the "Issues" to see why the release failed.  
 The summary output shows the cause of failure (in this case it is because the AzSK SVTs have failed).
 
 
-![03_Issues_Release_Fail](../Images/03_Issues_Release_Fail.png)
+![03_Issues_Release_Fail](../Images/03_Issues_Release_Fail.PNG)
 
 **Step-5:** Look at the complete output log of the AzSK portion of the release pipeline execution . 
 Clicking on the "Security controls are failing" text (in the pic above) and, further, clicking on 
@@ -222,7 +222,7 @@ Notice how the output is the same as what is displayed when SVTs are manually ru
 Essentially, the AzSK_SVTs extension gives us the capability to mirror the secure configuration state
 that was established during the development/prototyping phases.
 
-![03_Release_Task](../Images/03_Release_Task.png)
+![03_Release_Task](../Images/03_Release_Task.PNG)
 
 **Step-6:** See the summary "CSV" and detailed "LOG" output files for the AzSK SVTs.  
 This is no different than the "ad hoc SVT run" scenarios. Note, above, how the SVT outputs the location 
@@ -291,9 +291,9 @@ Currently AzSDK CICD extension/plugin has not been published on Jenkins reposito
 	
  Go to Home Page --> Manage Jenkins --> Manage plugins -->  Select Advanced --> Upload plugin file "[AzSDK_CICD_Jenkins_Plugin.hpi](Assets/AzSDK_CICD_Jenkins_Plugin.hpi)"
 
-![03_Upload_plugin](../Images/03_Upload_Plugin.png)  
+![03_Upload_plugin](../Images/03_Upload_Plugin.PNG)  
  
-![03_Install_plugin](../Images/03_Install_Plugin.png)
+![03_Install_plugin](../Images/03_Install_Plugin.PNG)
  <br/>Plugin is successfully imported. Now let's use plugin to scan Azure Resources.  
 
 [Back to top...](Readme.md#contents)
@@ -321,12 +321,12 @@ This part assumes that you are familiar with Jenkins pipeline at a basic level. 
 	 Click on  "Add build step" and select "AzSK Security Verification Tests".
 
  
-	![03_Add_Build_Steps](../Images/03_Add_Build_Steps.png)  
+	![03_Add_Build_Steps](../Images/03_Add_Build_Steps.PNG)  
 
 - #### Step-4: Specify the input parameters for the SVT step.
 	Step displays some configuration inputs that are required for the task to run. Specify SPN credentials id as configured in Step-1. Remaining inputs are none other than the familiar options we have been specifying while running the AzSK SVTs manually. When the pipeline executes, SVTs will scan the specified set of resources.  
  
-	![03_Input_Parameter](../Images/03_Input_Parameter.png)	
+	![03_Input_Parameter](../Images/03_Input_Parameter.PNG)	
 - #### Step-5: (Optional) Setup connectivity from CICD to OMS.
 	 You can also configure build to send runtime security evaluation results to OMS workspace. For that configure OMS credetial using below steps:
 	- For adding OMS workspace credentials  
@@ -334,25 +334,25 @@ This part assumes that you are familiar with Jenkins pipeline at a basic level. 
 		Provide OMS details and click Ok
 		
    
-  	![03_Create_OMS](../Images/03_Create_OMS.png)  
+  	![03_Create_OMS](../Images/03_Create_OMS.PNG)  
 
 	- Provide OMS Credentials Id in build step  
 
-  	![03_Provide_OMS_Cred](../Images/03_Provide_OMS_Cred.png)	
+  	![03_Provide_OMS_Cred](../Images/03_Provide_OMS_Cred.PNG)	
 - #### Step-6: Save the Job 
 
-	![03_Save_Job](../Images/03_Save_Job.png)
+	![03_Save_Job](../Images/03_Save_Job.PNG)
 [Back to top...](Readme.md#contents)
 ### Verifying that the SVTs have been added and configured correctly
 - #### Step-1: Trigger the build.
 
-	![03_Trigger_Build_1](../Images/03_Trigger_Build_1.png)  
+	![03_Trigger_Build_1](../Images/03_Trigger_Build_1.PNG)  
 - #### Step-2: Verify that the build has started.
 
-	![03_Trigger_Build_2](../Images/03_Trigger_Build_2.png)	  
+	![03_Trigger_Build_2](../Images/03_Trigger_Build_2.PNG)	  
 - #### Step-3: View the 'Console Output'.
 
-	![03_Trigger_Build_3](../Images/03_Trigger_Build_3.png)	  
+	![03_Trigger_Build_3](../Images/03_Trigger_Build_3.PNG)	  
 - #### Step-4: See the summary "CSV" and detailed "LOG" output files for the AzSK SVTs.
 
 	This is no different than the "ad hoc SVT run" scenarios. SVT outputs the location 

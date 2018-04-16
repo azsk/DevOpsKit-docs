@@ -50,7 +50,7 @@ You can use the 'DetailedLogFile' field to locate the LOG file where control eva
 is written by AzSK. (This file can be different for different resources/resource groups.) 
 See the image below:
 
- ![CSV File](../Images/00_ACF_Basics_CSV.png) 
+ ![CSV File](../Images/00_ACF_Basics_CSV.PNG) 
 
 For some controls, AzSK can automatically generate scripts that can be run to address the control failures.
 This can be done using the '-GenerateFixScript' flag in the scan commands. Whether AzSK has support for
@@ -214,13 +214,13 @@ As shown in the images, the command enters 'attest' mode after completing a scan
 4. This is repeated for all attestable controls and each resource.
 
  Sample attestation workflow in progress:
- ![02_SVT_Attest_1](../Images/02_SVT_Attest_1.png) 
+ ![02_SVT_Attest_1](../Images/02_SVT_Attest_1.PNG) 
  
  Sample summary of attestation after workflow is completed:
- ![02_SVT_Attest_2](../Images/02_SVT_Attest_2.png) 
+ ![02_SVT_Attest_2](../Images/02_SVT_Attest_2.PNG) 
 
 Attestation details corresponding to each control (e.g., justification, user name, etc.) are also captured in the CSV file as shown below:
- ![02_SVT_Attest_3](../Images/02_SVT_Attest_3.png) 
+ ![02_SVT_Attest_3](../Images/02_SVT_Attest_3.PNG) 
 
 The attestation process for application resources is similar to that for subscriptions. For example, the command below shows how to 
 trigger attestation for a specific resource in an RG:
