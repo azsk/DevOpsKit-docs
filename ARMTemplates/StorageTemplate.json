@@ -1,0 +1,186 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageaccount": {
+          "type": "String",
+           "metadata": {
+        "description": "The name of the new storage account to create."
+      }
+        },
+        "alertrule_blob": {
+          "type": "String",
+           "metadata": {
+        "description": "The name of the alert for blob to create."
+      }
+        },
+        "alertrule_file": {
+          "type": "String",
+          "metadata": {
+        "description": "The name of the alert for file to create."
+      }
+        },
+        "alertrule_queue": {
+          "type": "String",
+          "metadata": {
+        "description": "The name of the alert for queue to create."
+      }
+        },
+        "alertrule_table": {
+          "type": "String",
+          "metadata": {
+        "description": "The name of the alert for table to create."
+      }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "microsoft.insights/alertrules",//[Azure_Storage_Audit_Issue_Alert_AuthN_Req]
+            "name": "[parameters('alertrule_blob')]",
+            "apiVersion": "2014-04-01",
+            "location": "southcentralus",
+            "properties": {
+                "name": "[parameters('alertrule_blob')]",
+                "description": "This metric alert rule was created from Powershell version: 3.1.0",
+                "isEnabled": true,
+                "condition": {
+                    "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+                    "dataSource": {
+                        "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+                        "resourceUri": "[concat(resourceId('Microsoft.Storage/storageAccounts', parameters('storageaccount')), '/services/blob')]",
+                        "metricName": "AnonymousSuccess"
+                    },
+                    "operator": "GreaterThan",
+                    "threshold": 0,
+                    "windowSize": "PT1H"
+                },
+                "action": {
+                    "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+                    "sendToServiceOwners": true,
+                    "customEmails": []
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageaccount'))]"
+            ]
+        },
+        {
+            "type": "microsoft.insights/alertrules",//[Azure_Storage_Audit_Issue_Alert_AuthN_Req]
+            "name": "[parameters('alertrule_file')]",
+            "apiVersion": "2014-04-01",
+            "location": "southcentralus",
+            "properties": {
+                "name": "[parameters('alertrule_file')]",
+                "description": "This metric alert rule was created from Powershell version: 3.1.0",
+                "isEnabled": true,
+                "condition": {
+                    "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+                    "dataSource": {
+                        "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+                        "resourceUri": "[concat(resourceId('Microsoft.Storage/storageAccounts', parameters('storageaccount')), '/services/file')]",
+                        "metricName": "AnonymousSuccess"
+                    },
+                    "operator": "GreaterThan",
+                    "threshold": 0,
+                    "windowSize": "PT1H"
+                },
+                "action": {
+                    "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+                    "sendToServiceOwners": true,
+                    "customEmails": []
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageaccount'))]"
+            ]
+        },
+        {
+            "type": "microsoft.insights/alertrules",//[Azure_Storage_Audit_Issue_Alert_AuthN_Req]
+            "name": "[parameters('alertrule_queue')]",
+            "apiVersion": "2014-04-01",
+            "location": "southcentralus",
+            "scale": null,
+            "properties": {
+                "name": "[parameters('alertrule_queue')]",
+                "description": "This metric alert rule was created from Powershell version: 3.1.0",
+                "isEnabled": true,
+                "condition": {
+                    "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+                    "dataSource": {
+                        "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+                        "resourceUri": "[concat(resourceId('Microsoft.Storage/storageAccounts', parameters('storageaccount')), '/services/queue')]",
+                        "metricName": "AnonymousSuccess"
+                    },
+                    "operator": "GreaterThan",
+                    "threshold": 0,
+                    "windowSize": "PT1H"
+                },
+                "action": {
+                    "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+                    "sendToServiceOwners": true,
+                    "customEmails": []
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageaccount'))]"
+            ]
+        },
+        {
+            "type": "microsoft.insights/alertrules",//[Azure_Storage_Audit_Issue_Alert_AuthN_Req]
+            "name": "[parameters('alertrule_table')]",
+            "apiVersion": "2014-04-01",
+            "location": "southcentralus",
+            "scale": null,
+            "properties": {
+                "name": "[parameters('alertrule_table')]",
+                "description": "This metric alert rule was created from Powershell version: 3.1.0",
+                "isEnabled": true,
+                "condition": {
+                    "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+                    "dataSource": {
+                        "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+                        "resourceUri": "[concat(resourceId('Microsoft.Storage/storageAccounts', parameters('storageaccount')), '/services/table')]",
+                        "metricNamespace": null,
+                        "metricName": "AnonymousSuccess"
+                    },
+                    "operator": "GreaterThan",
+                    "threshold": 0,
+                    "windowSize": "PT1H"
+                },
+                "action": {
+                    "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+                    "sendToServiceOwners": true,
+                    "customEmails": []
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageaccount'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "sku": {
+                "name": "Standard_GRS",//[Azure_Storage_Deploy_Use_Geo_Redundant]
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "name": "[parameters('storageaccount')]",
+            "apiVersion": "2017-10-01",
+            "location": "southcentralus",
+            "tags": {},
+            "properties": {
+              "encryption": {
+                "keySource": "Microsoft.Storage",
+                "services": {
+                  "blob": {
+                    "enabled": true//[Azure_Storage_DP_Encrypt_At_Rest_Blob]
+                  }
+                }
+              },
+              "supportsHttpsTrafficOnly": true //[Azure_Storage_DP_Encrypt_In_Transit]
+            },
+            "dependsOn": []
+        }
+    ]
+}

@@ -1,0 +1,234 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "serverName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the new database server to create."
+      }
+    },
+    "serverLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "The location of the database server."
+      }
+    },
+    "administratorLogin": {
+      "type": "string",
+      "metadata": {
+        "description": "The account name to use for the database server administrator."
+      }
+    },
+    "administratorLoginPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The password to use for the database server administrator."
+      }
+    },
+    "databaseName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the new database to create."
+      }
+    },
+    "collation": {
+      "type": "string",
+      "defaultValue": "SQL_Latin1_General_CP1_CI_AS",
+      "metadata": {
+        "description": "The database collation for governing the proper use of characters."
+      }
+    },
+    "edition": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "metadata": {
+        "description": "The type of database to create. The available options are: Web, Business, Basic, Standard, and Premium."
+      }
+    },
+    "maxSizeBytes": {
+      "type": "string",
+      "defaultValue": "1073741824",
+      "metadata": {
+        "description": "The maximum size, in bytes, for the database"
+      }
+    },
+    "requestedServiceObjectiveName": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "metadata": {
+        "description": "The name corresponding to the performance level for edition. The available options are: Shared, Basic, S0, S1, S2, S3, P1, P2, and P3."
+      }
+    },
+    "storageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the new storage account to create."
+      }
+    },
+	"emailAddresses": {
+      "type": "string",
+      "metadata": {
+        "description": "Email address for alerts."
+      }
+    },
+	"AAD Admin Login": {
+		"type": "String"
+	},
+	"AAD Admin ObjectID": {
+		"type": "String"
+	},
+	"AAD TenantId": {
+		"type": "String"
+	},
+    "storageEndpoint": {
+      "type": "string",
+      "defaultValue": "[concat('https://',parameters('storageAccountName'),'.blob.core.windows.net')]"
+    },
+    "storageType": {
+      "type": "string",
+      "defaultValue": "Standard_GRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_ZRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ]
+    }
+  },
+  "resources": [
+    {
+      "name": "[parameters('serverName')]",
+      "type": "Microsoft.Sql/servers",
+      "location": "[parameters('serverLocation')]",
+      "apiVersion": "2014-04-01-preview",
+      "properties": {
+        "administratorLogin": "[parameters('administratorLogin')]",
+        "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+        "version": "12.0"
+      },
+      "resources": [
+        {
+          "name": "[parameters('databaseName')]",
+          "type": "databases",
+          "location": "[parameters('serverLocation')]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/', parameters('serverName'))]"
+          ],
+          "properties": {
+            "edition": "[parameters('edition')]",
+            "collation": "[parameters('collation')]",
+            "maxSizeBytes": "[parameters('maxSizeBytes')]",
+            "requestedServiceObjectiveName": "[parameters('requestedServiceObjectiveName')]"
+          },
+          "resources": [
+			  {
+			  "name": "current",
+			  "type": "transparentDataEncryption",
+			  "dependsOn": [
+                "[concat('Microsoft.Sql/servers/', parameters('serverName'))]",
+                "[concat('Microsoft.Sql/servers/', parameters('serverName'), '/databases/',parameters('databaseName'))]"
+              ],
+			  "location": null,
+			  "apiVersion": "2014-04-01-preview",
+			  "properties": {
+				"status": "Enabled"
+			  }
+			},
+            {
+              "apiVersion": "2015-05-01-preview",
+              "type": "auditingSettings",//Enable Logging and Monitoring with Storage Endpoint and Access Key and auditActionsAndGroups
+              "name": "Default",
+              "location": "[parameters('serverLocation')]",
+              "dependsOn": [
+                "[concat('Microsoft.Sql/servers/', parameters('serverName'))]",
+                "[concat('Microsoft.Sql/servers/', parameters('serverName'), '/databases/',parameters('databaseName'))]"
+              ],
+              "properties": {
+                "State": "Enabled",//Enable Logging and Monitoring with Storage Endpoint and Access Key and auditActionsAndGroups
+                "storageEndpoint": "[parameters('storageEndpoint')]",
+                "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]",
+                "retentionDays": 0,
+                "auditActionsAndGroups": [ "SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP", "DATABASE_LOGOUT_GROUP", "USER_CHANGE_PASSWORD_GROUP" ],
+                "storageAccountSubscriptionId": "[subscription().subscriptionId]",
+                "isStorageSecondaryKeyInUse": false
+              }
+            }
+          ]
+        },
+        {
+          "apiVersion": "2014-04-01-preview",
+          "type": "firewallrules",
+          "location": "[parameters('serverLocation')]",
+          "name": "AllowAllWindowsAzureIps",
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/', parameters('serverName'))]"
+          ],
+          "properties": {
+            "endIpAddress": "0.0.0.0",
+            "startIpAddress": "0.0.0.0"
+          }
+        },
+        {
+          "apiVersion": "2015-05-01-preview",//Azure_SQLDatabase_Audit_Enable_Logging_and_Monitoring
+          "type": "auditingSettings",//Enable Logging and Monitoring with Storage Endpoint and Access Key
+          "name": "Default",
+          "location": "[parameters('serverLocation')]",
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/', parameters('serverName'))]"
+          ],
+          "properties": {
+            "State": "Enabled",//Enable Logging and Monitoring with Storage Endpoint and Access Key
+            "storageEndpoint": "[parameters('storageEndpoint')]",
+            "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]",
+            "retentionDays": 0,
+            "auditActionsAndGroups": null,
+            "storageAccountSubscriptionId": "[subscription().subscriptionId]",
+            "isStorageSecondaryKeyInUse": false
+          }
+        },
+		{
+			"apiVersion": "2015-05-01-preview",//Azure_SQLDatabase_Audit_Enable_Threat_Detection
+			"type": "securityAlertPolicies",//Enable Threat Detection : Need to paas email address to enable it
+			"name": "Default",
+			"dependsOn": [
+				"[concat('Microsoft.Sql/servers/', parameters('serverName'))]",
+                "[concat('Microsoft.Sql/servers/', parameters('serverName'), '/databases/',parameters('databaseName'))]",
+				"[concat('Microsoft.Sql/servers/', parameters('serverName'), '/auditingSettings/Default')]"
+			],
+			"properties": {
+				"state": "Enabled",//Enable Threat Detection : Need to paas email address to enable it
+				"disabledAlerts": "",
+				"emailAddresses": "[parameters('emailAddresses')]",
+				"emailAccountAdmins": "Enabled",
+				"storageEndpoint": "[parameters('storageEndpoint')]",
+				"storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]",
+				"retentionDays": 0
+			}
+		},
+		{
+			"type": "administrators",//Azure_SQLDatabase_AuthZ_Use_AAD_Admin
+			"name": "activeDirectory",//Azure SQLDatabase ActiveDirectory Admin Rule
+			"apiVersion": "2014-04-01-preview",
+			"location": "[parameters('serverLocation')]",
+			"properties": {
+				"administratorType": "ActiveDirectory",
+				"login": "[parameters('AAD Admin Login')]",
+				"sid": "[parameters('AAD Admin ObjectID')]",
+				"tenantId": "[parameters('AAD TenantID')]"
+			},
+			"dependsOn": [
+				"[concat('Microsoft.Sql/servers/', parameters('serverName'))]",
+                "[concat('Microsoft.Sql/servers/', parameters('serverName'), '/databases/',parameters('databaseName'))]",
+				"[concat('Microsoft.Sql/servers/', parameters('serverName'), '/auditingSettings/Default')]"
+			]
+        }
+      ]
+    }
+  ],
+  "outputs": {
+
+  }
+}

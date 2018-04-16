@@ -1,0 +1,88 @@
+- name: Secure DevOps Kit
+  topicHref: ../../README.md
+  items:
+  - name: Setup
+    topicHref: ../../00a-Setup/Readme.md
+  - name: Getting Started
+    topicHref: ../../00b-Getting-Started/Readme.md
+    items:
+      - name: AzureServiceSecurity
+        topicHref: ../../00b-Getting-Started/GettingStarted_AzureServiceSecurity.md
+      - name: SubscriptionSecurity
+        topicHref: ../../00b-Getting-Started/GettingStarted_SubscriptionSecurity.md
+  - name: Addressing-Control-Failures
+    topicHref: ../../00c-Addressing-Control-Failures/Readme.md
+  - name: Subscription-Security
+    topicHref: ../../01-Subscription-Security/Readme.md
+  - name: 02-Secure-Development
+    topicHref: ../../02-Secure-Development/Readme.md
+    items:
+      - name: Control Coverage
+        topicHref: ../../02-Secure-Development/ControlCoverage/README.md
+        items:
+          - name: Analysis Services
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/AnalysisServices.md
+          - name: App Service
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/AppService.md
+          - name: Automation
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/Automation.md
+          - name: Batch
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/Batch.md
+          - name: CDN
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/CDN.md
+          - name: Cloud Service
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/CloudService.md
+          - name: Cosmos DB
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/CosmosDB.md
+          - name: DataFactory
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/DataFactory.md
+          - name: DataLakeAnalytics
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/DataLakeAnalytics.md
+          - name: DataLakeStore
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/DataLakeStore.md
+          - name: ERvNet
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/ERvNet.md
+          - name: EventHub
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/EventHub.md
+          - name: KeyVault
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/KeyVault.md
+          - name: LoadBalancer
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/LoadBalancer.md
+          - name: LogicApps
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/LogicApps.md
+          - name: NotificationHub
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/NotificationHub.md
+          - name: ODG
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/ODG.md
+          - name: RedisCache
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/RedisCache.md
+          - name: Search
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/Search.md
+          - name: ServiceBus
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/ServiceBus.md
+          - name: ServiceFabric
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/ServiceFabric.md
+          - name: SQLDatabase
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/SQLDatabase.md
+          - name: Storage
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/Storage.md
+          - name: StreamAnalytics
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/StreamAnalytics.md
+          - name: Subscription
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/SubscriptionCore.md
+          - name: TrafficManager
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/TrafficManager.md
+          - name: VirtualMachine
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/VirtualMachine.md
+          - name: VirtualNetwork
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/VirtualNetwork.md
+      - name: Security IntelliSense Rules
+        topicHref: ../../02-Secure-Development/Security_IntelliSense_rules_list.md
+  - name: Security In CICD
+    topicHref: ../../03-Security-In-CICD/Readme.md
+  - name: Continous Assurance
+    topicHref: ../../04-Continous-Assurance/Readme.md
+  - name: Alerting and Monitoring
+    topicHref: ../../05-Alerting-and-Monitoring/Readme.md
+  - name: Security Telemetry
+    topicHref: ../../06-Security-Telemetry/Readme.md    

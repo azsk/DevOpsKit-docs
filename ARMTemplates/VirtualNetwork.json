@@ -1,0 +1,72 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virualNetworkName": {
+          "type": "String",
+            "metadata": {
+        "description": "Name of the Virtual Netwok"
+            }
+        },
+      "NSGname": {
+        "type": "String",
+          "metadata": {
+        "description": "Name of the Security Group"
+      }
+        },
+      "addressPrefix": {
+        "type": "String",
+          "metadata": {
+        "description": "Address prefix in the format '10.3.0.0/29'"
+        }
+      },
+        "subnetName": {
+            "defaultValue": "default",
+          "type": "String",
+            "metadata": {
+        "description": "Name of the SubNet"
+      }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",//[Azure_VNet_NetSec_Configure_NSG]
+            "name": "[parameters('NSGname')]",
+            "apiVersion": "2017-06-01",
+            "location": "centralus",
+            "properties": {
+                "securityRules": []
+            },
+            "dependsOn": []
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[parameters('virualNetworkName')]",
+            "apiVersion": "2017-06-01",
+            "location": "centralus",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                       "[parameters('addressPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "default",
+                        "properties": {
+                            "addressPrefix": "[parameters('addressPrefix')]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('NSGname'))]"
+                            }
+                        }
+                    }
+                ]
+               },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('NSGname'))]"
+            ]
+        }
+        
+    ]
+}

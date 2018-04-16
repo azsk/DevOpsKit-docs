@@ -1,0 +1,57 @@
+{
+  "build": {
+    "content":
+       [ {
+        "files": [
+          "**.md",
+
+          "**/toc.yml",
+          "**/**.md",
+          "toc.yml",
+          "*.md"
+        ],
+        "exclude": [
+          "obj/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "Images/**",
+          "Videos/**",
+          "WebsiteContent/carousels/**",
+          "WebsiteContent/content/**"
+        ],
+        "exclude": [
+          "obj/**"
+        ]
+      }
+    ],
+    "dest": "../AzSkWebSiteRelease/_AzSKWebSite",
+    "overwrite": [],
+    "globalMetadata": {
+      "_appTitle": "AzSK website",
+      "brand": "azure",
+      "searchScope": [ "Azure" ],
+      "_gitContribute": {
+        "repo": "https://github.com/azsdk/azsdk-docs",
+        "branch": "master",
+        "apiSpecFolder": "azsdk-docs"
+      },
+      "_gitUrlPattern": "github",
+      "_appLogoPath": "Images/Icons/AzSDK_Logo.PNG",
+      "_appFooter": "Copyright (c) - Microsoft 2017. All rights reserved.",
+      "_appFaviconPath": "Images/Icons/AzSDK_Favicon.PNG"
+    },
+    "globalMetadataFiles":[],
+    "fileMetadataFiles": [],
+    "template": [
+       "../Artifacts/_exported_templates/AzSKTemplate"
+    ],
+    "postProcessors": [],
+    "noLangKeyword": false,
+    "keepFileLink": false,
+    "cleanupCacheHistory": false
+  }
+}

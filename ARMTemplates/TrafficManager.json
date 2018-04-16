@@ -1,0 +1,50 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "trafficManagerName": {
+        "type": "String",
+        "metadata": {
+        "description": "Name of the Traffic Manager"
+      }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/trafficManagerProfiles",
+            "name": "[parameters('trafficManagerName')]",
+            "apiVersion": "2017-03-01",
+            "location": "global",
+           "properties": {
+             "profileStatus": "Enabled",
+             "trafficRoutingMethod": "Weighted",
+             "dnsConfig": {
+               "relativeName": "[parameters('trafficManagerName')]",
+               "fqdn": "[concat(parameters('trafficManagerName'),'.trafficmanager.net')]",
+               "ttl": 30
+               },
+            "monitorConfig": {
+              "protocol": "HTTPS",
+              "port": 80,
+              "path": "/"
+            },
+            "endpoints": [
+                {
+                  "name": "External-endpoint",
+                  "type": "Microsoft.Network/trafficManagerProfiles/externalEndpoints",
+                  "properties": {
+                    "endpointStatus": "Enabled",
+                    "target": "www.google.com",
+                    "weight": 1,
+                    "priority": 1
+                  }
+                }
+              ]
+
+          },
+          "dependsOn": [ ]
+                
+        }
+    ]
+}

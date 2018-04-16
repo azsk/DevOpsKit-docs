@@ -1,0 +1,130 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"eventHubNamespace": {
+			"type": "string",
+			"metadata": {
+				"description": "Namespace of the Event Hub"
+			}
+		},
+		"eventHubName": {
+			"type": "string",
+			"metadata": {
+				"description": "Name of the Event Hub"
+			}
+		},
+		"storageAccountNameForDiagnostics": {
+			"type": "string",
+			"metadata": {
+				"description": "Name of existing Storage Acount for Diagnostics purpose"
+			}
+		},
+		"AuthorizationRules": {
+			"defaultValue": "RootManageSharedAccessKey",
+			"type": "String"
+		}
+	},
+	"variables": { },
+	"resources": [
+		{
+			"type": "Microsoft.EventHub/namespaces",
+			"sku": {
+				"name": "Standard",
+				"tier": "Standard",
+				"capacity": 1
+			},
+			"name": "[parameters('eventHubNamespace')]",
+			"apiVersion": "2017-04-01",
+			"location": "Central US",
+			"resources": [
+				{
+					"type": "providers/diagnosticSettings",//[Azure_EventHub_Audit_Enable_Diagnostics_Log] to enable diagnostic logs
+					"apiVersion": "2015-07-01",
+					"dependsOn": [
+						"[resourceId('Microsoft.EventHub/namespaces', parameters('eventHubNamespace'))]"
+					],
+					"name": "Microsoft.Insights/service",
+					"properties": {
+						"logs": [
+							{
+								"category": "ArchiveLogs",
+								"enabled": true,
+								"retentionPolicy": {
+									"days": 365,
+									"enabled": true
+								}
+							},
+							{
+								"category": "OperationalLogs",
+								"enabled": true,
+								"retentionPolicy": {
+									"days": 365,
+									"enabled": true
+								}
+							},
+							{
+								"category": "AutoScaleLogs",
+								"enabled": true,
+								"retentionPolicy": {
+									"days": 365,
+									"enabled": true
+								}
+							}
+						],
+						"metrics": [
+							{
+								"enabled": true,
+								"retentionPolicy": {
+									"enabled": true,
+									"days": 365
+								}
+							}
+						],
+						"storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNameForDiagnostics'))]"
+					}
+				},
+				{
+					"type": "Microsoft.EventHub/namespaces/AuthorizationRules",
+					"name": "[concat(parameters('eventHubNamespace'), '/', parameters('AuthorizationRules'))]",
+					"apiVersion": "2017-04-01",
+					"location": "Central US",
+					"properties": {
+						"rights": [
+							"Listen",
+							"Manage",
+							"Send"
+						]
+					},
+					"dependsOn": [
+						"[resourceId('Microsoft.EventHub/namespaces', parameters('eventHubNamespace'))]"
+					]
+				},
+				{
+					"type": "Microsoft.EventHub/namespaces/eventhubs/authorizationRules",//[Azure_EventHub_AuthZ_Use_Min_Permissions_Access_Policies]use  minimum access policies at event hub level
+					"name": "[concat(parameters('eventHubNamespace'), '/', parameters('eventHubName'), '/', parameters('AuthorizationRules'))]",
+					"apiVersion": "2017-04-01",
+					"location": "Central US",
+					"properties": {
+						"rights": [
+							"Listen"
+						]
+					},
+					"dependsOn": [
+						"[resourceId('Microsoft.EventHub/namespaces', parameters('eventHubNamespace'))]",
+						"[resourceId('Microsoft.EventHub/namespaces/eventhubs', parameters('eventHubNamespace'), parameters('eventHubName'))]"
+					]
+				},
+				{
+					"type": "Microsoft.EventHub/namespaces/eventhubs",
+					"apiVersion": "2017-04-01",
+					"dependsOn": [
+						"[resourceId('Microsoft.EventHub/namespaces', parameters('eventHubNamespace'))]"
+					],
+					"location": "Central US",
+					"name": "[concat(parameters('eventHubNamespace'), '/', parameters('eventHubName'))]"
+				}
+			]
+		}
+	]
+}

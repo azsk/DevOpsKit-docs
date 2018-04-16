@@ -1,0 +1,1 @@
+The "Secure DevOps Kit for Azure" (will be referred to as 'AzSK' henceforth) is a collection of scripts, tools, extensions, automations, etc. that caters to the end to end Azure subscription and resource security needs for dev ops teams using extensive automation and smoothly integrating security into native dev ops workflows helping accomplish secure dev ops
