@@ -150,7 +150,7 @@ the respective OMS workspace.
 
 The installation command will display output like the below:
 
-![05_Install-AzSKOMSSecurityPack](../Images/05_Install-AzS	KOMSSecurityPack.png)
+![05_Install-AzSKOMSSecurityPack](../Images/05_Install-AzSKOMSSecurityPack.png)
       
 At this point, assuming that AzSK events were already being sent to the OMS workspace, you should start
 seeing a tile such as the one below:
