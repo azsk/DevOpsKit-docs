@@ -382,11 +382,11 @@ The screenshots below show the core functionality at work:
 - Error and warning indications for incorrect and possibly vulnerable code:
 	(E.g., use of custom token cache in ADAL scenario)  
 
-![SecIntel_Ex_1](../Images/02_SecIntel_Ex_1.png)
+![SecIntel_Ex_1](../Images/02_SecIntel_Ex_1.PNG)
 
 - Suggestions for corrections/compliant coding practices:
 	(E.g., Instead of Random, the RNGCryptoServiceProvider class should be used in a crypto context.)  
-![02_SecIntel_Ex_2](../Images/02_SecIntel_Ex_2.png)  
+![02_SecIntel_Ex_2](../Images/02_SecIntel_Ex_2.PNG)  
 
 [Back to top…](Readme.md#contents)  
 
@@ -395,7 +395,7 @@ The screenshots below show the core functionality at work:
 
 - Go to **Tools** -> **Extensions and Updates** -> In the left sidebar select **Online** -> **Visual Studio Gallery** and search for **Security IntelliSense** in the right sidebar
 
-![02_SecIntel_VSGallery_Download](../Images/02_SecIntel_VSGallery_Download.png)
+![02_SecIntel_VSGallery_Download](../Images/02_SecIntel_VSGallery_Download.PNG)
 
 - Select Security IntelliSense item and click **Download**
 - After download completes, in the pop-up click **Install**
@@ -417,7 +417,7 @@ extension installation per steps from above).
 - Go to View->Solution Explorer and then open one of demo files (e.g., "CryptoSample.cs") in the VS editor. 
    - You should see SecIntel in action -- i.e., code that is in violation of the rules in use for 
    the SecIntel VSIX plugin will appear as red-squigglies (errors) and green-squigglies (warnings).  
-   ![02_SecIntel_Suggestion](../Images/02_SecIntel_Suggestion.png)
+   ![02_SecIntel_Suggestion](../Images/02_SecIntel_Suggestion.PNG)
 
 - Note: In the currently implemented behavior of the extension, 'errors' don’t actually fail the build. 
 We will change this behavior in an upcoming sprint. After that anything that is considered an 'error' will start failing 
@@ -483,7 +483,7 @@ the supported rule templates.
    - If you have the extension installed, you will see a screen such as below with options to 
    "Disable" or "Uninstall" the extension.
 - Click "Uninstall" and restart Visual Studio.
-![02_SecIntel_VSGallery](../Images/02_SecIntel_VSGallery.png)  
+![02_SecIntel_VSGallery](../Images/02_SecIntel_VSGallery.PNG)  
 
 [Back to top…](Readme.md#contents)
 ### What default compiler actions are configured?
