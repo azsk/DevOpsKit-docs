@@ -1,0 +1,100 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "serviceBusNamespaceName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Service Bus Namespace"
+      }
+    },
+    "serviceBusTopicName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Service Bus Topic"
+      }
+    },
+    "storageAccountNameForDiagnostics": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Storage account for storing logs"
+      }
+    },
+  },
+  "variables": {
+    "sbVersion": "2015-08-01"
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-08-01",
+      "name": "[parameters('serviceBusNamespaceName')]",
+      "type": "Microsoft.ServiceBus/namespaces",
+      "location": "[resourceGroup().location]",
+      "properties": {},
+      "resources": [
+        {
+          "apiVersion": "[variables('sbVersion')]",
+          "name": "[parameters('serviceBusTopicName')]",
+          "type": "Topics",
+          "dependsOn": [
+            "[concat('Microsoft.ServiceBus/namespaces/', parameters('serviceBusNamespaceName'))]"
+          ],
+          "properties": {
+            "path": "[parameters('serviceBusTopicName')]"
+          },
+          "resources": [
+            {
+              "name": "AccessKey", //[Azure_ServiceBus_AuthZ_Use_Minimum_Access_Policies] using minimum access policies at topic level
+              "type": "authorizationRules",
+              "apiVersion": "2017-04-01",
+              "properties": {
+                "rights": [
+                  "Listen"
+                ]
+              },
+              "dependsOn": [
+                "[concat('Microsoft.ServiceBus/namespaces/', parameters('serviceBusNamespaceName'),'/Topics/',parameters('serviceBusTopicName'))]"
+              ]
+
+            }
+          ]
+        },
+         {
+          "type": "providers/diagnosticSettings",  //[Azure_ServiceBus_Audit_Enable_Diagnostics_Log] enable diagnostic logs
+          "name": "Microsoft.Insights/service",
+          "dependsOn": [
+            "[resourceId('Microsoft.ServiceBus/namespaces', parameters('serviceBusNamespaceName'))]"
+          ],
+          "apiVersion": "2015-07-01",
+          "properties": {
+            "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNameForDiagnostics'))]",
+            "logs": [
+              {
+                "category": "OperationalLogs",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 365,
+                  "enabled": true
+                }
+              }
+            ],
+            "metrics": [
+              {
+                "timeGrain": "PT1M",
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": true,
+                  "days": 365
+                }
+              }
+            ]
+          }
+        }
+      
+
+
+      ]
+    }
+  ],
+  "outputs": {}
+}

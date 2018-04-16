@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+       "appservicename": {
+        "type": "String",
+        "metadata": {
+        "description": "Name of the web app"
+      }
+        },
+      "serviceplanname": {
+         "type": "String",
+         "metadata": {
+        "description": "Name of the App Service Plan"
+      }
+    },
+    "location": {
+            "defaultValue": "South Central US",
+       "type": "String",
+       "metadata": {
+        "description": "Location of AppService"
+      }
+        }
+  },
+  "variables": { },
+  "resources": [
+    {
+      "name": "[parameters('serviceplanname')]",
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2016-09-01",
+      "location": "[parameters('location')]",
+      "properties": {
+
+      },
+      "sku": {
+        "name": "S1",
+        "tier": "Standard",
+        "size": "S1",
+        "capacity": 2 //[Azure_AppService_BCDR_Use_Multiple_Instances] deploy app service on a minimum of two instances to ensure availability
+      }
+      
+    },
+    {
+      "name": "[parameters('appservicename')]",
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2016-08-01",
+      "location": "[parameters('location')]",
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serviceplanname'))]",
+        "siteConfig": {
+          "alwaysOn": true, //[Azure_AppService_BCDR_Use_AlwaysOn] enable 'always on'
+          "use32BitWorkerProcess": false, 
+          "requestTracingEnabled": true, //[Azure_AppService_Audit_Enable_Logging_and_Monitoring] enable auditing and monitoring
+          "httpLoggingEnabled": true, //[Azure_AppService_Audit_Enable_Logging_and_Monitoring] enable auditing and monitoring
+          "detailedErrorLoggingEnabled": true //[Azure_AppService_Audit_Enable_Logging_and_Monitoring] enable auditing and monitoring
+
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('serviceplanname'))]"
+      ]
+    }
+
+  ]
+}

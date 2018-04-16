@@ -1,0 +1,44 @@
+var contentdata = [
+  {
+    "title": "Secure the Subscription",
+    "href": "/01-Subscription-Security/Readme.html",
+    "thumnailimage": "/Images/Icons/Secure_Subscription.PNG",
+    "thumnailhoverimage": "/Images/Icons/Secure Subscription_Hover.PNG",
+    "content": "/WebsiteContent/landingContent/Secure_Subscription"
+  },
+  {
+    "title": "Enable secure development",
+    "href": "/02-Secure-Development/Readme.html",
+    "thumnailimage": "/Images/Icons/Enable_Development.PNG",
+    "thumnailhoverimage": "/Images/Icons/Enable Development_Hover.PNG",
+    "content": "/WebsiteContent/landingContent/Secure_Development"
+  },
+  {
+    "title": "Integrate security into CICD",
+    "href": "/03-Security-In-CICD/Readme.html",
+    "thumnailimage": "/Images/Icons/Integrate_Security.PNG",
+    "thumnailhoverimage": "/Images/Icons/Integrate Security_Hover.PNG",
+    "content": "/WebsiteContent/landingContent/Secure_CICD"
+  },
+  {
+    "title": "Continuous Assurance",
+    "href": "/04-Continous-Assurance/Readme.html",
+    "thumnailimage": "/Images/Icons/Continuous_Assurance.PNG",
+    "thumnailhoverimage": "/Images/Icons/Continuous Assurance_Hover.PNG",
+    "content": "/WebsiteContent/landingContent/Continuous_Assurance"
+  },
+  {
+    "title": "Alerting & monitoring",
+    "href": "/05-Alerting-and-Monitoring/Readme.html",
+    "thumnailimage": "/Images/Icons/Alerting_Monitoring.PNG",
+    "thumnailhoverimage": "/Images/Icons/Alerting & Monitoring_Hover.PNG",
+    "content": "/WebsiteContent/landingContent/Alerting_Monitoring"
+  },
+  {
+    "title": "Cloud risk governance",
+    "href": "/06-Security-Telemetry/Readme.html",
+    "thumnailimage": "/Images/Icons/Cloud_Risk.PNG",
+    "thumnailhoverimage": "/Images/Icons/Cloud Risk_Hover.PNG",
+    "content": "/WebsiteContent/landingContent/Security_Telemetry"
+  }
+]

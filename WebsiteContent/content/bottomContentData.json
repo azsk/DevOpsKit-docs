@@ -1,0 +1,14 @@
+var bottomcontentdata = [
+  {
+    "categoryHeading": "Documentation",
+    "href": "/README.html",
+    "content": "../WebsiteContent/landingContent/bottomContent/DocumentationSection",
+    "readMoreButtonLabel": "Learn more"
+  },
+  {
+    "categoryHeading": "Videos",
+    "href": "/Videos/videos.html",
+    "content": "../WebsiteContent/landingContent/bottomContent/VideosSection",
+    "readMoreButtonLabel": "Watch More"
+  }
+]

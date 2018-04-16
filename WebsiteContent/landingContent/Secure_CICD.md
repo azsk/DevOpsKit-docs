@@ -1,0 +1,1 @@
+Test automation is a core tenet of devops. We emphasize this by providing the ability to run SVTs as part of the VSTS CICD pipeline. These SVTs can be used to ensure that the target subscription used to deploy a cloud application and the Azure resources the application is built upon are all setup in a secure manner

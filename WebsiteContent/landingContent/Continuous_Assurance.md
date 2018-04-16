@@ -1,0 +1,1 @@
+In the constantly changing dev ops environment, it is important to move away from the mindset of security being a milestone. We have to treat security as a continuously varying state of a system. This is made possible through capabilities that enable continuous assurance using a combination of automation runbooks, schedules, etc.

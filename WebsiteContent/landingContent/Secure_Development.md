@@ -1,0 +1,1 @@
+During the coding and early development stages, developers should have the ability to write secure code and to test the secure configuration of their cloud applications. Just like build verification tests (BVTs), we introduce the concept of security verification tests (SVTs) which can check for security of various resource types in Azure

@@ -1,0 +1,1 @@
+Visibility of security status is important for individual application teams and also for central enterprise teams. We provide solutions that cater to the needs of both. Moreover, the solution spans across all stages of dev ops in effect bridging the gap between the dev team and the ops team from a security standpoint through the single, integrated views it generates
