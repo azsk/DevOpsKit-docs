@@ -35,9 +35,9 @@
       "brand": "azure",
       "searchScope": [ "Azure" ],
       "_gitContribute": {
-        "repo": "https://github.com/azsdk/azsdk-docs",
+        "repo": "https://github.com/azsk/DevOpsKit-docs",
         "branch": "master",
-        "apiSpecFolder": "azsdk-docs"
+        "apiSpecFolder": "DevOpsKit-docs"
       },
       "_gitUrlPattern": "github",
       "_appLogoPath": "Images/Icons/AzSDK_Logo.PNG",
