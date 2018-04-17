@@ -19,6 +19,13 @@
   - [Adding SVTs in the Jenkins pipeline](Readme.md#adding-svts-in-the-jenkins-pipeline)
   - [Verifying that SVTs have been added and configured correctly](Readme.md#verifying-that-the-svts-have-been-added-and-configured-correctly-1)
 - [Remediating Failures and Next Steps](Readme.md#remediating-failures-and-next-steps)
+
+## [AzSK ARM Checker (Preview)](Readme.md#azsk-armchecker)
+- [Overview](Readme.md#overview-1) 
+- [Enable AzSK extension for your VSTS](Readme.md#enable-azsk-extension-for-your-vsts-1)
+- [Walkthrough](Readme.md#walkthrough-2)
+  - [Adding ARM Template Checker in VSTS pipeline](Readme.md#adding-arm-template-checker-in-vsts-pipeline)
+  - [Verifying that ARMChecker have been added and configured correctly](Readme.md#verifying-that-the-armchecker-have-been-added-and-configured-correctly)
 ------------------------------------------------------------------
 ### Overview 
 The AzSK contains Security Verification Tests (SVTs) for multiple PaaS and IaaS services of the Azure platform. 
@@ -376,3 +383,140 @@ conditions (e.g., back to back SVT failures) etc.
 
 [Back to top...](Readme.md#contents)
 
+# AzSK ARMChecker
+### Overview
+
+The ARMTemplate security check script runs a scan on your given to ARM template to examine various conditions and configurations that need to be present in your ARMTemplate for secured resource deployment.
+
+[Back to top…](Readme.md#contents)
+### Scan the security health of your ARM Template
+
+The ARM Template health check script can be run using the command below after replacing `<ARMTemplate file path`> 
+ with your subscriptionId
+```PowerShell
+Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -Preview 
+```
+The parameters used are:
+- ARMTemplatePath – Subscription ID is the identifier of your Azure subscription 
+> **Note**: This feature is in preview mode only. So, passing "–Preview" switch is mandatory. 
+[Back to top…](Readme.md#contents)
+
+### ARM Temaplate Checker - What is covered?  
+ARM Template checker covers Baseline controls for following services:
+App Service, Storage, SQL, CDN, Traffic Manager, Document DB, Redis Cache, and Data Lake.
+ARM Template for reference are available [here](../ARMTemplates).
+
+### ARMTemplate Checker Scan - How to fix findings?
+
+Get-AzSKARMTemplateSecurityStatus cmdlet generate outputs which are organized as under: 
+- summary information of the control evaluation (pass/fail) status in a CSV file,
+- detailed powershell output log in a LOG file
+
+To address findings, you should do the following:
+1.	See the summary of control evaluation first in the CSV file. (Open the CSV in XLS. Use "Format as Table", "Hide Columns", "Filter", etc.)
+2.	Review controls that are marked as "Failed", "Verify" or "Manual"
+3.	Use the following approach based on control status:
+         - For the “Verify” controls, look at the expected value and description column in .CSV file to decide whether to consider the    control as "Passed" or not. 
+         - For the “Failed” controls, look at the .CSV file to get the supporting information like Expected value , Line No. and Resource path etc. 
+	 
+#### Scan multiple ARMTemplate :-	 
+To scan multiple ARMTemplate at a time you can pass folder path containing different ARM Template(s) to “–ARMTemplatePath” parameter in “Get-AzSKARMTemplateSecurityStatus” cmdlet.
+e.g. :
+```PowerShell
+ Get-AzSKARMTemplateSecurityStatus  –ARMTemplatePath "D:\DSRE\TestARMChecker\" –Preview [ -Recurse ]
+```
+> **Note**: You need to pass “-Recurse” switch in cmdlet if you want to scan ARM Temaplates in the specified location and in all child folders of the location.
+
+[Back to top...](Readme.md#contents)	
+
+### Enable AzSK extension for your VSTS
+
+This extesion has been published to the VSTS gallery under "Build and Release" category. 
+You can now install this extension from the Marketplace directly (https://marketplace.visualstudio.com/items?itemName=azsdktm.AzSDK-task).
+> **Note:** You can also install this extension on your on-prem TFS instance. Please follow the instructions detailed at:
+> https://docs.microsoft.com/en-us/vsts/marketplace/get-tfs-extensions
+
+### Walkthrough
+This part assumes that you are familiar with VS build tasks and pipelines at a basic level. To demonstrate 
+the capability of the feature, we will use a basic ARMTemplate that is checked into our trial repository. 
+Our goal is to show how ARM checker can be injected into the build/release workflow so that security testing for 
+Azure resources can be done before deployment of ARM Template seamlessly in CICD.  
+
+[Back to top...](Readme.md#contents)
+
+### Adding ARM Template Checker in VSTS pipeline
+
+**Step-1:** Create a release definition or open an existing one.   
+As shown below, currently the release definition is configured to simply deploy a ARM Template using Azure Powershell script. This is likely to be the state of any working CICD pipeline that deploys a ARM Template from VSTS to an Azure subscription.
+
+Let us take a look at the steps needed to add the AzSK-SVT task to the release definition.
+
+![03_Create_Release_Defination](../Images/03_Create_Release_Defination_ARM.JPG)
+
+**Step-2:** Add the AzSK-ARMChecker release task to the pipeline.
+Click on "Add Tasks", and select "AzSK ARM Template Checker".
+Click on "Add" and "Close".
+> **Note:** The VSTS dialog doesn't provide a good visual indication but the task does 
+get added when you click "Add" once!
+
+![03_Task_Catalog](../Images/03_Task_Catalog_ARM.JPG)
+
+**Step-3:** Specify the input parameters for the ARM Checker task.
+The "AzSK_ARM Checker" task starts showing in the "Run on Agent" list and displays some configuration inputs that are required for the task to run. These are none other than the familiar options we have been specifying while running the AzSK ARM Checker manually - you can specify the target ARM Template file path or a folder path based on your 
+
+Along with input parameter, you can check for below options
+<br/>**Recurse:** Switch this if you want to scan ARM Temaplates in the specified location and in all child folders of the location.
+
+<br/>**Do not auto-update AzSDK:** Switch to toggle auto update of AzSDK and required AzureRM modules on the build server. Keep this un-checked for Hosted agent and Hosted VS2017 and while using SVT task fot the first time and if you want to update AZSDK the version of AzSDK. 
+
+![03_IP_Parameter_for_Task](../Images/03_IP_Parameter_for_Task_ARM.JPG)
+
+**Step-4**: Save the Release Definition.
+  
+[Back to top...](Readme.md#contents)
+
+### Verifying that the ARMchecker have been added and configured correctly
+**Step-1:** Start the release pipeline. 
+This can be done by adding a new release for an existing build (or trigger a new release via a minor/trial 
+check-in). 
+
+![03_Start_Release_Pipeline](../Images/03_Start_Release_Pipeline_ARM.JPG)
+
+**Step-2:** Verify that the release pipeline has started. 
+Once the release is triggered, we can see that it is in progress by clicking on "Releases" (or via 
+"Build & Release" menu in the VSTS menu).
+
+![03_Verify_Pipeline](../Images/03_Verify_Pipeline_ARM.JPG)
+
+**Step-3:** View the release outcome.  
+In a few minutes the release pipeline should complete and we can view the outcomes as shown below (in the 
+pic below we can see that the release pipeline has failed):
+
+![03_View_Release_OutCome](../Images/03_View_Release_OutCome_ARMChecker.png)
+
+**Step-4:** Look at the "Issues" to see why the release failed.  
+The summary output shows the cause of failure (in this case it is because the AzSK ARMChecker have failed).
+
+
+![03_Issues_Release_Fail](../Images/03_Issues_Release_Fail_ARM.JPG)
+
+**Step-5:** Look at the complete output log of the ARM Checker portion of the release pipeline execution . Notice how the output is the same as what is displayed when ARMChecker cmdlet manually run in a PS console.
+
+![03_Release_Task](../Images/03_Release_Task_ARM.JPG)
+
+**Step-6:** See the summary "CSV" and detailed "LOG" output files for the AzSK_ARMTemplateChcker. 
+This is no different than the "ad hoc ARMChecker run" scenarios. Note, above, how the ARM Checker outputs the location 
+of the "CSV" file and the "LOG" file at the end of the run. However, those locations are on the release 
+agent machine. These are also packaged up in an overall ZIP file and are available to download. The 
+overall ZIP file can be downloaded by clicking on the "Download all logs as ZIP" option.  
+The ZIP file "ReleaseLogs_dd.zip" contains LOGs from the entire release pipeline including the master 
+output for the AzSK_ARMChecker. The CSV file and the LOG file for AzSK ARMChecker are embedded in the 'inner' ZIP 
+file that is named as ArmTemplateChecker_Logs_yyyymmdd_hhmmss.zip .
+
+![03_Output_Folder](../Images/03_Output_Folder_ARM.JPG) 
+
+Opening/extracting the "ArmTemplateChecker_Logs" ZIP file will reveal a folder structure and files placement identical to 
+what we have seen in the case of ad hoc ARMChecker runs:
+![03_AzSDK_Logs](../Images/03_ARMChecker_Logs.JPG)
+
+[Back to top...](Readme.md#contents)
