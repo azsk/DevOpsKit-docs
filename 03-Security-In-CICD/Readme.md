@@ -336,7 +336,7 @@ This part assumes that you are familiar with Jenkins pipeline at a basic level. 
 	![03_Input_Parameter](../Images/03_Input_Parameter.PNG)	
 - #### Step-5: (Optional) Setup connectivity from CICD to OMS.
 	 You can also configure build to send runtime security evaluation results to OMS workspace. For that configure OMS credetial using below steps:
-	- For adding OMS workspace credentials  
+ 	- For adding OMS workspace credentials  
 		Go to Home Page -->  Credentials --> System --> Global credentials  --> Click on "Add Credentials" --> Select credential type "OMS Details"  
 		Provide OMS details and click Ok
 		
@@ -386,18 +386,18 @@ conditions (e.g., back to back SVT failures) etc.
 # AzSK ARMChecker
 ### Overview
 
-The ARMTemplate security check script runs a scan on your given to ARM template to examine various conditions and configurations that need to be present in your ARMTemplate for secured resource deployment.
+The ARM Template security check script runs a scan on your given ARM template to examine various conditions and configurations that need to be present in your ARMTemplate for secured resource deployment.
 
 [Back to top…](Readme.md#contents)
 ### Scan the security health of your ARM Template
 
-The ARM Template health check script can be run using the command below after replacing `<ARMTemplate file path`> 
- with your subscriptionId
+The ARM Template health check script can be run using the command below after replacing `<Path to ARM Template>`
+ with the path of your ARM Template
 ```PowerShell
 Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -Preview 
 ```
 The parameters used are:
-- ARMTemplatePath – Subscription ID is the identifier of your Azure subscription 
+- ARMTemplatePath – Path to ARM Template file or folder
 > **Note**: This feature is in preview mode only. So, passing "–Preview" switch is mandatory. 
 [Back to top…](Readme.md#contents)
 
@@ -419,8 +419,8 @@ To address findings, you should do the following:
          - For the “Verify” controls, look at the expected value and description column in .CSV file to decide whether to consider the    control as "Passed" or not. 
          - For the “Failed” controls, look at the .CSV file to get the supporting information like Expected value , Line No. and Resource path etc. 
 	 
-#### Scan multiple ARMTemplate :-	 
-To scan multiple ARMTemplate at a time you can pass folder path containing different ARM Template(s) to “–ARMTemplatePath” parameter in “Get-AzSKARMTemplateSecurityStatus” cmdlet.
+#### Scan multiple ARMTemplates :-	 
+To scan multiple ARMTemplates at a time you can pass folder path containing different ARM Template(s) to “–ARMTemplatePath” parameter in “Get-AzSKARMTemplateSecurityStatus” cmdlet.
 e.g. :
 ```PowerShell
  Get-AzSKARMTemplateSecurityStatus  –ARMTemplatePath "D:\DSRE\TestARMChecker\" –Preview [ -Recurse ]
