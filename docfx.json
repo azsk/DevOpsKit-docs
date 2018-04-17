@@ -35,14 +35,14 @@
       "brand": "azure",
       "searchScope": [ "Azure" ],
       "_gitContribute": {
-        "repo": "https://github.com/azsdk/azsdk-docs",
+        "repo": "https://github.com/azsk/DevOpsKit-docs",
         "branch": "master",
-        "apiSpecFolder": "azsdk-docs"
+        "apiSpecFolder": "DevOpsKit-docs"
       },
       "_gitUrlPattern": "github",
-      "_appLogoPath": "Images/Icons/AzSDK_Logo.PNG",
+      "_appLogoPath": "Images/Icons/AzSK_Logo.PNG",
       "_appFooter": "Copyright (c) - Microsoft 2017. All rights reserved.",
-      "_appFaviconPath": "Images/Icons/AzSDK_Favicon.PNG"
+      "_appFaviconPath": "Images/Icons/AzSK_Favicon.PNG"
     },
     "globalMetadataFiles":[],
     "fileMetadataFiles": [],
