@@ -1,9 +1,11 @@
 var data = [
-  { "path": "../../Images/CarouselImages/CarouselImage01.PNG"},
-  { "path": "../../Images/CarouselImages/CarouselImage02.PNG"},
-  { "path": "../../Images/CarouselImages/CarouselImage03.PNG"},
-  { "path": "../../Images/CarouselImages/CarouselImage04.PNG"},
-  { "path": "../../Images/CarouselImages/CarouselImage05.PNG"},
-  { "path": "../../Images/CarouselImages/CarouselImage06.PNG"},
-  { "path": "../../Images/CarouselImages/CarouselImage07.PNG"} 
+  { "path": "https://devopskitwebsiteep.azureedge.net/media/CarouselImages/CarouselImage01.jpg"},
+  { "path": "https://devopskitwebsiteep.azureedge.net/media/CarouselImages/CarouselImage02.jpg"},
+  { "path": "https://devopskitwebsiteep.azureedge.net/media/CarouselImages/CarouselImage03.jpg"},
+  { "path": "https://devopskitwebsiteep.azureedge.net/media/CarouselImages/CarouselImage04.jpg"},
+  { "path": "https://devopskitwebsiteep.azureedge.net/media/CarouselImages/CarouselImage05.jpg"},
+  { "path": "https://devopskitwebsiteep.azureedge.net/media/CarouselImages/CarouselImage06.jpg"},
+  { "path": "https://devopskitwebsiteep.azureedge.net/media/CarouselImages/CarouselImage07.jpg"} ,
+  { "path": "https://devopskitwebsiteep.azureedge.net/media/CarouselImages/CarouselImage08.jpg"} 
 ]
+
