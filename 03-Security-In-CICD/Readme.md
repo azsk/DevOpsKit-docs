@@ -19,7 +19,7 @@
   - [Verifying that SVTs have been added and configured correctly](Readme.md#verifying-that-the-svts-have-been-added-and-configured-correctly-1)
 - [Remediating Failures and Next Steps](Readme.md#remediating-failures-and-next-steps)
 
-## [AzSK ARM Template Checker (Preview)](Readme.md#azsk-arm-template-checker-Preview)
+## [AzSK ARM Template Checker (Preview)](Readme.md#azsk-arm-template-checker)
 - [Overview](Readme.md#overview-1) 
 - [Enable AzSK extension for your VSTS](Readme.md#enable-azsk-extension-for-your-vsts-1)
 - [Walkthrough](Readme.md#walkthrough-2)
@@ -382,7 +382,7 @@ conditions (e.g., back to back SVT failures) etc.
 
 [Back to top...](Readme.md#contents)
 
-# AzSK ARM Template Checker(Preview)
+# AzSK ARM Template Checker
 ### Overview
 
 The ARM Template security check script runs a scan on your given ARM template to examine various conditions and configurations that need to be present in your ARMTemplate for secured resource deployment.
