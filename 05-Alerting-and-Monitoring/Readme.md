@@ -184,7 +184,7 @@ the left of the bell icon in the topmost band in the dashboard.)
 The solution view contains multiple blades representing alerts, various types of security activity, 
 security trends, etc. This view shows up when you click on the view tile and looks like the picture
 below:
-![05_Setting_OMS_Workspace_Solution_View](../Images/05_Setting_OMS_Workspace_Solution_View.PNG)
+![05_Setting_OMS_Workspace_Solution_View](../Images/05_OMS_New_View.PNG)
 
 The very first (Summary) blade provides complete instructions on how to interpret the different
 blades in this view. These blades cover the complete picture of baseline security compliance
@@ -203,7 +203,7 @@ are the same fields that display in the CSV file when you run the AzSK manually 
 	
 [Back to top…](Readme.md#contents)
 ### Guide to AzSK OMS Solution queries
-This section walks you through the queries present in the AzSK OMS solution. To get the latest queries make sure that you have the latest solution installed in your OMS workspace. To get the latest version of solution you need to re-install OMS solution using step **[[1-c]](https://github.com/azsdk/azsdk-docs/blob/master/05-Alerting-and-Monitoring/Readme.md#setting-up-the-azsk-oms-solution-step-by-step)** mentioned above. The queries show the status of controls based on the following criteria.
+This section walks you through the queries present in the AzSK OMS solution. To get the latest queries make sure that you have the latest solution installed in your OMS workspace. To get the latest version of solution you need to re-install OMS solution using step **[[1-c]](https://github.com/azsk/DevOpsKit-docs/blob/master/05-Alerting-and-Monitoring/Readme.md#setting-up-the-azsk-oms-solution-step-by-step)** mentioned above. The queries show the status of controls based on the following criteria.
 - Each blade shows the aggregated control status for all subscriptions whose data is sent to the OMS workspace.
 - By default, each blade shows the status of baseline controls.
 - The queries show counts based on control status recieved for last scan data(done with required access) received by the OMS workspace.
