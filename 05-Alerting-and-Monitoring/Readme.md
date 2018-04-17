@@ -184,7 +184,7 @@ the left of the bell icon in the topmost band in the dashboard.)
 The solution view contains multiple blades representing alerts, various types of security activity, 
 security trends, etc. This view shows up when you click on the view tile and looks like the picture
 below:
-![05_Setting_OMS_Workspace_Solution_View](../Images/05_Setting_OMS_Workspace_Solution_View.PNG)
+![05_Setting_OMS_Workspace_Solution_View](../Images/05_OMS_New_View.PNG)
 
 The very first (Summary) blade provides complete instructions on how to interpret the different
 blades in this view. These blades cover the complete picture of baseline security compliance
