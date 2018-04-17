@@ -10,7 +10,7 @@
 - [Update existing Continuous Assurance Automation Account](Readme.md#update-existing-continuous-assurance-automation-account)
 - [Remove Continuous Assurance Automation Account](Readme.md#remove-continuous-assurance-automation-account)
 - [Fetch details of an existing Continuous Assurance Automation Account](Readme.md#fetch-details-of-an-existing-continuous-assurance-automation-account)
-- [Continuous Assurance through central scanning mode (Preview) - Step by Step](Readme.md#continuous-assurance-through-central-scanning-mode-preview---step-by-step)
+- [Continuous Assurance through central scanning mode](Readme.md#continuous-assurance-through-central-scanning-mode)
 - [FAQ](Readme.md#faq)
 
 -----------------------------------------------------------------
@@ -277,16 +277,22 @@ Get-AzSKContinuousAssurance -SubscriptionId <SubscriptionId>
 
 [Back to top…](Readme.md#contents)
 
-### Continuous Assurance through central scanning mode (Preview) - Step by Step
+### Continuous Assurance through central scanning mode
 
 In scenarios where central team wants to monitor a group of subscriptions from a single and more controlled central subscription, this command would help to achieve such scenarios.
 #### Pre-requisites:
 - The user executing this command should have "Owner" access on all the subscriptions that are being enabled for central scanning mode including the central subscription.
-- User should have the latest version of the kit installed on the machine (>= v2.8.1)
-- Optional: Have the own instance of AzSK setup for your org. This would provide more capabilities to control the scanning behavior
+- User should have the latest version of the kit installed on the machine (>= [AzSK v3.1.x](https://www.powershellgallery.com/packages/AzSK/3.1.0))
+- Optional: Have an own instance of AzSK setup for your org. This would provide more capabilities to control the scanning behavior. 
+  (Refer [here](../07-Customizing-AzSK-for-your-Org/Readme.md) for more details)
 
-#### Setup Continuous Assurance (CA) in central mode:
-> **Note:** This feature is still in preview. 
+#### Types of central scanning mode:
+##### 1. Target subscriptions getting scanned by single Automation Account
+
+This is the default behaviour. Typically if the number of target subscriptions that you need to scan is <=40, you can go with this type. Ideally each of your subscription should get scanned atleast once in day.
+If it is taking more than a day to complete one round of scan for all target subscriptions, then you should try to use other type of central scanning mode which is mentioned below.
+
+###### Setup Continuous Assurance (CA) in central mode:
 
 This can be achieved by adding extra params to the existing CA command. You can run the command below:
 
@@ -297,7 +303,11 @@ $OMSWorkspaceId = '<omsWorkspaceId>'
 $OMSSharedKey = '<omsSharedKey>' 
 $TargetSubscriptionIds = '<TargetSubscriptionId>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
 
-Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds -ResourceGroupNames $ResourceGroupNames -OMSWorkspaceId $OMSWorkspaceId -OMSSharedKey $OMSSharedKey -Preview
+Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds 
+        -ResourceGroupNames $ResourceGroupNames -OMSWorkspaceId $OMSWorkspaceId -OMSSharedKey $OMSSharedKey -CentralScanMode 
+        [-AltOMSWorkspaceId '<alternateOMSWSId>'] [-AltOMSSharedKey '<alternateOMSWSKey>'] 
+        [-WebhookUrl '<webhookUrl>'] [-WebhookAuthZHeaderName '<headerName>'] [-WebhookAuthZHeaderValue '<headerValue>'] 
+        [-ScanIntervalInHours '<scanIntervalInHours>'] [-LoggingOption '<CentralSub|IndividualSubs>'] [-SkipTargetSubscriptionConfig]
 ```
 </br>
 
@@ -315,9 +325,16 @@ Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscript
 |WebhookAuthZHeaderValue|(Optional) Value of the AuthZ heade |FALSE|24 hrs||
 |ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value |FALSE|None||
 |LoggingOption| "IndividualSubs/CentralSub". This provides the capability to users to store the CA scan logs on central subscription or on individual subscriptions| False |CentralSub |
-|Preview| It is mandatory to use preview switch| True | |
+|SkipTargetSubscriptionConfig| (Optional) Use this switch if you dont have the owner permission on the target sub. This option assumes you have already one all the required configuration on the target sub. Check the note below| False| |
+|CentralScanMode| Mandatory switch to specify in central scan mode| True | |
 
-#### Append/modify/fix the central CA setup
+</br>
+
+> **Note:** If you are using switch -SkipTargetSubscriptionConfig, then it assumes you have done all the required configuration on the target subscriptions. 
+> Like, adding the CA SPN as Reader on target sub, Creating AzSK RG and a storage account name starting with azsk, Contributor permission to SPN on AzSKRG. 
+> If any of the steps are not done, then central scan automation account will skip those target subscriptions.
+
+###### Append/modify/fix the central CA setup
 
 In case you want to 
 </br>(a) add new subscriptions to central scanning mode, or 
@@ -328,7 +345,7 @@ In case you want to
 </br>(f) Webhook details needs to updated, or
 </br>(g) ScanInterval needs to updated, or
 </br>(h) the scanning account credential needs to be rotated as part of hygiene/ expiry, or
-</br>(i) modify the logging option to central mode
+</br>(i) modify the logging option to central mode or vice-versa
 
 In all such scenarios, you can run the command below:
 
@@ -338,7 +355,11 @@ $OMSWorkspaceId = '<omsWorkspaceId>'
 $OMSSharedKey = '<omsSharedKey>' 
 $TargetSubscriptionIds = '<TargetSubscriptionId>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
 
-Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds -OMSWorkspaceId $OMSWorkspaceId -OMSSharedKey $OMSSharedKey -FixRuntimeAccount -LoggingOption CentralSub -Preview
+Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds -CentralScanMode
+        [-OMSWorkspaceId $OMSWorkspaceId] [-OMSSharedKey $OMSSharedKey] [-FixRuntimeAccount] [-LoggingOption <CentralSub|IndividualSubs>] 
+        [-AltOMSWorkspaceId '<alternateOMSWSId>'] [-AltOMSSharedKey '<alternateOMSWSKey>'] 
+        [-WebhookUrl '<webhookUrl>'] [-WebhookAuthZHeaderName '<headerName>'] [-WebhookAuthZHeaderValue '<headerValue>'] 
+        [-ScanIntervalInHours '<scanIntervalInHours>'] [-LoggingOption '<CentralSub|IndividualSubs>']
 ```
 </br>
 
@@ -350,25 +371,31 @@ Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscripti
 |OMSSharedKey| OMSSharedKey for the central monitoring dashbaord| False | Only provide if you want to update the OMS Sharedkey along with workspaceId param |
 |LoggingOption| "IndividualSubs/CentralSub" | False | Only provide if you want to change the logging option|
 |FixRuntimeAccount| This will correct all the permissions issues related to the scanning account| False | Provide this switch only when you want to add new subscriptions for central scanning mode or if scanning account credential needs to be updated |
-|Preview| It is mandatory to use preview switch| True | |
+|AltOMSWorkspaceId|(Optional) Alternate Workspace ID of OMS to monitor security scan results|FALSE|None||
+|AltOMSSharedKey|(Optional) Shared key of Alternate OMS which is used to monitor security scan results|FALSE|None||
+|WebhookUrl|(Optional) All the scan results shall be posted to this configured webhook |FALSE|None||
+|WebhookAuthZHeaderName|(Optional) Name of the AuthZ header (typically 'Authorization')|FALSE|'Authorization'||
+|WebhookAuthZHeaderValue|(Optional) Value of the AuthZ heade |FALSE|24 hrs||
+|ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value |FALSE|None||
+|CentralScanMode| It is mandatory to use CentralScanMode switch| True | |
 
-#### Diagnose the health of central CA
+###### Diagnose the health of central CA
 
 You could run the command below. It would diagnose the Continuous Assurance Automation account running under central subscription
 
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
 
-Get-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -ExhaustiveCheck
+Get-AzSKContinuousAssurance -SubscriptionId $SubscriptionId [-ExhaustiveCheck]
 ```
 </br>
 
 |Param Name| Purpose| Required?| DefaultValue| Comments|
 |----------|--------|----------|-------------|---------|
 |SubscritionId| Central SubscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
-|ExhaustiveCheck| By appending this switch it would check whether all the modules installed in central automation account are up to date| False | Only include if default diagnosis is not resulting in any issue |
+|ExhaustiveCheck| (Optional) By appending this switch it would check whether all the modules installed in central automation account are up to date| False | Only include if default diagnosis is not resulting in any issue |
 
-#### Remove CA from the central subscription
+###### Remove CA from the central subscription
 
 In case you want to 
 </br>(a) unregister some subs from central scanning mode, or 
@@ -378,7 +405,7 @@ In case you want to
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
 
-Remove-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -DeleteStorageReports -Preview 
+Remove-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -DeleteStorageReports -CentralScanMode 
 ```
 
 
@@ -387,6 +414,162 @@ Remove-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -DeleteStorageRep
 |SubscritionId| Central SubscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
 |TargetSubscriptionIds| Comma separated list of target subIds which will be un-registered from the central scanning mode. | False | |
 |DeleteStorageReports| Deletes all the scan logs from the azsk storage account based on the logging option and value provided in the target subscription. If used with out preview switch, it would remove all logs from the host sub central storage account.| False | Only include if default diagnosis is not resulting in any issue |
+|CentralScanMode| It is mandatory to use CentralScanMode switch| True | |
+
+>**Note** If just subscrptionId is passed, then it would check if the host sub is in central scanning mode, if so, user needs to pass Preview switch. In these scenarios, it would remove the whole automation account from host sub.
+
+
+2. Batch multiple target subscriptions and scanned by different Automation Accounts with in the same host subscription
+
+If you are trying to scan multiple target subscriptions, then scanning all of them using a single Automation Account might delay the scan frequency. 
+In such scenarios, you should try to categorize your subscriptions and scale out using multiple automation accounts with in the same host subscription.
+
+###### Setup Continuous Assurance (CA) in central mode:
+
+This can be achieved by adding extra params to the existing Central CA command. You can run the command below:
+
+```PowerShell
+$SubscriptionId = '<subscriptionId>'
+$ResourceGroupNames = '*' 
+$OMSWorkspaceId = '<omsWorkspaceId>'
+$OMSSharedKey = '<omsSharedKey>' 
+$TargetSubscriptionIds = '<TargetSubscriptionId>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
+$AutomationAccountLocation = '<location>'
+$AutomationAccountRGName = '<RGName>' # e.g. AzSK-Category-ScanRG01
+$AutomationAccountName = '<accountName> # e.g. AzSKScanningAccount01
+
+> **Note** You should use the unique names for AutomationAccountRG and AutomationAccountName to avoid any conflicts while setup
+
+Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds 
+        -ResourceGroupNames $ResourceGroupNames -OMSWorkspaceId $OMSWorkspaceId -OMSSharedKey $OMSSharedKey 
+        -AutomationAccountRGName $AutomationAccountRGName -AutomationAccountName $AutomationAccountName -AutomationAccountLocation $AutomationAccountLocation -CentralScanMode 
+        [-AltOMSWorkspaceId '<alternateOMSWSId>'] [-AltOMSSharedKey '<alternateOMSWSKey>'] 
+        [-WebhookUrl '<webhookUrl>'] [-WebhookAuthZHeaderName '<headerName>'] [-WebhookAuthZHeaderValue '<headerValue>'] 
+        [-ScanIntervalInHours '<scanIntervalInHours>'] [-LoggingOption '<CentralSub|IndividualSubs>'] [-SkipTargetSubscriptionConfig]
+```
+</br>
+
+|Param Name| Purpose| Required?| DefaultValue| Comments|
+|----------|--------|----------|-------------|---------|
+|SubscritionId| Central subscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
+|TargetSubscriptionIds| Comma separated list of subscriptionIds that needs to be scanned by the central subscription. Host subscription is always appended by default. No need to pass that value in this param| True | The user executing this command should be owner on these subscriptions. |
+|ResourceGroupNames| Comma separated list of ResourceGroupNames| True | Since you are planning to run in the central mode, you should use * as its value. This is because you need not have the same RG across all the subscriptions|
+|AutomationAccountLocation| (Optional) Location where the AutomationAccount to be created | false | |
+|AutomationAccountRGName| Name of ResourceGroup which will hold the scanning automation account | False | e.g. AzSK-Category-ScanRG01 |
+|AutomationAccountName| All the scanning events will be send to this OMSWorkspace. This will act as central monitoring dashboard | False | e.g. AzSKScanningAccount01|
+|OMSWorkspaceId| All the scanning events will be send to this OMSWorkspace. This will act as central monitoring dashboard | True | |
+|OMSSharedKey| OMSSharedKey for the central monitoring dashboard| True | |
+|AltOMSWorkspaceId|(Optional) Alternate Workspace ID of OMS to monitor security scan results|FALSE|None||
+|AltOMSSharedKey|(Optional) Shared key of Alternate OMS which is used to monitor security scan results|FALSE|None||
+|WebhookUrl|(Optional) All the scan results shall be posted to this configured webhook |FALSE|None||
+|WebhookAuthZHeaderName|(Optional) Name of the AuthZ header (typically 'Authorization')|FALSE|'Authorization'||
+|WebhookAuthZHeaderValue|(Optional) Value of the AuthZ heade |FALSE|24 hrs||
+|ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value |FALSE|None||
+|LoggingOption| "IndividualSubs/CentralSub". This provides the capability to users to store the CA scan logs on central subscription or on individual subscriptions| False |CentralSub |
+|SkipTargetSubscriptionConfig| (Optional) Use this switch if you dont have the owner permission on the target sub. This option assumes you have already one all the required configuration on the target sub. Check the note below| False| |
+|CentralScanMode| Mandatory switch to specify in central scan mode| True | |
+
+</br>
+
+> **Note:** If you are using switch -SkipTargetSubscriptionConfig, then it assumes you have done all the required configuration on the target subscriptions. 
+> Like, adding the CA SPN as Reader on target sub, Creating AzSK RG and a storage account name starting with azsk, Contributor permission to SPN on AzSKRG. 
+> If any of the steps are not done, then central scan automation account will skip those target subscriptions.
+
+###### Append/modify/fix the central CA setup
+
+In case you want to 
+</br>(a) add new subscriptions to central scanning mode, or 
+</br>(b) CA is not using the latest runbook, or 
+</br>(c) OMS workspace needs to be updated, or
+</br>(d) OMS keys have been rotated and you want to use the latest keys, or
+</br>(e) AltOMS workspace details needs to updated, or
+</br>(f) Webhook details needs to updated, or
+</br>(g) ScanInterval needs to updated, or
+</br>(h) the scanning account credential needs to be rotated as part of hygiene/ expiry, or
+</br>(i) modify the logging option to central mode or vice-versa
+
+In all such scenarios, you can run the command below, by providing the AutomationAccountRGName and AutomationAccountName:
+
+```PowerShell
+$SubscriptionId = '<subscriptionId>'
+$AutomationAccountRGName = '<RGName>' # e.g. AzSK-Category-ScanRG01
+$AutomationAccountName = '<accountName> # e.g. AzSKScanningAccount01
+$OMSWorkspaceId = '<omsWorkspaceId>'
+$OMSSharedKey = '<omsSharedKey>' 
+$TargetSubscriptionIds = '<TargetSubscriptionId>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
+
+Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds 
+        -AutomationAccountRGName $AutomationAccountRGName -AutomationAccountName $AutomationAccountName -CentralScanMode
+        [-OMSWorkspaceId $OMSWorkspaceId] [-OMSSharedKey $OMSSharedKey] [-FixRuntimeAccount] [-LoggingOption <CentralSub|IndividualSubs>] 
+        [-AltOMSWorkspaceId '<alternateOMSWSId>'] [-AltOMSSharedKey '<alternateOMSWSKey>'] 
+        [-WebhookUrl '<webhookUrl>'] [-WebhookAuthZHeaderName '<headerName>'] [-WebhookAuthZHeaderValue '<headerValue>'] 
+        [-ScanIntervalInHours '<scanIntervalInHours>'] [-LoggingOption '<CentralSub|IndividualSubs>']
+```
+</br>
+
+|Param Name| Purpose| Required?| DefaultValue| Comments|
+|----------|--------|----------|-------------|---------|
+|SubscritionId| Central subscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
+|TargetSubscriptionIds| Comma separated list of subscriptionIds that needs to be scanned by the central subscription. It would always append the values provided in this param to the current scanning list.| True | The user executing this command should be owner on these subscriptions. |
+|AutomationAccountRGName| Name of ResourceGroup which will hold the scanning automation account | False | e.g. AzSK-Category-ScanRG01 |
+|AutomationAccountName| Name of the AutomationAccount which will scan target subscriptions | False | e.g. AzSKScanningAccount01|
+|OMSWorkspaceId| All the scanning events will be send to this OMSWorkspace. This will act as central monitoring dashboard | False | Only provide if you want to change the workspace details |
+|OMSSharedKey| OMSSharedKey for the central monitoring dashbaord| False | Only provide if you want to update the OMS Sharedkey along with workspaceId param |
+|LoggingOption| "IndividualSubs/CentralSub" | False | Only provide if you want to change the logging option|
+|FixRuntimeAccount| This will correct all the permissions issues related to the scanning account| False | Provide this switch only when you want to add new subscriptions for central scanning mode or if scanning account credential needs to be updated |
+|AltOMSWorkspaceId|(Optional) Alternate Workspace ID of OMS to monitor security scan results|FALSE|None||
+|AltOMSSharedKey|(Optional) Shared key of Alternate OMS which is used to monitor security scan results|FALSE|None||
+|WebhookUrl|(Optional) All the scan results shall be posted to this configured webhook |FALSE|None||
+|WebhookAuthZHeaderName|(Optional) Name of the AuthZ header (typically 'Authorization')|FALSE|'Authorization'||
+|WebhookAuthZHeaderValue|(Optional) Value of the AuthZ heade |FALSE|24 hrs||
+|ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value |FALSE|None||
+|CentralScanMode| It is mandatory to use CentralScanMode switch| True | |
+
+###### Diagnose the health of central CA
+
+You could run the command below. It would diagnose the Continuous Assurance Automation account running under central subscription
+
+```PowerShell
+$SubscriptionId = '<subscriptionId>'
+$AutomationAccountRGName = '<RGName>' # e.g. AzSK-Category-ScanRG01
+$AutomationAccountName = '<accountName> # e.g. AzSKScanningAccount01
+
+Get-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -AutomationAccountRGName $AutomationAccountRGName -AutomationAccountName $AutomationAccountName -CentralScanMode [-ExhaustiveCheck] 
+```
+</br>
+
+|Param Name| Purpose| Required?| DefaultValue| Comments|
+|----------|--------|----------|-------------|---------|
+|SubscritionId| Central SubscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions
+|AutomationAccountRGName| Name of ResourceGroup which will hold the scanning automation account | False | e.g. AzSK-Category-ScanRG01 |
+|AutomationAccountName| Name of the AutomationAccount which will scan target subscriptions | False | e.g. AzSKScanningAccount01|
+|ExhaustiveCheck| (Optional) By appending this switch it would check whether all the modules installed in central automation account are up to date| False | Only include if default diagnosis is not resulting in any issue |
+
+
+###### Remove CA from the central subscription
+
+In case you want to 
+</br>(a) unregister some subs from central scanning mode, or 
+</br>(b) to delete the scan logs, or 
+</br>(c) to remove the whole automation account
+
+```PowerShell
+$SubscriptionId = '<subscriptionId>'
+$AutomationAccountRGName = '<RGName>' # e.g. AzSK-Category-ScanRG01
+$AutomationAccountName = '<accountName> # e.g. AzSKScanningAccount01
+
+Remove-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -DeleteStorageReports -AutomationAccountRGName $AutomationAccountRGName -AutomationAccountName $AutomationAccountName -CentralScanMode 
+```
+
+
+|Param Name| Purpose| Required?| DefaultValue| Comments|
+|----------|--------|----------|-------------|---------|
+|SubscritionId| Central SubscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
+|TargetSubscriptionIds| Comma separated list of target subIds which will be un-registered from the central scanning mode. | False | |
+|AutomationAccountRGName| Name of ResourceGroup which will hold the scanning automation account | False | e.g. AzSK-Category-ScanRG01 |
+|AutomationAccountName| Name of the AutomationAccount which will scan target subscriptions | False | e.g. AzSKScanningAccount01|
+|DeleteStorageReports| Deletes all the scan logs from the azsk storage account based on the logging option and value provided in the target subscription. If used with out preview switch, it would remove all logs from the host sub central storage account.| False | Only include if default diagnosis is not resulting in any issue |
+|CentralScanMode| It is mandatory to use CentralScanMode switch| True | |
 
 >**Note** If just subscrptionId is passed, then it would check if the host sub is in central scanning mode, if so, user needs to pass Preview switch. In these scenarios, it would remove the whole automation account from host sub.
 
