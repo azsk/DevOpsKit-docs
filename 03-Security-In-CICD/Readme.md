@@ -413,17 +413,17 @@ Get-AzSKARMTemplateSecurityStatus cmdlet generate outputs which are organized as
 - detailed powershell output log in a LOG file
 
 To address findings, you should do the following:
-1.	See the summary of control evaluation first in the CSV file. (Open the CSV in XLS. Use "Format as Table", "Hide Columns", "Filter", etc.)
-2.	Review controls that are marked as "Failed", "Verify" or "Manual"
-3.	Use the following approach based on control status:
-         - For the “Verify” controls, look at the expected value and description column in .CSV file to decide whether to consider the    control as "Passed" or not. 
-         - For the “Failed” controls, look at the .CSV file to get the supporting information like Expected value , Line No. and Resource path etc. 
+1. See the summary of control evaluation first in the CSV file. (Open the CSV in XLS. Use "Format as Table", "Hide Columns", "Filter", etc.)
+2. Review controls that are marked as "Failed", "Verify" or "Manual"
+3. Use the following approach based on control status:
+     - For the “Verify” controls, look at the expected value and description column in .CSV file to decide whether to consider the    control as "Passed" or not. 
+     - For the “Failed” controls, look at the .CSV file to get the supporting information like Expected value , Line No. and Resource path etc. 
 	 
 #### Scan multiple ARMTemplates :-	 
 To scan multiple ARMTemplates at a time you can pass folder path containing different ARM Template(s) to “–ARMTemplatePath” parameter in “Get-AzSKARMTemplateSecurityStatus” cmdlet.
 e.g. :
 ```PowerShell
- Get-AzSKARMTemplateSecurityStatus  –ARMTemplatePath "D:\DSRE\TestARMChecker\" –Preview [ -Recurse ]
+ Get-AzSKARMTemplateSecurityStatus  –ARMTemplatePath "D:\DSRE\TestARMChecker\" –Preview [-Recurse]
 ```
 > **Note**: You need to pass “-Recurse” switch in cmdlet if you want to scan ARM Temaplates in the specified location and in all child folders of the location.
 
