@@ -144,14 +144,21 @@ The execution of command will create following resources in the subscription (if
 2. Storage Account (azskcontosoitsa) - azsk\<OrgName>\<DepartmentName>sa.
 3. Application Insight (AzSK-Contoso-IT-AppInsight) - AzSK-\<OrgName>-\<DepartmentName>-AppInsight. 
 
-It will also create a very basic 'customized' policy involving just a single change (an org-specific message
-in AzSk.json) and upload AzSk.json, ServerConfigMetadata.json files to the storage account. It will also
-upload an org-specific installation script called AzSK-EasyInstaller.ps1 to another container within the same 
-storage account and another file called ScanAgent.ps1 which is used to support the Continuous Assurance feature.
+It will also create a very basic 'customized' policy involving below files uploaded to the policy storage account.
+##### Basic files setup during Policy Setup 
+ 
+| File | Container | Description  
+| ---- | ---- | ---- |
+| AzSK-EasyInstaller.ps1 | installer | Org-specific installation script. This installer will ensure that anyone who installs AzSK using your 'iwr' command not only gets the core AzSK module but their local installation of AzSK is also configured to use org-specific policy settings (e.g., policy server URL, telemetry key, etc.) |
+| AzSKConfig.json | policies  | This file contains supported AzSK version for Org. This feature helps to run specific version of AzSK for all Contoso users/CA/CICD.<br/> <br/>  **Note:** During policy setup this value is set with AzSK version available on client machine that was used to setup. Whenever new AzSK version is released (You can always get notification for new release by following AzSK module in PowerShell Gallery or release section [here](https://azsk.azurewebsites.net/Release/RN180315.html)), Policy Owner should update this value after validating latest released version is compatible with Org-Policy.     
+| RunbookCoreSetup.ps1 | policies  | Used in Continuous Assurance to setup AzSK module
+| RunbookScanAgent.ps1 | policies  | Used in Continuous Assurance to run daily scan 
+| AzSk.json | policies | Includes org-specific message, telemetry key, InstallationCommand, CASetupRunbookURL etc.
+| Migration.ps1 | policies | This script helps to Contoso subscription to migrate from AzSDK to AzSK with Org policy.
+| ServerConfigMetadata.json | policies | Index file with list of policy files.  
+
 At the end of execution, an 'iwr' command line will be printed to the console. This command leverages the org-specific
- installation script from the storage account for installing AzSK. The org-specific installer will ensure that 
-anyone who installs AzSK using your 'iwr' command not only gets the core AzSK module but their local installation 
-of AzSK is also configured to use org-specific policy settings (e.g., policy server URL, telemetry key, etc.)
+ installation script from the storage account for installing AzSK.
 
 ```PowerShell
 iwr 'https://azskcontosoitsa.blob.core.windows.net/installer/AzSK-EasyInstaller.ps1' -UseBasicParsing | iex 
