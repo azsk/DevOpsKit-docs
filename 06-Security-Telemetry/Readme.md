@@ -20,9 +20,9 @@
 
 The Secure DevOps Kit generates telemetry events from all stages of dev ops. That is, events are generated when an engineer runs a scan ad hoc or when SVTs are run in CICD or subscriptions are scanned via Continuous Assurance (CA). The telemetry can be collected and aggregated across an organization. When combined with other organization metadata (e.g., a mapping of subscriptions to applications or service lines or business groups), this can yield a powerful platform for supporting a data-driven approach cloud risk governance and allow organizations to drive measured and targeted security improvement initiatives in a continuous and incremental fashion (just like the rest of dev ops). The telemetry data from AzSK can be leveraged in two key ways:
 
-- Application Insights based – called Control Telemetry (will be renamed to Org Telemetry soon). There are two ways possible. One, configure it centrally, two, configure it specifically in end-user's machine
+- Application Insights based ï¿½ called Control Telemetry (will be renamed to Org Telemetry soon). There are two ways possible. One, configure it centrally, two, configure it specifically in end-user's machine
 
-- API based – this is a custom solution using WebAPI and SQL to collect events and enrich it with organizational metadata. This lets an organization track and drive adoption and usage of the AzSK and provides a window into the org's DevSecOps Maturity. API based telemetry will be release in coming months when we release documents for how organization can customize AzSK for their needs
+- API based ï¿½ this is a custom solution using WebAPI and SQL to collect events and enrich it with organizational metadata. This lets an organization track and drive adoption and usage of the AzSK and provides a window into the org's DevSecOps Maturity. API based telemetry will be release in coming months when we release documents for how organization can customize AzSK for their needs
 
 [Back to top...](#contents)
 
@@ -40,9 +40,9 @@ The setup is done once by a central security team or monitoring team. No action 
 
 An Application Insights account is required to collect the data. Create an Application Insights account in Azure with the Application Type 'General' and take a note of the Instrumentation Key from the Overview section of the resource.
 
-![Setup_Create_App_Insights](/Images/06_Setup_Create_App_Insights.jpg)
+![Setup_Create_App_Insights](/Images/06_Setup_Create_App_Insights.PNG)
 
-![Setup_Locate_AI_Instrumentation_Key](/Images/06_Setup_Locate_AI_Instrumentation_Key.jpg)
+![Setup_Locate_AI_Instrumentation_Key](/Images/06_Setup_Locate_AI_Instrumentation_Key.PNG)
 
  With this you can refer [local control telemetry](#local-control-telemetry) section for further steps.
 
@@ -68,7 +68,7 @@ The command configures the AzSK toolkit to send data to the given Applications I
 
 To check that events are flowing into Application Insights, after setting the local telemetry key execute a subscription security command. Normally it will take around 4 to 5 minutes for the data to appear in App Insights. In Azure portal, navigate to App Insights resource 'Overview' -> Search and select an event listed with name **Control Scanned**.
 
-![Understand_Locate_AI_Data](/Images/06_Understand_Locate_AI_Data.jpg)
+![Understand_Locate_AI_Data](/Images/06_Understand_Locate_AI_Data.PNG)
 
 #### Event Data Properties
 
@@ -120,11 +120,11 @@ Option 1 is straight forward. For more information on it, check the [link](https
 
 Option 2 gives the flexibility of querying and visualizing. To start click on the Analytics link on the App Insights resource overview. This will launch a new site.
 
-![Locate_Analytics_Link](/Images/06_Locate_Analytics_Link.jpg)
+![Locate_Analytics_Link](/Images/06_Locate_Analytics_Link.PNG)
 
 After the site is loaded, click on the new tab option to start writing queries.
 
-![Locate_Analytics_New_Query](/Images/06_Locate_Analytics_New_Query.jpg)
+![Locate_Analytics_New_Query](/Images/06_Locate_Analytics_New_Query.PNG)
 
 Run the following query
 
@@ -137,7 +137,7 @@ customEvents
 
 There is a filter in the top right, which gives the easy option to select time ranges. This can be done via code as well.
 
-![Run_Analytics_Query](/Images/06_Run_Analytics_Query.jpg)
+![Run_Analytics_Query](/Images/06_Run_Analytics_Query.PNG)
 
 The query computes top failing 10 Azure features that are scanned by the toolkit.
 
