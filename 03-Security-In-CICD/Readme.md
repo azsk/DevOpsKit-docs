@@ -20,7 +20,7 @@
   - [Verifying that SVTs have been added and configured correctly](Readme.md#verifying-that-the-svts-have-been-added-and-configured-correctly-1)
 - [Remediating Failures and Next Steps](Readme.md#remediating-failures-and-next-steps)
 
-## [AzSK ARM Checker (Preview)](Readme.md#azsk-armchecker)
+## [AzSK ARM Checker (Preview)](Readme.md#azsk-arm-template-checker-Preview)
 - [Overview](Readme.md#overview-1) 
 - [Enable AzSK extension for your VSTS](Readme.md#enable-azsk-extension-for-your-vsts-1)
 - [Walkthrough](Readme.md#walkthrough-2)
@@ -354,7 +354,7 @@ This part assumes that you are familiar with Jenkins pipeline at a basic level. 
 - #### Step-1: Trigger the build.
 
 	![03_Trigger_Build_1](../Images/03_Trigger_Build_1.PNG)  
-- #### Step-2: Verify that the build has started.
+ - #### Step-2: Verify that the build has started.
 
 	![03_Trigger_Build_2](../Images/03_Trigger_Build_2.PNG)	  
 - #### Step-3: View the 'Console Output'.
@@ -383,7 +383,7 @@ conditions (e.g., back to back SVT failures) etc.
 
 [Back to top...](Readme.md#contents)
 
-# AzSK ARM Template Checker
+# AzSK ARM Template Checker(Preview)
 ### Overview
 
 The ARM Template security check script runs a scan on your given ARM template to examine various conditions and configurations that need to be present in your ARMTemplate for secured resource deployment.
