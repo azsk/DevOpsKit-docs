@@ -58,7 +58,7 @@ Run below command to get information about Azure services security control(s). C
 |ResourceTypeName|Friendly name of resource type. Run command 'Get-AzSKSupportedResourceTypes' to get the list of supported values. E.g. AppService, KeyVault|TRUE|All|
 |ControlIds|Comma-separated list of Control Ids|FALSE|None|
 |UseBaselineControls|The flag used to get details of controls defined in baseline|FALSE|None|
-|FilterTags|Comma-seperated tags to filter the security controls. E.g., RBAC, AuthN, etc.|FALSE|None|
+|FilterTags|Comma-separated tags to filter the security controls. E.g., RBAC, AuthN, etc.|FALSE|None|
 |ControlSeverity|Filter by severity of control E.g., Critical, High, Medium, Low|FALSE|None|
 |ControlIdContains|Filter by ControlId(s) contains keyword|FALSE|None|
 |Verbose|Get information on PS console|FALSE|None|

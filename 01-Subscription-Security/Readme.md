@@ -129,9 +129,9 @@ provisioning mandatory accounts).
 
 The subscription health check supports multiple parameters as specified below:
 - SubscriptionId – Subscription ID is the identifier of your Azure subscription 
-- FilterTags  - Comma-seperated tags to filter the security controls. E.g., RBAC, SOX, AuthN, etc.
-- ExcludeTags - Comma-seperated tags to exclude the security controls. E.g., RBAC, SOX, AuthN, etc.
-- ControlIds  - Comma-seperated AzSK control id's to filter security controls. E.g., Azure_Subscription_AuthZ_Limit_Admin_Owner_Count, Azure_Subscription_Config_Azure_Security_Center, etc.
+- FilterTags  - Comma-separated tags to filter the security controls. E.g., RBAC, SOX, AuthN, etc.
+- ExcludeTags - Comma-separated tags to exclude the security controls. E.g., RBAC, SOX, AuthN, etc.
+- ControlIds  - Comma-separated AzSK control id's to filter security controls. E.g., Azure_Subscription_AuthZ_Limit_Admin_Owner_Count, Azure_Subscription_Config_Azure_Security_Center, etc.
 ```PowerShell
 Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubscriptionId> [-ControlIds <ControlIds>] [-FilterTags <FilterTags>] [-ExcludeTags <ExcludeTags>]
 ```
