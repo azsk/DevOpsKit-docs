@@ -370,9 +370,8 @@ This part assumes that you are familiar with Jenkins pipeline at a basic level. 
 > 	- Currently task is configured to not stop if SVT fails.
 
 ### Remediating failures and next steps
-Once you have the CSV file and the LOG file for the SVTs execution, the process of understanding and 
-remediating failures is no different than what is used when SVTs are run manually. Basically, you will 
-need to look at the failed SVTs in the CSV file and the corresponding details about 'what exactly caused 
+Once you have the CSV file and the LOG file for the SVTs execution, the process of understanding and remediating failures is no different than what is used when SVTs are run manually. Basically, you will 
+ need to look at the failed SVTs in the CSV file and the corresponding details about 'what exactly caused 
 each individual failure?' in the LOG file. Thereafter the issue can be remediated (additional guidance 
 available from AzSK is at the link in the CSV file for each row).  
 
@@ -385,7 +384,7 @@ conditions (e.g., back to back SVT failures) etc.
 # AzSK ARM Template Checker
 ### Overview
 
-The ARM Template security check script runs a scan on your given ARM template to examine various conditions and configurations that need to be present in your ARMTemplate for secured resource deployment.
+The ARM Template security check script runs a scan on your given ARM Template to examine various conditions and configurations that need to be present in your ARM Template for secured resource deployment.
 
 [Back to top…](Readme.md#contents)
 ### Scan the security health of your ARM Template
@@ -400,7 +399,7 @@ The parameters used are:
 > **Note**: This feature is in preview mode only. So, passing "–Preview" switch is mandatory. 
 [Back to top…](Readme.md#contents)
 
-### ARM Temaplate Checker - What is covered?  
+### ARM Template Checker - What is covered?  
 ARM Template checker covers Baseline controls for following services:
 App Service, Storage, SQL, CDN, Traffic Manager, Document DB, Redis Cache, and Data Lake.
 ARM Template for reference are available [here](../ARMTemplates).
@@ -418,13 +417,13 @@ To address findings, you should do the following:
      - For the “Verify” controls, look at the expected value and description column in .CSV file to decide whether to consider the    control as "Passed" or not. 
      - For the “Failed” controls, look at the .CSV file to get the supporting information like Expected value , Line No. and Resource path etc. 
 	 
-#### Scan multiple ARMTemplates :-	 
-To scan multiple ARMTemplates at a time you can pass folder path containing different ARM Template(s) to “–ARMTemplatePath” parameter in “Get-AzSKARMTemplateSecurityStatus” cmdlet.
+#### Scan multiple ARM Templates :-	 
+To scan multiple ARM Templates at a time you can pass folder path containing different ARM Template(s) to “–ARMTemplatePath” parameter in “Get-AzSKARMTemplateSecurityStatus” cmdlet.
 e.g. :
 ```PowerShell
  Get-AzSKARMTemplateSecurityStatus  –ARMTemplatePath "D:\DSRE\TestARMChecker\" –Preview [-Recurse]
 ```
-> **Note**: You need to pass “-Recurse” switch in cmdlet if you want to scan ARM Temaplates in the specified location and in all child folders of the location.
+> **Note**: You need to pass “-Recurse” switch in cmdlet if you want to scan ARM Templates in the specified location and in all child folders of the location.
 
 [Back to top...](Readme.md#contents)	
 
@@ -464,7 +463,7 @@ get added when you click "Add" once!
 The "AzSK ARM Template Checker" task starts showing in the "Run on Agent" list and displays some configuration inputs that are required for the task to run. These are none other than the familiar options we have been specifying while running the AzSK ARM Template Checker manually - you can specify the target ARM Template file path or a folder path based on your requirment.
 
 Along with input parameter, you can check for below options
-<br/>**Recurse:** Switch this if you want to scan ARM Temaplates in the specified location and in all child folders of the location.
+<br/>**Recurse:** Switch this if you want to scan ARM Templates in the specified location and in all child folders of the location.
 <br/>**Do not auto-update AzSK:** Switch to toggle auto update of AzSK and required AzureRM modules on the build server. Keep this un-checked for Hosted agent and Hosted VS2017 and while using SVT task fot the first time and if you want to update AZSK the version of AzSK. 
 
 ![03_IP_Parameter_for_Task](../Images/03_IP_Parameter_for_Task_ARM.JPG)
