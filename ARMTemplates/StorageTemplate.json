@@ -158,7 +158,7 @@
                 "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageaccount'))]"
             ]
         },
-        {
+         {
             "type": "Microsoft.Storage/storageAccounts",
             "sku": {
                 "name": "Standard_GRS",//[Azure_Storage_Deploy_Use_Geo_Redundant]
@@ -170,16 +170,19 @@
             "location": "southcentralus",
             "tags": {},
             "properties": {
-              "encryption": {
-                "keySource": "Microsoft.Storage",
-                "services": {
-                  "blob": {
-                    "enabled": true//[Azure_Storage_DP_Encrypt_At_Rest_Blob]
+                "encryption": {
+                  "keySource": "Microsoft.Storage",
+                  "services": {
+                    "blob": {
+                      "enabled": true //[Azure_Storage_DP_Encrypt_At_Rest_Blob]
+                    },
+                    "file": {
+                      "enabled": true //[Azure_Storage_DP_Encrypt_At_Rest_File]
+                    }
                   }
-                }
+                },
+                "supportsHttpsTrafficOnly": true //[Azure_Storage_DP_Encrypt_In_Transit]
               },
-              "supportsHttpsTrafficOnly": true //[Azure_Storage_DP_Encrypt_In_Transit]
-            },
             "dependsOn": []
         }
     ]
