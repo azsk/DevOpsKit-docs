@@ -41,25 +41,32 @@
       
     },
     {
-      "name": "[parameters('appservicename')]",
-      "type": "Microsoft.Web/sites",
-      "apiVersion": "2016-08-01",
-      "location": "[parameters('location')]",
-      "properties": {
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serviceplanname'))]",
-        "siteConfig": {
-          "alwaysOn": true, //[Azure_AppService_BCDR_Use_AlwaysOn] enable 'always on'
-          "use32BitWorkerProcess": false, 
-          "requestTracingEnabled": true, //[Azure_AppService_Audit_Enable_Logging_and_Monitoring] enable auditing and monitoring
-          "httpLoggingEnabled": true, //[Azure_AppService_Audit_Enable_Logging_and_Monitoring] enable auditing and monitoring
-          "detailedErrorLoggingEnabled": true //[Azure_AppService_Audit_Enable_Logging_and_Monitoring] enable auditing and monitoring
-
-        }
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', parameters('serviceplanname'))]"
-      ]
-    }
+        "name": "[parameters('appservicename')]",
+        "type": "Microsoft.Web/sites",
+        "apiVersion": "2016-08-01",
+        "location": "[parameters('location')]",
+        "properties": {
+           "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serviceplanname'))]",
+           "httpsOnly": true, //[Azure_AppService_DP_Dont_Allow_HTTP_Access]
+           "siteConfig": {
+             "alwaysOn": true, //[Azure_AppService_BCDR_Use_AlwaysOn] enable 'always on']
+             "use32BitWorkerProcess": false,
+             "requestTracingEnabled": true, //[Azure_AppService_Audit_Enable_Logging_and_Monitoring] enable auditing and monitoring
+             "httpLoggingEnabled": true, //[Azure_AppService_Audit_Enable_Logging_and_Monitoring] enable auditing and monitoring
+             "detailedErrorLoggingEnabled": true, //[Azure_AppService_Audit_Enable_Logging_and_Monitoring] enable auditing and monitoring
+             "remoteDebuggingEnabled": false, //[Azure_AppService_Config_Disable_Remote_Debugging]
+             "webSocketsEnabled": false, //[Azure_AppService_Config_Disable_Web_Sockets]
+             "siteAuthEnabled":true, //[Azure_AppService_AuthN_Use_AAD_for_Client_AuthN]
+             "netFrameworkVersion":"v4.6",// [Azure_AppService_Deploy_Use_Latest_Version]
+           "siteAuthSettings":{
+              "clientId":"***********ClientId*********" //[Azure_AppService_AuthN_Use_AAD_for_Client_AuthN]
+            }
+          }
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/serverfarms', parameters('serviceplanname'))]"
+        ]
+      }
 
   ]
 }
