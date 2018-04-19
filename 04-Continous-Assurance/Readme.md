@@ -7,9 +7,9 @@
 - [Overview](Readme.md#overview)
 - [Setting up Continuous Assurance - Step by Step](Readme.md#setting-up-continuous-assurance---step-by-step)
 - [Continuous Assurance - how it works (under the covers)](Readme.md#continuous-assurance---how-it-works-under-the-covers)
-- [Update existing Continuous Assurance Automation Account](Readme.md#update-existing-continuous-assurance-automation-account)
-- [Remove Continuous Assurance Automation Account](Readme.md#remove-continuous-assurance-automation-account)
-- [Fetch details of an existing Continuous Assurance Automation Account](Readme.md#fetch-details-of-an-existing-continuous-assurance-automation-account)
+- [Updating an existing Continuous Assurance setup](Readme.md#updating-an-existing-continuous-assurance-setup)
+- [Removing a Continuous Assurance setup](Readme.md#removing-a-continuous-assurance-setup)
+- [Getting details about a Continuous Assurance setup](Readme.md##getting-details-about-a-continuous-assurance-setup)
 - [Continuous Assurance (CA) - 'Central Scan' mode](Readme.md#continuous-assurance-ca---central-scan-mode)
 - [FAQ](Readme.md#faq)
 
@@ -20,7 +20,7 @@ considered a secure snapshot of a system. Support for Continuous Assurance lets 
 a 'state' as opposed to a 'point in time' achievement. This is particularly important in today's context 
 when 'continuous change' has become a norm.
 
-There can be two types of drift: 
+There can be two types of drift:        
 1. Drift involving 'baseline' configuration:
 This involves settings that have a fixed number of possible states (often pre-defined/statically determined 
 ones). For instance, a SQL DB can have TDE encryption turned ON or OFF…or a Storage Account may have 
