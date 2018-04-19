@@ -9,7 +9,7 @@
 - [Continuous Assurance - how it works (under the covers)](Readme.md#continuous-assurance---how-it-works-under-the-covers)
 - [Updating an existing Continuous Assurance setup](Readme.md#updating-an-existing-continuous-assurance-setup)
 - [Removing a Continuous Assurance setup](Readme.md#removing-a-continuous-assurance-setup)
-- [Getting details about a Continuous Assurance setup](Readme.md##getting-details-about-a-continuous-assurance-setup)
+- [Getting details about a Continuous Assurance setup](Readme.md#getting-details-about-a-continuous-assurance-setup)
 - [Continuous Assurance (CA) - 'Central Scan' mode](Readme.md#continuous-assurance-ca---central-scan-mode)
 - [FAQ](Readme.md#faq)
 
