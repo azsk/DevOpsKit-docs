@@ -107,7 +107,7 @@ name and attempt to use it (in this case the user must have 'Owner' permission o
 Here's a quick summary of the permissions required for the user who sets up CA:
 - "Owner" access on the subscription
 - Ability to create an AAD app in the tenant (this app is used as the runtime account for scanning via the CA runbook)
-- "Owner" acceess to the AAD app if the user specifies one (or CA internally finds a previously created one)
+- "Owner" access to the AAD app if the user specifies one (or CA internally finds a previously created one)
 
 
 **Note-1**: Completion of this one-time setup activity can take up to 2 hours. (This is because one of the things that setup does 
@@ -244,7 +244,7 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 |AltOMSSharedKey|(Optional) Shared key of Alternate OMS which is used to monitor security scan results|FALSE|None||
 |WebhookUrl|(Optional) All the scan results shall be posted to this configured webhook |FALSE|None||
 |WebhookAuthZHeaderName|(Optional) Name of the AuthZ header (typically 'Authorization')|FALSE|None||
-|WebhookAuthZHeaderValue|(Optional) Value of the AuthZ heade |FALSE|None||
+|WebhookAuthZHeaderValue|(Optional) Value of the AuthZ header |FALSE|None||
 |ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value |FALSE|None||
 |AzureADAppName|Use this parameter if you want to update the connection (used for running the runbook) with new AD App and Service principal|FALSE|None|This is useful if existing connection is changed/removed by mistake|
 |FixRuntimeAccount|Use this switch to fix CA runtime account in case of below issues.<ol><li>Runtime account deleted<br>(Permissions required: Subscription owner)</li><li>Runtime account permissions missing<br>(Permissions required: Subscription owner and AD App owner)</li><li>Certificate deleted/expired<br>(Permissions required: Subscription owner and AD App owner)</li></ol>|FALSE|None||
@@ -286,11 +286,14 @@ In scenarios where central team wants to monitor a group of subscriptions from a
 - Optional: Have an own instance of AzSK setup for your org. This would provide more capabilities to control the scanning behavior. 
   (Refer [here](../07-Customizing-AzSK-for-your-Org/Readme.md) for more details)
 
-#### Types of central scanning mode:
-##### 1. Target subscriptions getting scanned by single Automation Account
+#### Different approaches to setup central scanning mode:
+##### 1. Scan your target subscriptions using one AutomationAccount (Default approach):
 
-This is the default behaviour. Typically if the number of target subscriptions that you need to scan is <=40, you can go with this type. Ideally each of your subscription should get scanned atleast once in day.
-If it is taking more than a day to complete one round of scan for all target subscriptions, then you should try to use other type of central scanning mode which is mentioned below.
+An automation account will be installed in a host/ central subscription, which will scan all the target subscriptions. 
+We dont recommend this approach if the number of subcriptions to scan are greater than 40. 
+As the number of target subscriptions increases, the frequency of scan for each subscription reduces. 
+Ideally each subscription should get scanned atleast once in a day. You can use the second approach to scale
+for multiple target subscriptions.
 
 ###### Setup Continuous Assurance (CA) in central mode:
 
@@ -322,7 +325,7 @@ Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscript
 |AltOMSSharedKey|(Optional) Shared key of Alternate OMS which is used to monitor security scan results|FALSE|None||
 |WebhookUrl|(Optional) All the scan results shall be posted to this configured webhook |FALSE|None||
 |WebhookAuthZHeaderName|(Optional) Name of the AuthZ header (typically 'Authorization')|FALSE|'Authorization'||
-|WebhookAuthZHeaderValue|(Optional) Value of the AuthZ heade |FALSE|24 hrs||
+|WebhookAuthZHeaderValue|(Optional) Value of the AuthZ header |FALSE|24 hrs||
 |ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value |FALSE|None||
 |LoggingOption| "IndividualSubs/CentralSub". This provides the capability to users to store the CA scan logs on central subscription or on individual subscriptions| False |CentralSub |
 |SkipTargetSubscriptionConfig| (Optional) Use this switch if you dont have the owner permission on the target sub. This option assumes you have already one all the required configuration on the target sub. Check the note below| False| |
@@ -331,8 +334,8 @@ Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscript
 </br>
 
 > **Note:** If you are using switch -SkipTargetSubscriptionConfig, then it assumes you have done all the required configuration on the target subscriptions. 
-> Like, adding the CA SPN as Reader on target sub, Creating AzSK RG and a storage account name starting with azsk, Contributor permission to SPN on AzSKRG. 
-> If any of the steps are not done, then central scan automation account will skip those target subscriptions.
+> Like, adding the CA SPN as Reader on target sub, creating AzSK RG and a storage account name starting with azsk, grant contributor role to CA SPN on AzSKRG. 
+> If any of these steps are not done, then central scan automation account will skip those target subscriptions while scan.
 
 ###### Append/modify/fix the central CA setup
 
@@ -413,20 +416,24 @@ Remove-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -DeleteStorageRep
 |----------|--------|----------|-------------|---------|
 |SubscritionId| Central SubscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
 |TargetSubscriptionIds| Comma separated list of target subIds which will be un-registered from the central scanning mode. | False | |
-|DeleteStorageReports| Deletes all the scan logs from the azsk storage account based on the logging option and value provided in the target subscription. If used with out preview switch, it would remove all logs from the host sub central storage account.| False | Only include if default diagnosis is not resulting in any issue |
+|DeleteStorageReports| Deletes all the scan logs from the azsk storage account based on the logging option and value provided in the target subscription. If used with out CentralScanMode switch, it would remove all logs from the host sub central storage account.| False | Only include if default diagnosis is not resulting in any issue |
 |CentralScanMode| It is mandatory to use CentralScanMode switch| True | |
 
->**Note** If just subscrptionId is passed, then it would check if the host sub is in central scanning mode, if so, user needs to pass Preview switch. In these scenarios, it would remove the whole automation account from host sub.
+>**Note** If just subscrptionId is passed, then it would check if the host sub is in central scanning mode, if so, user needs to pass CentralScanMode switch. In these scenarios, it would remove the whole automation account from host sub.
 
 
-2. Batch multiple target subscriptions and scanned by different Automation Accounts with in the same host subscription
+##### 2. Divide and scan approach:
 
-If you are trying to scan multiple target subscriptions, then scanning all of them using a single Automation Account might delay the scan frequency. 
-In such scenarios, you should try to categorize your subscriptions and scale out using multiple automation accounts with in the same host subscription.
+If you are trying to scan multiple target subscriptions, then scanning all of them using a single Automation Account can reduce the scan frequency. 
+In such scenarios, you can use this approach to categorize your subscriptions into batches and scan these batches 
+using multiple independent automation accounts with in the same host/central subscription.
+In this scenario, all your logs, scanning configuration, attestation data is persisted under core AzSKRG and each automation account will have its own dedicated RG.
+
 
 ###### Setup Continuous Assurance (CA) in central mode:
 
-This can be achieved by adding extra params to the existing Central CA command. You can run the command below:
+This can be achieved by adding extra params to the existing Central CA command. You need to pass the AutomationAccount name and AutomationAccount RG name. 
+You can run the command below:
 
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
@@ -568,10 +575,10 @@ Remove-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -DeleteStorageRep
 |TargetSubscriptionIds| Comma separated list of target subIds which will be un-registered from the central scanning mode. | False | |
 |AutomationAccountRGName| Name of ResourceGroup which will hold the scanning automation account | False | e.g. AzSK-Category-ScanRG01 |
 |AutomationAccountName| Name of the AutomationAccount which will scan target subscriptions | False | e.g. AzSKScanningAccount01|
-|DeleteStorageReports| Deletes all the scan logs from the azsk storage account based on the logging option and value provided in the target subscription. If used with out preview switch, it would remove all logs from the host sub central storage account.| False | Only include if default diagnosis is not resulting in any issue |
+|DeleteStorageReports| Deletes all the scan logs from the azsk storage account based on the logging option and value provided in the target subscription. If used with out CentralScanMode switch, it would remove all logs from the host sub central storage account.| False | Only include if default diagnosis is not resulting in any issue |
 |CentralScanMode| It is mandatory to use CentralScanMode switch| True | |
 
->**Note** If just subscrptionId is passed, then it would check if the host sub is in central scanning mode, if so, user needs to pass Preview switch. In these scenarios, it would remove the whole automation account from host sub.
+>**Note** If just subscrptionId is passed, then it would check if the host sub is in central scanning mode, if so, user needs to pass CentralScanMode switch. In these scenarios, it would remove the whole automation account from host sub.
 
 [Back to top…](Readme.md#contents)
 
