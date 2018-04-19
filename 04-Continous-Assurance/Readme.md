@@ -10,7 +10,7 @@
 - [Update existing Continuous Assurance Automation Account](Readme.md#update-existing-continuous-assurance-automation-account)
 - [Remove Continuous Assurance Automation Account](Readme.md#remove-continuous-assurance-automation-account)
 - [Fetch details of an existing Continuous Assurance Automation Account](Readme.md#fetch-details-of-an-existing-continuous-assurance-automation-account)
-- [Continuous Assurance through central scanning mode](Readme.md#continuous-assurance-through-central-scanning-mode)
+- [Continuous Assurance through central scanning mode](Readme.md##continuous-assurance-ca---central-scan-mode)
 - [FAQ](Readme.md#faq)
 
 -----------------------------------------------------------------
