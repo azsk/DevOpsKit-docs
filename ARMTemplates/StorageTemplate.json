@@ -161,7 +161,7 @@
          {
             "type": "Microsoft.Storage/storageAccounts",
             "sku": {
-                "name": "Standard_GRS",
+                "name": "Standard_GRS", //[Azure_Storage_Deploy_Use_Geo_Redundant] **This control has been deprecated**
                 "tier": "Standard"
             },
             "kind": "Storage",
