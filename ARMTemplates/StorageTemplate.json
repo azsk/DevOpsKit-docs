@@ -161,7 +161,7 @@
          {
             "type": "Microsoft.Storage/storageAccounts",
             "sku": {
-                "name": "Standard_GRS",//[Azure_Storage_Deploy_Use_Geo_Redundant]
+                "name": "Standard_GRS",
                 "tier": "Standard"
             },
             "kind": "Storage",
@@ -174,10 +174,11 @@
                   "keySource": "Microsoft.Storage",
                   "services": {
                     "blob": {
-                      "enabled": true //[Azure_Storage_DP_Encrypt_At_Rest_Blob]
+                      "enabled": true //[Azure_Storage_DP_Encrypt_At_Rest_Blob] **This control has been deprecated**
+                                      
                     },
                     "file": {
-                      "enabled": true //[Azure_Storage_DP_Encrypt_At_Rest_File]
+                      "enabled": true //[Azure_Storage_DP_Encrypt_At_Rest_File] **This control has been deprecated**
                     }
                   }
                 },
