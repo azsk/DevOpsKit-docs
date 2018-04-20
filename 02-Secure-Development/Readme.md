@@ -47,7 +47,7 @@
 ### Overview
 Security Verifications Tests (or SVTs) represent the core of security testing functionality of the 
 AzSK. For all the prominent features in Azure (e.g., Web Apps, Storage, SQL DB, Key Vault, etc.), 
-the AzSK ccan perform automated security checks against Azure resources of those types. 
+the AzSK can perform automated security checks against Azure resources of those types. 
 These checks are based on security standards and best practices as applicable for sensitive corporate 
 data at Microsoft. In general, these are likely to be applicable for most scenarios that involve 
 processing sensitive data in other environments.
