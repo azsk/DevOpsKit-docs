@@ -56,6 +56,10 @@ At this point, policy migration is complete. However, we will do some additional
 **Notes:** 
  - Your old (AzSDK-based) org policy will be retained under the old "AzSDK-[OrgName]-[DeptName]-RG" resource group inside your policy host subscription. You can delete this RG after ensuring that migration has worked as expected for both the policy and individual subscriptions across your org. 
  
+ - If you had enabled 'baseline scanning' via the "SupportedSources = "CC"" setting in ControlSettings.json, that approach has been deprecated. Please use the "-UseBaselineControls" switch directly in the command invocation inside you RunbookScanAgent.PS1.
+ 
+ - If you had made changes to CosmosDB settings and had an entry for 'cosmosdb.json' in your ServerConfigMetadata.json file, you may have to rename the file to 'CosmosDB.json' and re-upload it.
+ 
  - Please review different configuration capabilities available for org policy control in the org policy section [here](../07-Customizing-AzSK-for-your-Org/Readme.md#basic-files-setup-during-policy-setup).
 
 <br>
