@@ -103,7 +103,7 @@ The contents of the 'FixControlScripts' folder are organized as under:
 - *\RunFixScript.ps1* - The file which starts implementing the recommendations. The file typically contains repair command which uses the files from current folder.  
 - *\FixControlConfig.json* - The file contains the configuration of controls along with mandatory/optional parameters which are required for implementing the fix for control.  
 - *\Services* - The folder contains the PowerShell files which are used to implement the fix for control.  
-	- *\\\<resourceType>.ps1* - The file contains PowerShell code to implement the fix for control. The file can be referred for review.  
+	- *\\\<ResourceType>.ps1* - The file contains PowerShell code to implement the fix for control. The file can be referred for review.  
 - *\FixControlConfig-\<Timestamp>.json* - This file is generated when repair command is run. The file contains the input values provided by user while running the repair command. The file can be referred for review.
 
 [Back to top...](Readme.md#contents)
@@ -121,8 +121,8 @@ This command remediates the subscription security related controls using the aut
 
 |Parameter|Name|Description|
 |----|----|----|
-|ParameterFilePath |The full file path to 'FixControlConfig.json' (by default generated in sub-folder 'FixControlScripts' of the AzSK scan command output folder).|Mandatory|
-|ControlIds|The list of control ids for which fixes should be applied.|Optional|
+|ParameterFilePath |Full file path to 'FixControlConfig.json' (by default generated in sub-folder 'FixControlScripts' of the AzSK scan command output folder).|Mandatory|
+|ControlIds|List of control ids for which fixes should be applied.|Optional|
 |Force|Switch to bypass user consent of modifying Azure resources|Optional|  
 
 For example,
@@ -134,12 +134,12 @@ This command remediates security controls for various Azure resources using the 
 
 |Parameter|Name|Description|
 |----|----|----|
-|ParameterFilePath |The full file path of  'FixControlConfig.json' (by default generated in sub-folder 'FixControlScripts' of the AzSK scan command output folder). |Mandatory |
-|ResourceGroupNames	|The list of resource groups for which fixes should be applied. |Optional |
-|ResourceTypes |The list of resource types for which fixes should be applied. E.g., Microsoft.Sql/servers. |Optional |
-|ResourceTypeNames |The list of resource type names for which fixes should be applied. E.g., SQLDatabase. |Optional |
-|ResourceNames |The list of resources for which fixes should be applied. |Optional |
-|ControlIds |The list of control ids for which fixes should be applied. |Optional |
+|ParameterFilePath |Full file path of  'FixControlConfig.json' (by default generated in sub-folder 'FixControlScripts' of the AzSK scan command output folder). |Mandatory |
+|ResourceGroupNames	|List of resource groups for which fixes should be applied. |Optional |
+|ResourceTypes |List of resource types for which fixes should be applied. E.g., Microsoft.Sql/servers. |Optional |
+|ResourceTypeNames |List of resource type names for which fixes should be applied. E.g., SQLDatabase. |Optional |
+|ResourceNames |List of resources for which fixes should be applied. |Optional |
+|ControlIds |List of control ids for which fixes should be applied. |Optional |
 |Force |Switch to bypass user consent prompts when modifying Azure resources |Optional |
 
 For example,
@@ -247,7 +247,7 @@ fixing the issue for the time being):
 
 |Attestation Status | Description|
 |---|---|
-|None | There is no attestation done for a given control. User can select this option duriung the workflow to skip the attestation|
+|None | There is no attestation done for a given control. User can select this option during the workflow to skip the attestation|
 |NotAnIssue | User has verified the control data and attesting it as not a issue with proper justification|
 |WillNotFix | User has verified the control data and attesting it as not fixed with proper justification|
 |WillFixLater | User has verified the control data and attesting it as not fixed with proper justification stating the future fix plan|
@@ -266,12 +266,12 @@ The columns are described as under:
 |Passed |None |Passed |No | -NA- |No need for attestation. Control has passed outright!|
 |Verify |None |Verify |No | -NA- |User has to ratify based on manual examination of AzSK evaluation log. E.g., SQL DB firewall IPs list.|
 |Verify |NotAnIssue |Passed |Yes | 90 |User has ratified in the past. E.g., SQL firewall IPs scenario, where all are IPs are legitimate.|
-|Verify |WillNotFix |Exception |Yes | Based on the control severity table below|Valid security issue but a fix cannot be implemented immediately. E.g., A 'deprecated' account was found in the subscription. However, the user wants to check any dependecies before removal.|
-|Verify |WillFixLater |Remediate |Yes| Based on the control severity table below|Valid security issue but a fix cannot be implemented immediately. E.g., A 'deprecated' account was found in the subscription. However, the user wants to check any dependecies before removal.|
+|Verify |WillNotFix |Exception |Yes | Based on the control severity table below|Valid security issue but a fix cannot be implemented immediately. E.g., A 'deprecated' account was found in the subscription. However, the user wants to check any dependencies before removal.|
+|Verify |WillFixLater |Remediate |Yes| Based on the control severity table below|Valid security issue but a fix cannot be implemented immediately. E.g., A 'deprecated' account was found in the subscription. However, the user wants to check any dependencies before removal.|
 |Failed |None |Failed |No | -NA- | Control has failed but has not been attested. Perhaps a fix is in the works...|	 
-|Failed |NotAnIssue |Passed |Yes | 90 |Control has failed but the issue is benign in a given context business. E.g., Failover instance for a non BC-DR critical service|
-|Failed |WillNotFix |Exception |Yes | Based on the control severity table below| Control has failed. The issue is not benign but the user has some other constraint and cannot fix it. E.g., Need an SPN to be in Owner role at subscription scope.|
-|Failed |WillFixLater |Remediate |Yes | Based on the control severity table below| Control has failed. The issue is not benign but the user wishes to defer fixing it for later. E.g., AAD is not enabled for Azure SQL DB.|
+|Failed |NotAnIssue |Passed |Yes | 90 |Control has failed but the issue is benign in a given context business. E.g., Failover instance for a non-BC-DR critical service|
+|Failed |WillNotFix |Exception |Yes | Based on the control severity table below| Control has failed. The issue is not benign, but the user has some other constraint and cannot fix it. E.g., Need an SPN to be in Owner role at subscription scope.|
+|Failed |WillFixLater |Remediate |Yes | Based on the control severity table below| Control has failed. The issue is not benign, but the user wishes to defer fixing it for later. E.g., AAD is not enabled for Azure SQL DB.|
 |Error |None |Error |No | -NA- | There was an error during evaluation. Manual verification is needed and is still pending.|
 |Error |NotAnIssue |Passed |Yes | 90| There was an error during evaluation. However, control has been manually verified by the user.|
 |Error |WillNotFix |Exception |Yes | Based on the control severity table below| There was an error during evaluation. Manually verification by the user indicates a valid security issue.|
@@ -299,7 +299,7 @@ The following table describes the possible effective control evaluation results 
 |Control Scan Result| Description|
 |---|---|
 |Passed |Fully automated control. Azure resource/subscription configuration meeting the AzSK control requirement|
-|Verfiy |Semi-automated control. It would emit the required data in the log files which can be validated by the user/auditor.e.g. SQL DB IP ranges|
+|Verify |Semi-automated control. It would emit the required data in the log files which can be validated by the user/auditor. e.g. SQL DB IP ranges|
 |Failed |Fully automated control. Azure resource/subscription configuration not meeting AzSK control requirement|
 |Error |Automated control. Currently failing due to some exception. User needs to validate manually|
 |Manual |No automation as of now. User needs to validate manually|
@@ -317,7 +317,7 @@ If this RG is not present (as is possible when none of the scenarios that intern
 [Back to top...](Readme.md#contents)
 
 ### Attestation expiry:
-All the control attestations done through devops kit is set with a default expiry. This would force teams to revisit the control attestation at regular intervals. 
+All the control attestations done through AzSK is set with a default expiry. This would force teams to revisit the control attestation at regular intervals. 
 Expiry of an attestation is determined through different parameters like control severity, attestation status etc. 
 There are two simple rules for determining the attestation expiry. Those are:
 
@@ -346,8 +346,8 @@ all of which have a specific (single) controlId that requires attestation. This 
 a slightly different combination of parameters alongside '-AttestControls'.
 
  ```PowerShell  
-$subscriptionId = 'sub_id_here'
-$resourceGroupNames = 'Comma-separated list of RGs'
+$subscriptionId = 'Your subscription Id'
+$resourceGroupNames = 'Comma-separated list of resource groups'
 $resourceNames = 'Comma-separated list of resources'
 $bulkAttestControlId = 'AzSK ControlId string'     # You can get this from the CSV file, first column.
 $justificationText = 'Rationale behind your choice of AttestationStatus here...'
@@ -365,7 +365,7 @@ Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId `
 
 |Parameter Name| Description|
 |---|---|
-|BulkAttestControlId | The controlId to bulk-attest. Bulk attest mode supports only one controlId at a time.|
+|BulkAttestControlId |ControlId to bulk-attest. Bulk attest mode supports only one controlId at a time.|
 |AttestControls | See table in the  [Starting Attestation](Readme.md#starting-attestatio) section. |
 |AttestationStatus | Attester must select one of the attestation reasons (NotAnIssue, WillNotFix, WillFixLater)|
 |JustificationText | Attester must provide an apt justification with proper business reason.|
@@ -410,10 +410,10 @@ Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId `
  ``` 
 
 ###### Scenario 2: ###### 
-An application uses many Storage Accounts, of which a subset are used only to store web site performance logs. 
+An application uses many Storage Accounts, of which a subset is used only to store web site performance logs. 
 Because these logs aren't critical business data, the business does not want to incur the expense of geo-redundant
 storage for the storage accounts holding them. All other storage accounts, however, store critical business data which business absolutely
-cannot afford to lose in the event of regional disasters. Thus we have a situation where an AzSK control (in this case
+cannot afford to lose in the event of regional disasters. Thus, we have a situation where an AzSK control (in this case
 the GRS setting for Storage Accounts) must pass for a subset of resources while it need to be 'attested' for 
 the remainder.
 
@@ -451,7 +451,7 @@ Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId `
 **Bulk clearing past attestation:** 
 
 The bulk attestation feature can also be used for situations where a user wants to clear the attestation for 
-multiple resources in bulk, for a spcified controlId. This can be achieved by running the command below:
+multiple resources in bulk, for a specified controlId. This can be achieved by running the command below:
 
  ```PowerShell  
 $subscriptionId = <Your SubscriptionId>
