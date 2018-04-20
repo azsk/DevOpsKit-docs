@@ -3,7 +3,7 @@
 ### Contents
 - [Overview](OMSQueries.md#overview)
 - [Local effective scan result](OMSQueries.md#Local-effective-scan-result)
-- [Services scan result for baseline controls](OMSQueries.md#ca-complete-scan-results)
+- [CA Complete Scan Results](OMSQueries.md#ca-complete-scan-results)
 
 --------------------------
 ### Overview: 
