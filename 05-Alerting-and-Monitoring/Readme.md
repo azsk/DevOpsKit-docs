@@ -61,11 +61,6 @@ c) some AzSK scans have run in respective stages and events are already present 
 
 If you need help for any of the above, see the respective section in the [Appendix](Readme.md#appendix) at the bottom.
 
-** The OMS product team has recently made several improvements to the underlying store and have also adopted
-a new query language. This write-up assumes that you are using the new/updated OMS workspace and
-the new query language. If you have not migrated yet, we will also provide the corresponding old
-language queries. (All images will show queries using the new language though!)
-
 The AzSK OMS setup involves two sets of steps - one set to be run by the monitoring team that owns 
 the OMS workspace and the other set to be run by the application team (for applications which 
 are to be monitored via a common OMS dashboard). 
@@ -122,16 +117,6 @@ Run the below commands in PS after replacing the various '<>' with
                     -ViewName $azSkViewName
 ```
 
-> Note: If you are on the old model for OMS, you should use the following command instead:
-> ```PowerShell 
-> #Install command for *old* model of OMS
-> Install-AzSKOMSSolution -OMSSubscriptionId $omsSubId `
->            -OMSResourceGroup $omsRGName `
->            -OMSWorkspaceId $omsWSId `
->            -ViewName $azSkViewName `
->            -UseOldModel `
->            -OMSInstallationOption GenericView 
-> 
 The table below explains the different parameters used by Install-AzSKOMSSolution cmdlet:
 
 |ParameterName|Comments|
@@ -203,7 +188,7 @@ are the same fields that display in the CSV file when you run the AzSK manually 
 	
 [Back to top…](Readme.md#contents)
 ### Guide to AzSK OMS Solution queries
-This section walks you through the queries present in the AzSK OMS solution. To get the latest queries make sure that you have the latest solution installed in your OMS workspace. To get the latest version of solution you need to re-install OMS solution using step **[[1-c]](https://github.com/azsk/DevOpsKit-docs/blob/master/05-Alerting-and-Monitoring/Readme.md#setting-up-the-azsk-oms-solution-step-by-step)** mentioned above. The queries show the status of controls based on the following criteria.
+This section walks you through the queries present in the AzSK OMS solution. To get the latest queries make sure that you have the latest solution installed in your OMS workspace. To get the latest version of solution you need to re-install OMS solution using step **[[1-c]](#setting-up-the-azsk-oms-solution-step-by-step)** mentioned above. The queries show the status of controls based on the following criteria.
 - Each blade shows the aggregated control status for all subscriptions whose data is sent to the OMS workspace.
 - By default, each blade shows the status of baseline controls.
 - The queries show counts based on control status recieved for last scan data(done with required access) received by the OMS workspace.
@@ -414,7 +399,6 @@ for "Continuous Assurance".)
 ![05_Setting_OMS_Workspace_App_Specific_View_Details_2](../Images/05_Setting_OMS_Workspace_App_Specific_View_Details_2.PNG)
 
 
-<!-- #TODO# - Should add more on a PoC for 'auto-correct' runbook for one or more critical resources -->
 
 [Back to top…](Readme.md#contents)
 
@@ -534,7 +518,7 @@ using these solutions. In the part, we will look at how to leverage a couple of 
 add more based on the specific resources (SQL, VM, Service Fabric, Key Vault, etc.) you are using in your subscription.
 
 The AzSK solution complements the coverage from these individual solutions by its focus on cloud resource configuration.
-It is also unique it its coverage of events across dev ops stages.
+It is also unique in its coverage of events across dev ops stages.
 
 > **Note**: Setting up other solutions from the gallery is not required for the AzSK OMS Solution to work.
 
@@ -567,6 +551,6 @@ Choose the subscription(s) corresponding to the apps that are being monitored an
 
 At this point, the app subscription is setup to pipe it's Azure Activity Log events to the OMS workspace. 
 
-In the next 2 steps we will configure AzSK to send data to the OMS workspace from a PowerShell session. 
+In the next steps we will configure AzSK to send data to the OMS workspace from a PowerShell session. This can be done by running commands discussed in ([B] Testing OMS connectivity)[Readme.md#b-testing-oms-connectivity]
 This is just so that we can verify that events generated AzSK are getting routed to the OMS workspace
 correctly. 
