@@ -551,6 +551,6 @@ Choose the subscription(s) corresponding to the apps that are being monitored an
 
 At this point, the app subscription is setup to pipe it's Azure Activity Log events to the OMS workspace. 
 
-In the next steps we will configure AzSK to send data to the OMS workspace from a PowerShell session. This can be done by running commands discussed in ([B] Testing OMS connectivity)[Readme.md#b-testing-oms-connectivity]
+In the next steps we will configure AzSK to send data to the OMS workspace from a PowerShell session. This can be done by running commands discussed in [[B] Testing OMS connectivity](Readme.md#b-testing-oms-connectivity)
 This is just so that we can verify that events generated AzSK are getting routed to the OMS workspace
 correctly. 
