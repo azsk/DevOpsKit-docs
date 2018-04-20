@@ -126,7 +126,10 @@ host and maintain a custom set of policy files that override the default AzSK be
 | DepartmentName | The name of a department in your organization. If provided, this value is concatenated to the org name parameter. This should be alphanumeric. | No | None |
 | PolicyFolderPath | The local folder in which the policy files capturing org-specific changes will be stored for reference. This location can be used to manage policy files. | No | User Desktop |
 | ResourceGroupLocation | The location in which the Azure resources for hosting the policy will be created. | No | EastUS2 | To obtain valid locations, use Get-AzureRMLocation cmdlet |
-
+| ResourceGroupName | Resource Group name where policy resources will be created. | No | AzSK-\<OrgName>-\<DepName>-RG | Custom resource group name for storing policy resources. **Note :** ResourceGroupName, StorageAccountName and AppInsightName must be passed together to create custom resources |
+| StorageAccountName | Name for policy storage account | No | azsk-\<OrgName>-\<DepName>-sa | |
+| AppInsightName | Name for application insight resource where telemetry data will be pushed | No | AzSK-\<OrgName>-<DepName>-AppInsight | Custom resource group name for storing policy resources.  |
+| AppInsightLocation | The location in which the AppInsightLocation resource will be created. | No | EastUS |  |
 #### First-time policy setup - an example
 The following example will set up policies for IT department of Contoso organization. 
 
