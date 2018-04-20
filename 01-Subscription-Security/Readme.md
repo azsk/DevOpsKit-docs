@@ -18,7 +18,7 @@
 - [Remove previously provisioned security settings from your subscription](Readme.md#remove-azsk-subscription-security-provisioning-from-your-subscription)
 - [FAQs](Readme.md#faqs-1)
 
-### [AzSK: Subscription AccessControl Provisioning](Readme.md#azsk-subscription-access-control-provisioning)
+### [AzSK: Subscription Access Control Provisioning](Readme.md#azsk-subscription-access-control-provisioning)
 - [Overview](Readme.md#overview-2)
 - [Setup pre-approved mandatory accounts](Readme.md#setup-pre-approved-mandatory-accounts)
 - [Remove pre-approved mandatory accounts](Readme.md#remove-previously-provisioned-accounts)
@@ -101,7 +101,7 @@ The next section explains how to interpret output in the LOG file and how to add
 All cmdlets in AzSK generate outputs which are organized as under: 
 - summary information of the control evaluation (pass/fail) status in a CSV file, 
 - detailed control evaluation log in a LOG file and
-- a few other anciliary files for additional support
+- a few other ancillary files for additional support
 
 The overall layout and files in the output folder are also described in the README.txt file present in the root output folder.
 
@@ -137,7 +137,7 @@ Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubscriptionId> [-ControlIds
 ```
 These different parameters would enable you to execute different 'flavors' of subscription health scan. 
 For example, they will let you scan only SOX relevant controls or AuthZ related controls or 
-exclude best practices or even execute one specifc control. 
+exclude best practices or even execute one specific control. 
 Here are some examples:
 
 1. Execute only SOX related controls
@@ -201,7 +201,7 @@ Remove-AzSKSubscriptionSecurity -SubscriptionId <subscriptionId> -Tags <TagNames
 This command cleans up various security provisioning that was previously done using the Set-AzSKSubscriptionSecurity 
 command such as alerts, access control (RBAC) settings, ARM policies, etc.
 
-This command does not effect the Azure Security Center related settings (whether they were previously configured
+This command does not affect the Azure Security Center related settings (whether they were previously configured
 by AzSK or directly by the user).
 
 To remove access control related configuration, it is mandatory to use the `-Tags` parameter. If this
@@ -321,7 +321,7 @@ Run the below command
 ```PowerShell
 Set-AzSKAlerts -SubscriptionId <subscriptionid> -TargetResourceGroup <TargetRGName>
 ```
-These parameters above has to be updated with the appropriate values. See the table below for details.
+These parameters above have to be updated with the appropriate values. See the table below for details.
 
 |Config Param Name	|Purpose	|
 | -----------------  | --------- | 
