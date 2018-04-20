@@ -196,9 +196,7 @@ This section walks you through the queries present in the AzSK OMS solution. To 
 
 Details of various blades of Azure Security Health View are as follows:
 
-**1) Subsciption Security Status:** This blade shows the status of baseline Subsciption Security controls of your subscription(s).The  below image depicts the blade: 
-
-![](/Images/OMS_Blade_SS.PNG)
+**1) Subsciption Security Status:** This blade shows the status of baseline Subsciption Security controls of your subscription(s).
 
 - Donut: The below query shows the aggregated control status of Subscription Security controls.
 	``` AIQL
@@ -224,9 +222,7 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize AggregatedValue = count() by SubscriptionName_s 
 	| sort by AggregatedValue desc
 	
-**2) Express Route vNet Security Status:** This blade shows the status of baseline ERvNet Controls for virtual networks in your subscription that have Express Route connectivity setup.The below image depicts the blade:
-
-![](/Images/OMS_Blade_ERvNet.PNG)
+**2) Express Route vNet Security Status:** This blade shows the status of baseline ERvNet Controls for virtual networks in your subscription that have Express Route connectivity setup.
 
 - Donut: The below query shows the aggregated control status of ERvNet controls.
 	``` AIQL
