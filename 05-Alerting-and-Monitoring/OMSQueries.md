@@ -37,6 +37,6 @@ AzSK_CL | join kind= inner (
 | summarize AggregatedValue = count() by SubscriptionId,ControlStatus
 ```
 
-
+--------------------------
 
 
