@@ -199,6 +199,7 @@ Details of various blades of Azure Security Health View are as follows:
 **1) Subsciption Security Status:** This blade shows the status of baseline Subsciption Security controls of your subscription(s).
 
 - Donut: The below query shows the aggregated control status of Subscription Security controls.
+
 	``` AIQL
 	AzSK_CL 
 	| where TimeGenerated > ago(3d)  
@@ -209,7 +210,9 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize  count() by SubscriptionId,ControlId_s,ControlStatus 
 	| summarize AggregatedValue = count() by ControlStatus 
 	| sort by AggregatedValue desc
+	```
 - List: The below query shows the list of subscriptions that have one or more Subscription Security controls failing along with the number of controls failing on each subscription. 
+
 	``` AIQL
 	AzSK_CL 
 	| where TimeGenerated > ago(3d)  
@@ -221,10 +224,12 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize  count() by SubscriptionName_s,ControlId_s,ControlStatus_s 
 	| summarize AggregatedValue = count() by SubscriptionName_s 
 	| sort by AggregatedValue desc
+	```
 	
 **2) Express Route vNet Security Status:** This blade shows the status of baseline ERvNet Controls for virtual networks in your subscription that have Express Route connectivity setup.
 
 - Donut: The below query shows the aggregated control status of ERvNet controls.
+
 	``` AIQL
 	AzSK_CL 
 	| where TimeGenerated > ago(3d)  
@@ -234,7 +239,9 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize arg_max(TimeGenerated,*) by SubscriptionName_s,ResourceId,ControlId_s 
 	| summarize AggregatedValue = count() by ControlStatus 
 	| sort by AggregatedValue desc
+	```
 - List: The below query shows the list of subscriptions that have one or more ERvNet control failing and number of failures on each subscription.
+
 	``` AIQL
 	AzSK_CL 
 	| where TimeGenerated > ago(3d)  
@@ -245,12 +252,14 @@ Details of various blades of Azure Security Health View are as follows:
 	| where ControlStatus =="Failed" 
 	| summarize AggregatedValue = count() by SubscriptionName_s 
 	| sort by AggregatedValue desc
+	```
 
 **3) Resource Security (RS-1):** This blade shows the status of baseline controls for all resources present on your subscription(s). The below image depicts the blade:
 
 ![](/Images/OMS_Blade_RS1.PNG)
 
 - Donut: The below query shows the aggregated status of controls for all the resources present on your subscription(s).
+
 	``` AIQL
 	AzSK_CL 
 	| where TimeGenerated > ago(3d) 
@@ -260,7 +269,9 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize arg_max(TimeGenerated, *) by SubscriptionId, ResourceId, ControlId_s 
 	| summarize AggregatedValue = count() by ControlStatus 
 	| sort by AggregatedValue desc
+	```
 - List: The below query shows the list of resource type that have one or more control failing along with the number of controls failing for each resource type.
+
 	``` AIQL
 	AzSK_CL  
 	| where TimeGenerated > ago(3d) 
@@ -270,12 +281,14 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize arg_max(TimeGenerated, *) by SubscriptionId, ResourceId, ControlId_s 
 	| where ControlStatus == "Failed" | summarize AggregatedValue = count() by FeatureName_s 
 	| sort by AggregatedValue desc	
+	```
 
 **4) Resource Security (RS-2):** This blade shows resources present on your subscription(s) that have some baseline controls failing. The below image depicts the blade:
 
 ![](/Images/OMS_Blade_RS2.PNG)
 
 - Tile: The below query shows the number of unique resources that have at least one control failing. 
+
 	``` AIQL
 	AzSK_CL  
 	| where TimeGenerated >ago(3d)  
@@ -286,7 +299,9 @@ Details of various blades of Azure Security Health View are as follows:
 	| where ControlStatus == "Failed" 
 	| summarize  AggregatedValue = count() by ResourceName_s  
 	| count 
+	```
 - List: The below query shows the the list of resources that have one or more control failing along with the number of failed controls for each resource.
+
 	``` AIQL
 	AzSK_CL  
 	| where TimeGenerated >ago(3d)  
@@ -296,12 +311,14 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize arg_max(TimeGenerated, *) by SubscriptionId, ResourceId, ControlId_s 
 	| where ControlStatus == "Failed" 
 	| summarize  AggregatedValue = count() by ResourceName_s 
+	```
 
 **5) Resource Security (RS-3):** This blade shows resource groups present on your subscription(s) that failed baseline controls. The below image depicts the blade:
 
 ![](/Images/OMS_Blade_RS3.PNG)
 
 - Tile: The below query shows the number of unique resource groups containing resources that are failing.
+
 	``` AIQL
 	AzSK_CL  
 	| where TimeGenerated > ago(3d)  
@@ -312,7 +329,9 @@ Details of various blades of Azure Security Health View are as follows:
 	| where ControlStatus == "Failed" 
 	| summarize  AggregatedValue = count() by ResourceGroup 
 	| count
+	```
 - List: The below query shows list of resource groups that have one or more controls failing along with the number of failed controls for each resource group.
+
 	``` AIQL
 	AzSK_CL  
 	| where TimeGenerated > ago(3d)  
@@ -322,12 +341,14 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize arg_max(TimeGenerated, *) by SubscriptionId, ResourceId, ControlId_s  
 	| where ControlStatus == "Failed" 
 	| summarize  AggregatedValue = count() by ResourceGroup
+	```
 
 **6) Resource Security (RS-4):** This blade shows baseline security controls that are failing on your subscription(s). The below image depicts the blade:
 
 ![](/Images/OMS_Blade_RS4.PNG)
 
 - Tile: The below query shows the number of unique controls that are failing.
+
 	``` AIQL
 	AzSK_CL  
 	| where TimeGenerated > ago(3d)  
@@ -338,7 +359,9 @@ Details of various blades of Azure Security Health View are as follows:
 	| where ControlStatus == "Failed" 
 	| summarize  AggregatedValue = count() by ControlId_s 
 	| count 
+	```
 - List: The below query shows the list of controls that are failing along with the number of failures for each control.
+
 	``` AIQL
 	AzSK_CL  
 	| where TimeGenerated > ago(3d)  
@@ -348,6 +371,7 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize arg_max(TimeGenerated, *) by SubscriptionId, ResourceId, ControlId_s  
 	| where ControlStatus == "Failed" 
 	| summarize  AggregatedValue = count() by ControlId_s
+	```
 	
 **7) Useful Queries:** In this last blade, we have included a few queries that you can use as is or tweak to create your own custom queries. These queries are similar to the queries for various other blades except that they will show the status of **all controls** (opposed to baseline controls only). These can be used as a starting point for setting up your own alerts, doing auto-heal, etc. 
 
