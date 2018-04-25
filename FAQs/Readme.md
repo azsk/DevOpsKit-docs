@@ -7,6 +7,8 @@
   - [Error message: "WARNING: The version '3.x.y' of module 'AzureRM.Profile' is currently in use. Retry the operation after closing..."](../00a-Setup/Readme.md#error-message-warning-the-version-3xy-of-module-azurermprofile-is-currently-in-use-retry-the-operation-after-closing)
   - [Error message: "The property 'Id' cannot be found on this object. Verify that the property exists..."](../00a-Setup/Readme.md#error-message-the-property-id-cannot-be-found-on-this-object-verify-that-the-property-exists)
   - [Message: "Warning : Microsoft Azure PowerShell collects data about how users use PowerShell cmdlets..."](../00a-Setup/Readme.md#message-warning--microsoft-azure-powershell-collects-data-about-how-users-use-powershell-cmdlets)
+  - [When will AzSK support the newest AzureRm module (currently 5.x)? Can I run both side by side? In the meantime, what if I need to run both AzSK and the new version of AzureRm (for different tasks)?](../00a-Setup/Readme.md#when-will-azsk-support-the-newest-azurerm-module-currently-5x-can-i-run-both-side-by-side-in-the-meantime-what-if-i-need-to-run-both-azsk-and-the-new-version-of-azurerm-for-different-tasks)
+  - [ How often should I upgrade my installation of AzSK? How long will it take?](../00a-Setup/Readme.md#how-often-should-i-upgrade-my-installation-of-azsk-how-long-will-it-take)
   
 - ### Subscription-Security
   - #### AzSK: Subscription Security Provisioning
@@ -44,5 +46,17 @@
     - [What if I need to change the resource groups after a few weeks?](../04-Continous-Assurance/Readme.md#what-if-i-need-to-change-the-resource-groups-after-a-few-weeks)
     - [Do I need to also setup AzSK OMS solution?](../04-Continous-Assurance/Readme.md#do-i-need-to-also-setup-AzSK-oms-solution)
     - [How much does it cost to setup Continuous Assurance alongwith OMS monitoring solution?](../04-Continous-Assurance/Readme.md#how-much-does-it-cost-to-setup-continuous-assurance-alongwith-oms-monitoring-solution)
+    - [What are AzSDRG and AzSK_CA_SPN used for?]
+    - [How to fix SPN permissions for my AzSK Continuous Assurance setup?]
+    - [How to renew the certificate used for Continuous Assurance?]
+    - [What are some example controls that are not scanned by CA?]
+    - [Should I manually update modules in the AzSK CA automation account?]
+    - [Difference between scanned controls from CA v. ad hoc scans]
+
+- ### Addressing Control Failures
+    - [Can fixing an AzSK control impact my application?]
+    - [What permission should I have to perform attestation in AzSK?]
+    - [Attestation fails with permission error even though I am Owner.]
+    - [Why do I have new control failures from AzSK?]
 
     
