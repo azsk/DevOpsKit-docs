@@ -509,4 +509,17 @@ It can happen due to below reasons
    Install-AzSKContinuousAssurance -SubscriptionId "<subId>" -ResourceGroupNames "*" -OMSWorkspaceId "<omsWorkspaceId>" -OMSSharedKey "<omsSharedKey>"
    ```
 
+    
+#### Why do I have new control failures from AzSK?
+
+You might come across a scenario that you spent some time and fixed all the issues that you were expected to and "got to green". Now, a few days (or weeks) later, you are seeing that you have to address a bunch of issues. You may wonder - 'What happened? Why do I get new failures from AzSK?'
+
+There are many reasons why you may see 'new' control failures after you put in the effort to resolve existing ones. Here are some common ones: </br>
+a- You may have net new resources that were created/deployed to the subscription. The first time CA scans these resources (usually within 24 hours of their creation), it will flag any security control failures. </br>
+b- Someone on the team perhaps changed the configuration of an existing resource. In a large subscription with many stakeholders acting on different resources and resource groups, this is quite a possibility. That is where CA helps! It watches over the drift and reports it. </br>
+c- Baseline control set may change. As attacks get sophisticated, so must our defense. It is quite possible that a control that was not considered "core hygiene" might become so a few months down. This will mean that for existing resources, everyone now has a new control to fix. </br>
+d- New controls may get added. Azure is a very dynamic environment. The PG adds new features and security capabilities every quarter in some services and every six months in most others. When a new security feature is added, the AzSK may be modified to add a new control to cover it. If the control is core/fundamental, then everyone will be expected to fix it on existing resources. (Remember that CA automatically picks up latest AzSK bits for scanning. So the moment a version of AzSK gets released with a new control and it is a 'baseline' control, CA scans will start checking the control on existing resources.) </br>
+e- Control logic for existing controls may change - due to bug fixes or additional conditions in the detection logic. This change in control behavior will, again, start reflecting in CA scans when a version of AzSK with the 'fix' or 'logic change' is released. </br>
+f- Configuration baselines may change. What is considered a mandatory account today may not remain so tomorrow or in 6 months. Certificates expire, credentials/accounts get deprecated. The AzSK is able to detect that your subscription contains these accounts but the access permissions that CA has does not let CA make any changes. </br>
+Phew...We hope we covered the main reasons. One last thought is that in the current "agile + dev ops + cloud" era, with all rapid iterations and changes happening at all layers, security has also become a much more 'continuous' effort compared to the past.
 [Back to top...](Readme.md#contents)

@@ -57,5 +57,6 @@
     - [Can fixing an AzSK control impact my application?](../00c-Addressing-Control-Failures/Readme.md#can-fixing-an-azsk-control-impact-my-application)
     - [What permission should I have to perform attestation in AzSK?](../00c-Addressing-Control-Failures/Readme.md#what-permission-should-i-have-to-perform-attestation-in-azsk)
     - [Attestation fails with permission error even though I am Owner.](../00c-Addressing-Control-Failures/Readme.md#attestation-fails-with-permission-error-even-though-i-am-owner)
+    - [Why do I have new control failures from AzSK?](../00c-Addressing-Control-Failures/Readme.md#why-do-i-have-new-control-failures-from-azsk)
 
     
