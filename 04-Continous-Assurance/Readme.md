@@ -60,7 +60,7 @@ for your application.)
 
 
 **Step-1: Setup**  
-0. Setup the latest version of the AzSK following the installation instructions for your organization. (For MSIT use https://aka.ms/azsdkdocs).
+0. Setup the latest version of the AzSK following the installation instructions for your organization. (For CSE use https://aka.ms/devopskit/onboarding).
 1. Open the PowerShell ISE and login to your Azure account (using **Login-AzureRmAccount**).  
 2. Run the '**Install-AzSKContinuousAssurance**' command with required parameters given in below table. 
 
@@ -702,7 +702,7 @@ The main/dominant component of the cost is automation runtime (storage/OMS costs
 
 
 #### Troubleshooting
-Please reach out to us at AzSDKSupExt@microsoft.com if you face any issues with this feature. 
+Please reach out to us at [azsksup@microsoft.com]() if you face any issues with this feature. 
 
 [Back to top…](Readme.md#contents)
 
