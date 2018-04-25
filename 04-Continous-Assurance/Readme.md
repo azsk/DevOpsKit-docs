@@ -448,7 +448,8 @@ Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscript
 
 > **Note:** If you are using switch -SkipTargetSubscriptionConfig, then it assumes you have done all the required configuration on the target subscriptions. 
 > Like, adding the CA SPN as Reader on target sub, Creating AzSK RG and a storage account name starting with azsk, Contributor permission to SPN on AzSKRG. 
-> If any of the steps are not done, then central scan automation account will skip those target subscriptions.
+> If any of the steps are not done, then central scan automation account will skip those target subscriptions. 
+> You can use the script [here](https://github.com/azsk/DevOpsKit-docs/blob/master/04-Continous-Assurance/scripts/PrepareTargetSubscriptionForCentralModeCA.md) to prepare one or more target subscriptions for central mode scanning. The example invocation at the bottom of the script shows how to invoke the function in the script for a single target sub.
 
 ##### 2.2 Updating/modifying Central Scan mode CA (multiple Automation accounts option)
 
