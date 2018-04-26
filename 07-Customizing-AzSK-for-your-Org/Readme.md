@@ -137,9 +137,9 @@ You must be an 'Owner' or 'Contributor' for the subscription in which you want t
 Also, make sure that that the org name and dept name are purely alphanumeric and their combined length is less than 19 characters.
 
 ```PowerShell
-Install-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> ` 
-           -OrgName "Contoso" ` 
-           -DepartmentName "IT" ` 
+Install-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+           -OrgName "Contoso" `
+           -DepartmentName "IT" `
            -PolicyFolderPath "D:\ContosoPolicies"
 ```
 The execution of command will create following resources in the subscription (if they don't already exist): 
