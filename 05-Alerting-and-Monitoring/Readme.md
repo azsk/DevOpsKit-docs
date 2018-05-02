@@ -61,11 +61,6 @@ c) some AzSK scans have run in respective stages and events are already present 
 
 If you need help for any of the above, see the respective section in the [Appendix](Readme.md#appendix) at the bottom.
 
-** The OMS product team has recently made several improvements to the underlying store and have also adopted
-a new query language. This write-up assumes that you are using the new/updated OMS workspace and
-the new query language. If you have not migrated yet, we will also provide the corresponding old
-language queries. (All images will show queries using the new language though!)
-
 The AzSK OMS setup involves two sets of steps - one set to be run by the monitoring team that owns 
 the OMS workspace and the other set to be run by the application team (for applications which 
 are to be monitored via a common OMS dashboard). 
@@ -122,16 +117,6 @@ Run the below commands in PS after replacing the various '<>' with
                     -ViewName $azSkViewName
 ```
 
-> Note: If you are on the old model for OMS, you should use the following command instead:
-> ```PowerShell 
-> #Install command for *old* model of OMS
-> Install-AzSKOMSSolution -OMSSubscriptionId $omsSubId `
->            -OMSResourceGroup $omsRGName `
->            -OMSWorkspaceId $omsWSId `
->            -ViewName $azSkViewName `
->            -UseOldModel `
->            -OMSInstallationOption GenericView 
-> 
 The table below explains the different parameters used by Install-AzSKOMSSolution cmdlet:
 
 |ParameterName|Comments|
@@ -203,7 +188,7 @@ are the same fields that display in the CSV file when you run the AzSK manually 
 	
 [Back to top…](Readme.md#contents)
 ### Guide to AzSK OMS Solution queries
-This section walks you through the queries present in the AzSK OMS solution. To get the latest queries make sure that you have the latest solution installed in your OMS workspace. To get the latest version of solution you need to re-install OMS solution using step **[[1-c]](https://github.com/azsk/DevOpsKit-docs/blob/master/05-Alerting-and-Monitoring/Readme.md#setting-up-the-azsk-oms-solution-step-by-step)** mentioned above. The queries show the status of controls based on the following criteria.
+This section walks you through the queries present in the AzSK OMS solution. To get the latest queries make sure that you have the latest solution installed in your OMS workspace. To get the latest version of solution you need to re-install OMS solution using step **[[1-c]](#setting-up-the-azsk-oms-solution-step-by-step)** mentioned above. The queries show the status of controls based on the following criteria.
 - Each blade shows the aggregated control status for all subscriptions whose data is sent to the OMS workspace.
 - By default, each blade shows the status of baseline controls.
 - The queries show counts based on control status recieved for last scan data(done with required access) received by the OMS workspace.
@@ -211,11 +196,10 @@ This section walks you through the queries present in the AzSK OMS solution. To 
 
 Details of various blades of Azure Security Health View are as follows:
 
-**1) Subsciption Security Status:** This blade shows the status of baseline Subsciption Security controls of your subscription(s).The  below image depicts the blade: 
-
-![](/Images/OMS_Blade_SS.PNG)
+**1) Subsciption Security Status:** This blade shows the status of baseline Subsciption Security controls of your subscription(s).
 
 - Donut: The below query shows the aggregated control status of Subscription Security controls.
+
 	``` AIQL
 	AzSK_CL 
 	| where TimeGenerated > ago(3d)  
@@ -226,7 +210,9 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize  count() by SubscriptionId,ControlId_s,ControlStatus 
 	| summarize AggregatedValue = count() by ControlStatus 
 	| sort by AggregatedValue desc
+	```
 - List: The below query shows the list of subscriptions that have one or more Subscription Security controls failing along with the number of controls failing on each subscription. 
+
 	``` AIQL
 	AzSK_CL 
 	| where TimeGenerated > ago(3d)  
@@ -238,12 +224,12 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize  count() by SubscriptionName_s,ControlId_s,ControlStatus_s 
 	| summarize AggregatedValue = count() by SubscriptionName_s 
 	| sort by AggregatedValue desc
+	```
 	
-**2) Express Route vNet Security Status:** This blade shows the status of baseline ERvNet Controls for virtual networks in your subscription that have Express Route connectivity setup.The below image depicts the blade:
-
-![](/Images/OMS_Blade_ERvNet.PNG)
+**2) Express Route vNet Security Status:** This blade shows the status of baseline ERvNet Controls for virtual networks in your subscription that have Express Route connectivity setup.
 
 - Donut: The below query shows the aggregated control status of ERvNet controls.
+
 	``` AIQL
 	AzSK_CL 
 	| where TimeGenerated > ago(3d)  
@@ -253,7 +239,9 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize arg_max(TimeGenerated,*) by SubscriptionName_s,ResourceId,ControlId_s 
 	| summarize AggregatedValue = count() by ControlStatus 
 	| sort by AggregatedValue desc
+	```
 - List: The below query shows the list of subscriptions that have one or more ERvNet control failing and number of failures on each subscription.
+
 	``` AIQL
 	AzSK_CL 
 	| where TimeGenerated > ago(3d)  
@@ -264,12 +252,14 @@ Details of various blades of Azure Security Health View are as follows:
 	| where ControlStatus =="Failed" 
 	| summarize AggregatedValue = count() by SubscriptionName_s 
 	| sort by AggregatedValue desc
+	```
 
 **3) Resource Security (RS-1):** This blade shows the status of baseline controls for all resources present on your subscription(s). The below image depicts the blade:
 
 ![](/Images/OMS_Blade_RS1.PNG)
 
 - Donut: The below query shows the aggregated status of controls for all the resources present on your subscription(s).
+
 	``` AIQL
 	AzSK_CL 
 	| where TimeGenerated > ago(3d) 
@@ -279,7 +269,9 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize arg_max(TimeGenerated, *) by SubscriptionId, ResourceId, ControlId_s 
 	| summarize AggregatedValue = count() by ControlStatus 
 	| sort by AggregatedValue desc
+	```
 - List: The below query shows the list of resource type that have one or more control failing along with the number of controls failing for each resource type.
+
 	``` AIQL
 	AzSK_CL  
 	| where TimeGenerated > ago(3d) 
@@ -289,12 +281,14 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize arg_max(TimeGenerated, *) by SubscriptionId, ResourceId, ControlId_s 
 	| where ControlStatus == "Failed" | summarize AggregatedValue = count() by FeatureName_s 
 	| sort by AggregatedValue desc	
+	```
 
 **4) Resource Security (RS-2):** This blade shows resources present on your subscription(s) that have some baseline controls failing. The below image depicts the blade:
 
 ![](/Images/OMS_Blade_RS2.PNG)
 
-- Tile: The below query shows the number of unique resource types that have at least one control failing. 
+- Tile: The below query shows the number of unique resources that have at least one control failing. 
+
 	``` AIQL
 	AzSK_CL  
 	| where TimeGenerated >ago(3d)  
@@ -305,7 +299,9 @@ Details of various blades of Azure Security Health View are as follows:
 	| where ControlStatus == "Failed" 
 	| summarize  AggregatedValue = count() by ResourceName_s  
 	| count 
+	```
 - List: The below query shows the the list of resources that have one or more control failing along with the number of failed controls for each resource.
+
 	``` AIQL
 	AzSK_CL  
 	| where TimeGenerated >ago(3d)  
@@ -315,12 +311,14 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize arg_max(TimeGenerated, *) by SubscriptionId, ResourceId, ControlId_s 
 	| where ControlStatus == "Failed" 
 	| summarize  AggregatedValue = count() by ResourceName_s 
+	```
 
 **5) Resource Security (RS-3):** This blade shows resource groups present on your subscription(s) that failed baseline controls. The below image depicts the blade:
 
 ![](/Images/OMS_Blade_RS3.PNG)
 
 - Tile: The below query shows the number of unique resource groups containing resources that are failing.
+
 	``` AIQL
 	AzSK_CL  
 	| where TimeGenerated > ago(3d)  
@@ -331,7 +329,9 @@ Details of various blades of Azure Security Health View are as follows:
 	| where ControlStatus == "Failed" 
 	| summarize  AggregatedValue = count() by ResourceGroup 
 	| count
+	```
 - List: The below query shows list of resource groups that have one or more controls failing along with the number of failed controls for each resource group.
+
 	``` AIQL
 	AzSK_CL  
 	| where TimeGenerated > ago(3d)  
@@ -341,12 +341,14 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize arg_max(TimeGenerated, *) by SubscriptionId, ResourceId, ControlId_s  
 	| where ControlStatus == "Failed" 
 	| summarize  AggregatedValue = count() by ResourceGroup
+	```
 
 **6) Resource Security (RS-4):** This blade shows baseline security controls that are failing on your subscription(s). The below image depicts the blade:
 
 ![](/Images/OMS_Blade_RS4.PNG)
 
 - Tile: The below query shows the number of unique controls that are failing.
+
 	``` AIQL
 	AzSK_CL  
 	| where TimeGenerated > ago(3d)  
@@ -357,7 +359,9 @@ Details of various blades of Azure Security Health View are as follows:
 	| where ControlStatus == "Failed" 
 	| summarize  AggregatedValue = count() by ControlId_s 
 	| count 
+	```
 - List: The below query shows the list of controls that are failing along with the number of failures for each control.
+
 	``` AIQL
 	AzSK_CL  
 	| where TimeGenerated > ago(3d)  
@@ -367,9 +371,9 @@ Details of various blades of Azure Security Health View are as follows:
 	| summarize arg_max(TimeGenerated, *) by SubscriptionId, ResourceId, ControlId_s  
 	| where ControlStatus == "Failed" 
 	| summarize  AggregatedValue = count() by ControlId_s
+	```
 	
-**7) Useful Queries:** In this last blade, we have included a few queries that you can use as is or tweak to create your own custom queries. These queries are similar to the queries for various other blades except that they will show the status of **all controls** (opposed to baseline controls only). These can be used as a starting point for setting up your own alerts, doing auto-heal, etc. The below image depicts the blade:
-
+**7) Useful Queries:** In this last blade, we have included a few queries that you can use as is or tweak to create your own custom queries. These queries are similar to the queries for various other blades except that they will show the status of **all controls** (opposed to baseline controls only). These can be used as a starting point for setting up your own alerts, doing auto-heal, etc. 
 
 [Back to top…](Readme.md#contents)
 
@@ -415,7 +419,6 @@ for "Continuous Assurance".)
 ![05_Setting_OMS_Workspace_App_Specific_View_Details_2](../Images/05_Setting_OMS_Workspace_App_Specific_View_Details_2.PNG)
 
 
-<!-- #TODO# - Should add more on a PoC for 'auto-correct' runbook for one or more critical resources -->
 
 [Back to top…](Readme.md#contents)
 
@@ -535,7 +538,7 @@ using these solutions. In the part, we will look at how to leverage a couple of 
 add more based on the specific resources (SQL, VM, Service Fabric, Key Vault, etc.) you are using in your subscription.
 
 The AzSK solution complements the coverage from these individual solutions by its focus on cloud resource configuration.
-It is also unique it its coverage of events across dev ops stages.
+It is also unique in its coverage of events across dev ops stages.
 
 > **Note**: Setting up other solutions from the gallery is not required for the AzSK OMS Solution to work.
 
@@ -568,6 +571,6 @@ Choose the subscription(s) corresponding to the apps that are being monitored an
 
 At this point, the app subscription is setup to pipe it's Azure Activity Log events to the OMS workspace. 
 
-In the next 2 steps we will configure AzSK to send data to the OMS workspace from a PowerShell session. 
+In the next steps we will configure AzSK to send data to the OMS workspace from a PowerShell session. This can be done by running commands discussed in [[B] Testing OMS connectivity](Readme.md#b-testing-oms-connectivity).
 This is just so that we can verify that events generated AzSK are getting routed to the OMS workspace
 correctly. 
