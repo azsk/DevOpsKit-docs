@@ -83,7 +83,7 @@ As you can see from the summary description above, the "Secure DevOps Kit for Az
 - AzSK Security Controls Portal @https://aka.ms/azskosstcp
 - Security IntelliSense <a href="https://marketplace.visualstudio.com/items?itemName=AzSDKTeam.SecurityIntelliSense-Preview">@VisualStudio Marketplace</a>
 - Visual Studio Online CICD Build/Release Extension <a href="https://marketplace.visualstudio.com/items?itemName=azsdktm.AzSDK-task">@VisualStudio Marketplace</a>
-- For any other issues or feedback please drop a mail to <a href="mailto:azsksupext@microsoft.com">AzSK Support</a>
+- For any other issues or feedback please drop a mail to <a href="mailto:azsksup@microsoft.com">AzSK Support</a>
   
 [Back to top...](README.md#content) 
 
