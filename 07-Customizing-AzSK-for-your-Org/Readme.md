@@ -45,7 +45,7 @@ Note that the policy files needed for security scans are downloaded into each PS
 AzSK scenarios. That is, apart from manually-run scans from your desktop, this same behavior happens 
 if you include the AzSK SVTs Release Task in your CICD pipeline or if you setup Continuous Assurance. 
 Also, the AzSK policy files on the CDN are based on what we use internally in Core Services Engineering 
-(CSE) at Microsoft. We also keep them up to date from one release to next .
+(CSE) at Microsoft. We also keep them up to date from one release to next.
 
 <!--![Org Policy - The big picture](../Images/07_OrgPolicy_Big_Picture.PNG)-->
 
@@ -126,7 +126,7 @@ host and maintain a custom set of policy files that override the default AzSK be
 | DepartmentName | The name of a department in your organization. If provided, this value is concatenated to the org name parameter. This should be alphanumeric. | No | None |
 | PolicyFolderPath | The local folder in which the policy files capturing org-specific changes will be stored for reference. This location can be used to manage policy files. | No | User Desktop |
 | ResourceGroupLocation | The location in which the Azure resources for hosting the policy will be created. | No | EastUS2 | To obtain valid locations, use Get-AzureRMLocation cmdlet |
-| ResourceGroupName | Resource Group name where policy resources will be created. | No | AzSK-\<OrgName>-\<DepName>-RG | Custom resource group name for storing policy resources. **Note :** ResourceGroupName, StorageAccountName and AppInsightName must be passed together to create custom resources |
+| ResourceGroupName | Resource Group name where policy resources will be created. | No | AzSK-\<OrgName>-\<DepName>-RG | Custom resource group name for storing policy resources. **Note:** ResourceGroupName, StorageAccountName and AppInsightName must be passed together to create custom resources |
 | StorageAccountName | Name for policy storage account | No | azsk-\<OrgName>-\<DepName>-sa | |
 | AppInsightName | Name for application insight resource where telemetry data will be pushed | No | AzSK-\<OrgName>-<DepName>-AppInsight | Custom resource group name for storing policy resources.  |
 | AppInsightLocation | The location in which the AppInsightLocation resource will be created. | No | EastUS |  |
@@ -134,12 +134,12 @@ host and maintain a custom set of policy files that override the default AzSK be
 The following example will set up policies for IT department of Contoso organization. 
 
 You must be an 'Owner' or 'Contributor' for the subscription in which you want to host your org's policy artefacts.
-Also, make sure that that the org name and dept name are purely alphanumeric and their combined length is less that 19 characters.
+Also, make sure that that the org name and dept name are purely alphanumeric and their combined length is less than 19 characters.
 
 ```PowerShell
-Install-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> ` 
-           -OrgName "Contoso" ` 
-           -DepartmentName "IT" ` 
+Install-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+           -OrgName "Contoso" `
+           -DepartmentName "IT" `
            -PolicyFolderPath "D:\ContosoPolicies"
 ```
 The execution of command will create following resources in the subscription (if they don't already exist): 
@@ -224,7 +224,7 @@ they should see a message such as the following (note the 'Contoso-IT') indicati
 
     Running AzSK cmdlet using Contoso-IT policy
 
-Notice that here, the default (first time) org policy setup injects the 'Contoso-IT' based on the OrgName and
+Notice that here, the default (first-time) org policy setup injects the 'Contoso-IT' based on the OrgName and
 the DeptName that you provided when you setup your org policy server. (When users are running without your 
 org policy correctly setup, they will see the 'Running AzSK cmdlet using generic (org-neutral)
 policy' message which comes from the AzSK public CDN endpoint.)
@@ -247,7 +247,7 @@ of the 'Contoso-IT' so it stands out a bit.
 ```
  iii) Save the file
  
- iv) Run the policy setup command (the same command you ran for the first time setup)
+ iv) Run the policy setup command (the same command you ran for the first-time setup)
 
 ###### Testing:
 
@@ -305,13 +305,13 @@ Rather, **always** copy the file to your own org-policy folder and edit it there
 }
 ```
 
- v) Rerun the policy setup command (the same command you ran for the first time setup)
+ v) Rerun the policy setup command (the same command you ran for the first-time setup)
  
 ###### Testing: 
 
 Anyone in your org can now start a fresh PS console and the result of the evaluation of the number of owners/admins control in 
 the subscription security scan (Get-AzSKSubscriptionSecurityStatus) should reflect that the new setting is in 
-effect. (E.g., if you changes the max count to 3 and they had 4 owners/admins in their subscription, then the control
+effect. (E.g., if you change the max count to 3 and they had 4 owners/admins in their subscription, then the control
 result will change from 'Passed' to 'Failed'.)
 
 
@@ -384,7 +384,7 @@ and 'ControlIds' for that resource...making it fairly easy to customize/tweak yo
  
  iii) Confirm that an entry for ControlSettings.json is already there in the ServerConfigMetadata.json file. (Else see step-iii in (c) above.)
  
- iv) Run the policy setup command (the same command you ran for the first time setup)
+ iv) Run the policy setup command (the same command you ran for the first-time setup)
 
 ###### Testing:
 
@@ -459,7 +459,7 @@ the `Azure_Storage_Deploy_Use_Geo_Redundant` control.
 }
 ```  
 
- v) Rerun the org policy setup command (the same command you ran for the first time setup)
+ v) Rerun the org policy setup command (the same command you ran for the first-time setup)
  
 ###### Testing: 
 Someone in your org can test this change using the `Get-AzSKAzureServicesSecurityStatus` command on a target
@@ -477,9 +477,9 @@ appear in the resulting CSV file.
 ## Using CICD Extension with custom org-policy
 
 To set up CICD when using custom org-policy, please follow below steps:
-1. Add Security Verification Tests (SVTs) in VSTS pipeline by following the main steps [here](../03-Security-In-CICD#adding-svts-in-the-release-pipeline) .
-2. Obtain the policy store URl by :
-	1. Download the installer file (ps1) from Org specific iwr command.To  download file, just open the URL from iwr command.
+1. Add Security Verification Tests (SVTs) in VSTS pipeline by following the main steps [here](../03-Security-In-CICD#adding-svts-in-the-release-pipeline).
+2. Obtain the policy store URl by:
+	1. Download the installer file (ps1) from Org specific iwr command. To download file, just open the URL from iwr command.
 	```	
 	E.g.: iwr 'https://azskxxx.blob.core.windows.net/installer/AzSK-EasyInstaller.ps1' -UseBasicParsing | iex
 	```
@@ -495,7 +495,7 @@ E.g. https://azskxxx.blob.core.windows.net/policies/$($Version)/$($FileName)?sv=
 	1. AzSKServerURL = <Modified URL from step 4>.
 	2. EnableServerAuth = false 
 	
-Having set the policy URL along with AzSK_SVTs Task, you can verify if your CICD task has been properly setup by following steps [here](../03-Security-In-CICD#verifying-that-the-svts-have-been-added-and-configured-correctly) .
+Having set the policy URL along with AzSK_SVTs Task, you can verify if your CICD task has been properly setup by following steps [here](../03-Security-In-CICD#verifying-that-the-svts-have-been-added-and-configured-correctly).
 
 
 ## Next Steps:
@@ -532,7 +532,7 @@ Here are a few common things that may cause glitches and you should be careful a
 - Make sure you use exact case for file names for various policy files (and the names must match case-and-all
 with the entries in the ServerConfigMetadata.json file)
 - Make sure that no special/BOM characters get introduced into the policy file text. (The policy upload code does scrub for
-a few known cases but we may have missed the odd one.)
+a few known cases, but we may have missed the odd one.)
 - Don't forget to make entries in ServerConfigMetadata.json for all files you have changed.
 - Note that the policy upload command always generates a fresh installer.ps1 file for upload. If you want to make changes to 
 that, you may have to keep a separate copy and upload it. (We will revisit this in future sprints.)

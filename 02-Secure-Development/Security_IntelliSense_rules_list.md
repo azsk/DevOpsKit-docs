@@ -408,7 +408,7 @@ The RijndaelManaged class supports algorithm modes which are not FIPS approved. 
 
 **Message**
 <br/>
-The MD5 hash algorigthm is weak and must not be used.
+The MD5 hash algorithm is weak and must not be used.
 <br/>
 <br/>
 **Description**
@@ -421,7 +421,7 @@ The MD5 hash algorithm has been broken and many practical attacks have been foun
 
 **Message**
 <br/>
-The SHA1 hash algorigthm is weak and must not be used.
+The SHA1 hash algorithm is weak and must not be used.
 <br/>
 <br/>
 **Description**

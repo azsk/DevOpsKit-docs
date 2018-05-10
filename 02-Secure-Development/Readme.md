@@ -47,7 +47,7 @@
 ### Overview
 Security Verifications Tests (or SVTs) represent the core of security testing functionality of the 
 AzSK. For all the prominent features in Azure (e.g., Web Apps, Storage, SQL DB, Key Vault, etc.), 
-the AzSK ccan perform automated security checks against Azure resources of those types. 
+the AzSK can perform automated security checks against Azure resources of those types. 
 These checks are based on security standards and best practices as applicable for sensitive corporate 
 data at Microsoft. In general, these are likely to be applicable for most scenarios that involve 
 processing sensitive data in other environments.
@@ -218,7 +218,7 @@ The contents of the output folder are organized as under:
 
 You can use these outputs as follows - 
 1. The SecurityReport.CSV file provides a quick glimpse of the control results. Investigate those that say 'Verify' or 'Failed'.  
-2. For 'Failed' or 'Verify' controls, look in the <resourceType>.LOG file (search for 'failed' or by control-id). Understand what caused the control the fail.
+2. For 'Failed' or 'Verify' controls, look in the <resourceType>.LOG file (search for 'failed' or by control-id). Understand what caused the control to fail.
 3. For 'Verify' controls, you will also find the SecurityEvaluationData.JSON file handy. 
 4. For some controls, you can also use the 'Recommendation' field in the control output to get the PS command you may need to use.
 5. Make any changes to the subscription/resource configurations based on steps 2, 3 and 4. 
