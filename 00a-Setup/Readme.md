@@ -106,6 +106,8 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 The execution policy setting will be remembered and all future PS consoles opened in non-Admin (CurrentUser) mode will apply the 'RemoteSigned' execution policy.
 
 #### Error message: "PackageManagement\Install-Package: cannot process argument transformation on parameter 'InstalledModuleInfo'..."
+
+
 If you have installed AzureRM PowerShell using Azure SDK in your machine, it typically get installed in Program Files. You could run the below command to confirm
 ```PowerShell
  Get-Module -Name AzureRM* -ListAvailable 
@@ -148,3 +150,28 @@ The above error message is an indication that an AzSK cmdlet is being run in a P
 The AzSK depends upon AzureRm PowerShell modules. AzureRm modules are created/maintained by the Azure product team and provide the core PowerShell libraries to interact with different Azure services. For example, you'd use the AzureRm Storage module to create/work with a storage account, etc.  
 
 The AzSK setup installs the required version of AzureRm. It is possible that this is the first time your system is being setup for AzureRm. In such a situation, you will get a 'data collection' related notice/warning from AzureRm. You can choose to 'accept' or 'decline' permission to collect data. The AzSK functionality will not be affected by that.  
+
+#### When will AzSK support the newest AzureRm module (currently 5.x)? Can I run both side by side? In the meantime, what if I need to run both AzSK and the new version of AzureRm (for different tasks)?
+At any time, AzSK is bound to a specific version of AzureRm. We have found that it keeps our dependencies in check and limits randomizations from minor version updates of one of the many modules that ship under the "AzureRm umbrella".
+
+However, after each major update to AzureRm, we wait for a dot-release and migrate AzSK to the latest version (e.g., 5.1). This usually happens within a couple of months after the major AzureRm release.
+
+In the interim, if you need to use AzSK as well as the latest AzureRm (for other tasks), this is how you can do it. (We assume that you already have the latest AzSK installed which, in turn, will ensure that you have the version of AzureRm that AzSK requires). 
+Install the newest AzureRm from a fresh PS console if you haven't done so.
+Use separate PS consoles for AzSK and (newer) AzureRM work.
+For the AzSK console, always start with the following command:
+```PowerShell
+import-module AzSK
+```
+This will automatically cause AzSK to load the version of AzureRm it requires as opposed to the newest one. Run AzSK commands as needed in this session.
+For the (new) AzureRm console, just run whatever AzureRm commands you need to there. The latest installed version of AzureRm will automatically get loaded and used for those. (Do not run AzSK commands in this console.) 
+
+Just note that this assumes that both AzSK and AzureRm were installed with '-Scope CurrentUser'. If a newer AzureRm is installed without an explicit 'CurrentUser' scope, it is possible that by default AzureRm 4.1 may get loaded. In such a situation, it is better to explicitly load the version needed with a '-RequiredVersion' flag (or full path to module). Basically, remember that PS will search for a module in the order folders are listed in $Env:PSModulePath and load the first module that exports the function being used.
+
+#### How often should I upgrade my installation of AzSK? How long will it take?
+The AzSK team releases a new version of AzSK at the end of each monthly sprint. You should aim to use the latest release always. So, as a regular user, you should upgrade AzSK each month. 
+
+Being on the latest release ensures that you have the latest features, most up to date control evaluation code, coverage for latest Security Verification Tests (SVTs), etc. 
+Note that, when you run any AzSK command, if there is a newer version of AzSK available, the command will tell you about it (at the very top). 
+
+Note that, the first time you installed AzSK, it perhaps took a few extra minutes because of the dependencies that had to be installed (especially AzureRm). In most subsequent installations, it will just need to fetch the latest AzSK modules. This will hardly take a couple of minutes.
