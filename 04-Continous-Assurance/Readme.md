@@ -419,9 +419,9 @@ $OMSSharedKey = '<omsSharedKey>'
 $TargetSubscriptionIds = '<SubId1, SubId2, SubId3...>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
 $AutomationAccountLocation = '<location>'
 $AutomationAccountRGName = '<RGName>' # e.g. AzSK-Category-ScanRG01
-$AutomationAccountName = '<accountName> # e.g. AzSKScanningAccount01
+$AutomationAccountName = '<accountName>' # e.g. AzSKScanningAccount01
 
-> **Note** You should use the unique names for AutomationAccountRG and AutomationAccountName to avoid any conflicts while setup
+# **Note** You should use the unique names for AutomationAccountRG and AutomationAccountName to avoid any conflicts while setup
 
 Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds 
         -ResourceGroupNames $ResourceGroupNames -OMSWorkspaceId $OMSWorkspaceId -OMSSharedKey $OMSSharedKey 
