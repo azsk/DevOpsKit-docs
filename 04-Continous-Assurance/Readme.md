@@ -291,10 +291,10 @@ Unlike the 'individual subscription' mode where each subscription get its own in
 - [Optional: Have a custom DevOps Kit policy setup for your org. This would provide more capabilities to control the scanning behavior. 
   (See [here](../07-Customizing-AzSK-for-your-Org/Readme.md) for more details on org policy.)
 
-#### Central Scan mode - single versus multiple Automation accounts:
+### Central Scan mode - single versus multiple Automation accounts:
 When setting up CA with central scan mode, you have a choice regarding division of the scanning workload between automation accounts. You can choose to have all target subscriptions scanned via a single automation account *or* you can configure multiple automation accounts to divide the scanning workload amongst them by assigning each automation account a subset of the subscriptions for scaning. These two options and when to choose which one are covered below: 
 
-##### 1. Central Scan mode CA using a single Automation account (default behavior):
+#### 1. Central Scan mode CA using a single Automation account (default behavior):
 
 With this option, a single automation account will get created in the host (master) subscription, which will scan all the target subscriptions. This mode is suitable for scanning up to a max of 40-50 subscriptions. (As the number of target subscriptions increases, the frequency of scan for each subscription reduces. Ideally each subscription should get scanned at least once per day. The multiple Automation account option might help if the count of subscriptions to be scanned is higher.)
 
@@ -361,7 +361,7 @@ All other parameters as described in the main Update-AzSKContinuousAssurance par
 
 ##### 1.3 Diagnosing the health of Central Mode CA (single Automation account option)
 
-You could run the command below. It would diagnose the Continuous Assurance Automation account running under central subscription
+You can run the command below to enquire the health of CA setup in your subscription. Note that the '-CentralScanMode' flag is not requied for this command.
 
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
@@ -398,8 +398,8 @@ Remove-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -DeleteStorageRep
 
 >**Note** If just subscrptionId is passed, then it would check if the host sub is in central scanning mode, if so, user needs to pass CentralScanMode switch specifically. In these scenarios, it would remove the whole automation account from host sub.
 
-
-##### 2. Central Scan mode CA using multiple Automation accounts
+ 
+#### 2. Central Scan mode CA using multiple Automation accounts
 
 If you are trying to scan multiple target subscriptions, then scanning all of them using a single Automation account can reduce the scan frequency. 
 In such scenarios, you can use this approach to categorize your subscriptions into batches and scan these batches 
@@ -477,9 +477,9 @@ Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscripti
 |FixRuntimeAccount| This will correct all the permissions issues related to the scanning account| False | Provide this switch only when you want to add new subscriptions for central scanning mode or if scanning account credential needs to be updated |
 |CentralScanMode| It is mandatory to use CentralScanMode switch| True | |
 
-###### 2.3 Diagnosing the health of Central Mode CA (multiple Automation accounts option)
+##### 2.3 Diagnosing the health of Central Mode CA (multiple Automation accounts option)
 
-You can run the command below (see the main section for Get-AzSKContinuousAssurance earlier  in this doc for details)
+You can run the command below to enquire the health of CA setup in your subscription. In the case of multi-Automation account setup, you can query the status of one setup at a time. As a result, you must pass the name of the automation account and the automation account resource group as parameters. Note that the '-CentralScanMode' flag is not requied for this command.
 
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
