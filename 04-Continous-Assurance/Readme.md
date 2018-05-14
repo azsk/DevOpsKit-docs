@@ -486,7 +486,7 @@ $SubscriptionId = '<subscriptionId>'
 $AutomationAccountRGName = '<RGName>' # e.g. AzSK-Category-ScanRG01
 $AutomationAccountName = '<accountName> # e.g. AzSKScanningAccount01
 
-Get-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -AutomationAccountRGName $AutomationAccountRGName -AutomationAccountName $AutomationAccountName -CentralScanMode [-ExhaustiveCheck] 
+Get-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -AutomationAccountRGName $AutomationAccountRGName -AutomationAccountName $AutomationAccountName [-ExhaustiveCheck] 
 ```
 </br>
 
