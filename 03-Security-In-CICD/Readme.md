@@ -25,6 +25,8 @@
 - [Walkthrough](Readme.md#walkthrough-2)
   - [Adding ARM Template Checker in VSTS pipeline](Readme.md#adding-arm-template-checker-in-vsts-pipeline)
   - [Verifying that ARM Template Checker have been added and configured correctly](Readme.md#verifying-that-the-arm-template-checker-have-been-added-and-configured-correctly)
+  - [How to exclude file(s) from scan?](Readme.md#how-to-exclude-file(s)-from-scan?)
+  - [How to skip certain controls during scan?](Readme.md#how-to-skip-certain-controls-during-scan?)
 ------------------------------------------------------------------
 ### Overview 
 The AzSK contains Security Verification Tests (SVTs) for multiple PaaS and IaaS services of the Azure platform. 
@@ -515,4 +517,9 @@ Opening/extracting the "ArmTemplateChecker_Logs" ZIP file will reveal a folder s
 what we have seen in the case of ad hoc ARMChecker runs:
 ![03_AzSDK_Logs](../Images/03_ARMChecker_Logs.JPG)
 
+[Back to top...](Readme.md#contents)
+
+### How to exclude file(s) from scan?
+[Back to top...](Readme.md#contents)
+### How to skip certain controls during scan?
 [Back to top...](Readme.md#contents)
