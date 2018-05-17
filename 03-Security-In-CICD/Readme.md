@@ -540,12 +540,16 @@ AzSK ARM Template Checker will fail if any security control will fail for provid
 
 ![03_AzSDK_Logs](../Images/03_ARMChecker_Logs.JPG)
 
-**Step-2:** Open CSV file and now keep only those controls which you want to skip from scan :
+**Step-2:** Open CSV file and start editing, keep only those controls with failed status which you want to skip from scan.
 
 ![03_AzSDK_Logs](../Images/03_FailedControl_Logs_ARMChecker.JPG)
 
+After editing CSV should look like this,
+
+![03_AzSDK_Logs](../Images/03_Skip_Controls_File_ARMChecker.JPG)
+
 **Step-3:** Upload this edited CSV file to your repository and give path of this file in "Skip Controls From File" input as shown in below image:
 
-![03_AzSDK_Logs](../Images/03_ARMChecker_Logs.JPG)
+![03_AzSDK_Logs](../Images/03_Skip_Controls_File_ARMChecker.JPG)
 
 [Back to top...](Readme.md#contents)
