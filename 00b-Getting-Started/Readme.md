@@ -32,7 +32,7 @@ in the table below:
 
 | Command (alias) | What it does |	Reqd Permission |
 |----|----|-----|
-|Clear-AzSKSessionState (CSS)|Command to clear AzSK Session object|NA|
+|Clear-AzSKSessionState (CSS)|Command to clear AzSK session object|NA|
 |Get-AzSKAzureServicesSecurityStatus (GRS)|Scans a set of RGs (or the entire subscription)|Reader on subscription or respective RGs|
 |Get-AzSKContinuousAssurance (GCA)|Validates the status of Continuous Assurance automation account including the condition of various artifacts such as storage account, schedules, runbooks, SPN/connection, required modules, etc.|Reader on subscription.|
 |Get-AzSKControlsStatus (GCS)|Single cmdlet that combines Get-AzSKSubscriptionSecurityStatus, Get-AzSKAzureServicesSecurityStatus|Union of permissions.|
