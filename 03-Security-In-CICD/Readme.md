@@ -25,8 +25,8 @@
 - [Walkthrough](Readme.md#walkthrough-2)
   - [Adding ARM Template Checker in VSTS pipeline](Readme.md#adding-arm-template-checker-in-vsts-pipeline)
   - [Verifying that ARM Template Checker have been added and configured correctly](Readme.md#verifying-that-the-arm-template-checker-have-been-added-and-configured-correctly)
-  - [How to exclude files from scan](Readme.md#how-to-exclude-files-from-scan)
-  - [How to skip certain controls during scan](Readme.md#how-to-skip-certain-controls-during-scan)
+  - [Exclude files from scan](Readme.md#exclude-files-from-scan)
+  - [Skip certain controls during scan](Readme.md#skip-certain-controls-during-scan)
 ------------------------------------------------------------------
 ### Overview 
 The AzSK contains Security Verification Tests (SVTs) for multiple PaaS and IaaS services of the Azure platform. 
@@ -519,37 +519,37 @@ what we have seen in the case of ad hoc ARMChecker runs:
 
 [Back to top...](Readme.md#contents)
 
-### How to exclude files from scan
+### Exclude files from scan
 To scan multiple ARM Templates at a time you can pass folder path containing different ARM Template(s) but it is possible that folder may contain some ARM Template(s) that are not valid or currently not supported by ARM Checker. In this case AzSK ARM Template Checker Task will skip those file(s) and will fail.
 
-![03_AzSDK_Logs](../Images/03_SkippedFile_Error_ARMChecker.JPG)
+![03_SkippedFile_Error_ARMChecker](../Images/03_SkippedFile_Error_ARMChecker.JPG)
 The overall ZIP file can be downloaded by clicking on the "Download all logs as ZIP" option. The ZIP file "ReleaseLogs_dd.zip" contains LOGs from the entire release pipeline including the master output for the AzSK_ARMTemplateChecker. The CSV file and the LOG file for   AzSK ARM Template Checker are embedded in the 'inner' ZIP file that is named as ArmTemplateChecker_Logs_yyyymmdd_hhmmss.zip . Download "ArmTemplateChecker_Logs" ZIP file and then Open/extract the "ArmTemplateChecker_Logs". It will contains SkippedFiles.LOG file along with other files. On opening this file you will get list of all file(s) skipped during scan. 
 
-![03_AzSDK_Logs](../Images/03_Skipped_Files_Log_ARMChecker.JPG)
+![03_Skipped_Files_Log_ARMChecker](../Images/03_Skipped_Files_Log_ARMChecker.JPG)
 
 In such case you can exclude files from scan using "Exclude Files" input, you need to pass name of the files you want to exclude in "Exclude Files" input as shown in image below:
 
-![03_AzSDK_Logs](../Images/03_ExcludeFiles_Param_ARMChecker.JPG)
+![03_ExcludeFiles_Param_ARMChecker](../Images/03_ExcludeFiles_Param_ARMChecker.JPG)
 
 [Back to top...](Readme.md#contents)
 
-### How to skip certain controls during scan
+### Skip certain controls during scan
 
 AzSK ARM Template Checker will fail if any security control will fail for provided ARM Template. But in some case it may be possible that some controls failure you don't want to fix. In such case you can skip specific controls from scan using below step:<br>
 **Step-1:** The overall ZIP file can be downloaded by clicking on the "Download all logs as ZIP" option. The ZIP file "ReleaseLogs_dd.zip" contains LOGs from the entire release pipeline including the master output for the AzSK_ARMTemplateChecker. The CSV file and the LOG file for AzSK ARM Template Checker are embedded in the 'inner' ZIP file that is named as ArmTemplateChecker_Logs_yyyymmdd_hhmmss.zip . Opening/extracting the "ArmTemplateChecker_Logs" ZIP file will reveal a folder structure and files placement as shown below:
 
-![03_AzSDK_Logs](../Images/03_ARMChecker_Logs.JPG)
+![03_ARMChecker_Logs](../Images/03_ARMChecker_Logs.JPG)
 
 **Step-2:** Open CSV file and start editing, keep only those controls with failed status which you want to skip from scan.
 
-![03_AzSDK_Logs](../Images/03_FailedControl_Logs_ARMChecker.JPG)
+![03_FailedControl_Logs_ARMChecker](../Images/03_FailedControl_Logs_ARMChecker.JPG)
 
 After editing CSV should look like this,
 
-![03_AzSDK_Logs](../Images/03_Skip_Controls_File_ARMChecker.JPG)
+![03_Skip_Controls_File_ARMChecker](../Images/03_Skip_Controls_File_ARMChecker.JPG)
 
 **Step-3:** Upload this edited CSV file to your repository and give path of this file in "Skip Controls From File" input as shown in below image:
 
-![03_AzSDK_Logs](../Images/03_Skip_Controls_Param_ARMCheckerJPG.JPG)
+![03_Skip_Controls_Param_ARMCheckerJPG](../Images/03_Skip_Controls_Param_ARMCheckerJPG.JPG)
 
 [Back to top...](Readme.md#contents)
