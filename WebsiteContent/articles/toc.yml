@@ -3,11 +3,16 @@
   topicHref: ../../README.md
 - name: Setup
   href: ../../00a-Setup/Readme.md
+  items:
+    - name: Migration.md
+      href: ../../00a-Setup/Migration.md
 - name: Getting Started
   href: ../../00b-Getting-Started/Readme.md
   items:
     - name: Azure Service Security
       href: ../../00b-Getting-Started/GettingStarted_AzureServiceSecurity.md
+    - name: PowerShell tips for new AzSK Users
+      href: ../../00b-Getting-Started/GettingStarted_PowerShellTipsAzSK.md
     - name: Subscription Security
       href: ../../00b-Getting-Started/GettingStarted_SubscriptionSecurity.md
 - name: Addressing Control Failures
@@ -88,8 +93,14 @@
   href: ../../04-Continous-Assurance/Readme.md
 - name: Alerting and Monitoring
   href: ../../05-Alerting-and-Monitoring/Readme.md
+  items:
+    - name: OMS Queries
+      href: ../../05-Alerting-and-Monitoring/OMSQueries.md
 - name: Security Telemetry
   href: ../../06-Security-Telemetry/Readme.md
+  items: 
+    - name: App Insight Queries
+      href: ../../06-Security-Telemetry/App-Insights-Queries/Readme.md
 - name: Customizing AzSK for your organization
   href: ../../07-Customizing-AzSK-for-your-Org/Readme.md
 - name: Advanced features

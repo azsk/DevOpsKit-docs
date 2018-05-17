@@ -28,9 +28,9 @@ in the table below:
 [Alerting & Monitoring](../05-Alerting-and-Monitoring/Readme.md) | <ul><li>Leveraging OMS towards:<ul><li>Single pane view of security across dev ops stages</li><li>Security alerts based on various search conditions.</li></ul></li></ul>
 [Cloud Risk Governance](../06-Security-Telemetry/Readme.md) | <ul><li>Support for control state attestation and security governance dashboards. </li></ul> 
 
-## List Of AzSK commands
+## Complete list of AzSK commands
 
-|Command|What it does|	Role/Permission|
+| Command (alias) | What it does |	Reqd Permission |
 |----|----|-----|
 |Get-AzSKAzureServicesSecurityStatus (GRS)|Scans a set of RGs (or the entire subscription)|Reader on subscription or respective RGs|
 |Get-AzSKContinuousAssurance (GCA)|Validates the status of Continuous Assurance automation account including the condition of various artifacts such as storage account, schedules, runbooks, SPN/connection, required modules, etc.|Reader on subscription.|

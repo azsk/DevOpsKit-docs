@@ -60,7 +60,7 @@ for your application.)
 
 
 **Step-1: Setup**  
-0. Setup the latest version of the AzSK following the installation instructions for your organization. (For MSIT use https://aka.ms/azsdkdocs).
+0. Setup the latest version of the AzSK following the installation instructions for your organization. (For CSE use https://aka.ms/devopskit/onboarding).
 1. Open the PowerShell ISE and login to your Azure account (using **Login-AzureRmAccount**).  
 2. Run the '**Install-AzSKContinuousAssurance**' command with required parameters given in below table. 
 
@@ -291,10 +291,10 @@ Unlike the 'individual subscription' mode where each subscription get its own in
 - [Optional: Have a custom DevOps Kit policy setup for your org. This would provide more capabilities to control the scanning behavior. 
   (See [here](../07-Customizing-AzSK-for-your-Org/Readme.md) for more details on org policy.)
 
-#### Central Scan mode - single versus multiple Automation accounts:
+### Central Scan mode - single versus multiple Automation accounts:
 When setting up CA with central scan mode, you have a choice regarding division of the scanning workload between automation accounts. You can choose to have all target subscriptions scanned via a single automation account *or* you can configure multiple automation accounts to divide the scanning workload amongst them by assigning each automation account a subset of the subscriptions for scaning. These two options and when to choose which one are covered below: 
 
-##### 1. Central Scan mode CA using a single Automation account (default behavior):
+#### 1. Central Scan mode CA using a single Automation account (default behavior):
 
 With this option, a single automation account will get created in the host (master) subscription, which will scan all the target subscriptions. This mode is suitable for scanning up to a max of 40-50 subscriptions. (As the number of target subscriptions increases, the frequency of scan for each subscription reduces. Ideally each subscription should get scanned at least once per day. The multiple Automation account option might help if the count of subscriptions to be scanned is higher.)
 
@@ -349,7 +349,7 @@ Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscripti
 ```
 </br>
 
-All other parameters as described in the main Update-AzSKContinuousAssurance parameters table apply. 
+> **Note:** All other parameters as described in the main Update-AzSKContinuousAssurance parameters table apply. They are not repeated below for brevity.
 
 |Param Name| Purpose| Required?| DefaultValue| Comments|
 |----------|--------|----------|-------------|---------|
@@ -361,7 +361,7 @@ All other parameters as described in the main Update-AzSKContinuousAssurance par
 
 ##### 1.3 Diagnosing the health of Central Mode CA (single Automation account option)
 
-You could run the command below. It would diagnose the Continuous Assurance Automation account running under central subscription
+You can run the command below to enquire the health of CA setup in your subscription. Note that the '-CentralScanMode' flag is not requied for this command.
 
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
@@ -398,8 +398,8 @@ Remove-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -DeleteStorageRep
 
 >**Note** If just subscrptionId is passed, then it would check if the host sub is in central scanning mode, if so, user needs to pass CentralScanMode switch specifically. In these scenarios, it would remove the whole automation account from host sub.
 
-
-##### 2. Central Scan mode CA using multiple Automation accounts
+ 
+#### 2. Central Scan mode CA using multiple Automation accounts
 
 If you are trying to scan multiple target subscriptions, then scanning all of them using a single Automation account can reduce the scan frequency. 
 In such scenarios, you can use this approach to categorize your subscriptions into batches and scan these batches 
@@ -411,6 +411,8 @@ In this scenario, all your logs, scanning configuration, attestation data is per
 
 When you have more than about 40-50 subscriptions to scan, it is better to use multiple Automation accounts option of the Central Scan mode. You need to split the overall set of target subscriptions into multiple groups and then decide names to use for the Automation account and the resource groups that will host the CA for each group. Once this grouping and naming is done, you simply run the central scan mode CA setup command once for each group (with additional parameters identifying the Automation account name and the resource group that will serve as the host for scanning the respective group).
 
+> **Note:** When using multi-Automation Account mode, be sure to provide a _unique_ Automation account name and a _unique_ resource group name for each CA setup. Basically, each such tuple represents a unique CA setup within the master/central subscription. You will need to carefully provide this tuple for subsequent Update-CA/Remove-CA calls as well...as it is this tuple that helps CA identify the subscription group being targeted. 
+
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
 $ResourceGroupNames = '*' #This should always be '*' for Central Scan mode CA
@@ -419,9 +421,9 @@ $OMSSharedKey = '<omsSharedKey>'
 $TargetSubscriptionIds = '<SubId1, SubId2, SubId3...>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
 $AutomationAccountLocation = '<location>'
 $AutomationAccountRGName = '<RGName>' # e.g. AzSK-Category-ScanRG01
-$AutomationAccountName = '<accountName> # e.g. AzSKScanningAccount01
+$AutomationAccountName = '<accountName>' # e.g. AzSKScanningAccount01
 
-> **Note** You should use the unique names for AutomationAccountRG and AutomationAccountName to avoid any conflicts while setup
+# **Note** You should use the unique names for AutomationAccountRG and AutomationAccountName to avoid any conflicts while setup
 
 Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds 
         -ResourceGroupNames $ResourceGroupNames -OMSWorkspaceId $OMSWorkspaceId -OMSSharedKey $OMSSharedKey 
@@ -448,7 +450,8 @@ Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscript
 
 > **Note:** If you are using switch -SkipTargetSubscriptionConfig, then it assumes you have done all the required configuration on the target subscriptions. 
 > Like, adding the CA SPN as Reader on target sub, Creating AzSK RG and a storage account name starting with azsk, Contributor permission to SPN on AzSKRG. 
-> If any of the steps are not done, then central scan automation account will skip those target subscriptions.
+> If any of the steps are not done, then central scan automation account will skip those target subscriptions. 
+> You can use the script [here](https://github.com/azsk/DevOpsKit-docs/blob/master/04-Continous-Assurance/scripts/PrepareTargetSubscriptionForCentralModeCA.md) to prepare one or more target subscriptions for central mode scanning. The example invocation at the bottom of the script shows how to invoke the function in the script for a single target sub.
 
 ##### 2.2 Updating/modifying Central Scan mode CA (multiple Automation accounts option)
 
@@ -466,6 +469,8 @@ Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscripti
 ```
 </br>
 
+> **Note:** All other parameters as described in the main Update-AzSKContinuousAssurance parameters table apply. They are not repeated below for brevity.
+
 |Param Name| Purpose| Required?| DefaultValue| Comments|
 |----------|--------|----------|-------------|---------|
 |SubscritionId| Central subscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
@@ -476,16 +481,16 @@ Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscripti
 |FixRuntimeAccount| This will correct all the permissions issues related to the scanning account| False | Provide this switch only when you want to add new subscriptions for central scanning mode or if scanning account credential needs to be updated |
 |CentralScanMode| It is mandatory to use CentralScanMode switch| True | |
 
-###### 2.3 Diagnosing the health of Central Mode CA (multiple Automation accounts option)
+##### 2.3 Diagnosing the health of Central Mode CA (multiple Automation accounts option)
 
-You can run the command below (see the main section for Get-AzSKContinuousAssurance earlier  in this doc for details)
+You can run the command below to enquire the health of CA setup in your subscription. In the case of multi-Automation account setup, you can query the status of one setup at a time. As a result, you must pass the name of the automation account and the automation account resource group as parameters. Note that the '-CentralScanMode' flag is not requied for this command.
 
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
 $AutomationAccountRGName = '<RGName>' # e.g. AzSK-Category-ScanRG01
 $AutomationAccountName = '<accountName> # e.g. AzSKScanningAccount01
 
-Get-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -AutomationAccountRGName $AutomationAccountRGName -AutomationAccountName $AutomationAccountName -CentralScanMode [-ExhaustiveCheck] 
+Get-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -AutomationAccountRGName $AutomationAccountRGName -AutomationAccountName $AutomationAccountName [-ExhaustiveCheck] 
 ```
 </br>
 
@@ -532,6 +537,28 @@ Remove-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -DeleteStorageRep
 You need to be 'Owner' on the subscription.
 This is required because, during CA setup, we add RBAC access to an Azure AD App (SPN) that's utilized for running the 'security scan' runbooks in Azure Automation. Only an'Owner' for a subscription has the right to change subscription RBAC.  
 
+#### What are AzSKRG and AzSK_CA_SPN used for?
+
+The AzSK Continuous Assurance (CA) setup basically provisions your subscription with the ability to do daily scans and sends the scan results to your OMS workspace.
+To do the scanning, the CA setup process creates a runtime account (owned by you) and grants that account 'Reader' access to your subscription. This is the AzSK_CA_SPN_xxxx that you will notice in a 'Reader' role if you look at the Access Control (IAM) list for your subscription.
+ 
+The CA setup also creates an automation account that holds the runbook (scanning code), the schedules (that trigger the daily scan) and other configuration parameters (e.g., your OMS info, target resource groups list, etc.) This, and other artifacts related to AzSK and functioning of AzSK commands, are held in a resource group called 'AzSKRG' in your subscription. 
+
+Each day, the runbook executes under the identity of the AzSK_CA_SPN_xxxx runtime account and performs a scan of the subscription and contained resources (per the currently applicable baseline controls list). 
+
+At the end of the each scan, the SPN needs some place to store the results (so that they can be examined by someone as need be later). For the purpose of storing the ZIP files from daily scans, a storage account is used. This storage account is also held within the same (AzSKRG) resource group and a blob container called 'AzSKexecutionlogs' is where the ZIP files are written each day. Because the CA SPN writes to the storage account, it needs 'Contributor' access to the 'AzSKRG' resource group. This access is also setup during the Install-AzSKContinuousAssurance (CA setup) command. 
+
+In general, all artifacts within the AzSKRG resource group are considered 'read only'. Respective AzSK cmdlets have the logic to manage these resources built-in. You should not make any modifications directly to either the contents of this resource group or to the permissions of the SPN (AzSK_CA_SPN_xxxx) as this may impact the functioning of AzSK CA or other AzSK commands. 
+
+#### How to fix SPN permissions for my AzSK Continuous Assurance setup?
+
+The AzSK_CA_SPN is used to perform scanning and do the bookkeeping necessary for Continuous Assurance scans. As a result, during CA installation, it is granted 'Reader' access at subscription scope and 'Contributor' access at AzSKRG resource group scope. If any of these are changed/removed, CA functioning will be impacted. To revert to correct permissions run the following:
+
+```PowerShell
+Update-AzSKContinuousAssurance -SubscriptionId <sub_id> -FixRuntimeAccount
+``` 
+See the above question for more info about the SPN and AzSKRG.
+
 #### Is it possible to setup CA if there is no OMS workspace?
 No. The intent of CA is to scan regularly and be able to monitor the outcomes for security drift. Out of the box, AzSK CA uses OMS for the monitoring capabilities. (Basically, AzSK sends control evaluation results to a connected OMS workspace.)  
 
@@ -563,6 +590,64 @@ That is easy! Just run the Update-AzSKContinuousAssurance cmdlet with the new li
 #### Do I need to also setup AzSK OMS solution?
 This part is not mandatory for CA itself to work.
 However, setting up the AzSK OMS solution is recommended as it will help you get a richer view of continuous assurance for your subscription and resources as scanned by CA. Secondly, it will give you several out-of-box artefacts to assist with security monitoring for your service. For instance, you will start getting email alerts if any of the high or critical severity controls from AzSK fail in your service.  
+
+#### How to renew the certificate used for Continuous Assurance? 
+
+The SPN used for daily scanning by AzSK CA uses a cert credential which has a default expiry of 6 months. When the cert comes close to expiry both the Azure portal and the Get-AzSKContinuousAssurance command warn about a need to renew the credential. Here's how to renew the cert:
+
+The SPN belongs to an AAD application that is created on behalf of the person who setup CA for the first time. You need to ensure that either that person performs the renewal or you can request that person to give you 'Owner' permission to that application. If the owner is unavailable (or has left the org) then altogether new application in AAD (owned by you), SPN and a certificate credential will be created and new SPN will be used for scanning your subscription moving forward.
+
+Run the following command to renew CA certificate.
+
+```PowerShell
+Update-AzSKContinuousAssurance -SubscriptionId <sub_id_here> -RenewCertificate
+```
+
+Verify that it worked by running Get-AzSKContinuousAssurance again to confirm that the warning is gone.
+
+```PowerShell
+Get-AzSKContinuousAssurance -SubscriptionId <sub_id_here>
+```
+
+Note:
+If you don't know who ran CA setup earlier, you can find the owner of the AAD SPN by going to "Azure Active Directory" in the left pane in the portal and clicking "Enterprise Applications" and searching for the specific SPN (as shown below). Once you find the SPN, click on it and click "Owners". You can now contact one of the listed owners to either perform the above steps or add you as the owner so you can.
+
+#### What are some example controls that are not scanned by CA?
+
+Here are a few examples of controls that CA cannot fully scan or can only 'partially' infer compliance for: 
+* Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities - requires Graph API access to determine if an AAD object is an 'external' identity </br>
+* Azure_Subscription_AuthZ_Remove_Management_Certs - querying for management certs requires Co-Admin permission </br>
+* Azure_AppService_AuthN_Use_AAD_for_Client_AuthN - often this is implemented in code so an app owner has to attest this control. Also, any 'security-related' config info is not accessible to the 'Reader' RBAC role. </br>
+* Azure_CloudService_SI_Enable_AntiMalware - needs co-admin access. </br> 
+* Azure_CloudService_AuthN_Use_AAD_for_Client_AuthN - no API available to check this (has to be manually attested). </br>
+* Azure_Storage_AuthN_Dont_Allow_Anonymous - needs 'data plane' access to storage account (CA SPN being a 'Reader' cannot do 'ListKeys' to access actual data). </br>
+As always, the most foolproof way to check all control failures is to ensure you are doing the following:
+
+Step-1: Update to the latest version of AzSK (it will tell you each time a command starts if your version is not the latest)
+
+Step-2: Run a subscription controls scan (as Co-Admin) with "-UseBaselineControls" flag
+
+Step-3: Run a complete scan of resources (as Co-Admin if you have classic resources or as Owner if you don't)
+
+Step-4: Lastly, if you fix or attest any controls which CA cannot scan, you may need to rerun (b) or (c) above at least once so that the final status of those non-CA controls gets sent to the OMS.
+
+#### Should I manually update modules in the AzSK CA automation account?
+
+No! Manually updating Azure modules like that will break AzSK CA.
+
+AzSK is reliant on a specific version of AzureRm PowerShell modules. It is extensively tested against that version (and that version only). The Continuous Assurance setup process ensures that the correct version of AzureRm modules is installed and imported into the CA automation account. If you attempt to update Azure modules (see pic below), it may bring in incompatible versions of AzureRm modules and cause CA scanning to break. 
+
+Note that once in a few months, the AzSK team reviews new releases of AzureRm modules and updates the dependencies after extensive testing. At that point, the CA automation account will be automatically updated to import the newer modules. (No action is needed from your side.)
+
+#### Difference between scanned controls from CA v. ad hoc scans
+
+Some controls require elevated access and are not scanned by CA because the CA runtime account is only configured with 'Reader' privilege on the subscription. 
+
+The elevated access required may itself be different based on the control... e.g., some classic/v1 controls (such as presence of management certs) can be checked only if the runtime account has 'Co-Admin' privilege. Other controls (such as RBAC access to non-AAD identities) can be checked if you have read access to the AAD Graph. Yet others may need 'data plane' access (e.g., is a storage blob set to be publicly accessible?). 
+
+Such controls will be counted as 'failing' by default until you run the scans manually (which is when the actual result will start reflecting for them). 
+
+Also, when running scans manually, make sure you are on the latest version of the kit. That may also cause a discrepancy between a CA scan and a local scan. (CA always runs using the latest version of the kit.)
 
 #### How much does it cost to setup Continuous Assurance alongwith OMS monitoring solution?
 Using the following ballpark calculations (and service costs as of Q1-FY18), we estimate that a Continuous Assurance
@@ -622,7 +707,7 @@ The main/dominant component of the cost is automation runtime (storage/OMS costs
 
 
 #### Troubleshooting
-Please reach out to us at AzSDKSupExt@microsoft.com if you face any issues with this feature. 
+Please reach out to us at [azsksup@microsoft.com]() if you face any issues with this feature. 
 
 [Back to top…](Readme.md#contents)
 
