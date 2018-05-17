@@ -25,7 +25,7 @@
 - [Walkthrough](Readme.md#walkthrough-2)
   - [Adding ARM Template Checker in VSTS pipeline](Readme.md#adding-arm-template-checker-in-vsts-pipeline)
   - [Verifying that ARM Template Checker have been added and configured correctly](Readme.md#verifying-that-the-arm-template-checker-have-been-added-and-configured-correctly)
-  - [How to exclude file(s) from scan](Readme.md#how-to-exclude-file(s)-from-scan)
+  - [How to exclude files from scan](Readme.md#how-to-exclude-files-from-scan)
   - [How to skip certain controls during scan](Readme.md#how-to-skip-certain-controls-during-scan)
 ------------------------------------------------------------------
 ### Overview 
@@ -519,7 +519,7 @@ what we have seen in the case of ad hoc ARMChecker runs:
 
 [Back to top...](Readme.md#contents)
 
-### How to exclude file(s) from scan
+### How to exclude files from scan
 To scan multiple ARM Templates at a time you can pass folder path containing different ARM Template(s) but it is possible that folder may contain some ARM Template(s) that are not valid or currently not supported by ARM Checker. In this case AzSK ARM Template Checker Task will skip those file(s) and will fail.
 
 ![03_AzSDK_Logs](../Images/03_SkippedFile_Error_ARMChecker.JPG)
