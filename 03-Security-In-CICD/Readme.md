@@ -527,7 +527,7 @@ The overall ZIP file can be downloaded by clicking on the "Download all logs as 
 
 ![03_Skipped_Files_Log_ARMChecker](../Images/03_Skipped_Files_Log_ARMChecker.JPG)
 
-In such case you can exclude files from scan using "Exclude Files" input, you need to pass name of the files you want to exclude in "Exclude Files" input as shown in image below:
+In such case you can exclude files from scan using "Exclude Files" input, you need to pass name of the files (comma separated if more than one) you want to exclude in "Exclude Files" input as shown in image below:
 
 ![03_ExcludeFiles_Param_ARMChecker](../Images/03_ExcludeFiles_Param_ARMChecker.JPG)
 
