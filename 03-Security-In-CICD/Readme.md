@@ -26,7 +26,7 @@
   - [Adding ARM Template Checker in VSTS pipeline](Readme.md#adding-arm-template-checker-in-vsts-pipeline)
   - [Verifying that ARM Template Checker have been added and configured correctly](Readme.md#verifying-that-the-arm-template-checker-have-been-added-and-configured-correctly)
   - [How to exclude file(s) from scan?](Readme.md#how-to-exclude-file(s)-from-scan)
-  - [How to skip certain controls during scan?](Readme.md#how-to-skip-certain-controls-during-scan?)
+  - [How to skip certain controls during scan?](Readme.md##how-to-skip-certain-controls-during-scan)
 ------------------------------------------------------------------
 ### Overview 
 The AzSK contains Security Verification Tests (SVTs) for multiple PaaS and IaaS services of the Azure platform. 
