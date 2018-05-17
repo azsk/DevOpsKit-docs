@@ -8,12 +8,15 @@ This page displays security controls that are automated via the devops kit and a
 |[Subscription](Feature/SubscriptionCore.md)||
 |[Alerts List](Feature/AlertList.md)||
 |[ARMPolicy List](Feature/ARMPolicyList.md)||
-|[AnalysisServices](Feature/AnalysisServices.md)|Microsoft.AnalysisServices/servers|
+|[AzSKCfg](Feature/AzSKCfg.md)||
+|[APIConnection](Feature/APIConnection.md)|Microsoft.Web/connections|
 |[AppService](Feature/AppService.md)|Microsoft.Web/sites|
 |[Automation](Feature/Automation.md)|Microsoft.Automation/automationAccounts|
 |[Batch](Feature/Batch.md)|Microsoft.Batch/batchAccounts|
+|[BotService](Feature/BotService.md)|Microsoft.BotService/botServices|
 |[CDN](Feature/CDN.md)|Microsoft.Cdn/profiles|
 |[CloudService](Feature/CloudService.md)|Microsoft.ClassicCompute/domainNames|
+|[ContainerInstances](Feature/ContainerInstances.md)|Microsoft.ContainerInstance/containerGroups|
 |[CosmosDB](Feature/CosmosDB.md)|Microsoft.DocumentDb/databaseAccounts|
 |[DataFactory](Feature/DataFactory.md)|Microsoft.DataFactory/dataFactories|
 |[DataLakeAnalytics](Feature/DataLakeAnalytics.md)|Microsoft.DataLakeAnalytics/accounts|
