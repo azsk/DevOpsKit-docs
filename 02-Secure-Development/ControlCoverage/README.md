@@ -12,6 +12,7 @@ This page displays security controls that are automated via the devops kit and a
 |[AppService](Feature/AppService.md)|Microsoft.Web/sites|
 |[Automation](Feature/Automation.md)|Microsoft.Automation/automationAccounts|
 |[Batch](Feature/Batch.md)|Microsoft.Batch/batchAccounts|
+|[BotService](Feature/BotService.md)|Microsoft.BotService/botServices|
 |[CDN](Feature/CDN.md)|Microsoft.Cdn/profiles|
 |[CloudService](Feature/CloudService.md)|Microsoft.ClassicCompute/domainNames|
 |[CosmosDB](Feature/CosmosDB.md)|Microsoft.DocumentDb/databaseAccounts|
