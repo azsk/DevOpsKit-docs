@@ -520,9 +520,14 @@ what we have seen in the case of ad hoc ARMChecker runs:
 [Back to top...](Readme.md#contents)
 
 ### How to exclude file(s) from scan?
-To scan multiple ARM Templates at a time you can pass folder path containing different ARM Template(s) but it is possible that folder may contain some ARM Template(s) that are not valid or currently not supported by ARM Checker. In this case AzSK ARM Template Checker will fail.
+To scan multiple ARM Templates at a time you can pass folder path containing different ARM Template(s) but it is possible that folder may contain some ARM Template(s) that are not valid or currently not supported by ARM Checker. In this case AzSK ARM Template Checker Task will skip those file(s) and will fail.
 
 ![03_AzSDK_Logs](../Images/03_ARMChecker_Logs.JPG)
+
+Download "ArmTemplateChecker_Logs" ZIP file and then Open/extract the "ArmTemplateChecker_Logs". It will contains SkippedFiles.LOG file along with other files. On opening this file you will get list of all file(s) skipped during scan. 
+
+![03_AzSDK_Logs](../Images/03_ARMChecker_Logs.JPG)
+
 In such case you can exclude files from scan using "Exclude Files" input, you need to pass name of the files you want to exclude in "Exclude Files" input as shown in image below:
 
 ![03_AzSDK_Logs](../Images/03_ARMChecker_Logs.JPG)
@@ -530,7 +535,7 @@ In such case you can exclude files from scan using "Exclude Files" input, you ne
 [Back to top...](Readme.md#contents)
 
 ### How to skip certain controls during scan?
-AzSK ARM Template Checker will fail if any security control will fail for provided ARM Template. But in some case it may be possible that some controls failure you don't want to fix. In such case you can skip specific controls from scan using below step:
+AzSK ARM Template Checker will fail if any security control will fail for provided ARM Template. But in some case it may be possible that some controls failure you don't want to fix. In such case you can skip specific controls from scan using below step:<br>
 **Step-1:** Download "ArmTemplateChecker_Logs" ZIP file and then Opening/extracting the "ArmTemplateChecker_Logs" ZIP file will reveal a folder structure and files placement as shown below:
 
 ![03_AzSDK_Logs](../Images/03_ARMChecker_Logs.JPG)
