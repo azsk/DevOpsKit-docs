@@ -398,6 +398,8 @@ Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -Pre
 ```
 The parameters used are:
 - ARMTemplatePath – Path to ARM Template file or folder
+- ExcludeFiles – Comma-separated list of JSON files to be excluded from scan
+- SkipControlsFromFile – Path to file containing list of controls to skip
 > **Note**: This feature is in preview mode only. So, passing "–Preview" switch is mandatory. 
 [Back to top…](Readme.md#contents)
 
@@ -527,7 +529,7 @@ The overall ZIP file can be downloaded by clicking on the "Download all logs as 
 
 ![03_Skipped_Files_Log_ARMChecker](../Images/03_Skipped_Files_Log_ARMChecker.JPG)
 
-In such case you can exclude files from scan using "Exclude Files" input, you need to pass name of the files (comma separated if more than one) you want to exclude in "Exclude Files" input as shown in image below:
+In such case you can exclude files from scan using "Exclude Files" input, you need to pass name of the files (comma separated) you want to exclude in "Exclude Files" input as shown in image below:
 
 ![03_ExcludeFiles_Param_ARMChecker](../Images/03_ExcludeFiles_Param_ARMChecker.JPG)
 
