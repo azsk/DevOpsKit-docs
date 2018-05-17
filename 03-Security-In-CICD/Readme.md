@@ -523,7 +523,7 @@ what we have seen in the case of ad hoc ARMChecker runs:
 To scan multiple ARM Templates at a time you can pass folder path containing different ARM Template(s) but it is possible that folder may contain some ARM Template(s) that are not valid or currently not supported by ARM Checker. In this case AzSK ARM Template Checker Task will skip those file(s) and will fail.
 
 ![03_AzSDK_Logs](../Images/03_SkippedFile_Error_ARMChecker.JPG)
-The overall ZIP file can be downloaded by clicking on the "Download all logs as ZIP" option. The ZIP file "ReleaseLogs_dd.zip" contains LOGs from the entire release pipeline including the master output for the AzSK_ARMTemplateChecker. The CSV file and the LOG file for AzSK ARM Template Checker are embedded in the 'inner' ZIP file that is named as ArmTemplateChecker_Logs_yyyymmdd_hhmmss.zip . Download "ArmTemplateChecker_Logs" ZIP file and then Open/extract the "ArmTemplateChecker_Logs". It will contains SkippedFiles.LOG file along with other files. On opening this file you will get list of all file(s) skipped during scan. 
+The overall ZIP file can be downloaded by clicking on the "Download all logs as ZIP" option. The ZIP file "ReleaseLogs_dd.zip" contains LOGs from the entire release pipeline including the master output for the AzSK_ARMTemplateChecker. The CSV file and the LOG file for   AzSK ARM Template Checker are embedded in the 'inner' ZIP file that is named as ArmTemplateChecker_Logs_yyyymmdd_hhmmss.zip . Download "ArmTemplateChecker_Logs" ZIP file and then Open/extract the "ArmTemplateChecker_Logs". It will contains SkippedFiles.LOG file along with other files. On opening this file you will get list of all file(s) skipped during scan. 
 
 ![03_AzSDK_Logs](../Images/03_Skipped_Files_Log_ARMChecker.JPG)
 
