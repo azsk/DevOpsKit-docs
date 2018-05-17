@@ -550,6 +550,6 @@ After editing CSV should look like this,
 
 **Step-3:** Upload this edited CSV file to your repository and give path of this file in "Skip Controls From File" input as shown in below image:
 
-![03_AzSDK_Logs](../Images/03_Skip_Controls_File_ARMChecker.JPG)
+![03_AzSDK_Logs](../Images/03_Skip_Controls_Param_ARMCheckerJPG.JPG)
 
 [Back to top...](Readme.md#contents)
