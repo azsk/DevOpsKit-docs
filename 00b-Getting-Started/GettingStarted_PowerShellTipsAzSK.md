@@ -96,7 +96,7 @@ This can be done simply by selecting one or more lines from the 'Script Pane' an
 'Run Script' runs your entire script pane and that is often not what you want when you are experimenting and improving your
 script one or two lines at a time.
  
-![00_PS_RunSelection](../Images/00_PS_RunSelection.png)    
+![00_PS_RunSelection](../Images/00_PS_RunSelection.PNG)    
 
 If the normal 'Play' button is clicked in the ISE above, then the entire script file will be run from top to bottom. However, if
 the 'Run Selection' button is clicked (or F8 is pressed), then only the two script lines (line 21 and line 24) will run leveraging
