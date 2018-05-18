@@ -1,5 +1,5 @@
 # Customizing AzSK for your organization
-
+ 
 ### [Overview](Readme.md#overview-1)
  - [When and why should I set up org policy?](Readme.md#when-and-why-should-i-setup-org-policy)
  - [How does AzSK use online policy?](Readme.md#how-does-azsk-use-online-policy)
@@ -153,7 +153,7 @@ It will also create a very basic 'customized' policy involving below files uploa
 | File | Container | Description  
 | ---- | ---- | ---- |
 | AzSK-EasyInstaller.ps1 | installer | Org-specific installation script. This installer will ensure that anyone who installs AzSK using your 'iwr' command not only gets the core AzSK module but their local installation of AzSK is also configured to use org-specific policy settings (e.g., policy server URL, telemetry key, etc.) |
-| AzSKConfig.json | policies  | This file contains supported AzSK version for Org. This feature helps to run specific version of AzSK for all Contoso users/CA/CICD.<br/> <br/>  **Note:** During policy setup this value is set with AzSK version available on client machine that was used to setup. Whenever new AzSK version is released (You can always get notification for new release by following AzSK module in PowerShell Gallery or release section [here](https://azsk.azurewebsites.net/Release/RN180315.html)), Policy Owner should update this value after validating latest released version is compatible with Org-Policy.     
+| AzSK.Pre.json | policies  | This file contains a setting that controls/defines the AzSK version that is 'in effect' at an organization. An org can use this file to specify the specific version of AzSK that will get used in SDL/CICD/CA scenarios at the org for people who have used the org-specific 'iwr' to install and configure AzSK.<br/> <br/>  **Note:** During first time policy setup, this value is set with AzSK version available on the client machine that was used for policy creation. Whenever a new AzSK version is released, the org policy owner should update the AzSK version in this file with the latest released version after performing any compatibility tests in a test setup.<br/> You can get notified of new releases by following the AzSK module in PowerShell Gallery or release notes section [here](https://azsk.azurewebsites.net/Release/RN180315.html).  
 | RunbookCoreSetup.ps1 | policies  | Used in Continuous Assurance to setup AzSK module
 | RunbookScanAgent.ps1 | policies  | Used in Continuous Assurance to run daily scan 
 | AzSk.json | policies | Includes org-specific message, telemetry key, InstallationCommand, CASetupRunbookURL etc.
