@@ -398,8 +398,6 @@ Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -Pre
 ```
 The parameters used are:
 - ARMTemplatePath – Path to ARM Template file or folder
-- ExcludeFiles – Comma-separated list of JSON files to be excluded from scan
-- SkipControlsFromFile – Path to file containing list of controls to skip
 > **Note**: This feature is in preview mode only. So, passing "–Preview" switch is mandatory. 
 [Back to top…](Readme.md#contents)
 
