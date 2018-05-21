@@ -399,6 +399,7 @@ Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -Pre
 The parameters used are:
 - ARMTemplatePath – Path to ARM Template file or folder
 > **Note**: This feature is in preview mode only. So, passing "–Preview" switch is mandatory. 
+
 [Back to top…](Readme.md#contents)
 
 ### ARM Template Checker - What is covered?  
