@@ -76,7 +76,8 @@ for your application.)
 	        [-WebhookAuthZHeaderName <WebhookAuthZHeaderName>] `
 	        [-WebhookAuthZHeaderValue <WebhookAuthZHeaderValue>] `
 	        [-ScanIntervalInHours <ScanIntervalInHours>] `
-	        [-AzureADAppName <AzureADAppName>]
+	        [-AzureADAppName <AzureADAppName>] `
+		[-DoNotOpenOutputFolder]
 ```
 
 |Param Name|Purpose|Required?|Default value|Comments|
@@ -93,6 +94,7 @@ for your application.)
 |WebhookAuthZHeaderValue|(Optional) Value of the AuthZ heade |FALSE|None||
 |ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value |FALSE|None||
 |AzureADAppName|(Optional) Name for the Azure Active Directory(AD) Application that will be created in the subscription for running the runbooks. |FALSE|None||
+|DoNotOpenOutputFolder|(Optional) Switch to specify whether to open output folder.|FALSE|None||
 
 **More about the 'AzureADAppName' parameter:**
 
@@ -232,7 +234,8 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
     [-AzureADAppName <AzureADAppName>] `
     [-FixRuntimeAccount] ` 
     [-FixModules] `
-    [-RenewCertificate]
+    [-RenewCertificate] `
+    [-DoNotOpenOutputFolder]
 ```
 
 |Param Name|Purpose|Required?|Default Value|Comments
@@ -251,6 +254,8 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 |FixRuntimeAccount|Use this switch to fix CA runtime account in case of below issues.<ol><li>Runtime account deleted<br>(Permissions required: Subscription owner)</li><li>Runtime account permissions missing<br>(Permissions required: Subscription owner and AD App owner)</li><li>Certificate deleted/expired<br>(Permissions required: Subscription owner and AD App owner)</li></ol>|FALSE|None||
 |FixModules|Use this switch in case 'AzureRm.Automation' module extraction fails in CA Automation Account.|FALSE|None||
 |RenewCertificate|Renews certificate credential of CA SPN if the caller is Owner of the AAD Application (SPN). If the caller is not Owner, a new application is created with a corresponding SPN and a certificate owned by the caller. CA uses the updated credential going forward.|FALSE|None||
+|DoNotOpenOutputFolder|(Optional) Switch to specify whether to open output folder.|FALSE|None||
+
 
 [Back to top…](Readme.md#contents)
 ## Removing a Continuous Assurance setup
@@ -258,12 +263,13 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 2. Run the '**Remove-AzSKContinuousAssurance**' command as below. 
 
 ```PowerShell
-Remove-AzSKContinuousAssurance -SubscriptionId <SubscriptionId>  [-DeleteStorageReports] 
+Remove-AzSKContinuousAssurance -SubscriptionId <SubscriptionId>  [-DeleteStorageReports] [-DoNotOpenOutputFolder]
 ```
 |Param Name |Purpose |Required?	|Default value	|Comments|
 |-----|-----|-----|----|-----|
 |SubscriptionId	|Subscription ID of the Azure subscription in which Automation Account exists |True |None||	 
-|DeleteStorageReports |Add this switch to delete AzSK execution reports from storage account. This will delete the storage container where reports are stored. Generally you will not want to use this option as all previous scan reports will be purged. |False |None||  
+|DeleteStorageReports |Add this switch to delete AzSK execution reports from storage account. This will delete the storage container where reports are stored. Generally you will not want to use this option as all previous scan reports will be purged. |False |None|| 
+|DoNotOpenOutputFolder|(Optional) Switch to specify whether to open output folder.|False|None||
 
 [Back to top…](Readme.md#contents)
 ## Getting details about a Continuous Assurance setup
@@ -272,7 +278,7 @@ Remove-AzSKContinuousAssurance -SubscriptionId <SubscriptionId>  [-DeleteStorage
 3. Result will display the current status of CA in your subscription. If CA is not working as expected, it will display remediation steps else it will display a message indicating CA is in healthy state.  
 4. Once you follow the remediation steps, run the command again to check if anything is still missing in CA setup. Follow the remediation steps accordingly until the CA state becomes healthy. 
 ```PowerShell
-Get-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> 
+Get-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> [-DoNotOpenOutputFolder] 
 ```
 **Note:** This command is compatible only for Automation Account installed after 5th May, 2017 AzSK release.
 
@@ -311,7 +317,7 @@ $TargetSubscriptionIds = '<SubId1, SubId2, SubId3...>' #Need to provide comma se
 
 Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds 
         -ResourceGroupNames $ResourceGroupNames -OMSWorkspaceId $OMSWorkspaceId -OMSSharedKey $OMSSharedKey -CentralScanMode 
-        [-LoggingOption '<CentralSub|IndividualSubs>'] [-SkipTargetSubscriptionConfig]
+        [-LoggingOption '<CentralSub|IndividualSubs>'] [-SkipTargetSubscriptionConfig] [-DoNotOpenOutputFolder]
 ```
 </br>
 
@@ -327,6 +333,7 @@ The table below lists only the parameters that are mandatory or have specific ne
 |LoggingOption| "IndividualSubs/CentralSub". This provides the capability to users to store the CA scan logs on central subscription or on individual subscriptions| False |CentralSub |
 |SkipTargetSubscriptionConfig| (Optional) Use this switch if you dont have the owner permission on the target sub. This option assumes you have already one all the required configuration on the target sub. Check the note below| False| |
 |CentralScanMode| Mandatory switch to specify in central scan mode| True | |
+|DoNotOpenOutputFolder|(Optional) Switch to specify whether to open output folder.|False|None||
 
 </br>
 
@@ -345,7 +352,7 @@ $OMSSharedKey = '<omsSharedKey>'
 $TargetSubscriptionIds = '<SubId1, SubId2, SubId3...>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
 
 Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds -CentralScanMode -FixRuntimeAccount
-     [-LoggingOption <CentralSub|IndividualSubs>] 
+     [-LoggingOption <CentralSub|IndividualSubs>] [-DoNotOpenOutputFolder] 
 ```
 </br>
 
@@ -358,6 +365,7 @@ Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscripti
 |LoggingOption| "IndividualSubs/CentralSub" | False | Only provide if you want to change the logging option|
 |FixRuntimeAccount| This will correct all the permissions issues related to the scanning account| False | Provide this switch only when you want to add new subscriptions for central scanning mode |
 |CentralScanMode| It is mandatory to use CentralScanMode switch| True | |
+|DoNotOpenOutputFolder|(Optional) Switch to specify whether to open output folder.|False|None||
 
 ##### 1.3 Diagnosing the health of Central Mode CA (single Automation account option)
 
@@ -366,7 +374,7 @@ You can run the command below to enquire the health of CA setup in your subscrip
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
 
-Get-AzSKContinuousAssurance -SubscriptionId $SubscriptionId [-ExhaustiveCheck]
+Get-AzSKContinuousAssurance -SubscriptionId $SubscriptionId [-ExhaustiveCheck] 
 ```
 </br>
 
@@ -374,6 +382,7 @@ Get-AzSKContinuousAssurance -SubscriptionId $SubscriptionId [-ExhaustiveCheck]
 |----------|--------|----------|-------------|---------|
 |SubscritionId| Central SubscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
 |ExhaustiveCheck| (Optional) By appending this switch it would check whether all the modules installed in central automation account are up to date| False | Only include if default diagnosis is not resulting in any issue |
+
 
 ##### 1.4  Remove Central Scan mode CA from the master subscription (single Automation account option)
 
@@ -466,7 +475,6 @@ $TargetSubscriptionIds = '<SubId1, SubId2, SubId3,...>' #Need to provide comma s
 Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds 
         -AutomationAccountRGName $AutomationAccountRGName -AutomationAccountName $AutomationAccountName -CentralScanMode -FixRuntimeAccount
         [-LoggingOption <CentralSub|IndividualSubs>] 
-```
 </br>
 
 > **Note:** All other parameters as described in the main Update-AzSKContinuousAssurance parameters table apply. They are not repeated below for brevity.
@@ -500,7 +508,6 @@ Get-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -AutomationAccountRG
 |AutomationAccountRGName| Name of ResourceGroup which will hold the scanning automation account | False | e.g. AzSK-Category-ScanRG01 |
 |AutomationAccountName| Name of the AutomationAccount which will scan target subscriptions | False | e.g. AzSKScanningAccount01|
 |ExhaustiveCheck| (Optional) By appending this switch it would check whether all the modules installed in central automation account are up to date| False | Only include if default diagnosis is not resulting in any issue |
-
 
 ##### 2.4  Remove Central Scan mode CA from the master subscription (multiple Automation accounts option)
 
