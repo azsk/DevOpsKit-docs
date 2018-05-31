@@ -105,3 +105,26 @@
   href: ../../07-Customizing-AzSK-for-your-Org/Readme.md
 - name: Advanced features
   href: ../../08-Advanced-Features/Readme.md
+- name: ARMTemplates
+  href: ../../ARMTemplates/Readme.md
+  items:
+     - name: AppService
+       href: ../../ARMTemplates/AppService.md
+     - name: EventHub
+       href: ../../ARMTemplates/EventHub.md
+     - name: KeyVault
+       href: ../../ARMTemplates/KeyVault.md
+     - name: NotificationHub
+       href: ../../ARMTemplates/NotificationHub.md
+     - name: SQLDatabase
+       href: ../../ARMTemplates/SQLDatabase.md
+     - name: ServiceBus
+       href: ../../ARMTemplates/ServiceBus.md
+     - name: StorageTemplate
+       href: ../../ARMTemplates/StorageTemplate.md
+     - name: TrafficManager
+       href: ../../ARMTemplates/TrafficManager.md
+     - name: VirtualMachine
+       href: ../../ARMTemplates/VirtualMachine.md
+     - name: VirtualNetwork
+       href: ../../ARMTemplates/VirtualNetwork.md
