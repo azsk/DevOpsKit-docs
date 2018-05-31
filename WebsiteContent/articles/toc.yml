@@ -25,9 +25,9 @@
     - name: Control Coverage
       href: ../../02-Secure-Development/ControlCoverage/README.md
       items:
-        - name: AzSDK ARM PolicyList
+        - name: AzSK ARM PolicyList
           href: ../../02-Secure-Development/ControlCoverage/Feature/ARMPolicyList.md
-        - name: AzSDK Alert List
+        - name: AzSK Alert List
           href: ../../02-Secure-Development/ControlCoverage/Feature/ARMPolicyList.md
         - name: Analysis Services
           href: ../../02-Secure-Development/ControlCoverage/Feature/AnalysisServices.md
