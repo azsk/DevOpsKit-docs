@@ -391,7 +391,7 @@ The screenshots below show the core functionality at work:
 [Back to top…](Readme.md#contents)  
 
 ### How do I enable Security IntelliSense on my dev box?
-- Open Visual Studio 2015
+- Open Visual Studio 2015/2017.
 
 - Go to **Tools** -> **Extensions and Updates** -> In the left sidebar select **Online** -> **Visual Studio Gallery** and search for **Security IntelliSense** in the right sidebar
 
