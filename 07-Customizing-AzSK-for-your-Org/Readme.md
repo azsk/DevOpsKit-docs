@@ -160,12 +160,24 @@ It will also create a very basic 'customized' policy involving below files uploa
 | Migration.ps1 | policies | This script helps to Contoso subscription to migrate from AzSDK to AzSK with Org policy.
 | ServerConfigMetadata.json | policies | Index file with list of policy files.  
 
+
 At the end of execution, an 'iwr' command line will be printed to the console. This command leverages the org-specific
  installation script from the storage account for installing AzSK.
 
 ```PowerShell
 iwr 'https://azskcontosoitsa.blob.core.windows.net/installer/AzSK-EasyInstaller.ps1' -UseBasicParsing | iex 
 ```
+
+
+Monitoring dashboard gets created along with policy deployment and it lets you monitor the operations for various DevOps Kit workflows at your org.(e.g., CA issues, anomalous control drifts, evaluation errors, etc.). 
+
+You will be able to see the dashboard at the home page of Azure Portal. If not, you can navigate to below path see the dashboard
+
+Go to Azure Portal --> Select "Browse all dashboards" in dashboard dropdown --> --> Select type "Shared Dashboard" --> Select subscription where policy is setup -->Select "DevOps Kit Monitoring Dashboard [OrgName]"
+
+Below is snapshot of the dashboard
+<img alt="Effective Org Policy Evaluation" src="../Images/07_OrgPolicy_MonitoringDashboard.png" />
+
 
 ## Modifying and customizing org policy 
 
