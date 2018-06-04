@@ -19,7 +19,8 @@
  - [Testing the overall policy setup](Readme.md#testing-the-overall-policy-setup)
  - [Troubleshooting common issues](Readme.md#troubleshooting-common-issues)
  
- 
+### [Create Cloud Compliance Report for your org in PowerBI](Readme.md#modifying-and-customizing-org-policy-1)
+ - [Get started with DevOps Kit compliance report in PowerBI]
 ----------------------------------------------------------------
 
 ## Overview
@@ -548,3 +549,97 @@ a few known cases, but we may have missed the odd one.)
 - Don't forget to make entries in ServerConfigMetadata.json for all files you have changed.
 - Note that the policy upload command always generates a fresh installer.ps1 file for upload. If you want to make changes to 
 that, you may have to keep a separate copy and upload it. (We will revisit this in future sprints.)
+
+## Create Cloud Compliance Report for your org in PowerBI
+You can now visualize DevOps Kit Cloud Security Compliance for your organization in PowerBI. This report is going to use your Application Insights instance as a DataSource which is used to capture security telemetry from scans.
+#### Step 1: Prepare your Org-Subscription Mapping
+You can create a simple org-sub mapping csv file as shown below:
+![Org-Sub metadata json](../Images/07_OrgPolicy_PBI_OrgMetadata.PNG) 
+Such mapping can help you to measure security compliance view across each org/ service group. 
+
+| ColumnName  | Description | Required? | Comments |
+| ---- | ---- | ---- |---- |
+| OrgName | Name of organization within your Enterprise | Yes |  This 
+you can consider as level 1 hierarchy for your enterprise | 
+| ServiceGroupName | Name of Service Line/ Business Unit within an organization | Yes |  This you can consider as level 2 hierarchy for your enterprise | 
+| SubscriptionId | Subscription Id belonging to a org/servicegroup | Yes |   | 
+| SubscriptionName | Subscription Name | Yes |   | 
+| OwnerDetails | ; separated owner information for a given subscription | Yes | This infomration can show subscription owner details in the report itself.  | 
+
+> **Note**: Ensure you follow the correct casing for all the column names as mentioned in the table above. Currently the default template will support only these columns. You can modify the report as per your needs.
+
+a) Open your Application Insights resource in Portal and click on Analytics view as shown below:
+
+![Open Analytics view](../Images//07_OrgPolicy_PBI_OrgMetadata_AI_01.PNG)
+
+b) Create a custom data source for your OrgData as shown below:
+
+![Create custom data source](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_02.PNG)
+
+Please follow the below screenshots to create datasource. Follow naming convention as specified in the screenshots.
+![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_03.PNG)
+
+
+![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_04.PNG)
+
+
+![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_05.PNG)
+
+
+![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_06.PNG)
+
+Upload your org-sub mapping file to data source:
+
+![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_07.PNG)
+
+![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_08.PNG)
+
+
+You can now see the custom datasource in your analytics view as shown below:
+
+![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_09.PNG)
+
+#### Step 2: Create PowerBI report file
+In this section we shall create a PowerBI report with Application Insights as datasource. You need to have latest version of PowerBI desktop installed on your machine. You can download it from [here.](https://powerbi.microsoft.com/en-us/desktop/)
+
+a) Capture ApplicationId for your Insights workspace from portal as shown below:
+
+![capture applicationInsights AppId](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_10.PNG)
+
+b) Download and copy the PowerBI template file located [here](./TemplateFiles/AzSKComplianceReport.pbit) to your local mahcine.
+
+c) Open the template file using PowerBI Desktop, provide the Insights AppID and click on 'Load' as shown below:
+
+![capture applicationInsights AppId](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_11.PNG)
+
+d) Now it would prompt for login. Authenticate using your organization account in the PowerBI desktop
+![Login to AI](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_12.PNG)
+
+e) It would now load all the Application Insights data into PowerBI report along with org mapping as shown below: 
+
+![Compliance summary](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_13.PNG)
+
+You can also view control details related to single subscription using the 'Detail view' tab as shown below:
+
+![Compliance summary](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_14.PNG)
+
+
+#### Step 3: Publish PowerBI report file to your workspace
+
+a) Update AI connection string across data tables in PowerBI report as shown below:
+
+Click on Edit Queries menu option
+
+![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_15.PNG)
+
+Copy the value of AzSKAIConnectionString
+
+![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_16.PNG)
+
+Replace the value of AzSKAIConnectionString as shown below with the actual connection string (e.g. AzSKAIConnectionString => "https://api.applicationinsights.io/v1/apps/<AIAppID>/query")
+
+![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_17.PNG)
+
+Perform this operation for ControlResults_AI, Subscriptions_AI, and ResourceInventory_AI datatables and then click on Close and Apply.
+
+Your PBIX report is ready for publish. You can now publish your report to your workspace.
