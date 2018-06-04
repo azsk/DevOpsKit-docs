@@ -554,6 +554,7 @@ You can now visualize DevOps Kit Cloud Security Compliance for your organization
 #### Step 1: Prepare your Org-Subscription Mapping
 You can create a simple org-sub mapping csv file as shown below:
 ![Org-Sub metadata json](../Images/07_OrgPolicy_PBI_OrgMetadata.PNG) 
+
 Such mapping can help you to measure security compliance view across each org/ service group. 
 
 | ColumnName  | Description | Required? | Comments |
