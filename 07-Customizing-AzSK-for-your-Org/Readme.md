@@ -376,9 +376,7 @@ file already present in your org policy folder.)
          "Azure_Subscription_AuthZ_Limit_Admin_Owner_Count",
          "Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities",
          "Azure_Subscription_Config_Azure_Security_Center"
-      ],
-      "ExpiryInDays": 6,
-      "SupportedSources": [ "CC" ]
+      ]
    }
 }
 ```
