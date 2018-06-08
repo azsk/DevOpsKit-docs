@@ -173,7 +173,7 @@ Monitoring dashboard gets created along with policy deployment and it lets you m
 
 You will be able to see the dashboard at the home page of Azure Portal. If not, you can navigate to below path see the dashboard
 
-Go to Azure Portal --> Select "Browse all dashboards" in dashboard dropdown --> --> Select type "Shared Dashboard" --> Select subscription where policy is setup -->Select "DevOps Kit Monitoring Dashboard [OrgName]"
+Go to Azure Portal --> Select "Browse all dashboards" in dashboard dropdown -->  Select type "Shared Dashboard" --> Select subscription where policy is setup -->Select "DevOps Kit Monitoring Dashboard [OrgName]"
 
 Below is snapshot of the dashboard
 <img alt="Effective Org Policy Evaluation" src="../Images/07_OrgPolicy_MonitoringDashboard.png" />
@@ -368,7 +368,7 @@ file already present in your org policy folder.)
             "ResourceType": "Storage",
             "ControlIds": [
                "Azure_Storage_AuthN_Dont_Allow_Anonymous",
-               "Azure_Storage_Deploy_Use_Geo_Redundant"
+               "Azure_Storage_DP_Encrypt_In_Transit"
             ]
          }
       ],
@@ -416,7 +416,7 @@ in your org has developed. Let us do this for the Storage.json file. Specificall
 of `Azure_Storage_Audit_Issue_Alert_AuthN_Req` altogether. We will modify severity of 
 `Azure_Storage_AuthN_Dont_Allow_Anonymous` to `Critical` for our org (it is `High` by default) and
 we will change the recommendation people in our org will follow if they need to address an issue with 
-the `Azure_Storage_Deploy_Use_Geo_Redundant` control.
+the `Azure_Storage_DP_Encrypt_In_Transit` control.
 
 ###### Steps: 
  
@@ -440,9 +440,9 @@ the `Azure_Storage_Deploy_Use_Geo_Redundant` control.
       "Enabled": false
    },
    {
-      "ControlID": "Azure_Storage_Deploy_Use_Geo_Redundant",
-      "Id": "AzureStorage130",
-      "Recommendation": "**Note**: Use our Contoso-IT-EnableGRS.ps1 tool for this!"
+      "ControlID": "Azure_Storage_DP_Encrypt_In_Transit",
+      "Id": "AzureStorage160",
+      "Recommendation": "**Note**: Use our Contoso-IT-EncryptInTransit.ps1 tool for this!"
    }
   ]
 }
