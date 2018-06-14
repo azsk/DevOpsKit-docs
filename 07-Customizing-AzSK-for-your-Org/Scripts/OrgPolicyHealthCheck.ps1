@@ -547,7 +547,7 @@ else
       $AzSKConfiguOutput.Status = $false  
 }
 
-if(-not $PolicyScanOutput.Resources.Status -or $PolicyScanOutput.Policies.Status -or $InstallOutput.Status -or $PolicyScanOutput.Configurations.AzSKPre.Status -or  -not $PolicyScanOutput.Configurations.RunbookCoreSetup.Status -or  -not $AzSKConfiguOutput.Status)
+if(-not $PolicyScanOutput.Resources.Status -or -not $PolicyScanOutput.Policies.Status -or -not $InstallOutput.Status -or -not $PolicyScanOutput.Configurations.AzSKPre.Status -or  -not $PolicyScanOutput.Configurations.RunbookCoreSetup.Status -or  -not $AzSKConfiguOutput.Status)
 {
     WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
     WriteMessage "Found that Org policy configuration is not correctly setup.`nReview the failed check and follow the remedy suggested at FAQ: https://aka.ms/devopskit/orgpolicy/healthcheck" $([MessageType]::Warning) 
