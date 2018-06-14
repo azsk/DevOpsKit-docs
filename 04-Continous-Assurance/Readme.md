@@ -401,10 +401,10 @@ Remove-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -DeleteStorageRep
  
 #### 2. Central Scan mode CA using multiple Automation accounts
 
-If you are trying to scan multiple target subscriptions, then scanning all of them using a single Automation account can reduce the scan frequency. 
-In such scenarios, you can use this approach to categorize your subscriptions into batches and scan these batches 
+If you are trying to scan multiple target subscriptions, then scanning all of them using a single Automation account can be tedious and face scale/performance issues. Furthermore, with too many subscriptions to scan, you may not be able to scan each subscription with the desired scan interval.
+In such scenarios, you can use the multiple accounts approach by grouping your subscriptions into batches and scanning these batches 
 using multiple independent automation accounts with in the same host/central subscription.
-In this scenario, all your logs, scanning configuration, attestation data is persisted under core AzSKRG and each automation account will have its own dedicated RG.
+In this scenario, all your logs, scanning configuration, attestation data is persisted under the default AzSKRG whereas each automation account will have its own dedicated RG for CA bookkeeping.
 
 
 ##### 2.1 Setting up Continuous Assurance (CA) in Central Scan mode (mutiple Automation accounts option):
@@ -412,6 +412,8 @@ In this scenario, all your logs, scanning configuration, attestation data is per
 When you have more than about 40-50 subscriptions to scan, it is better to use multiple Automation accounts option of the Central Scan mode. You need to split the overall set of target subscriptions into multiple groups and then decide names to use for the Automation account and the resource groups that will host the CA for each group. Once this grouping and naming is done, you simply run the central scan mode CA setup command once for each group (with additional parameters identifying the Automation account name and the resource group that will serve as the host for scanning the respective group).
 
 > **Note:** When using multi-Automation Account mode, be sure to provide a _unique_ Automation account name and a _unique_ resource group name for each CA setup. Basically, each such tuple represents a unique CA setup within the master/central subscription. You will need to carefully provide this tuple for subsequent Update-CA/Remove-CA calls as well...as it is this tuple that helps CA identify the subscription group being targeted. 
+
+> Furthermore, make sure you do not use the default CA account name ("AzSKContinuousAssurance") or the default AzSK resource group name for the org (e.g., "AzSKRG") when using this mode. Those are reserved for the single CA account mode!
 
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
@@ -439,9 +441,9 @@ Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscript
 |ResourceGroupNames| Comma separated list of ResourceGroupNames| True | Since you are planning to run in the central mode, you should use * as its value. This is because you need not have the same RG across all the subscriptions|
 |OMSWorkspaceId| All the scanning events will be send to this OMSWorkspace. This will act as central monitoring dashboard | True | |
 |OMSSharedKey| OMSSharedKey for the central monitoring dashboard| True | |
-|AutomationAccountLocation| (Optional) Location where the AutomationAccount to be created | false | |
-|AutomationAccountRGName| Name of ResourceGroup which will hold the scanning automation account | False | e.g. AzSK-Category-ScanRG01 |
-|AutomationAccountName| All the scanning events will be send to this OMSWorkspace. This will act as central monitoring dashboard | False | e.g. AzSKScanningAccount01|
+|AutomationAccountLocation| (Optional) Location where the AutomationAccount to be created | False | |
+|AutomationAccountRGName| Name of ResourceGroup which will hold the scanning automation account. Should be different than "AzSKRG". | True | e.g. AzSK-Category-ScanRG01 |
+|AutomationAccountName| Name of the automation account which will scan the target subscriptions. (This should be different than "AzSKContinuousAssurance".) | True | e.g. AzSKScanningAccount01|
 |LoggingOption| "IndividualSubs/CentralSub". This provides the capability to users to store the CA scan logs on central subscription or on individual subscriptions| False |CentralSub |
 |SkipTargetSubscriptionConfig| (Optional) Use this switch if you dont have the owner permission on the target sub. This option assumes you have already one all the required configuration on the target sub. Check the note below| False| |
 |CentralScanMode| Mandatory switch to specify in central scan mode| True | |
@@ -475,8 +477,8 @@ Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscripti
 |----------|--------|----------|-------------|---------|
 |SubscritionId| Central subscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
 |TargetSubscriptionIds| Comma separated list of subscriptionIds that needs to be scanned by the central subscription. It would always append the values provided in this param to the current scanning list.| True | The user executing this command should be owner on these subscriptions. |
-|AutomationAccountRGName| Name of ResourceGroup which will hold the scanning automation account | False | e.g. AzSK-Category-ScanRG01 |
-|AutomationAccountName| Name of the AutomationAccount which will scan target subscriptions | False | e.g. AzSKScanningAccount01|
+|AutomationAccountRGName| Name of Resource Group which will hold the scanning automation account | True | e.g. AzSK-Category-ScanRG01 |
+|AutomationAccountName| Name of the Automation Account which will scan target subscriptions | True | e.g. AzSKScanningAccount01|
 |LoggingOption| "IndividualSubs/CentralSub" | False | Only provide if you want to change the logging option|
 |FixRuntimeAccount| This will correct all the permissions issues related to the scanning account| False | Provide this switch only when you want to add new subscriptions for central scanning mode or if scanning account credential needs to be updated |
 |CentralScanMode| It is mandatory to use CentralScanMode switch| True | |
@@ -497,8 +499,8 @@ Get-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -AutomationAccountRG
 |Param Name| Purpose| Required?| DefaultValue| Comments|
 |----------|--------|----------|-------------|---------|
 |SubscritionId| Central SubscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions
-|AutomationAccountRGName| Name of ResourceGroup which will hold the scanning automation account | False | e.g. AzSK-Category-ScanRG01 |
-|AutomationAccountName| Name of the AutomationAccount which will scan target subscriptions | False | e.g. AzSKScanningAccount01|
+|AutomationAccountRGName| Name of Resource Group which will hold the scanning automation account | True | e.g. AzSK-Category-ScanRG01 |
+|AutomationAccountName| Name of the Automation Account which will scan target subscriptions | True | e.g. AzSKScanningAccount01|
 |ExhaustiveCheck| (Optional) By appending this switch it would check whether all the modules installed in central automation account are up to date| False | Only include if default diagnosis is not resulting in any issue |
 
 
@@ -522,8 +524,8 @@ Remove-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -DeleteStorageRep
 |----------|--------|----------|-------------|---------|
 |SubscritionId| Central SubscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
 |TargetSubscriptionIds| Comma separated list of target subIds which will be un-registered from the central scanning mode. | False | |
-|AutomationAccountRGName| Name of ResourceGroup which will hold the scanning automation account | False | e.g. AzSK-Category-ScanRG01 |
-|AutomationAccountName| Name of the AutomationAccount which will scan target subscriptions | False | e.g. AzSKScanningAccount01|
+|AutomationAccountRGName| Name of Resource Group which will hold the scanning automation account | True | e.g. AzSK-Category-ScanRG01 |
+|AutomationAccountName| Name of the Automation Account which will scan target subscriptions | True | e.g. AzSKScanningAccount01|
 |DeleteStorageReports| Deletes all the scan logs from the azsk storage account based on the logging option and value provided in the target subscription. If used with out CentralScanMode switch, it would remove all logs from the host sub central storage account.| False | Only include if default diagnosis is not resulting in any issue |
 |CentralScanMode| It is mandatory to use CentralScanMode switch| True | |
 
