@@ -179,7 +179,7 @@ function WriteMessage([string] $message,[string] $messageType)
 
   if($PolicyScanOutput.Resources.PolicyStore -and $PolicyScanOutput.Resources.AppInsight -and $PolicyScanOutput.Resources.MonitoringDashboard)
   {
-    WriteMessage "Status:   OK. Found all policy resources." $([MessageType]::Update)
+    WriteMessage "Status:   OK." $([MessageType]::Update)
     $PolicyScanOutput.Resources.Status = $true
   }
   else
@@ -280,7 +280,7 @@ function WriteMessage([string] $message,[string] $messageType)
     
     if($PolicyScanOutput.Policies.Installer -and $PolicyScanOutput.Policies.AzSKPre -and $PolicyScanOutput.Policies.RunbookCoreSetup -and $PolicyScanOutput.Policies.RunbookScanAgent -and $PolicyScanOutput.Policies.AzSKConfig -and $PolicyScanOutput.Policies.ServerConfigMetadata)
     {
-        WriteMessage "Status:   OK. Found all mandatory policies." $([MessageType]::Update)
+        WriteMessage "Status:   OK." $([MessageType]::Update)
         $PolicyScanOutput.Policies.Status = $true
     }
     else
@@ -547,7 +547,7 @@ else
       $AzSKConfiguOutput.Status = $false  
 }
 
-if(-not $PolicyScanOutput.Resources.Status -or $PolicyScanOutput.Policies.Status -or $InstallOutput.Status -or $PolicyScanOutput.Configurations.AzSKPre.Status -or  -not $PolicyScanOutput.Configurations.RunbookCoreSetup.Status -or  -not $AzSKConfiguOutput.Status)
+if(-not $PolicyScanOutput.Resources.Status -or -not $PolicyScanOutput.Policies.Status -or -not $InstallOutput.Status -or -not $PolicyScanOutput.Configurations.AzSKPre.Status -or  -not $PolicyScanOutput.Configurations.RunbookCoreSetup.Status -or  -not $AzSKConfiguOutput.Status)
 {
     WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
     WriteMessage "Found that Org policy configuration is not correctly setup.`nReview the failed check and follow the remedy suggested at FAQ: https://aka.ms/devopskit/orgpolicy/healthcheck" $([MessageType]::Warning) 
