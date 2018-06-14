@@ -179,7 +179,7 @@ function WriteMessage([string] $message,[string] $messageType)
 
   if($PolicyScanOutput.Resources.PolicyStore -and $PolicyScanOutput.Resources.AppInsight -and $PolicyScanOutput.Resources.MonitoringDashboard)
   {
-    WriteMessage "Status:   OK. Found all policy resources." $([MessageType]::Update)
+    WriteMessage "Status:   OK." $([MessageType]::Update)
     $PolicyScanOutput.Resources.Status = $true
   }
   else
@@ -280,7 +280,7 @@ function WriteMessage([string] $message,[string] $messageType)
     
     if($PolicyScanOutput.Policies.Installer -and $PolicyScanOutput.Policies.AzSKPre -and $PolicyScanOutput.Policies.RunbookCoreSetup -and $PolicyScanOutput.Policies.RunbookScanAgent -and $PolicyScanOutput.Policies.AzSKConfig -and $PolicyScanOutput.Policies.ServerConfigMetadata)
     {
-        WriteMessage "Status:   OK. Found all mandatory policies." $([MessageType]::Update)
+        WriteMessage "Status:   OK." $([MessageType]::Update)
         $PolicyScanOutput.Policies.Status = $true
     }
     else
