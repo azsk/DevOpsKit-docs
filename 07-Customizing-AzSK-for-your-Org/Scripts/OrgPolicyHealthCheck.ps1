@@ -1,4 +1,5 @@
-﻿Param(
+﻿#Script to validate health of Org Policy
+Param(
 
 [string]
 [Parameter(Mandatory = $true)]
@@ -13,6 +14,21 @@ $PolicyResourceGroupName
   $ModuleName = "AzSK"
   $BlankSubId = "00000000-0000-0000-0000-000000000000"
   $RepoName = "PSGallery"
+
+  #Create log file 
+  $LogFolderPath= $env:TEMP + "\PolicyHealthCheckLogs\"
+  $LogFilePath = "$LogFolderPath\PolicyHealthCheckLogs.log" 
+  if(-not (Test-Path -Path $LogFolderPath))
+    {
+	    mkdir -Path $LogFolderPath -Force | Out-Null
+    }
+    else
+	{
+		Remove-Item -Path "$LogFolderPath\*" -Force -Recurse 
+	}
+  
+  New-Item $LogFilePath  | Out-Null
+  
   #Login and Set context to policy subscription
     function Login
     {
@@ -108,192 +124,190 @@ function WriteMessage([string] $message,[string] $messageType)
             $colorCode = [System.ConsoleColor]::White
         }           
     }		
-    Write-Host $message -ForegroundColor $colorCode		
+    Write-Host $message -ForegroundColor $colorCode	
+    Add-Content -Value $message -Path $LogFilePath	
 }
 
 
-
-
-
-  WriteMessage "================================================================================" $([MessageType]::Info)
-  WriteMessage "Running Org policy check..." $([MessageType]::Info)
-  WriteMessage "================================================================================" $([MessageType]::Info)
-  Login
-  [PSObject] $PolicyScanOutput = @{}
-  $PolicyScanOutput.Resources = @{}
+WriteMessage "================================================================================" $([MessageType]::Info)
+WriteMessage "Running Org policy health check..." $([MessageType]::Info)
+WriteMessage "================================================================================" $([MessageType]::Info)
+Login
+[PSObject] $PolicyScanOutput = @{}
+$PolicyScanOutput.Resources = @{}
   
 
-  #Check 01: Presence of Org policy resources
-  WriteMessage "Check 01: Presence of Org policy resources." $([MessageType]::Info)
+#Check 01: Presence of Org policy resources
+WriteMessage "Check 01: Presence of Org policy resources." $([MessageType]::Info)
 
-  #a. Validate presense of policy resource group
-  $policyResourceGroup= Get-AzureRmResourceGroup -Name $PolicyResourceGroupName -ErrorAction SilentlyContinue  
-  if(-not $policyResourceGroup)
-  {
-    WriteMessage "`t Missing: Policy resource group" $([MessageType]::Error)
-    $PolicyScanOutput.Resources.ResourceGroup = $false
-    return
-  }
-  else
-  {
-    $PolicyScanOutput.Resources.ResourceGroup = $true
-  }
+#a. Validate presense of policy resource group
+$policyResourceGroup= Get-AzureRmResourceGroup -Name $PolicyResourceGroupName -ErrorAction SilentlyContinue  
+if(-not $policyResourceGroup)
+{
+WriteMessage "`t Missing: Policy resource group" $([MessageType]::Error)
+$PolicyScanOutput.Resources.ResourceGroup = $false
+return
+}
+else
+{
+$PolicyScanOutput.Resources.ResourceGroup = $true
+}
 
-  #b. Validate presense of policy resources storage, app insight and monitoring dashboard
-  $policyResources= Find-AzureRmResource -ResourceGroupName $policyResourceGroupName
-  #Check if poliy store  is present 
-  $policyStore = $policyResources  | Where-Object {$_.ResourceType -eq "Microsoft.Storage/storageAccounts" }
-  if(($policyStore | Measure-Object).Count -eq 0)
-  {
-    WriteMessage "`t Missing: Policy storage account" $([MessageType]::Error)
-    $PolicyScanOutput.Resources.PolicyStore = $false
-  }
-  else
-  {
-    $PolicyScanOutput.Resources.PolicyStore = $true
-  }
+#b. Validate presense of policy resources storage, app insight and monitoring dashboard
+$policyResources= Find-AzureRmResource -ResourceGroupName $policyResourceGroupName
+#Check if poliy store  is present 
+$policyStore = $policyResources  | Where-Object {$_.ResourceType -eq "Microsoft.Storage/storageAccounts" }
+if(($policyStore | Measure-Object).Count -eq 0)
+{
+WriteMessage "`t Missing: Policy storage account" $([MessageType]::Error)
+$PolicyScanOutput.Resources.PolicyStore = $false
+}
+else
+{
+$PolicyScanOutput.Resources.PolicyStore = $true
+}
   
-  #Check if app insight is present
-  $appInsight = $policyResources  | Where-Object {$_.ResourceType -eq "Microsoft.Insights/components" }
-  if(($appInsight | Measure-Object).Count -eq 0)
-  {
-    WriteMessage "`t Missing: Policy app insight" $([MessageType]::Error)
-    $PolicyScanOutput.Resources.AppInsight = $false
-  }
-  else
-  {
-    $PolicyScanOutput.Resources.AppInsight = $true
-  }
+#Check if app insight is present
+$appInsight = $policyResources  | Where-Object {$_.ResourceType -eq "Microsoft.Insights/components" }
+if(($appInsight | Measure-Object).Count -eq 0)
+{
+WriteMessage "`t Missing: Policy app insight" $([MessageType]::Error)
+$PolicyScanOutput.Resources.AppInsight = $false
+}
+else
+{
+$PolicyScanOutput.Resources.AppInsight = $true
+}
 
-  #Check if monitoring dashboard is present
-  $monitoringDashboard = $policyResources  | Where-Object {$_.ResourceType -eq "Microsoft.Portal/dashboards" }
-  if(($monitoringDashboard | Measure-Object).Count -eq 0)
-  {
-   WriteMessage "`t Missing: Monitoring dashboard" $([MessageType]::Error)
-    $PolicyScanOutput.Resources.MonitoringDashboard = $false
-  }
-  else
-  {
-    $PolicyScanOutput.Resources.MonitoringDashboard = $true
-  }
+#Check if monitoring dashboard is present
+$monitoringDashboard = $policyResources  | Where-Object {$_.ResourceType -eq "Microsoft.Portal/dashboards" }
+if(($monitoringDashboard | Measure-Object).Count -eq 0)
+{
+WriteMessage "`t Missing: Monitoring dashboard" $([MessageType]::Error)
+$PolicyScanOutput.Resources.MonitoringDashboard = $false
+}
+else
+{
+$PolicyScanOutput.Resources.MonitoringDashboard = $true
+}
 
-  if($PolicyScanOutput.Resources.PolicyStore -and $PolicyScanOutput.Resources.AppInsight -and $PolicyScanOutput.Resources.MonitoringDashboard)
-  {
+if($PolicyScanOutput.Resources.PolicyStore -and $PolicyScanOutput.Resources.AppInsight -and $PolicyScanOutput.Resources.MonitoringDashboard)
+{
+WriteMessage "Status:   OK." $([MessageType]::Update)
+$PolicyScanOutput.Resources.Status = $true
+}
+else
+{
+WriteMessage "Status:   Failed." $([MessageType]::Error)
+$PolicyScanOutput.Resources.Status = $false
+}
+WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Info)
+
+#Check 02: Presence of mandatory policies
+WriteMessage "Check 02: Presence of mandatory policies." $([MessageType]::Info)
+$PolicyScanOutput.Policies = @{}
+if($PolicyScanOutput.Resources.PolicyStore)
+{
+$PolicyStoragekey = Get-AzureRmStorageAccountKey -ResourceGroupName $policyStore.ResourceGroupName  -Name $policyStore.Name 
+$currentContext = New-AzureStorageContext -StorageAccountName $policyStore.Name  -StorageAccountKey $PolicyStoragekey[0].Value -Protocol Https    
+$containerList = Get-AzureStorageContainer -Context $currentContext
+  
+$policyTempFolder = $env:TEMP + "\" + $ModuleName + "\Policies\";				
+if(-not (Test-Path "$policyTempFolder"))
+{
+	mkdir -Path "$policyTempFolder" -ErrorAction Stop | Out-Null
+}
+else
+{
+	Remove-Item -Path "$policyTempFolder\*" -Force -Recurse 
+}
+    
+#Validate presense of installer
+$Installer = Get-AzureStorageBlobContent -Container "installer" -Blob "$($ModuleName)-EasyInstaller.ps1" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
+$InstallerPath = $policyTempFolder + "$($ModuleName)-EasyInstaller.ps1"
+if(($Installer | Measure-Object).Count -eq 0)
+{
+    WriteMessage "`t Missing: Installer" $([MessageType]::Error)
+    $PolicyScanOutput.Policies.Installer = $false
+}
+else
+{
+    $PolicyScanOutput.Policies.Installer = $true
+}    
+
+#Validate presense of AzSK.Pre.json
+$AzSKPre = Get-AzureStorageBlobContent -Container "policies" -Blob "1.0.0/AzSK.Pre.json" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
+if(($AzSKPre | Measure-Object).Count -eq 0)
+{
+    WriteMessage "`t Missing: AzSKPre Config" $([MessageType]::Error)
+    $PolicyScanOutput.Policies.AzSKPre = $false
+}
+else
+{
+    $PolicyScanOutput.Policies.AzSKPre = $true
+}
+
+$RunbookCoreSetup = Get-AzureStorageBlobContent -Container "policies" -Blob "1.0.0/RunbookCoreSetup.ps1" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
+if(($RunbookCoreSetup | Measure-Object).Count -eq 0)
+{
+    WriteMessage "`t Missing: RunbookCoreSetup" $([MessageType]::Error)
+    $PolicyScanOutput.Policies.RunbookCoreSetup = $false
+}
+else
+{
+    $PolicyScanOutput.Policies.RunbookCoreSetup = $true
+}
+
+$RunbookScanAgent = Get-AzureStorageBlobContent -Container "policies" -Blob "1.0.0/RunbookScanAgent.ps1" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
+if(($RunbookScanAgent | Measure-Object).Count -eq 0)
+{
+    WriteMessage "`t Missing: RunbookScanAgent" $([MessageType]::Error)
+    $PolicyScanOutput.Policies.RunbookScanAgent = $false
+}
+else
+{
+    $PolicyScanOutput.Policies.RunbookScanAgent = $true
+}
+
+
+$AzSKConfig = Get-AzureStorageBlobContent -Container "policies" -Blob "3.1803.0/AzSK.json" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
+if(($AzSKConfig | Measure-Object).Count -eq 0)
+{
+    WriteMessage "`t Missing: RunbookScanAgent" $([MessageType]::Error)
+    $PolicyScanOutput.Policies.AzSKConfig = $false
+}
+else
+{
+    $PolicyScanOutput.Policies.AzSKConfig = $true
+}
+
+$ServerConfigMetadata = Get-AzureStorageBlobContent -Container "policies" -Blob "3.1803.0/ServerConfigMetadata.json" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
+if(($ServerConfigMetadata | Measure-Object).Count -eq 0)
+{
+    WriteMessage "`t Missing: ServerConfigMetadata" $([MessageType]::Error)
+    $PolicyScanOutput.Policies.ServerConfigMetadata = $false
+}
+else
+{
+    $PolicyScanOutput.Policies.ServerConfigMetadata = $true
+}
+    
+if($PolicyScanOutput.Policies.Installer -and $PolicyScanOutput.Policies.AzSKPre -and $PolicyScanOutput.Policies.RunbookCoreSetup -and $PolicyScanOutput.Policies.RunbookScanAgent -and $PolicyScanOutput.Policies.AzSKConfig -and $PolicyScanOutput.Policies.ServerConfigMetadata)
+{
     WriteMessage "Status:   OK." $([MessageType]::Update)
-    $PolicyScanOutput.Resources.Status = $true
-  }
-  else
-  {
+    $PolicyScanOutput.Policies.Status = $true
+}
+else
+{
     WriteMessage "Status:   Failed." $([MessageType]::Error)
-    $PolicyScanOutput.Resources.Status = $false
-  }
-  WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Info)
-
-  #Check 02: Presence of mandatory policies
-  WriteMessage "Check 02: Presence of mandatory policies." $([MessageType]::Info)
-  $PolicyScanOutput.Policies = @{}
-  if($PolicyScanOutput.Resources.PolicyStore)
-  {
-    $PolicyStoragekey = Get-AzureRmStorageAccountKey -ResourceGroupName $policyStore.ResourceGroupName  -Name $policyStore.Name 
-    $currentContext = New-AzureStorageContext -StorageAccountName $policyStore.Name  -StorageAccountKey $PolicyStoragekey[0].Value -Protocol Https    
-    $containerList = Get-AzureStorageContainer -Context $currentContext
-  
-    $policyTempFolder = $env:TEMP + "\" + $ModuleName + "\Policies\";				
-    if(-not (Test-Path "$policyTempFolder"))
-    {
-	    mkdir -Path "$policyTempFolder" -ErrorAction Stop | Out-Null
-    }
-    else
-    {
-	    Remove-Item -Path "$policyTempFolder\*" -Force -Recurse 
-    }
-    
-    #Validate presense of installer
-    $Installer = Get-AzureStorageBlobContent -Container "installer" -Blob "$($ModuleName)-EasyInstaller.ps1" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
-    $InstallerPath = $policyTempFolder + "$($ModuleName)-EasyInstaller.ps1"
-    if(($Installer | Measure-Object).Count -eq 0)
-    {
-        WriteMessage "`t Missing: Installer" $([MessageType]::Error)
-        $PolicyScanOutput.Policies.Installer = $false
-    }
-    else
-    {
-        $PolicyScanOutput.Policies.Installer = $true
-    }    
-
-    #Validate presense of AzSK.Pre.json
-    $AzSKPre = Get-AzureStorageBlobContent -Container "policies" -Blob "1.0.0/AzSK.Pre.json" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
-    if(($AzSKPre | Measure-Object).Count -eq 0)
-    {
-        WriteMessage "`t Missing: AzSKPre Config" $([MessageType]::Error)
-        $PolicyScanOutput.Policies.AzSKPre = $false
-    }
-    else
-    {
-        $PolicyScanOutput.Policies.AzSKPre = $true
-    }
-
-    $RunbookCoreSetup = Get-AzureStorageBlobContent -Container "policies" -Blob "1.0.0/RunbookCoreSetup.ps1" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
-    if(($RunbookCoreSetup | Measure-Object).Count -eq 0)
-    {
-        WriteMessage "`t Missing: RunbookCoreSetup" $([MessageType]::Error)
-        $PolicyScanOutput.Policies.RunbookCoreSetup = $false
-    }
-    else
-    {
-        $PolicyScanOutput.Policies.RunbookCoreSetup = $true
-    }
-
-    $RunbookScanAgent = Get-AzureStorageBlobContent -Container "policies" -Blob "1.0.0/RunbookScanAgent.ps1" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
-    if(($RunbookScanAgent | Measure-Object).Count -eq 0)
-    {
-        WriteMessage "`t Missing: RunbookScanAgent" $([MessageType]::Error)
-        $PolicyScanOutput.Policies.RunbookScanAgent = $false
-    }
-    else
-    {
-        $PolicyScanOutput.Policies.RunbookScanAgent = $true
-    }
-
-
-    $AzSKConfig = Get-AzureStorageBlobContent -Container "policies" -Blob "3.1803.0/AzSK.json" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
-    if(($AzSKConfig | Measure-Object).Count -eq 0)
-    {
-        WriteMessage "`t Missing: RunbookScanAgent" $([MessageType]::Error)
-        $PolicyScanOutput.Policies.AzSKConfig = $false
-    }
-    else
-    {
-        $PolicyScanOutput.Policies.AzSKConfig = $true
-    }
-
-    $ServerConfigMetadata = Get-AzureStorageBlobContent -Container "policies" -Blob "3.1803.0/ServerConfigMetadata.json" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
-    if(($ServerConfigMetadata | Measure-Object).Count -eq 0)
-    {
-        WriteMessage "`t Missing: ServerConfigMetadata" $([MessageType]::Error)
-        $PolicyScanOutput.Policies.ServerConfigMetadata = $false
-    }
-    else
-    {
-        $PolicyScanOutput.Policies.ServerConfigMetadata = $true
-    }
-    
-    if($PolicyScanOutput.Policies.Installer -and $PolicyScanOutput.Policies.AzSKPre -and $PolicyScanOutput.Policies.RunbookCoreSetup -and $PolicyScanOutput.Policies.RunbookScanAgent -and $PolicyScanOutput.Policies.AzSKConfig -and $PolicyScanOutput.Policies.ServerConfigMetadata)
-    {
-        WriteMessage "Status:   OK." $([MessageType]::Update)
-        $PolicyScanOutput.Policies.Status = $true
-    }
-    else
-    {
-        WriteMessage "Status:   Failed." $([MessageType]::Error)
-        $PolicyScanOutput.Policies.Status = $false
-    }
-  }
-  else 
-  {
-    WriteMessage "Status:   Skipped. Policy store not found." $([MessageType]::Info)
     $PolicyScanOutput.Policies.Status = $false
-  }
+}
+}
+else 
+{
+WriteMessage "Status:   Skipped. Policy store not found." $([MessageType]::Info)
+$PolicyScanOutput.Policies.Status = $false
+}
 
 WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Info)
  
@@ -561,4 +575,5 @@ else
 }
 WriteMessage "================================================================================" $([MessageType]::Info)
 
+WriteMessage "Logs are exported to location: '$LogFilePath'"
 
