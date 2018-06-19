@@ -559,8 +559,7 @@ Such mapping can help you to measure security compliance view across each org/ s
 
 | ColumnName  | Description | Required? | Comments |
 | ---- | ---- | ---- |---- |
-| OrgName | Name of organization within your Enterprise | Yes |  This 
-you can consider as level 1 hierarchy for your enterprise | 
+| OrgName | Name of organization within your Enterprise | Yes |  This you can consider as level 1 hierarchy for your enterprise | 
 | ServiceGroupName | Name of Service Line/ Business Unit within an organization | Yes |  This you can consider as level 2 hierarchy for your enterprise | 
 | SubscriptionId | Subscription Id belonging to a org/servicegroup | Yes |   | 
 | SubscriptionName | Subscription Name | Yes |   | 
