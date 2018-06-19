@@ -588,7 +588,7 @@ Please follow the below screenshots to create datasource. Follow naming conventi
 ![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_06.PNG)
 
 Upload your org-sub mapping file to data source:
-During uploading mapping file make sure, you have removed first header row (which contains heading for column like OrgName,ServiceGroupName etc.) 
+During mapping file upload make sure, you have removed first header row (which contains heading for column like OrgName,ServiceGroupName etc.) 
 
 ![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_07.PNG)
 
