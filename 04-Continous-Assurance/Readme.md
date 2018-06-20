@@ -51,7 +51,7 @@ AzSK adds the service principal runtime account as a 'Reader' to the subscriptio
 
 **Prerequisite:**
 
-**1.** The machine should be running on one of the below OS: 	
+**1.** We currently support following OS options: 	
 - Windows 10
 - Windows Server 2016
 
