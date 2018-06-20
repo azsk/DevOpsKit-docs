@@ -7,6 +7,7 @@
 - [Control information](Readme.md#control-information)
 - [Attestation information](Readme.md#attestation-information)
 - [Host information](Readme.md#host-information)
+- [User Comments](Readme.md#user-comments)
 
 ### Overview
 
@@ -128,3 +129,5 @@ Run below command to get information about,
 Below is the sample output:
 
 ![08_Info_HostInfo_PS](../Images/08_Info_HostInfo_PS.PNG) 
+
+### User Comments 
