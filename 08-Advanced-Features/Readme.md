@@ -131,3 +131,23 @@ Below is the sample output:
 ![08_Info_HostInfo_PS](../Images/08_Info_HostInfo_PS.PNG) 
 
 ### User Comments 
+
+Now to track compliance progress on your subscription you can place 'markers/comments' on controls, these markers will be persisted on your subscription. Anyone across your subscription can read those comments later by running GSS/GRS/GCS cmd with an extra switch "-IncludeUserComments". 
+
+#### How to update user comments?
+Please follow the following steps to update user comments,
+Step 1: Run GRS/GSS/GCS cmd with “-IncludeUserComments” switch ,
+        ```PowerShell
+	      Get-AzSKAzureServicesSecurityStatus -SubscriptionId <Your SubscriptionId> -IncludeUserComments 
+        ```
+	In generated .CSV file, there will be an extra column “User Comments” which will contain custom comments provided by users.
+	
+Step 2: Edit/Update “User Comments” column and save file.	
+
+Step 3: Upload edited .CSV file using below cmdlt,
+        ```PowerShell
+	     Update-AzSKPersistedState -SubscriptionId  <Your SubscriptionId> -FilePath <Path for updated CSV file> -StateType "UserComments" 
+        ```
+#### How to read user comments?
+
+To read user comments on any controls you just need to run GCS/GSS/GRS cmd  with an extra switch "-IncludeUserComments". Once scan completes generated CSV file will contain "User Comments" column which will show comments/marker.
