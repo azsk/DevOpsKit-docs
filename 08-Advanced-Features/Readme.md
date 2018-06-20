@@ -136,13 +136,14 @@ Now to track compliance progress on your subscription you can place 'markers/com
 
 #### How to update user comments?
 
-Please follow the following steps to update user comments,
+Please follow the following steps to update user comments,</br>
 Step 1: Run GRS/GSS/GCS cmd with “-IncludeUserComments” switch, For e.g.
 ```PowerShell
       Get-AzSKAzureServicesSecurityStatus -SubscriptionId <Your SubscriptionId> -IncludeUserComments
 ```
-	In generated .CSV file, there will be an extra column “User Comments” which will contain custom comments provided by users.
-	
+
+In generated .CSV file, there will be an extra column “User Comments” which will contain custom comments provided by users.
+
 Step 2: Edit/Update “User Comments” column and save file.	
 
 Step 3: Upload edited .CSV file using below cmdlt,
