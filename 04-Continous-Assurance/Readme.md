@@ -49,6 +49,12 @@ AzSK adds the service principal runtime account as a 'Reader' to the subscriptio
 
 2. Target OMS WorkspaceID* and SharedKey. (The OMS workspace can be in a different subscription, see note below)
 
+**Prerequisite:**
+
+**1.** The machine should be running on one of the below OS: 	
+- Windows 10
+- Windows Server 2016
+
 
 > **\*Note** CA leverages an OMS repository for aggregating security scan results, you must determine which OMS workspace 
 you will use to view the security state of your subscription and applications (If you don't have an OMS repository please 
@@ -67,6 +73,8 @@ for your application.)
 ```PowerShell
 	Install-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 		[-AutomationAccountLocation <AutomationAccountLocation>] `
+		[-AutomationAccountRGName <AutomationAccountRGName>] `
+		[-AutomationAccountName <AutomationAccountName>] `
 	        -ResourceGroupNames <ResourceGroupNames> `
 	        -OMSWorkspaceId <OMSWorkspaceId> `
 	        -OMSSharedKey <OMSSharedKey> `
@@ -83,6 +91,8 @@ for your application.)
 |----|----|----|----|----|
 |SubscriptionId|Subscription ID of the Azure subscription in which an Automation Account for Continuous Assurance will be created |TRUE|None||
 |AutomationAccountLocation|(Optional) The location in which this cmdlet creates the Automation Account|FALSE|EastUS2|To obtain valid locations, use the Get-AzureRMLocation cmdlet|
+|AutomationAccountRGName|(Optional) Name of ResourceGroup where AutomationAccount will be installed|FALSE|AzSKRG|Don't pass default value explicitely for this param|
+|AutomationAccountName|(Optional) Name of AutomationAccount|FALSE|AzSKContinuousAssurance|Don't pass default value explicitely for this param|
 |ResourceGroupNames|Comma separated list of resource groups within which the application resources are contained.|TRUE|None||
 |OMSWorkspaceId|Workspace ID of OMS which is used to monitor security scan results|TRUE|None||
 |OMSSharedKey|Shared key of OMS which is used to monitor security scan results|TRUE|None||
@@ -421,6 +431,14 @@ $ResourceGroupNames = '*' #This should always be '*' for Central Scan mode CA
 $OMSWorkspaceId = '<omsWorkspaceId>'
 $OMSSharedKey = '<omsSharedKey>' 
 $TargetSubscriptionIds = '<SubId1, SubId2, SubId3...>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
+
+#if you have text file containing subscription ids then run below script
+#$FileContent = Get-Content -Path "<TextFilePath>"
+#$TargetSubscriptionIds = ($FileContent| foreach {$_.Trim()}) -join "," 
+
+#if you have PowerShell array object containing subscription ids e.g. $SubIdArray = @("subid1","subid2","subid3") then run below script
+#$TargetSubscriptionIds = ($SubIdArray| foreach {$_.Trim()}) -join "," 
+
 $AutomationAccountLocation = '<location>'
 $AutomationAccountRGName = '<RGName>' # e.g. AzSK-Category-ScanRG01
 $AutomationAccountName = '<accountName>' # e.g. AzSKScanningAccount01
@@ -464,6 +482,13 @@ $SubscriptionId = '<subscriptionId>'
 $AutomationAccountRGName = '<RGName>' # e.g. AzSK-Category-ScanRG01
 $AutomationAccountName = '<accountName>' # e.g. AzSKScanningAccount01
 $TargetSubscriptionIds = '<SubId1, SubId2, SubId3,...>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
+
+#if you have text file containing subscription ids then run below script
+#$FileContent = Get-Content -Path "<TextFilePath>"
+#$TargetSubscriptionIds = ($FileContent| foreach {$_.Trim()}) -join "," 
+
+#if you have PowerShell array object containing subscription ids e.g. $SubIdArray = @("subid1","subid2","subid3") then run below script
+#$TargetSubscriptionIds = ($SubIdArray| foreach {$_.Trim()}) -join "," 
 
 Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds 
         -AutomationAccountRGName $AutomationAccountRGName -AutomationAccountName $AutomationAccountName -CentralScanMode -FixRuntimeAccount
