@@ -638,10 +638,17 @@ Copy the value of AzSKAIConnectionString
 
 ![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_16.PNG)
 
-Replace the value of AzSKAIConnectionString as shown below with the actual connection string (e.g. AzSKAIConnectionString => "https://api.applicationinsights.io/v1/apps/<AIAppID>/query")
+Replace the value of AzSKAIConnectionString as shown below with the actual connection string (e.g. AzSKAIConnectionString => "https://api.applicationinsights.io/v1/apps/[AIAppID]/query")
 
 ![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_17.PNG)
 
 Perform this operation for ControlResults_AI, Subscriptions_AI, and ResourceInventory_AI datatables and then click on Close and Apply.
 
 Your PBIX report is ready for publish. You can now publish your report to your workspace.
+
+![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_18.PNG)
+
+![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_19.PNG)
+
+![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_20.PNG)
+
