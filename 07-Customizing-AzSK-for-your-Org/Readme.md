@@ -549,10 +549,10 @@ a few known cases, but we may have missed the odd one.)
 - Note that the policy upload command always generates a fresh installer.ps1 file for upload. If you want to make changes to 
 that, you may have to keep a separate copy and upload it. (We will revisit this in future sprints.)
 
-## Create Cloud Compliance Report for your org in PowerBI
-You can now visualize DevOps Kit Cloud Security Compliance for your organization in PowerBI. This report is going to use your Application Insights instance as a DataSource which is used to capture security telemetry from scans.
+## Create Cloud Security Compliance Report for your org in PowerBI
+You can now visualize DevOps Kit Cloud Security Compliance for your organization in PowerBI. This report is going to use your Application Insights instance (created as part of Org policy setup) as a DataSource which is used to capture security telemetry from scans.
 #### Step 1: Prepare your Org-Subscription Mapping
-You can create a simple org-sub mapping csv file as shown below:
+You can create a simple org-sub mapping csv file as shown below (Refer template from [here](./TemplateFiles/OrgMapping.csv)):
 ![Org-Sub metadata json](../Images/07_OrgPolicy_PBI_OrgMetadata.PNG) 
 
 Such mapping can help you to measure security compliance view across each org/ service group. 
@@ -567,7 +567,7 @@ Such mapping can help you to measure security compliance view across each org/ s
 
 > **Note**: Ensure you follow the correct casing for all the column names as mentioned in the table above. Currently the default template will support only these columns. You can modify the report as per your needs.
 
-a) Open your Application Insights resource in Portal and click on Analytics view as shown below:
+a) Open Application Insights resource present under Org Policy resource group in Portal and click on Analytics view as shown below:
 
 ![Open Analytics view](../Images//07_OrgPolicy_PBI_OrgMetadata_AI_01.PNG)
 
@@ -582,13 +582,15 @@ Please follow the below screenshots to create datasource. Follow naming conventi
 ![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_04.PNG)
 
 
+You can upload schema present [here](./TemplateFiles/OrgMappingDataSourceSchema.json)
 ![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_05.PNG)
 
 
 ![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_06.PNG)
 
 Upload your org-sub mapping file to data source:
-During mapping file upload make sure, you have removed first header row (which contains heading for column like OrgName,ServiceGroupName etc.) 
+
+**Note**: During mapping file upload make sure, you have removed first header row (which contains heading for column like OrgName,ServiceGroupName etc.) 
 
 ![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_07.PNG)
 
