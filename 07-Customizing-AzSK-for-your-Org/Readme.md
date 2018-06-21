@@ -650,5 +650,6 @@ Your PBIX report is ready for publish. You can now publish your report to your w
 
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_19.PNG)
 
-![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_20.PNG)
+![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_20.png)
+
 
