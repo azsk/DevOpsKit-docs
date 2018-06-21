@@ -134,9 +134,9 @@ Below is the sample output:
 
 Now to track compliance progress on your subscription you can place 'markers/comments' on controls, these markers will be persisted on your subscription. Anyone across your subscription can read those comments later by running GSS/GRS/GCS cmd with an extra switch "-IncludeUserComments". 
 
-> **Note:** This feature will be disabled by default for your subscrition . To enable this, Please run following command:
+> **Note:** This feature will be disabled by default for your subscription . To enable this, Please run following command:
 >```PowerShell
->    Get-AzSKAzureServicesSecurityStatus -SubscriptionId <Your SubscriptionId> -IncludeUserComments
+>    Set-AzSKUserPreference -PersistScanReportInSubscription
 >```
 	
 #### How to update user comments?
