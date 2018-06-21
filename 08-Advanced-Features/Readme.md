@@ -130,16 +130,16 @@ Below is the sample output:
 
 ![08_Info_HostInfo_PS](../Images/08_Info_HostInfo_PS.PNG) 
 
-### User Comments 
+### User Comments/Custom Tags
 
-Now to track compliance progress on your subscription you can place 'markers/comments' on controls, these markers will be persisted on your subscription. Anyone across your subscription can read those comments later by running GSS/GRS/GCS cmd with an extra switch "-IncludeUserComments". 
+To track compliance progress on your subscription you can place 'custom tags/comments' on controls, these comments will be persisted inside your subscription's AzSK storage account. Anyone across your subscription can read the comments later by running GSS/GRS/GCS command with switch "-IncludeUserComments". 
 
-> **Note:** This feature will be disabled by default for your subscription . To enable this, Please run following command:
+> **Note:** You need to explicitly enable this feature for your subscription. To do so, Please run following command:
 >```PowerShell
 >    Set-AzSKUserPreference -PersistScanReportInSubscription
 >```
 	
-#### How to update user comments?
+#### How to add/update user comments?
 
 Please follow the following steps to update user comments:
 
@@ -148,7 +148,7 @@ Step 1: Run GRS/GSS/GCS cmd with “-IncludeUserComments” switch. For e.g.
       Get-AzSKAzureServicesSecurityStatus -SubscriptionId <Your SubscriptionId> -IncludeUserComments
 ```
 
-In generated .CSV file, there will be an extra column “User Comments” which will contain custom comments provided by users.
+In the .CSV file that is generated, there will be an extra column “UserComments” which will contain custom comments provided by users.
 
 Step 2: Edit/Update “User Comments” column and save file.	
 
@@ -158,4 +158,4 @@ Step 3: Upload edited .CSV file using below cmdlt,
 ```    
 #### How to read user comments?
 
-To read user comments on any controls you just need to run GCS/GSS/GRS cmd  with an extra switch "-IncludeUserComments". Once scan completes generated CSV file will contain "User Comments" column which will show comments/marker.
+To read user comments on any controls you just need to run GCS/GSS/GRS cmd  with an extra switch "-IncludeUserComments". Once a scan completes the .CSV file will contain "User Comments" column which will show comments/custom tags.
