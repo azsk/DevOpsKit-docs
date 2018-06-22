@@ -113,23 +113,23 @@ Let us now look at the command that will help with the above and a few examples�
 #### The org policy setup command (`Install-AzSKOrganizationPolicy`)
 
 This command helps the central security team of an organization to customize the behavior of various functions
-and security controls checked by AzSK.  
+and security controls checked by AzSK.  
 
 As discussed in previous sections, AzSK runtime behavior is mainly controlled through JSON-based policy files 
 which have a predefined schema. The command helps in creating a policy store and other required components to
-host and maintain a custom set of policy files that override the default AzSK behavior. 
+host and maintain a custom set of policy files that override the default AzSK behavior. 
 
-| Parameter| Description | Required? | Default Value | Comments |
+| Parameter| Description | Required? | Default Value | Comments |
 | ---- | ---- | ---- |----|---- |
-| SubscriptionId | Subscription ID of the Azure subscription in which organization policy  store will be created. | Yes | None | 
-|OrgName | The name of your organization. The value will be used to generate names of Azure resources being created as part of policy setup. This should be alphanumeric. | Yes | None |
-| DepartmentName | The name of a department in your organization. If provided, this value is concatenated to the org name parameter. This should be alphanumeric. | No | None |
-| PolicyFolderPath | The local folder in which the policy files capturing org-specific changes will be stored for reference. This location can be used to manage policy files. | No | User Desktop |
-| ResourceGroupLocation | The location in which the Azure resources for hosting the policy will be created. | No | EastUS2 | To obtain valid locations, use Get-AzureRMLocation cmdlet |
-| ResourceGroupName | Resource Group name where policy resources will be created. | No | AzSK-\<OrgName>-\<DepName>-RG | Custom resource group name for storing policy resources. **Note:** ResourceGroupName, StorageAccountName and AppInsightName must be passed together to create custom resources |
-| StorageAccountName | Name for policy storage account | No | azsk-\<OrgName>-\<DepName>-sa | |
-| AppInsightName | Name for application insight resource where telemetry data will be pushed | No | AzSK-\<OrgName>-<DepName>-AppInsight | Custom resource group name for storing policy resources.  |
-| AppInsightLocation | The location in which the AppInsightLocation resource will be created. | No | EastUS |  |
+| SubscriptionId | Subscription ID of the Azure subscription in which organization policy  store will be created. | Yes | None | 
+|OrgName | The name of your organization. The value will be used to generate names of Azure resources being created as part of policy setup. This should be alphanumeric. | Yes | None |
+| DepartmentName | The name of a department in your organization. If provided, this value is concatenated to the org name parameter. This should be alphanumeric. | No | None |
+| PolicyFolderPath | The local folder in which the policy files capturing org-specific changes will be stored for reference. This location can be used to manage policy files. | No | User Desktop |
+| ResourceGroupLocation | The location in which the Azure resources for hosting the policy will be created. | No | EastUS2 | To obtain valid locations, use Get-AzureRMLocation cmdlet |
+| ResourceGroupName | Resource Group name where policy resources will be created. | No | AzSK-\<OrgName>-\<DepName>-RG | Custom resource group name for storing policy resources. **Note:** ResourceGroupName, StorageAccountName and AppInsightName must be passed together to create custom resources |
+| StorageAccountName | Name for policy storage account | No | azsk-\<OrgName>-\<DepName>-sa | |
+| AppInsightName | Name for application insight resource where telemetry data will be pushed | No | AzSK-\<OrgName>-<DepName>-AppInsight | Custom resource group name for storing policy resources.  |
+| AppInsightLocation | The location in which the AppInsightLocation resource will be created. | No | EastUS |  |
 #### First-time policy setup - an example
 The following example will set up policies for IT department of Contoso organization. 
 
@@ -138,14 +138,14 @@ Also, make sure that that the org name and dept name are purely alphanumeric and
 
 ```PowerShell
 Install-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
-           -OrgName "Contoso" `
-           -DepartmentName "IT" `
-           -PolicyFolderPath "D:\ContosoPolicies"
+           -OrgName "Contoso" `
+           -DepartmentName "IT" `
+           -PolicyFolderPath "D:\ContosoPolicies"
 ```
-The execution of command will create following resources in the subscription (if they don't already exist): 
+The execution of command will create following resources in the subscription (if they don't already exist): 
 1. Resource Group (AzSK-Contoso-IT-RG) - AzSK-\<OrgName>-\<DepartmentName>-RG. 
 2. Storage Account (azskcontosoitsa) - azsk\<OrgName>\<DepartmentName>sa.
-3. Application Insight (AzSK-Contoso-IT-AppInsight) - AzSK-\<OrgName>-\<DepartmentName>-AppInsight. 
+3. Application Insight (AzSK-Contoso-IT-AppInsight) - AzSK-\<OrgName>-\<DepartmentName>-AppInsight. 
 
 It will also create a very basic 'customized' policy involving below files uploaded to the policy storage account.
 ##### Basic files setup during Policy Setup 
@@ -165,7 +165,7 @@ At the end of execution, an 'iwr' command line will be printed to the console. T
  installation script from the storage account for installing AzSK.
 
 ```PowerShell
-iwr 'https://azskcontosoitsa.blob.core.windows.net/installer/AzSK-EasyInstaller.ps1' -UseBasicParsing | iex 
+iwr 'https://azskcontosoitsa.blob.core.windows.net/installer/AzSK-EasyInstaller.ps1' -UseBasicParsing | iex 
 ```
 
 
@@ -179,14 +179,14 @@ Below is snapshot of the dashboard
 <img alt="Effective Org Policy Evaluation" src="../Images/07_OrgPolicy_MonitoringDashboard.png" />
 
 
-## Modifying and customizing org policy 
+## Modifying and customizing org policy 
 
-All subsequent runs of the (same) command above will pick up the JSON files from local PolicyFolderPath and upload 
+All subsequent runs of the (same) command above will pick up the JSON files from local PolicyFolderPath and upload 
 to policy store, provided the values for OrgName and DepartmentName remain unchanged. (This is required
 because the command internally evaluates the locations of various artifacts based on these values.) To modify policy
 or add more policy customizations, we shall be reusing the same command as used for first-time setup.
 
-> **Note**: ServerConfigMetadata.json and AzSK-EasyInstaller.ps1 will always get overwritten on the subsequent run of the command. 
+> **Note**: ServerConfigMetadata.json and AzSK-EasyInstaller.ps1 will always get overwritten on the subsequent run of the command. 
 
 	
 #### Common scenarios for org policy customization
@@ -550,106 +550,126 @@ a few known cases, but we may have missed the odd one.)
 that, you may have to keep a separate copy and upload it. (We will revisit this in future sprints.)
 
 ## Create Cloud Security Compliance Report for your org in PowerBI
-You can now visualize DevOps Kit Cloud Security Compliance for your organization in PowerBI. This report is going to use your Application Insights instance (created as part of Org policy setup) as a DataSource which is used to capture security telemetry from scans.
+Once you have an org policy setup and running smoothly with multiple subscriptions across your org being scanned using your policy, you will need a solution that provides visibility to security compliance for all the subscriptions across your org. This will help you drive compliance/risk governance initiatives for your organization. 
+
+When you setup your org policy endpoint, one of the things that happens is creation of an Application Insights workspace for your setup. After that, whenever someone performs an AzSK scan for a subscription that is configured to use your org policy, the scan results are sent (as 'security' telemetry) to your org's Application Insights workspace. Because this workspace receives scan events from all such subscriptions, it can leveraged to generate aggregate security compliance views for your cloud-based environments. In the steps below, we will look at how a PowerBI-based compliance dashboard can be created and deployed in a matter of minutes starting with a template dashboard that ships with the AzSK. All you need apart from the Application Insights instance is a CSV file that provides a mapping of your organization hierarchy to subscription ids (so that we know which team/service group owns each subscription).
+
+> Note: This is a one-time activity with tremendous leverage as you can use the resulting dashboard (example below) towards driving security governance activities over an extended period at your organization. 
+
+#### Step 0: Pre-requisites
+To create, edit and publish your compliance dashboard, you will need to install the latest version of PowerBI desktop on your local machine. Download it from [here](https://powerbi.microsoft.com/en-us/desktop/).
+
+
 #### Step 1: Prepare your Org-Subscription Mapping
-You can create a simple org-sub mapping csv file as shown below (Refer template from [here](./TemplateFiles/OrgMapping.csv)):
+In this step we will prepare the data file which will be fed to the PowerBI dashboard creation process as the mapping from subscription ids to the org hierarchy within your environment. The file is in a simple CSV form and should appear like the one below. 
+
+> Note: You may want to create a small CSV file with just a few subscriptions for a trial pass and then update it with the full subscription list for your org after getting everything working end-to-end.
+
+A sample template for the CSV file is [here](./TemplateFiles/OrgMapping.csv):
+
 ![Org-Sub metadata json](../Images/07_OrgPolicy_PBI_OrgMetadata.PNG) 
 
-Such mapping can help you to measure security compliance view across each org/ service group. 
+The table below describes the different columns in the CSV file and their intent.
 
-| ColumnName  | Description | Required? | Comments |
+| ColumnName  | Description | Required? | Comments |
 | ---- | ---- | ---- |---- |
-| OrgName | Name of organization within your Enterprise | Yes |  This you can consider as level 1 hierarchy for your enterprise | 
-| ServiceGroupName | Name of Service Line/ Business Unit within an organization | Yes |  This you can consider as level 2 hierarchy for your enterprise | 
-| SubscriptionId | Subscription Id belonging to a org/servicegroup | Yes |   | 
-| SubscriptionName | Subscription Name | Yes |   | 
-| OwnerDetails | ; separated owner information for a given subscription | Yes | This infomration can show subscription owner details in the report itself.  | 
+| BGName | Name of business group (e.g., Finance, HR, Marketing, etc.) within your enterprise | Yes |  This you can consider as level 1 hierarchy for your enterprise | 
+| ServiceGroupName | Name of Service Line/ Business Unit within an organization | Yes |  This you can consider as level 2 hierarchy for your enterprise | 
+| SubscriptionId | Subscription Id belonging to a org/servicegroup | Yes |   | 
+| SubscriptionName | Subscription Name | Yes | This should match the actual subscription name. If it does not, then the actual name will be used.  | 
+| OwnerDetails | List of subscription owners separated by semi-colons (;)  | Yes | These are people accountable for security of the subscription.  | 
 
-> **Note**: Ensure you follow the correct casing for all the column names as mentioned in the table above. Currently the default template will support only these columns. You can modify the report as per your needs.
+> **Note**: Ensure you follow the correct casing for all column names as shown in the table above. The 'out-of-box' PowerBI template is bound to these columns. If you need additional columns to represent your org hierarchy then you may need to modify the template/report as well.
 
-a) Open Application Insights resource present under Org Policy resource group in Portal and click on Analytics view as shown below:
+
+#### Step 2: Upload your mapping to the Application Insights (AI) workspace
+In this step we will import the data above into the AI workspace created during org policy setup. 
+
+ **(a)** Locate the AI resource that was created during org policy setup in your central subscription. This should be present under Org Policy resource group. After selecting the AI resource click on "Analytics view" as shown below:
 
 ![Open Analytics view](../Images//07_OrgPolicy_PBI_OrgMetadata_AI_01.PNG)
 
-b) Create a custom data source for your OrgData as shown below:
+**(b)** Create a custom data source for your OrgData as shown below. (This will be used to store the org-subscription mapping data from the CSV above.)
 
 ![Create custom data source](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_02.PNG)
 
-Please follow the below screenshots to create datasource. Follow naming convention as specified in the screenshots.
+Please follow the screenshots below to create the datasource. Take care to follow the naming convention as specified in the screenshots.
 ![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_03.PNG)
 
 
 ![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_04.PNG)
 
 
-You can upload schema present [here](./TemplateFiles/OrgMappingDataSourceSchema.json)
+The schema required for this datasource may be imported from the schema file [here](./TemplateFiles/OrgMappingDataSourceSchema.json)
 ![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_05.PNG)
 
 
 ![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_06.PNG)
 
-Upload your org-sub mapping file to data source:
+**(c)** Upload your org-subscription mapping file to this datasource:
 
-**Note**: During mapping file upload make sure, you have removed first header row (which contains heading for column like OrgName,ServiceGroupName etc.) 
+> **Note**: During mapping file upload remove the header row if any (this is the row containing comma-separated headings for columns such as "BGName, ServiceGroupName, etc."). The file should basically contain only the actual subscription mapping data without any header row. 
 
 ![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_07.PNG)
 
 ![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_08.PNG)
 
-
-You can now see the custom datasource in your analytics view as shown below:
+You should not be able to see the custom datasource in your analytics view as shown below:
 
 ![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_09.PNG)
 
-#### Step 2: Create PowerBI report file
-In this section we shall create a PowerBI report with Application Insights as datasource. You need to have latest version of PowerBI desktop installed on your machine. You can download it from [here.](https://powerbi.microsoft.com/en-us/desktop/)
+#### Step 3: Create a PowerBI report file
+In this section we shall create a PowerBI report locally within PowerBI Desktop using the AI workspace from org policy subscription as the datasource. We will start with a default (out-of-box) PowerBI template and configure it with settings specific to your environment. 
 
-a) Capture ApplicationId for your Insights workspace from portal as shown below:
+> Note: This step assumes you have completed Step-0 above!
+
+**(a)** Get the ApplicationId for your AI workspace from the portal as shown below:
 
 ![capture applicationInsights AppId](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_10.PNG)
 
-b) Download and copy the PowerBI template file located [here](./TemplateFiles/AzSKComplianceReport.pbit) to your local mahcine.
+**(b)** Download and copy the PowerBI template file from [here](./TemplateFiles/AzSKComplianceReport.pbit) to your local machine.
 
-c) Open the template file using PowerBI Desktop, provide the Insights AppID and click on 'Load' as shown below:
+**(c)** Open the template (.pbit) file using PowerBI Desktop, provide the AI ApplicationId and click on 'Load' as shown below:
 
 ![capture applicationInsights AppId](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_11.PNG)
 
-d) Now it would prompt for login. Authenticate using your organization account in the PowerBI desktop
+**(d)** PowerBI will prompt you to login to the org policy subscription at this stage. Authenticate using your user account. (This step basically allows PowerBI to import the data from AI into the PowerBI Desktop workspace.)
 ![Login to AI](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_12.PNG)
 
-e) It would now load all the Application Insights data into PowerBI report along with org mapping as shown below: 
+Once you have successfully logged in, you will see the AI data in the PowerBI report along with org mapping as shown below: 
 
 ![Compliance summary](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_13.PNG)
 
-You can also view control details related to single subscription using the 'Detail view' tab as shown below:
+The report contains 2 tabs. There is an overall/summary view of compliance and a detailed view which can be used to see control 'pass/fail' details for individual subscriptions. An example of the second view is shown below:
 
 ![Compliance summary](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_14.PNG)
 
+> TBD: Need to add steps to control access to the detailed view by business group. (Dashboard RBAC.) 
 
-#### Step 3: Publish PowerBI report file to your workspace
+#### Step 4: Publish the PowerBI report to your enterprise PowerBI workspace
 
-a) Update AI connection string across data tables in PowerBI report as shown below:
+**(a)** Before publishing to the enterprise PowerBI instance, we need to update AI connection string across data tables in the PowerBI report. The steps to do this are as below:
 
-Click on Edit Queries menu option
+[a1] Click on "Edit Queries" menu option.
 
 ![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_15.PNG)
 
-Copy the value of AzSKAIConnectionString
+[a2] Copy the value of "AzSKAIConnectionString"
 
 ![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_16.PNG)
 
-Replace the value of AzSKAIConnectionString as shown below with the actual connection string (e.g. AzSKAIConnectionString => "https://api.applicationinsights.io/v1/apps/[AIAppID]/query")
+[a3] Replace the value of "AzSKAIConnectionString" with the actual connection string (e.g., AzSKAIConnectionString => "https://api.applicationinsights.io/v1/apps/[AIAppID]/query"). You should retain the "" quotes in the connection string.
 
 ![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_17.PNG)
 
-Perform this operation for ControlResults_AI, Subscriptions_AI, and ResourceInventory_AI datatables and then click on Close and Apply.
+[a4] Repeat this operation for ControlResults_AI, Subscriptions_AI, and ResourceInventory_AI data tables.
 
-Your PBIX report is ready for publish. You can now publish your report to your workspace.
+[a5] Click on "Close and Apply".
+
+**(b)** You can now publish your PBIX report to your workspace. The PBIX file gets created locally when you click "Publish".
 
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_18.PNG)
 
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_19.PNG)
 
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_21.png)
-
-
