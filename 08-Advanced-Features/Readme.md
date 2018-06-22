@@ -159,3 +159,5 @@ Step 3: Upload edited .CSV file using below cmdlt,
 #### How to read user comments?
 
 To read user comments on any controls you just need to run GCS/GSS/GRS cmd  with an extra switch "-IncludeUserComments". Once a scan completes the .CSV file will contain "UserComments" column which will show comments/custom tags.
+
+![08_Info_UserComments_PS](../Images/08_Info_UserComments_PS.JPG)  
