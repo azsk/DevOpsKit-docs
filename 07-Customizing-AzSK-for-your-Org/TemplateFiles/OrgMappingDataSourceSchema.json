@@ -1,5 +1,5 @@
 [
-    {"location": "0", "name": "OrgName", "type": "string"},
+    {"location": "0", "name": "BGName", "type": "string"},
 
     {"location": "1", "name": "ServiceGroupName", "type": "string"},
 
