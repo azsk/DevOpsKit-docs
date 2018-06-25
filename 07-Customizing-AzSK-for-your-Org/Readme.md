@@ -669,6 +669,7 @@ The report contains 2 tabs. There is an overall/summary view of compliance and a
 **(b)** You can now publish your PBIX report to your workspace. The PBIX file gets created locally when you click "Publish".
 
 Click on Publish
+
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_18.PNG)
 
 Select destination workspace
@@ -676,5 +677,6 @@ Select destination workspace
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_19.PNG)
 
 Click on "Open [Report Name] in Power BI" 
+
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_21.png)
 
