@@ -672,6 +672,7 @@ Click on Publish
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_18.PNG)
 
 Select destination workspace
+
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_19.PNG)
 
 Click on "Open [Report Name] in Power BI" 
