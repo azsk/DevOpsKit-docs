@@ -682,7 +682,7 @@ Click on "Open [Report Name] in Power BI"
 
 **(c)** Now report got published successfully. You can can schedule refresh for report with below steps
 
-Go Workspace --> Datasets --> Click on "..." --> Click on "Schedule Refresh"
+Go to Workspace --> Datasets --> Click on "..." --> Click on "Schedule Refresh"
 
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_22.png)
 
