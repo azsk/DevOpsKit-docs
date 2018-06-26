@@ -1,5 +1,9 @@
 # Preview Features
 
+### Configure new runtime account in CA
+Now you can configure new runtime account by running UCA (Update-AzSKContinuousAssurance) command with switch "-NewRuntimeAccount". 
+This feature is helpful in case when CA certificate is expired but the SPN owner who had setup CA is not available, due to that certificate can't be renewed. This command will setup new runtime account and the person running the command will become new SPN owner.
+
 ### User Comments/Custom Tags
 
 To track compliance progress on your subscription you can place 'custom tags/comments' on controls, these comments will be persisted inside your subscription's AzSK storage account. Anyone across your subscription can read the comments later by running GSS/GRS/GCS command with switch "-IncludeUserComments". 
