@@ -19,7 +19,7 @@
  - [Testing the overall policy setup](Readme.md#testing-the-overall-policy-setup)
  - [Troubleshooting common issues](Readme.md#troubleshooting-common-issues)
  
-### [Create Cloud Compliance Report for your org in PowerBI](Readme.md#create-cloud-compliance-report-for-your-org-in-powerbi-1)
+### [Create Cloud Security Compliance Report for your org in PowerBI](Readme.md#create-cloud-security-compliance-report-for-your-org-in-powerbi)
 ----------------------------------------------------------------
 
 ## Overview
