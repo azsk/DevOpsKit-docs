@@ -39,16 +39,14 @@ To read user comments on any controls you just need to run GCS/GSS/GRS cmd  with
 
 ### Attestation Workflow Changes
 * Two new attestation state are introduced to split "NotAnIssue" (which had an overloaded meaning earlier) into the following 3 possible states:
-	* (Genuine) NotAnIssue -- to represent situations where the control is implemented in another way, so the finding does not apply.
-	* StateConfirmed -- to represent acknowledgment by a user that the control state (e.g., IP addressed ranges on a firewall) is correct/appropriate
-	* NotApplicable -- the control is not applicable for the given design/context (e.g., a storage container that is public access ‘by design’)
+	* (Genuine) NotAnIssue: To represent situations where the control is implemented in another way, so the finding does not apply.
+	* StateConfirmed: To represent acknowledgment by a user that the control state (e.g., IP addressed ranges on a firewall) is correct/appropriate
+	* NotApplicable: The control is not applicable for the given design/context (e.g., a storage container that is public access ‘by design’)
 
-* Change in expiry of attestation for controls:
-	
+* Change in expiry of attestation for controls:	
 	* NotAnIssue and NotApplicable attestation states will expire in 90 days from the attested date
-	* StateConfirmed,WillFixLater,WillNotFix will expire based on the control severity if the controls are in grace period.
-	* Post grace period expiry any control attested with WillFixLater would expire and will result in actual verification state 
-	  and 'WillFixLater' will not be available as an attestation option for the control.
+	* StateConfirmed, WillFixLater, WillNotFix will expire based on the control severity if the controls are in grace period
+	* Post grace period expiry, any control that has been attested with WillFixLater would expire and 'WillFixLater' will not be available as an attestation option for the control.
 
 
 
