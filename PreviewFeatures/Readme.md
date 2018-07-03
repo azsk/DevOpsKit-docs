@@ -35,3 +35,19 @@ Step 3: Upload edited .CSV file using below cmdlt,
 To read user comments on any controls you just need to run GCS/GSS/GRS cmd  with an extra switch "-IncludeUserComments". Once a scan completes the .CSV file will contain "UserComments" column which will show comments/custom tags.
 
 ![08_Info_UserComments_PS](../Images/08_Info_UserComments_PS.JPG)  
+
+
+### Attestation Workflow Changes
+* Two new attestation state are introduced to split "NotAnIssue" (which had an overloaded meaning earlier) into the following 3 possible states:
+	* (Genuine) NotAnIssue: To represent situations where the control is implemented in another way, so the finding does not apply.
+	* StateConfirmed: To represent acknowledgment by a user that the control state (e.g., IP addressed ranges on a firewall) is correct/appropriate
+	* NotApplicable: To represent that the control is not applicable for the given design/context (e.g., a storage container that is public access ‘by design’)
+
+* Change in expiry of attestation for controls:	
+	* NotAnIssue and NotApplicable attestation states will expire in 90 days from the attested date
+	* StateConfirmed, WillFixLater, WillNotFix will expire based on the control severity if the controls are in grace period
+	* Post grace period expiry, any control that has been attested with WillFixLater would expire and 'WillFixLater' will not be available as an attestation option for the control.
+
+
+
+
