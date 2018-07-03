@@ -41,7 +41,7 @@ To read user comments on any controls you just need to run GCS/GSS/GRS cmd  with
 * Two new attestation state are introduced to split "NotAnIssue" (which had an overloaded meaning earlier) into the following 3 possible states:
 	* (Genuine) NotAnIssue: To represent situations where the control is implemented in another way, so the finding does not apply.
 	* StateConfirmed: To represent acknowledgment by a user that the control state (e.g., IP addressed ranges on a firewall) is correct/appropriate
-	* NotApplicable: The control is not applicable for the given design/context (e.g., a storage container that is public access ‘by design’)
+	* NotApplicable: To represent that the control is not applicable for the given design/context (e.g., a storage container that is public access ‘by design’)
 
 * Change in expiry of attestation for controls:	
 	* NotAnIssue and NotApplicable attestation states will expire in 90 days from the attested date
