@@ -431,7 +431,7 @@ if(-not $RestoreFromBackup)
             $autoUpdateCommandUrl = GetSubString $InstallerContent $pattern   
             $Installerblob = $policyBlobslist | Where-Object {$_.Name -like "*AzSK-EasyInstaller.ps1*"}
             $installerUrl = $Installerblob.ICloudBlob.Uri.AbsoluteUri  
-
+            $IWRCommand = "iwr '$($installerUrl)' -UseBasicParsing | iex"
             if($autoUpdateCommandUrl -notlike "*$installerUrl*" )
             {
                 WriteMessage "Property Name: [AutoUpdateCommand]" $([MessageType]::Info)
@@ -597,12 +597,15 @@ if(-not $RestoreFromBackup)
         WriteMessage "Updated policy folder path: $PolicyCopyFolderPath" $([MessageType]::Info)
         WriteMessage "Backup policy folder path: $PolicyBackupFolderPath" $([MessageType]::Info)
         WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
-        WriteMessage "`nPlease perform below tasks to validate successful update of policy" $([MessageType]::Info)
+        WriteMessage "`nNow policy has been updated with latest configurations. You can perform below steps to smoke test policy configurations" $([MessageType]::Info)
         WriteMessage "`t 1. Run installer(IWR) and validate if it is able to install AzSK successfully." $([MessageType]::Info)
+        WriteMessage "`t`t $IWRCommand" $([MessageType]::Update)
         WriteMessage "`t 2. Run scan command in local machine and validate there is no exceptions" $([MessageType]::Info)
-        WriteMessage "`t 3. Run CA runbook and check if job gets executed and scans are logged in storage account" $([MessageType]::Info)
-        WriteMessage "`t 4. If one of the step(from 1,2,3) is failing, you can restore policy settings with the help of backup using same script with parameter RestoreFromBackup and PolicyBackupFolderPath)." $([MessageType]::Info)
-        WriteMessage "`t 5. If all steps(from 1,2,3) are passing, you can copy these latest updated policy configurations to your Org policy folder (Default location:[<Desktop>/AzSK-[OrgName]-Policy/]) which was created at time of policy installation. " $([MessageType]::Info)
+        WriteMessage "`t`t Get-AzSKSubscriptionSecurityStatus -SubscriptionId $SubscriptionId" $([MessageType]::Update)
+        WriteMessage "`t 3. Trigger CA runbook and check if job gets executed and scans are logged in storage account [$($policyStore.Name)]" $([MessageType]::Info)
+        WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
+        WriteMessage "`n`t  If one of the above step is failing, you can restore policy settings with the help of backup using same script with parameter RestoreFromBackup)." $([MessageType]::Info)
+        WriteMessage "`t  If all steps are passing, you can copy these latest updated policy configurations to your Org policy folder which was created at time of policy installation and used to updated policy " $([MessageType]::Info)
         WriteMessage "`t  Source Path : [$PolicyCopyFolderPath] Destination(Default) Path : [<Desktop>/AzSK-[OrgName]-Policy/]" $([MessageType]::Info)
         WriteMessage "`t  [policies\3.1803.0] ---->  [Config]" $([MessageType]::Info)
         WriteMessage "`t  [policies\1.0.0]    ---->  [CA-Runbook]" $([MessageType]::Info)
