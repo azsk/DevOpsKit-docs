@@ -20,7 +20,7 @@ Below steps will guide you through steps
 ## Run Org Policy Health Check
 
 Steps to execute Org policy health scan script
-1.	Download OrgPolicyHealthCheck script from [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyFixScript.ps1)
+1.	Download OrgPolicyHealthCheck script from [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyHealthCheck.ps1)
 
 
 
