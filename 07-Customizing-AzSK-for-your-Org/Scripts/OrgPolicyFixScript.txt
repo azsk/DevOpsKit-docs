@@ -475,7 +475,7 @@ if(-not $RestoreFromBackup)
 
             if([string]::IsNullOrEmpty($coreSetupAzSkVersionForOrgUrl) )
             {
-                WriteMessage "Warning:Org policy contains older version of RunbookCoreSetup.ps1 and RunbookScanAgent.ps1.`nWould you like to update it with latest version:" $([MessageType]::Warning)
+                WriteMessage "Warning:Org policy contains older version of RunbookCoreSetup.ps1 and RunbookScanAgent.ps1.`nWould you like to update it with latest version(Y/N):" $([MessageType]::Warning)
                 $answer= Read-Host
                 if($answer.ToLower() -eq "y" )
                 {
@@ -528,7 +528,7 @@ if(-not $RestoreFromBackup)
             if($IsPropertyModified)
             {        
                 $AzSKConfigContent.CASetupRunbookURL = $RunbookCoreSetupUrl + $sasToken
-                WriteMessage "Warning: CASetupRunbookURL is updated with latest Org policy CA setup url.`nYou need to run Update-AzSKContinuousAssurance on installed CA's.`nFor more details refer FAQ at: https://aka.ms/devopskit/orgpolicy/healthcheck" $([MessageType]::Warning)
+                WriteMessage "Warning: CASetupRunbookURL is updated with latest Org policy CA setup url.`nYou need to run Update-AzSKContinuousAssurance -SubscriptionId <SubId> on all installed CA's." $([MessageType]::Warning)
             }    
     
             #Validate ControlTelemetryKey 
@@ -554,8 +554,7 @@ if(-not $RestoreFromBackup)
                     {
                       $IsPropertyModified =  AddPropertyIfNotExists $AzSKConfigContent 'PolicyOrgName' $OrgName                  
                     }
-                }         
-        
+                }
             }
 
             #Validate Installation command
@@ -597,6 +596,7 @@ if(-not $RestoreFromBackup)
         WriteMessage "Updated policy folder path: $PolicyCopyFolderPath" $([MessageType]::Info)
         WriteMessage "Backup policy folder path: $PolicyBackupFolderPath" $([MessageType]::Info)
         WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
+        WriteMessage  "******************Instructions to validate policy updates************************" $([MessageType]::Warning)
         WriteMessage "`nNow policy has been updated with latest configurations. You can perform below steps to smoke test policy configurations" $([MessageType]::Info)
         WriteMessage "`t 1. Run installer(IWR) and validate if it is able to install AzSK successfully." $([MessageType]::Info)
         WriteMessage "`t`t $IWRCommand" $([MessageType]::Update)
@@ -604,12 +604,14 @@ if(-not $RestoreFromBackup)
         WriteMessage "`t`t Get-AzSKSubscriptionSecurityStatus -SubscriptionId $SubscriptionId" $([MessageType]::Update)
         WriteMessage "`t 3. Trigger CA runbook and check if job gets executed and scans are logged in storage account [$($policyStore.Name)]" $([MessageType]::Info)
         WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
-        WriteMessage "`n`t  If one of the above step is failing, you can restore policy settings with the help of backup using same script with parameter RestoreFromBackup)." $([MessageType]::Info)
+        WriteMessage  "********************Must steps after policy validation**************************" $([MessageType]::Warning)
+        WriteMessage "`n`t  If one of the above validation step is failing, you can restore policy settings with the help of backup using same script with parameter RestoreFromBackup)." $([MessageType]::Info)
         WriteMessage "`t  If all steps are passing, you can copy these latest updated policy configurations to your Org policy folder which was created at time of policy installation and used to updated policy " $([MessageType]::Info)
         WriteMessage "`t  Source Path : [$PolicyCopyFolderPath] Destination(Default) Path : [<Desktop>/AzSK-[OrgName]-Policy/]" $([MessageType]::Info)
         WriteMessage "`t  [policies\3.1803.0] ---->  [Config]" $([MessageType]::Info)
         WriteMessage "`t  [policies\1.0.0]    ---->  [CA-Runbook]" $([MessageType]::Info)
         WriteMessage "`t  [installer]         ---->  [Installer]" $([MessageType]::Info)
+        WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
         WriteMessage "================================================================================" 
     }
     catch

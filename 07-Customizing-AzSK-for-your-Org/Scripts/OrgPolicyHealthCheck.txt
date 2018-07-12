@@ -143,7 +143,7 @@ $PolicyScanOutput.Resources = @{}
   
 
 #Check 01: Presence of Org policy resources
-WriteMessage "Check 01: Presence of Org policy resources." $([MessageType]::Info)
+WriteMessage "Check 01: Presence of Org policy resources(Policy StorageAccount/ Telemetry AppInsights/Monitoring Dashboard)." $([MessageType]::Info)
 
 #a. Validate presense of policy resource group
 $policyResourceGroup= Get-AzureRmResourceGroup -Name $PolicyResourceGroupName -ErrorAction SilentlyContinue  
@@ -210,7 +210,7 @@ $PolicyScanOutput.Resources.Status = $false
 WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Info)
 
 #Check 02: Presence of mandatory policies
-WriteMessage "Check 02: Presence of mandatory policies." $([MessageType]::Info)
+WriteMessage "Check 02: Presence of mandatory policies(Installer/Runbooks/Configuration Index file)" $([MessageType]::Info)
 $PolicyScanOutput.Policies = @{}
 if($PolicyScanOutput.Resources.PolicyStore)
 {
@@ -317,8 +317,8 @@ $PolicyScanOutput.Policies.Status = $false
 
 WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Info)
  
-#Check 03: Validate installer file 
-WriteMessage "Check 03: Check Installer configurations." $([MessageType]::Info)
+#Check 03: Validate installer contains  
+WriteMessage "Check 03: Check Installer contains policy url/AzSK Version For Org (AzSK-EasyInstaller.ps1)." $([MessageType]::Info)
 $PolicyScanOutput.Configurations = @{}
 $PolicyScanOutput.Configurations.Installer = @{}
 $InstallOutput = $PolicyScanOutput.Configurations.Installer
@@ -394,7 +394,7 @@ WriteMessage  "-----------------------------------------------------------------
 
 #Check 04: Validate AzSKPre
 $PolicyScanOutput.Configurations.AzSKPre = @{}
-WriteMessage "Check 04: Check AzSKPre configurations." $([MessageType]::Info)
+WriteMessage "Check 04: Check AzSK Version configured for Org(AzSK.Pre.json)." $([MessageType]::Info)
 if($PolicyScanOutput.Policies.AzSKPre)
 {
    $AzSKPreConfigPath = $policyTempFolder + "1.0.0\AzSK.Pre.json"
@@ -434,7 +434,7 @@ WriteMessage  "-----------------------------------------------------------------
 
 #Check 05: Validate CoreSetup 
 $PolicyScanOutput.Configurations.RunbookCoreSetup = @{}
-WriteMessage "Check 05: Check RunbookCoreSetup configurations." $([MessageType]::Info)
+WriteMessage "Check 05: Check continueous assurrance RunbookCoreSetup contains reference for Org version(RunbookCoreSetup.ps1)." $([MessageType]::Info)
 if($PolicyScanOutput.Policies.RunbookCoreSetup)
 {
    $RunbookCoreSetupPath = $policyTempFolder + "1.0.0\RunbookCoreSetup.ps1"
@@ -477,7 +477,7 @@ WriteMessage  "-----------------------------------------------------------------
 
 #Check 06: Validate AzSKConfig
 $PolicyScanOutput.Configurations.AzSKConfig = @{}
-WriteMessage "Check 06: Check AzSKConfig configurations." $([MessageType]::Info)
+WriteMessage "Check 06: Check AzSKConfig configurations(AzSK.json)." $([MessageType]::Info)
 $AzSKConfiguOutput = $PolicyScanOutput.Configurations.AzSKConfig
 if($PolicyScanOutput.Policies.AzSKConfig)
 {
@@ -571,7 +571,7 @@ WriteMessage  "-----------------------------------------------------------------
 #Check 07: Validate AzSKConfig
 $PolicyScanOutput.Configurations.CARunbook = @{}
 $CARunbookOutput= $PolicyScanOutput.Configurations.CARunbook
-WriteMessage "Check 07: Check CA runbook configurations." $([MessageType]::Info)
+WriteMessage "Check 07: Check CA runbook referring to Org Policy URL" $([MessageType]::Info)
 
   $azskRG = Get-AzureRmResourceGroup -Name $caResourceGroupName -ErrorAction SilentlyContinue
   $automationAccount = Get-AzureRmAutomationAccount -ResourceGroupName $caResourceGroupName -Name $automationAccountName
