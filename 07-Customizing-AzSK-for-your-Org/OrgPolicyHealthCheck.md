@@ -39,7 +39,7 @@ Script will validate components of Org Policy and reports any missing configurat
 Fix script will try to remediate or provide instructions for missing configurations present Org policy. You can follow below stesp to execute fix script
 
 
-1.	Download Fix script from [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/ContosoDocUpdate/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyFixScript.txt) and save it with extension ".ps1"
+1.	Download Fix script from [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyFixScript.ps1.txt) and save it with extension ".ps1"
 
 
 
