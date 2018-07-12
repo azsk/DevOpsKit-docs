@@ -8,24 +8,28 @@ Param(
 [string]
 [Parameter(Mandatory = $true)]
 $PolicyResourceGroupName 
-)
+) 
 
-  #Constants 
-  $ModuleName = "AzSK"
-  $BlankSubId = "00000000-0000-0000-0000-000000000000"
-  $RepoName = "PSGallery"
+    #Constants 
+    $ModuleName = "AzSK"
+    $BlankSubId = "00000000-0000-0000-0000-000000000000"
+    $RepoName = "PSGallery"
+
+    #CA Constants
+    $caResourceGroupName="AzSKRG"
+    $automationAccountName="AzSKContinuousAssurance"
+    $runbookName="Continuous_Assurance_Runbook"
+
 
   #Create log file 
-  $LogFolderPath= $env:TEMP + "\PolicyHealthCheckLogs\"
-  $LogFilePath = "$LogFolderPath\PolicyHealthCheckLogs.log" 
-  if(-not (Test-Path -Path $LogFolderPath))
+  $LogFolderPath= $Env:LOCALAPPDATA + "\Microsoft\" + $ModuleName+ "Logs\PolicyHealthCheck\"
+
+  $LogFilePath = $LogFolderPath+ "PolicyHealthCheck$(Get-Date -format "yyyyMMdd_HHmmss").log" 
+
+    if(-not (Test-Path -Path $LogFolderPath))
     {
 	    mkdir -Path $LogFolderPath -Force | Out-Null
     }
-    else
-	{
-		Remove-Item -Path "$LogFolderPath\*" -Force -Recurse 
-	}
   
   New-Item $LogFilePath  | Out-Null
   
@@ -83,6 +87,7 @@ function IsStringEmpty($String)
     }
     else 
     {
+        $String= $String.Split("?")[0]
         return $String
     }
 }
@@ -161,6 +166,7 @@ if(($policyStore | Measure-Object).Count -eq 0)
 {
 WriteMessage "`t Missing: Policy storage account" $([MessageType]::Error)
 $PolicyScanOutput.Resources.PolicyStore = $false
+return
 }
 else
 {
@@ -332,7 +338,7 @@ if($PolicyScanOutput.Policies.Installer)
     {
         $InstallOutput.PolicyUrl = $false
         WriteMessage "`t Missing Configuration: OnlinePolicyStoreUrl" $([MessageType]::Error)
-        WriteMessage "`t Actual: $(IsStringEmpty($InstallerPolicyUrl))  `n`t Expected base Url: $(IsStringEmpty($policyContainerUrl))" $([MessageType]::Error)
+        WriteMessage "`t Actual: [$(IsStringEmpty($InstallerPolicyUrl))]  `n`t Expected: [$(IsStringEmpty($policyContainerUrl))]" $([MessageType]::Info)
     }
     
     #Validate AutoUpdateCommand command 
@@ -348,7 +354,7 @@ if($PolicyScanOutput.Policies.Installer)
     {
         $InstallOutput.AutoUpdateCommandUrl = $false
         WriteMessage "`t Missing Configuration: AutoUpdateCommand" $([MessageType]::Error)
-        WriteMessage "`t Actual: $(IsStringEmpty($autoUpdateCommandUrl))  `n`t Expected base Url: $(IsStringEmpty($installerUrl))" $([MessageType]::Error)
+        WriteMessage "`t Actual: [$(IsStringEmpty($autoUpdateCommandUrl))]  `n`t Expected: [$(IsStringEmpty($installerUrl))]" $([MessageType]::Info)
     } 
 
     #Validate AzSKConfigURL
@@ -364,7 +370,7 @@ if($PolicyScanOutput.Policies.Installer)
     {
         $InstallOutput.AzSKPreUrl = $false
         WriteMessage "`t Missing Configuration: AzSKPreConfigUrl" $([MessageType]::Error)
-        WriteMessage "`t Actual: $(IsStringEmpty($InstallerAzSKPreUrl))  `n`t Expected Substring Url: $(IsStringEmpty($AzSKPreUrl))" $([MessageType]::Error)
+        WriteMessage "`t Actual: [$(IsStringEmpty($InstallerAzSKPreUrl))]  `n`t Expected: [$(IsStringEmpty($AzSKPreUrl))]" $([MessageType]::Info)
     }
 
     if($InstallOutput.PolicyUrl -and $InstallOutput.AutoUpdateCommandUrl -and $InstallOutput.AzSKPreUrl)
@@ -403,8 +409,8 @@ if($PolicyScanOutput.Policies.AzSKPre)
     else
     {
         $PolicyScanOutput.Configurations.AzSKPre.CurrentVersionForOrg = $true
-        WriteMessage "`t You are running on older AzSK version" $([MessageType]::Warning)
-        WriteMessage "`t CurrentVersion: $(IsStringEmpty($($AzSKPreConfigContent.CurrentVersionForOrg)))  `n`t LatestVersion: $(IsStringEmpty($($LatestAzSKVersion.Version.Tostring())))" $([MessageType]::Warning)
+        WriteMessage "`tYou are running on older AzSK version" $([MessageType]::Warning)
+        WriteMessage "`tCurrentVersion: [$(IsStringEmpty($($AzSKPreConfigContent.CurrentVersionForOrg)))]  `n`tLatestVersion: [$(IsStringEmpty($($LatestAzSKVersion.Version.Tostring())))]" $([MessageType]::Warning)
     }
     
     if($PolicyScanOutput.Configurations.AzSKPre.CurrentVersionForOrg)
@@ -447,7 +453,7 @@ if($PolicyScanOutput.Policies.RunbookCoreSetup)
     {
         $PolicyScanOutput.Configurations.RunbookCoreSetup.AzSkVersionForOrgUrl = $false
         WriteMessage "`t Missing Configuration: AzSkVersionForOrgUrl" $([MessageType]::Error)
-        WriteMessage "`t Actual: $(IsStringEmpty($coreSetupAzSkVersionForOrgUrl))  `n`t Expected base Url: $(IsStringEmpty($AzSkVersionForOrgUrl))" $([MessageType]::Error)
+        WriteMessage "`t Actual: [$(IsStringEmpty($coreSetupAzSkVersionForOrgUrl))]  `n`t Expected: [$(IsStringEmpty($AzSkVersionForOrgUrl))]" $([MessageType]::Info)
     }
     
      if($PolicyScanOutput.Configurations.RunbookCoreSetup.AzSkVersionForOrgUrl)
@@ -488,7 +494,7 @@ if($PolicyScanOutput.Policies.AzSKConfig)
     {
         $AzSKConfiguOutput.CASetupRunbookUrl = $false
         WriteMessage "`t Missing Configuration: CASetupRunbookUrl" $([MessageType]::Error)
-        WriteMessage "`t Actual: $(IsStringEmpty($($AzSKConfigContent.CASetupRunbookURL)))  `n`t Expected base Url: $(IsStringEmpty($($RunbookCoreSetupUrl)))" $([MessageType]::Error)
+        WriteMessage "`t Actual: [$(IsStringEmpty($($AzSKConfigContent.CASetupRunbookURL)))]  `n`t Expected: [$(IsStringEmpty($($RunbookCoreSetupUrl)))]" $([MessageType]::Info)
     } 
     
     #Validate ControlTelemetryKey 
@@ -503,7 +509,7 @@ if($PolicyScanOutput.Policies.AzSKConfig)
     {
         $AzSKConfiguOutput.ControlTelemetryKey = $false
         WriteMessage "`t Missing Configuration: ControlTelemetryKey" $([MessageType]::Error)
-        WriteMessage "`t Actual: $(IsStringEmpty($($AzSKConfigContent.ControlTelemetryKey)))  `n`t Expected base Url: $(IsStringEmpty($($InstrumentationKey)))" $([MessageType]::Error)
+        WriteMessage "`t Actual: [$(IsStringEmpty($($AzSKConfigContent.ControlTelemetryKey)))]  `n`t Expected: [$(IsStringEmpty($($InstrumentationKey)))]" $([MessageType]::Info)
     } 
     
     # Validate InstallationCommand     
@@ -516,10 +522,10 @@ if($PolicyScanOutput.Policies.AzSKConfig)
     {
         $AzSKConfiguOutput.InstallationCommand = $false
         WriteMessage "`t Missing Configuration: InstallationCommand" $([MessageType]::Error)
-        WriteMessage "`t Actual: $(IsStringEmpty($($AzSKConfigContent.InstallationCommand)))  `n`t Expected base Url: $(IsStringEmpty($($installerUrl)))" $([MessageType]::Error)
+        WriteMessage "`t Actual: [$(IsStringEmpty($($AzSKConfigContent.InstallationCommand)))]  `n`t Expected: [$(IsStringEmpty($($installerUrl)))]" $([MessageType]::Info)
     }
 
-
+    
     # Validate PolicyOrgName    
     if($AzSKConfigContent.PolicyOrgName -and -not [string]::IsNullOrEmpty($AzSKConfigContent.PolicyOrgName) )
     {
@@ -541,7 +547,7 @@ if($PolicyScanOutput.Policies.AzSKConfig)
     {
         $AzSKConfiguOutput.AzSKPreConfigURL = $false
         WriteMessage "`t Missing Configuration: AzSKPreConfigURL" $([MessageType]::Error)
-        WriteMessage "`t Actual: $(IsStringEmpty($($AzSKConfigContent.AzSKConfigURL)))  `n`t Expected base Url: $(IsStringEmpty($($azSKPreUrl)))" $([MessageType]::Error)
+        WriteMessage "`t Actual: [$(IsStringEmpty($($AzSKConfigContent.AzSKConfigURL)))]  `n`t Expected: [$(IsStringEmpty($($azSKPreUrl)))]" $([MessageType]::Info)
     }
     
     if($AzSKConfiguOutput.CASetupRunbookUrl -and $AzSKConfiguOutput.ControlTelemetryKey -and $AzSKConfiguOutput.InstallationCommand -and $AzSKConfiguOutput.PolicyOrgName -and $AzSKConfiguOutput.AzSKPreConfigURL ) 
@@ -561,19 +567,86 @@ else
       $AzSKConfiguOutput.Status = $false  
 }
 
-if(-not $PolicyScanOutput.Resources.Status -or -not $PolicyScanOutput.Policies.Status -or -not $InstallOutput.Status -or -not $PolicyScanOutput.Configurations.AzSKPre.Status -or  -not $PolicyScanOutput.Configurations.RunbookCoreSetup.Status -or  -not $AzSKConfiguOutput.Status)
+WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Info)
+#Check 07: Validate AzSKConfig
+$PolicyScanOutput.Configurations.CARunbook = @{}
+$CARunbookOutput= $PolicyScanOutput.Configurations.CARunbook
+WriteMessage "Check 07: Check CA runbook configurations." $([MessageType]::Info)
+
+  $azskRG = Get-AzureRmResourceGroup -Name $caResourceGroupName -ErrorAction SilentlyContinue
+  $automationAccount = Get-AzureRmAutomationAccount -ResourceGroupName $caResourceGroupName -Name $automationAccountName
+
+  if($azskRG -and $automationAccount)
+  {
+    $validatedUri= "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$caResourceGroupName/providers/Microsoft.Automation/automationAccounts/$automationAccountName/runbooks/$runbookName/content?api-version=2015-10-31"
+    
+    
+    $accessToken=Get-AzSKAccessToken -ResourceAppIdURI "https://management.core.windows.net/"
+    $serverFileContent = Invoke-RestMethod `
+									    -Method GET `
+									    -Uri $validatedUri `
+                					    -Headers @{"Authorization" = "Bearer $accessToken"} `
+									    -UseBasicParsing
+    
+    #Check if OSS CoreSetup is refered in runbooks
+    $ossCoreSetupUrl = "https://azsdkossep.azureedge.net/1.0.0/RunbookCoreSetup.ps1"
+    $ossPolicyUrl = "https://azsdkossep.azureedge.net/```$Version/```$FileName"
+
+    
+    if($serverFileContent.Contains($ossCoreSetupUrl))
+    {
+        $CARunbookOutput.CoreSetupURL = $false
+        WriteMessage "`t Missing Configuration : [CoreSetupSrcUrl]" $([MessageType]::Error)
+        WriteMessage "`t Actual: $(IsStringEmpty($($ossCoreSetupUrl)))  `n`t Expected: $(IsStringEmpty($($RunbookCoreSetup.ICloudBlob.Uri.AbsoluteUri)))" $([MessageType]::Info)
+
+    }
+    else
+    {
+        $CARunbookOutput.CoreSetupURL = $true
+    }
+
+    if($serverFileContent.Contains($ossPolicyUrl))
+    {
+        $CARunbookOutput.PolicyURL = $false
+        WriteMessage "`t Missing Configuration : [CoreSetupSrcUrl]" $([MessageType]::Error)
+        $ExpectedUrl = $RunbookCoreSetup.ICloudBlob.Container.Uri.AbsoluteUri+"/```$Version/```$FileName"
+        WriteMessage "`t Actual: [$(IsStringEmpty($($ossPolicyUrl)))]  `n`t Expected: [$(IsStringEmpty($ExpectedUrl))]" $([MessageType]::Info)
+    }
+    else
+    {
+        $CARunbookOutput.PolicyURL = $true
+    }
+    if($CARunbookOutput.CoreSetupURL -and $CARunbookOutput.PolicyURL)
+    {
+         WriteMessage "Status:   OK." $([MessageType]::Update)
+        $CARunbookOutput.Status = $true
+    }
+    else
+    {
+         WriteMessage "Status:   Failed." $([MessageType]::Error)
+        $CARunbookOutput.Status = $true
+    }
+  }
+  else
+  {
+      WriteMessage "Status:   Skipped. CA not found under resource group [$caResourceGroupName]." $([MessageType]::Info) 
+      $PolicyScanOutput.Configurations.CARunbook.Status = $true  
+  }
+
+
+if(-not $PolicyScanOutput.Resources.Status -or -not $PolicyScanOutput.Policies.Status -or -not $InstallOutput.Status -or -not $PolicyScanOutput.Configurations.AzSKPre.Status -or  -not $PolicyScanOutput.Configurations.RunbookCoreSetup.Status -or  -not $AzSKConfiguOutput.Status -or -not $CARunbookOutput.Status)
 {
     WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
-    WriteMessage "Found that Org policy configuration is not correctly setup.`nReview the failed check and follow the remedy suggested at FAQ: https://aka.ms/devopskit/orgpolicy/healthcheck" $([MessageType]::Warning) 
+    WriteMessage "Your Org policy configuration is not correctly setup.`nReview failed checks and follow suggested remedies at: https://aka.ms/devopskit/orgpolicy/healthcheck . You can contact support team for more details: azsksup@microsoft.com " $([MessageType]::Warning) 
     WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
 }
 else
 {
      WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Info)
-     WriteMessage "Org policy configuration is in healthy state. `nFor other details, please follow FAQ: https://aka.ms/devopskit/orgpolicy/healthcheck" $([MessageType]::Info) 
+     WriteMessage "Org policy configuration is in healthy state. `nFor other details, please follow guide at: https://aka.ms/devopskit/orgpolicy/healthcheck. You can contact support team for more details: azsksup@microsoft.com" $([MessageType]::Info) 
      WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Info)
 }
 WriteMessage "================================================================================" $([MessageType]::Info)
 
-WriteMessage "Logs are exported to location: '$LogFilePath'"
+WriteMessage "Logs have been exported to location: '$LogFilePath'"
 

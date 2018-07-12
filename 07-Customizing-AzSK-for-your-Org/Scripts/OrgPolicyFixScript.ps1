@@ -1,0 +1,683 @@
+﻿Param(
+
+[string]
+[Parameter(Mandatory = $true)]
+ $SubscriptionId,
+
+[string]
+[Parameter(Mandatory = $true)]
+$PolicyResourceGroupName,
+
+[string]
+$PolicyCopyFolderPath = $env:TEMP + "\" + $ModuleName + "\Policies\",
+
+[string]
+$PolicyBackupFolderPath = $env:TEMP + "\" + $ModuleName + "\Backup\Policies\",
+
+[switch]
+$RestoreFromBackup 
+)
+
+#Constants 
+$ModuleName = "AzSK"
+$BlankSubId = "00000000-0000-0000-0000-000000000000"
+$RepoName = "PSGallery"
+
+
+#Login and Set context to policy subscription
+function Login
+{
+        $currentContext = Get-AzureRMContext 
+        if((-not $currentContext) -or ($currentContext -and ((-not $currentContext.Subscription -and ($this.SubscriptionContext.SubscriptionId -ne $BlankSubId)) `
+				    -or -not $currentContext.Account)))
+            {
+                WriteMessage "No active Azure login session found. Initiating login flow..."
+
+			    if($this.SubscriptionContext.SubscriptionId -ne $BlankSubId)
+			    {
+				    $rmLogin = Add-AzureRmAccount -SubscriptionId $SubscriptionId
+			    }
+			    else
+			    {
+				    $rmLogin = Add-AzureRmAccount
+			    }
+            
+			    if($rmLogin)
+			    {
+				    $currentContext = $rmLogin.Context;
+			    }
+            }
+
+        if($currentContext -and $currentContext.Subscription -and $currentContext.Subscription.Id)
+	    {
+		    if(($currentContext.Subscription.Id -ne $SubscriptionId) -and ($this.SubscriptionContext.SubscriptionId -ne $BlankSubId))
+		    {
+			    $currentContext = Set-AzureRmContext -SubscriptionId $SubscriptionId -ErrorAction Stop   
+        
+				    
+			    # $currentContext will contain the desired subscription (or $null if id is wrong or no permission)
+			    if ($null -eq $currentContext)
+			    {
+				    throw [SuppressedException] ("Invalid Subscription Id [" + $this.SubscriptionContext.SubscriptionId + "]") 
+			    }
+		    }
+	    }
+}
+#Login End
+
+#Function to get substring from regular expression
+function GetSubString($CotentString, $Pattern )
+{
+     $result = [regex]::match($CotentString, $pattern)
+     if(($result | Measure-Object).Count -gt 0)
+     {
+      return  $result.Groups[1].Value
+     }
+     else
+     {
+        return [string]::Empty
+     }
+
+      
+}
+
+
+
+#Validate if string is empty and return default string
+function IsStringEmpty($String)
+{
+    if([string]::IsNullOrEmpty($String))
+    {
+        return "Not Available"
+    }
+    else 
+    {
+        return $String
+    }
+}
+
+#Message types
+enum MessageType
+{
+    Error
+    Warning
+    Info
+    Update
+	Default
+}
+
+#Function to print messages on console
+function WriteMessage([string] $message,[string] $messageType)
+{
+    if(-not $message)
+    {
+        return;
+    }
+        
+    $colorCode = [System.ConsoleColor]::White
+
+    switch($messageType)
+    {
+        ([MessageType]::Error) {
+            $colorCode = [System.ConsoleColor]::Red             
+        }
+        ([MessageType]::Warning) {
+            $colorCode = [System.ConsoleColor]::Yellow              
+        }
+        ([MessageType]::Info) {
+            $colorCode = [System.ConsoleColor]::Cyan
+        }  
+        ([MessageType]::Update) {
+            $colorCode = [System.ConsoleColor]::Green
+        }           
+		([MessageType]::Default) {
+            $colorCode = [System.ConsoleColor]::White
+        }           
+    }		
+    Write-Host $message -ForegroundColor $colorCode		
+}
+
+function AddPropertyIfNotExists($jsonObject,$propertyName,$propertyValue)
+{
+
+    if(-not $jsonObject.$($propertyName))
+    {
+        WriteMessage "Adding property: [$propertyName]" $([MessageType]::Info)
+        $jsonObject | Add-Member -MemberType NoteProperty -Name $propertyName -Value $propertyValue -PassThru
+        return $true 
+    }
+    elseif( $jsonObject.$($propertyName) -notlike "*$propertyValue*") 
+    {
+        WriteMessage "Property Name: [$propertyName]" $([MessageType]::Info)
+        $jsonObject.$($propertyName) = $propertyValue
+        return $true
+    }
+    else
+    {
+        return $false
+    }
+}
+
+function SetUtf8Encoding([System.IO.FileInfo] $file)
+{
+	if($file)
+	{
+		$fileContent = Get-Content -Path $file.FullName;
+		if($fileContent)
+		{
+			Out-File -InputObject $fileContent -Force -FilePath $file.FullName -Encoding utf8
+		}
+	}
+}
+
+#BOM replace function 
+function RemoveUtf8BOM([System.IO.FileInfo] $file)
+{
+	SetUtf8Encoding $file
+	if($file)
+	{
+		$byteBuffer = New-Object System.Byte[] 3
+		$reader = $file.OpenRead()
+		$bytesRead = $reader.Read($byteBuffer, 0, 3);
+		if ($bytesRead -eq 3 -and
+			$byteBuffer[0] -eq 239 -and
+			$byteBuffer[1] -eq 187 -and
+			$byteBuffer[2] -eq 191)
+		{
+			$tempFile = [System.IO.Path]::GetTempFileName()
+			$writer = [System.IO.File]::OpenWrite($tempFile)
+			$reader.CopyTo($writer)
+			$writer.Dispose()
+			$reader.Dispose()
+			Move-Item -Path $tempFile -Destination $file.FullName -Force
+		}
+		else
+		{
+			$reader.Dispose()
+		}
+	}
+}
+
+
+#Function to upload blob to policy store
+function UploadFilesToBlob([PSObject] $storageContext, [string] $containerName, [string] $blobPath, [System.IO.FileInfo[]] $filesToUpload, [bool] $overwrite)
+{
+	$result = $null;
+        
+	if($filesToUpload -and $filesToUpload.Count -ne 0)
+	{
+		WriteMessage ("Uploading [$($filesToUpload.Count)] file(s) to container [$containerName]...") $([MessageType]::Info)
+		$filesToUpload |
+		ForEach-Object {
+			$blobName = $_.Name;
+			if(-not [string]::IsNullOrWhiteSpace($blobPath))
+			{
+				$blobName = $blobPath + "/" + $blobName;
+			}
+
+		    RemoveUtf8BOM $_
+            $loopValue = 3
+            $sleepValue =10
+			while($loopValue -gt 0)
+			{
+				$loopValue = $loopValue - 1;
+				try {
+					if($overwrite)
+					{
+						Set-AzureStorageBlobContent -Blob $blobName -Container $containerName -File $_.FullName -Context $storageContext -Force | Out-Null
+					}
+					else
+					{
+						$currentBlob = Get-AzureStorageBlob -Blob $blobName -Container $containerName -Context $storageContext -ErrorAction Ignore
+						
+						if(-not $currentBlob)
+						{
+							Set-AzureStorageBlobContent -Blob $blobName -Container $containerName -File $_.FullName -Context $storageContext | Out-Null
+						}
+					}
+					$loopValue = 0;
+				}
+				catch {
+					#sleep for incremental 10 seconds before next retry;
+					Start-Sleep -Seconds $sleepValue;
+					$sleepValue = $sleepValue + 10;
+				}
+			}
+
+		}
+		WriteMessage ("All files have been uploaded to container [$containerName]") $([MessageType]::Info)
+	}		
+}
+
+
+
+#***************************************** Execution started ********************************************
+WriteMessage "================================================================================" $([MessageType]::Info)
+WriteMessage "Updating your AzSK Org Policy setup..." $([MessageType]::Info)
+WriteMessage "================================================================================" $([MessageType]::Info)
+Login
+
+if(-not $RestoreFromBackup)
+{
+    try
+    {    
+        #a. Validate presense of policy resource group
+        $policyResourceGroup= Get-AzureRmResourceGroup -Name $PolicyResourceGroupName -ErrorAction SilentlyContinue  
+        if(-not $policyResourceGroup)
+        {
+        WriteMessage "`Policy resource group not found" $([MessageType]::Error)        
+        return
+        }
+        else
+        {
+        
+        WriteMessage "Found resource group: [$($policyResourceGroup.ResourceGroupName)]" $([MessageType]::Info)
+        }
+
+        #b. Validate presense of policy resources storage, app insight and monitoring dashboard
+        $policyResources= Find-AzureRmResource -ResourceGroupName $policyResourceGroupName
+        #Check if poliy store  is present 
+        $policyStore = $policyResources  | Where-Object {$_.ResourceType -eq "Microsoft.Storage/storageAccounts" }
+        if(($policyStore | Measure-Object).Count -eq 0)
+        {
+            WriteMessage "Policy storage account not found. Please re-run the Org policy setup or update cmdlet to fix this issue." $([MessageType]::Error)
+            return
+        }
+        else
+        {
+            WriteMessage "Found storage account: [$($policyStore.Name)]" $([MessageType]::Info)    
+        }
+  
+        #Check if app insight is present
+        $appInsight = $policyResources  | Where-Object {$_.ResourceType -eq "Microsoft.Insights/components" }
+        if(($appInsight | Measure-Object).Count -eq 0)
+        {
+            WriteMessage "Policy app insight not found.  Please re-run the Org policy setup or update cmdlet to fix this issue." $([MessageType]::Error)
+            return
+        }
+        else
+        {
+            WriteMessage "Found storage account: [$($policyStore.Name)]" $([MessageType]::Info)
+        }
+
+        #Check if monitoring dashboard is present
+        $monitoringDashboard = $policyResources  | Where-Object {$_.ResourceType -eq "Microsoft.Portal/dashboards" }
+        if(($monitoringDashboard | Measure-Object).Count -eq 0)
+        {
+            WriteMessage "Warning: Monitoring dashboard is missing on Org policy. Please re-run the Org policy setup or update cmdlet to fix this issue." $([MessageType]::Warning)
+        }
+        else
+        {    
+            WriteMessage "Found monitoring dashboard: [$($monitoringDashboard.Name)]" $([MessageType]::Info)
+        }
+
+ 
+        #region Check 02: Download policies into local
+
+        WriteMessage "Copying policies to local machine..." $([MessageType]::Info)
+        $PolicyStoragekey = Get-AzureRmStorageAccountKey -ResourceGroupName $policyStore.ResourceGroupName  -Name $policyStore.Name 
+        $currentContext = New-AzureStorageContext -StorageAccountName $policyStore.Name  -StorageAccountKey $PolicyStoragekey[0].Value -Protocol Https    
+        $containerList = Get-AzureStorageContainer -Context $currentContext
+        $PolicyContainerName = "policies"
+        $sasToken =  New-AzureStorageContainerSASToken -Name $PolicyContainerName  -Context $currentContext -ExpiryTime (Get-Date).AddMonths(6) -Permission rl -Protocol HttpsOnly -StartTime (Get-Date).AddDays(-1)
+		
+        if(-not (Test-Path "$PolicyCopyFolderPath"))
+        {
+	        mkdir -Path "$PolicyCopyFolderPath" -ErrorAction Stop | Out-Null
+        }
+        else
+        {
+	        Remove-Item -Path "$PolicyCopyFolderPath\*" -Force -Recurse 
+        }
+
+        $policyBlobslist = @()
+        $containerList | ForEach-Object {
+            $PolicyContainerName = $_.Name
+            $PolicyBlobs = Get-AzureStorageBlob -Container $PolicyContainerName -Context $currentContext
+        
+            $PolicyContainerPath = "$PolicyCopyFolderPath\$PolicyContainerName"
+            if(-not (Test-Path $PolicyContainerPath))
+            {
+	            mkdir -Path $PolicyContainerPath -ErrorAction Stop | Out-Null
+            }
+            else
+            {
+	            Remove-Item -Path "$PolicyContainerPath\*" -Force -Recurse 
+            }
+         
+            foreach ($blob in $PolicyBlobs)
+            {         
+                $policyBlobslist +=$blob
+                Get-AzureStorageBlobContent `
+                -Container $PolicyContainerName -Blob $blob.Name  `
+	            -Context $currentContext -Destination "$PolicyContainerPath" -Force  | Out-Null
+            }
+        }
+
+
+        #Create backup before modification
+        if(-not (Test-Path "$PolicyBackupFolderPath"))
+        {
+	        mkdir -Path "$PolicyBackupFolderPath" -ErrorAction Stop | Out-Null
+        }
+        else
+        {
+            $backupContent= Get-ChildItem -Path $PolicyBackupFolderPath 
+            if(($backupContent | Measure-Object).Count -gt 0)
+            {
+                WriteMessage "Warning: Backup folder already contains some files.This can override existing backup files present in folder : [$PolicyBackupFolderPath].`nDo you want to continue(Y/N):" $([MessageType]::Warning)
+                $answer= Read-Host
+                if($answer.ToLower() -eq "y" )
+                {
+                    Remove-Item -Path "$PolicyBackupFolderPath\*" -Force -Recurse
+                }
+                else
+                {
+                    return
+                }
+            }    
+        }
+
+        Copy-Item -Path $PolicyCopyFolderPath  -Destination "$PolicyBackupFolderPath" -Recurse -Force    
+        WriteMessage "Completed copying policies to local machine..." $([MessageType]::Update)
+        #endregion  
+ 
+        #region Check 04: Validate AzSKPre
+        $AzSKPre = $policyBlobslist | Where-Object {$_.Name -like "*AzSK.Pre.json*"}
+         #Validate CurrentVersionForOrg
+        $LatestAzSKVersion = Find-Module $ModuleName -Repository $RepoName
+        $AzSKVersion = Get-Module $ModuleName -ListAvailable | Select -First 1
+        if(($AzSKPre | Measure-Object).Count -eq 0)
+        {
+            WriteMessage "AzSKPre config not found. Please re-run the Org policy setup or update cmdlet to fix this issue." $([MessageType]::Error)   
+        }
+        else
+        {
+            $AzSKPreConfigPath =Get-ChildItem -Path $PolicyCopyFolderPath -Include "AzSK.Pre.json" -Recurse 
+            $AzSKPreConfigContent =  Get-Content -Path $AzSKPreConfigPath.FullName | ConvertFrom-Json   
+            if($AzSKPreConfigContent.CurrentVersionForOrg -ne $LatestAzSKVersion.Version.ToString())
+            {    
+                WriteMessage "Warning: Your Org policy is configured with older AzSK version[$($AzSKPreConfigContent.CurrentVersionForOrg)]. Consider updating it to latest stable available version [$($LatestAzSKVersion.Version.Tostring())]" $([MessageType]::Warning)        
+            }
+        }
+        #endregion 
+ 
+  
+        #region Check 03: Validate installer file
+        $Installer = Get-ChildItem -Path $PolicyCopyFolderPath -Include "$($ModuleName)-EasyInstaller.ps1" -Recurse
+        if(($Installer | Measure-Object).Count -eq 0)
+        {    
+           WriteMessage "Installer not found. Please re-run the Org policy setup or update cmdlet to fix this issue." $([MessageType]::Error)
+        }
+        else
+        {
+           WriteMessage "Updating installer file..." $([MessageType]::Info)
+           $InstallerContent =  Get-Content -Path $($Installer.FullName)
+           $AzSKConfig = $policyBlobslist | Where-Object {$_.Name -like "*AzSK.json*"}
+   
+           #Validate OnlinePolicyStoreUrl
+           $pattern = 'OnlinePolicyStoreUrl = "(.*?)"'
+           $InstallerPolicyUrl = GetSubString $InstallerContent $pattern  
+
+            $policyContainerUrl= $AzSKConfig.ICloudBlob.Container.Uri.AbsoluteUri + "/```$(```$Version)/```$(```$FileName)"
+            if($policyContainerUrl -and $InstallerPolicyUrl -notlike "*$policyContainerUrl*" )
+            {
+                WriteMessage "Property Name: [OnlinePolicyStoreUrl]" $([MessageType]::Info)
+                $InstallerContent=$InstallerContent.Replace($InstallerPolicyUrl,($AzSKConfig.ICloudBlob.Container.Uri.AbsoluteUri + "/```$(```$Version)/```$(```$FileName)" + $sasToken ))
+            }
+    
+            #Validate AutoUpdateCommand command 
+            $pattern = 'AutoUpdateCommand = "(.*?)"'
+            $autoUpdateCommandUrl = GetSubString $InstallerContent $pattern   
+            $Installerblob = $policyBlobslist | Where-Object {$_.Name -like "*AzSK-EasyInstaller.ps1*"}
+            $installerUrl = $Installerblob.ICloudBlob.Uri.AbsoluteUri  
+            $IWRCommand = "iwr '$($installerUrl)' -UseBasicParsing | iex"
+            if($autoUpdateCommandUrl -notlike "*$installerUrl*" )
+            {
+                WriteMessage "Property Name: [AutoUpdateCommand]" $([MessageType]::Info)
+                $IWRCommand = "iwr '$($installerUrl)' -UseBasicParsing | iex";
+                $InstallerContent=$InstallerContent.Replace($InstallerPolicyUrl,$IWRCommand)
+            }
+
+
+            #Validate AzSKConfigURL
+            $pattern = 'AzSKConfigURL = "(.*?)"'
+            $InstallerAzSKPreUrl = GetSubString $InstallerContent $pattern   
+    
+            $AzSKPreUrl = $AzSKPre.ICloudBlob.Uri.AbsoluteUri
+            if($InstallerAzSKPreUrl -notlike "*$AzSKPreUrl*")
+            {
+                WriteMessage "Property Name: [AzSKConfigURL]" $([MessageType]::Info)
+                $AzSKPreUrl = $AzSKPreUrl + $sasToken
+                $InstallerContent=$InstallerContent.Replace($InstallerAzSKPreUrl,$AzSKPreUrl)
+            }
+
+            Out-File -InputObject $InstallerContent -Force -FilePath $($Installer.FullName) -Encoding utf8
+            WriteMessage "Completed updating installer file..." $([MessageType]::Update)
+        }    
+        #endregion
+
+        #region Check 05: Validate CoreSetup 
+        $RunbookCoreSetupPath =Get-ChildItem -Path $PolicyCopyFolderPath -Include "RunbookCoreSetup.ps1" -Recurse 
+        $RunbookCoreSetup = $policyBlobslist | Where-Object {$_.Name -like "*RunbookCoreSetup.ps1*"}
+        if(($RunbookCoreSetupPath | Measure-Object).Count -eq 0)
+        {
+            WriteMessage "RunbookCoreSetup not found. Please re-run the Org policy setup or update cmdlet to fix this issue." $([MessageType]::Error)   
+        }
+        else
+        {
+            WriteMessage "Updating runbookCoreSetup file..." $([MessageType]::Info)
+            $RunbookCoreSetupContent =  Get-Content -Path $RunbookCoreSetupPath.FullName        
+            #Validate AzSkVersionForOrgUrl command 
+            $pattern = 'azskVersionForOrg = "(.*?)"'
+            $coreSetupAzSkVersionForOrgUrl = GetSubString $RunbookCoreSetupContent $pattern   
+            $AzSkVersionForOrgUrl = $AzSKPre.ICloudBlob.Uri.AbsoluteUri  
+
+            if([string]::IsNullOrEmpty($coreSetupAzSkVersionForOrgUrl) )
+            {
+                WriteMessage "Warning:Org policy contains older version of RunbookCoreSetup.ps1 and RunbookScanAgent.ps1.`nWould you like to update it with latest version:" $([MessageType]::Warning)
+                $answer= Read-Host
+                if($answer.ToLower() -eq "y" )
+                {
+                    #Take latest
+                    WriteMessage "Copying latest version of 'RunbookCoreSetup.ps1'..." $([MessageType]::Info)
+                    $RunbookUrl = "https://azsdkossep.azureedge.net/1.0.0/RunbookCoreSetup.ps1"
+
+                    IWR -Uri $RunbookUrl -OutFile $($RunbookCoreSetupPath.FullName) 
+                    $RunbookCoreSetupContent =  Get-Content -Path $RunbookCoreSetupPath.FullName        
+                    #Validate AzSkVersionForOrgUrl command 
+                    $pattern = 'azskVersionForOrg = "(.*?)"'
+                    $coreSetupAzSkVersionForOrgUrl = GetSubString $RunbookCoreSetupContent $pattern
+                    WriteMessage "Copying latest version of 'RunbookScanAgent.ps1'..." $([MessageType]::Info)
+                    $RunbookUrl = "https://azsdkossep.azureedge.net/1.0.0/RunbookScanAgent.ps1"
+                    $RunbookScanAgentPath =Get-ChildItem -Path $PolicyCopyFolderPath -Include "RunbookScanAgent.ps1" -Recurse 
+                    IWR -Uri $RunbookUrl -OutFile $($RunbookScanAgentPath.FullName) 
+
+                }
+                else
+                {
+                    WriteMessage "Skipping RunbookCoreSetup and RunbookScanAgent updates." $([MessageType]::Info)
+                }
+            }
+            if($coreSetupAzSkVersionForOrgUrl -ne "Not Available" -and  $coreSetupAzSkVersionForOrgUrl -notlike "*$AzSkVersionForOrgUrl*" )
+            {
+                $AzSkVersionForOrgUrl += $sasToken
+                WriteMessage "Property Name: [AzSKVersionForOrg]" $([MessageType]::Info)
+                $RunbookCoreSetupContent = $RunbookCoreSetupContent.Replace($coreSetupAzSkVersionForOrgUrl,$AzSkVersionForOrgUrl)
+            }
+            Out-File -InputObject $RunbookCoreSetupContent -Force -FilePath $($RunbookCoreSetupPath.FullName) -Encoding utf8   
+            WriteMessage "Completed updating runbookCoreSetup file..." $([MessageType]::Update)
+        }
+        #endregion
+
+        #region Check 06: Validate AzSKConfig
+        $AzSKConfigPath = Get-ChildItem -Path $PolicyCopyFolderPath -Include "AzSK.json" -Recurse
+        if(($AzSKConfigPath | Measure-Object).Count -eq 0)
+        {
+            WriteMessage "AzSK config not found. Please re-run the Org policy setup or update cmdlet to fix this issue." $([MessageType]::Error)   
+        }
+        else
+        {
+           WriteMessage "Updating AzSKConfig file..." $([MessageType]::Info)
+           $AzSKConfigContent =  Get-Content -Path $AzSKConfigPath.FullName | ConvertFrom-Json
+
+           #Validate CurrentVersionForOrg     
+           $RunbookCoreSetupUrl =  $RunbookCoreSetup.ICloudBlob.Uri.AbsoluteUri
+
+            $IsPropertyModified = AddPropertyIfNotExists $AzSKConfigContent 'CASetupRunbookURL' $RunbookCoreSetupUrl
+            if($IsPropertyModified)
+            {        
+                $AzSKConfigContent.CASetupRunbookURL = $RunbookCoreSetupUrl + $sasToken
+                WriteMessage "Warning: CASetupRunbookURL is updated with latest Org policy CA setup url.`nYou need to run Update-AzSKContinuousAssurance on installed CA's.`nFor more details refer FAQ at: https://aka.ms/devopskit/orgpolicy/healthcheck" $([MessageType]::Warning)
+            }    
+    
+            #Validate ControlTelemetryKey 
+            $appInsightResource= Get-AzureRMApplicationInsights -ResourceGroupName $appInsight.ResourceGroupName -Name $appInsight.Name
+            $InstrumentationKey =  $appInsightResource.InstrumentationKey
+            $IsPropertyModified = AddPropertyIfNotExists $AzSKConfigContent 'ControlTelemetryKey' $InstrumentationKey 
+
+            $azSKPreUrl = $AzSKPre.ICloudBlob.Uri.AbsoluteUri 
+            $IsPropertyModified = AddPropertyIfNotExists $AzSKConfigContent 'AzSKConfigURL' $azSKPreUrl
+            if($IsPropertyModified)
+            {
+                $AzSKConfigContent.AzSKConfigURL = $azSKPreUrl + $sasToken
+            }
+
+            #Validate PolicyOrgName    
+            if(-not $AzSKConfigContent.PolicyOrgName -and [string]::IsNullOrEmpty($AzSKConfigContent.PolicyOrgName) )
+            {
+                if(-not [string]::IsNullOrEmpty($AzSKConfigContent.PolicyMessage))
+                {
+                   $pattern = 'using (.*?) policy'
+                   $OrgName = GetSubString $($AzSKConfigContent.PolicyMessage) $pattern
+                    if(-not [string]::IsNullOrEmpty($OrgName))
+                    {
+                      $IsPropertyModified =  AddPropertyIfNotExists $AzSKConfigContent 'PolicyOrgName' $OrgName                  
+                    }
+                }         
+        
+            }
+
+            #Validate Installation command
+            $Installerblob = $policyBlobslist | Where-Object {$_.Name -like "*AzSK-EasyInstaller.ps1*"}
+            $installerUrl = $Installerblob.ICloudBlob.Uri.AbsoluteUri                
+            $IWRCommand = "iwr '$($installerUrl)' -UseBasicParsing | iex";
+           $IsPropertyModified = AddPropertyIfNotExists $AzSKConfigContent 'InstallationCommand' $IWRCommand 
+           
+
+          $AzSKConfigContent | ConvertTo-Json -Depth 10 | Out-File  -Force -FilePath $($AzSKConfigPath.FullName) -Encoding utf8
+            WriteMessage "Completed updating AzSKConfig file..." $([MessageType]::Update)
+        }
+        #region Upload updated configurations to policy store
+        WriteMessage "Uploading updated configurations to policy store..." $([MessageType]::Info)
+        Get-ChildItem -Path $PolicyCopyFolderPath | ForEach-Object {
+           $ContainerName= $_.Name 
+           $directoryList = Get-ChildItem -Path $_.FullName -Recurse -Directory
+           if(($directoryList | Measure-Object).Count -gt 0)
+           {
+                Get-ChildItem -Path $_.FullName -Recurse -Directory | ForEach-Object {
+                    $blobPath= $_.Name
+                    $filesToUpload = Get-ChildItem -Path $_.FullName -Recurse -File
+                    UploadFilesToBlob $currentContext $ContainerName $blobPath $filesToUpload $true
+               }      
+           }
+           else
+           {
+                $blobPath = [string]::Empty
+                $filesToUpload = Get-ChildItem -Path $_.FullName -Recurse -File
+                UploadFilesToBlob $currentContext $ContainerName $blobPath $filesToUpload $true
+           }
+       
+        }
+
+        #endregion
+        WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
+        WriteMessage "Policy updated successfully." $([MessageType]::Update) 
+        WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
+        WriteMessage "Updated policy folder path: $PolicyCopyFolderPath" $([MessageType]::Info)
+        WriteMessage "Backup policy folder path: $PolicyBackupFolderPath" $([MessageType]::Info)
+        WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
+        WriteMessage "`nNow policy has been updated with latest configurations. You can perform below steps to smoke test policy configurations" $([MessageType]::Info)
+        WriteMessage "`t 1. Run installer(IWR) and validate if it is able to install AzSK successfully." $([MessageType]::Info)
+        WriteMessage "`t`t $IWRCommand" $([MessageType]::Update)
+        WriteMessage "`t 2. Run scan command in local machine and validate there is no exceptions" $([MessageType]::Info)
+        WriteMessage "`t`t Get-AzSKSubscriptionSecurityStatus -SubscriptionId $SubscriptionId" $([MessageType]::Update)
+        WriteMessage "`t 3. Trigger CA runbook and check if job gets executed and scans are logged in storage account [$($policyStore.Name)]" $([MessageType]::Info)
+        WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
+        WriteMessage "`n`t  If one of the above step is failing, you can restore policy settings with the help of backup using same script with parameter RestoreFromBackup)." $([MessageType]::Info)
+        WriteMessage "`t  If all steps are passing, you can copy these latest updated policy configurations to your Org policy folder which was created at time of policy installation and used to updated policy " $([MessageType]::Info)
+        WriteMessage "`t  Source Path : [$PolicyCopyFolderPath] Destination(Default) Path : [<Desktop>/AzSK-[OrgName]-Policy/]" $([MessageType]::Info)
+        WriteMessage "`t  [policies\3.1803.0] ---->  [Config]" $([MessageType]::Info)
+        WriteMessage "`t  [policies\1.0.0]    ---->  [CA-Runbook]" $([MessageType]::Info)
+        WriteMessage "`t  [installer]         ---->  [Installer]" $([MessageType]::Info)
+        WriteMessage "================================================================================" 
+    }
+    catch
+    {
+        WriteMessage "Exception occured during policy update... $($_.Tostring())" $([MessageType]::Error)
+    }
+
+    #endregion
+
+}
+else
+{
+    if( Test-Path $PolicyBackupFolderPath)
+    {
+        $backupContent= Get-ChildItem -Path $PolicyBackupFolderPath 
+        if(($backupContent | Measure-Object).Count -eq 0)
+        {
+            WriteMessage "Backup folder does not contains any files." $([MessageType]::Error)
+            return
+        }
+        else
+        {
+            WriteMessage "Uploading configurations from backup folder to policy store..." $([MessageType]::Info)
+            $policyResources= Find-AzureRmResource -ResourceGroupName $policyResourceGroupName
+            #Check if poliy store  is present 
+            $policyStore = $policyResources  | Where-Object {$_.ResourceType -eq "Microsoft.Storage/storageAccounts" }
+            if(($policyStore | Measure-Object).Count -eq 0)
+            {
+                WriteMessage "Policy storage account not found. Please re-run the Org policy setup or update cmdlet to fix this issue." $([MessageType]::Error)
+                return
+            }
+            $PolicyStoragekey = Get-AzureRmStorageAccountKey -ResourceGroupName $policyStore.ResourceGroupName  -Name $policyStore.Name 
+            $currentContext = New-AzureStorageContext -StorageAccountName $policyStore.Name  -StorageAccountKey $PolicyStoragekey[0].Value -Protocol Https    
+            Get-ChildItem -Path $PolicyBackupFolderPath| ForEach-Object {
+                $ContainerName= $_.Name 
+                $directoryList = Get-ChildItem -Path $_.FullName -Recurse -Directory
+                if(($directoryList | Measure-Object).Count -gt 0)
+                {
+                    Get-ChildItem -Path $_.FullName -Recurse -Directory | ForEach-Object {
+                        $blobPath= $_.Name
+                        $filesToUpload = Get-ChildItem -Path $_.FullName -Recurse -File
+                        UploadFilesToBlob $currentContext $ContainerName $blobPath $filesToUpload $true
+                    }      
+                }
+                else
+                {
+                    $blobPath = [string]::Empty
+                    $filesToUpload = Get-ChildItem -Path $_.FullName -Recurse -File
+                    UploadFilesToBlob $currentContext $ContainerName $blobPath $filesToUpload $true
+                }
+       
+            }
+
+            #endregion
+            WriteMessage "--------------------------------------------------------------------------------" $([MessageType]::Warning)
+            WriteMessage "Policy updated successfully." $([MessageType]::Update) 
+            WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
+            WriteMessage "Please perform below tasks to validate successful update of policy from backup folder" $([MessageType]::Info)
+            WriteMessage "`t 1. Run installer(IWR) and validate if it is able to install AzSK successfully" $([MessageType]::Info)
+            WriteMessage "`t 2. Run scan command in local machine with Org policy and validate there is no exceptions" $([MessageType]::Info)
+            WriteMessage "`t 3. Run CA runbook and check if job gets executed and scan results are logged in storage account" $([MessageType]::Info)
+            WriteMessage "`t 4. If any of above steps is failing after policy update from backup. You can contact support team to resolve the issue" $([MessageType]::Info)                    
+            WriteMessage "================================================================================" $([MessageType]::Info)
+        }
+           
+    }
+    else
+    {
+        WriteMessage "Backup folder does not exists" $([MessageType]::Warning)
+    }    
+}
