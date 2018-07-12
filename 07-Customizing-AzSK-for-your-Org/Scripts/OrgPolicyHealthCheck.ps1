@@ -8,12 +8,18 @@ Param(
 [string]
 [Parameter(Mandatory = $true)]
 $PolicyResourceGroupName 
-)
+) 
 
-  #Constants 
-  $ModuleName = "AzSK"
-  $BlankSubId = "00000000-0000-0000-0000-000000000000"
-  $RepoName = "PSGallery"
+    #Constants 
+    $ModuleName = "AzSK"
+    $BlankSubId = "00000000-0000-0000-0000-000000000000"
+    $RepoName = "PSGallery"
+
+    #CA Constants
+    $caResourceGroupName="AzSKRG"
+    $automationAccountName="AzSKContinuousAssurance"
+    $runbookName="Continuous_Assurance_Runbook"
+
 
   #Create log file 
   $LogFolderPath= $env:TEMP + "\PolicyHealthCheckLogs\"
@@ -83,6 +89,7 @@ function IsStringEmpty($String)
     }
     else 
     {
+        $String= $String.Split("?")[0]
         return $String
     }
 }
@@ -364,7 +371,7 @@ if($PolicyScanOutput.Policies.Installer)
     {
         $InstallOutput.AzSKPreUrl = $false
         WriteMessage "`t Missing Configuration: AzSKPreConfigUrl" $([MessageType]::Error)
-        WriteMessage "`t Actual: $(IsStringEmpty($InstallerAzSKPreUrl))  `n`t Expected Substring Url: $(IsStringEmpty($AzSKPreUrl))" $([MessageType]::Error)
+        WriteMessage "`t Actual: $(IsStringEmpty($InstallerAzSKPreUrl))  `n`t Expected base Url: $(IsStringEmpty($AzSKPreUrl))" $([MessageType]::Error)
     }
 
     if($InstallOutput.PolicyUrl -and $InstallOutput.AutoUpdateCommandUrl -and $InstallOutput.AzSKPreUrl)
@@ -519,7 +526,7 @@ if($PolicyScanOutput.Policies.AzSKConfig)
         WriteMessage "`t Actual: $(IsStringEmpty($($AzSKConfigContent.InstallationCommand)))  `n`t Expected base Url: $(IsStringEmpty($($installerUrl)))" $([MessageType]::Error)
     }
 
-
+    
     # Validate PolicyOrgName    
     if($AzSKConfigContent.PolicyOrgName -and -not [string]::IsNullOrEmpty($AzSKConfigContent.PolicyOrgName) )
     {
@@ -561,7 +568,74 @@ else
       $AzSKConfiguOutput.Status = $false  
 }
 
-if(-not $PolicyScanOutput.Resources.Status -or -not $PolicyScanOutput.Policies.Status -or -not $InstallOutput.Status -or -not $PolicyScanOutput.Configurations.AzSKPre.Status -or  -not $PolicyScanOutput.Configurations.RunbookCoreSetup.Status -or  -not $AzSKConfiguOutput.Status)
+WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Info)
+#Check 07: Validate AzSKConfig
+$PolicyScanOutput.Configurations.CARunbook = @{}
+$CARunbookOutput= $PolicyScanOutput.Configurations.CARunbook
+WriteMessage "Check 07: Check CA runbook configurations." $([MessageType]::Info)
+
+  $azskRG = Get-AzureRmResourceGroup -Name $caResourceGroupName -ErrorAction SilentlyContinue
+  $automationAccount = Get-AzureRmAutomationAccount -ResourceGroupName $caResourceGroupName -Name $automationAccountName
+
+  if($azskRG -and $automationAccount)
+  {
+    $validatedUri= "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$caResourceGroupName/providers/Microsoft.Automation/automationAccounts/$automationAccountName/runbooks/$runbookName/content?api-version=2015-10-31"
+    
+    
+    $accessToken=Get-AzSKAccessToken -ResourceAppIdURI "https://management.core.windows.net/"
+    $serverFileContent = Invoke-RestMethod `
+									    -Method GET `
+									    -Uri $validatedUri `
+                					    -Headers @{"Authorization" = "Bearer $accessToken"} `
+									    -UseBasicParsing
+    
+    #Check if OSS CoreSetup is refered in runbooks
+    $ossCoreSetupUrl = "https://azsdkossep.azureedge.net/1.0.0/RunbookCoreSetup.ps1"
+    $ossPolicyUrl = "https://azsdkossep.azureedge.net/```$Version/```$FileName"
+
+    
+    if($serverFileContent.Contains($ossCoreSetupUrl))
+    {
+        $CARunbookOutput.CoreSetupURL = $false
+        WriteMessage "`t Missing Configuration : [CoreSetupSrcUrl]" $([MessageType]::Error)
+        WriteMessage "`t Actual: $(IsStringEmpty($($ossCoreSetupUrl)))  `n`t Expected base Url: $(IsStringEmpty($($RunbookCoreSetup.ICloudBlob.Uri.AbsoluteUri)))" $([MessageType]::Error)
+
+    }
+    else
+    {
+        $CARunbookOutput.CoreSetupURL = $true
+    }
+
+    if($serverFileContent.Contains($ossPolicyUrl))
+    {
+        $CARunbookOutput.PolicyURL = $false
+        WriteMessage "`t Missing Configuration : [CoreSetupSrcUrl]" $([MessageType]::Error)
+        $ExpectedUrl = $RunbookCoreSetup.ICloudBlob.Container.Uri.AbsoluteUri+"/```$Version/```$FileName"
+        WriteMessage "`t Actual: $(IsStringEmpty($($ossPolicyUrl)))  `n`t Expected base Url: $(IsStringEmpty($ExpectedUrl))" $([MessageType]::Error)
+    }
+    else
+    {
+        $CARunbookOutput.PolicyURL = $true
+    }
+    if($CARunbookOutput.CoreSetupURL -and $CARunbookOutput.PolicyURL)
+    {
+         WriteMessage "Status:   OK." $([MessageType]::Update)
+        $CARunbookOutput.Status = $true
+    }
+    else
+    {
+         WriteMessage "Status:   Failed." $([MessageType]::Error)
+        $CARunbookOutput.Status = $true
+    }
+  }
+  else
+  {
+      WriteMessage "Status:   Skipped. CA not found under resource group [$caResourceGroupName]." $([MessageType]::Info) 
+      $PolicyScanOutput.Configurations.CARunbook.Status = $true  
+  }
+
+
+if(-not $PolicyScanOutput.Resources.Status -or -not $PolicyScanOutput.Policies.Status -or -not $InstallOutput.Status -or -not $PolicyScanOutput.Configurations.AzSKPre.Status -or  -not $PolicyScanOutput.Configurations.RunbookCoreSetup.Status -or  -not $AzSKConfiguOutput.Status -or -not $CARunbookOutput.Status)
 {
     WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
     WriteMessage "Found that Org policy configuration is not correctly setup.`nReview the failed check and follow the remedy suggested at FAQ: https://aka.ms/devopskit/orgpolicy/healthcheck" $([MessageType]::Warning) 

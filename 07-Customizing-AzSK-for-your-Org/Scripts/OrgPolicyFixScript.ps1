@@ -1,16 +1,18 @@
 ﻿Param(
 
 [string]
+[Parameter(Mandatory = $true)]
  $SubscriptionId,
 
 [string]
+[Parameter(Mandatory = $true)]
 $PolicyResourceGroupName,
 
 [string]
 $PolicyCopyFolderPath = $env:TEMP + "\" + $ModuleName + "\Policies\",
 
 [string]
-$PolicyBackupFolderPath = $env:TEMP + "\" + $ModuleName + "\Backup\",
+$PolicyBackupFolderPath = $env:TEMP + "\" + $ModuleName + "\Backup\policies\",
 
 [switch]
 $RestoreFromBackup 
@@ -38,8 +40,8 @@ function Login
 			    else
 			    {
 				    $rmLogin = Add-AzureRmAccount
-                }
-                
+			    }
+            
 			    if($rmLogin)
 			    {
 				    $currentContext = $rmLogin.Context;
@@ -51,6 +53,8 @@ function Login
 		    if(($currentContext.Subscription.Id -ne $SubscriptionId) -and ($this.SubscriptionContext.SubscriptionId -ne $BlankSubId))
 		    {
 			    $currentContext = Set-AzureRmContext -SubscriptionId $SubscriptionId -ErrorAction Stop   
+        
+				    
 			    # $currentContext will contain the desired subscription (or $null if id is wrong or no permission)
 			    if ($null -eq $currentContext)
 			    {
@@ -99,27 +103,27 @@ function WriteMessage([string] $message,[string] $messageType)
     {
         return;
     }
-
+        
     $colorCode = [System.ConsoleColor]::White
 
     switch($messageType)
     {
         ([MessageType]::Error) {
-            $colorCode = [System.ConsoleColor]::Red
+            $colorCode = [System.ConsoleColor]::Red             
         }
         ([MessageType]::Warning) {
-            $colorCode = [System.ConsoleColor]::Yellow
+            $colorCode = [System.ConsoleColor]::Yellow              
         }
         ([MessageType]::Info) {
             $colorCode = [System.ConsoleColor]::Cyan
-        }
+        }  
         ([MessageType]::Update) {
             $colorCode = [System.ConsoleColor]::Green
-        }
+        }           
 		([MessageType]::Default) {
             $colorCode = [System.ConsoleColor]::White
-        }
-    }
+        }           
+    }		
     Write-Host $message -ForegroundColor $colorCode		
 }
 
