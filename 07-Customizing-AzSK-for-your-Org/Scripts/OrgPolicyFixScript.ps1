@@ -12,7 +12,7 @@ $PolicyResourceGroupName,
 $PolicyCopyFolderPath = $env:TEMP + "\" + $ModuleName + "\Policies\",
 
 [string]
-$PolicyBackupFolderPath = $env:TEMP + "\" + $ModuleName + "\Backup\policies\",
+$PolicyBackupFolderPath = $env:TEMP + "\" + $ModuleName + "\Backup\Policies\",
 
 [switch]
 $RestoreFromBackup 
@@ -68,7 +68,17 @@ function Login
 #Function to get substring from regular expression
 function GetSubString($CotentString, $Pattern )
 {
-    return $result = [regex]::match($CotentString, $pattern).Groups[1].Value
+     $result = [regex]::match($CotentString, $pattern)
+     if(($result | Measure-Object).Count -gt 0)
+     {
+      return  $result.Groups[1].Value
+     }
+     else
+     {
+        return [string]::Empty
+     }
+
+      
 }
 
 
@@ -309,8 +319,8 @@ if(-not $RestoreFromBackup)
         $currentContext = New-AzureStorageContext -StorageAccountName $policyStore.Name  -StorageAccountKey $PolicyStoragekey[0].Value -Protocol Https    
         $containerList = Get-AzureStorageContainer -Context $currentContext
         $PolicyContainerName = "policies"
-        $sasToken = New-AzureStorageContainerSASToken -Name $PolicyContainerName  -Context $currentContext -ExpiryTime (Get-Date).AddMonths(6) -Permission rl -Protocol HttpsOnly -StartTime (Get-Date).AddDays(-1)
-			
+        $sasToken =  New-AzureStorageContainerSASToken -Name $PolicyContainerName  -Context $currentContext -ExpiryTime (Get-Date).AddMonths(6) -Permission rl -Protocol HttpsOnly -StartTime (Get-Date).AddDays(-1)
+		
         if(-not (Test-Path "$PolicyCopyFolderPath"))
         {
 	        mkdir -Path "$PolicyCopyFolderPath" -ErrorAction Stop | Out-Null
@@ -355,7 +365,7 @@ if(-not $RestoreFromBackup)
             $backupContent= Get-ChildItem -Path $PolicyBackupFolderPath 
             if(($backupContent | Measure-Object).Count -gt 0)
             {
-                WriteMessage "Warning: Backup folder already contains some files.This can override existing backup files present in folder.`nDo you continue(Y/N):" $([MessageType]::Warning)
+                WriteMessage "Warning: Backup folder already contains some files.This can override existing backup files present in folder : [$PolicyBackupFolderPath].`nDo you want to continue(Y/N):" $([MessageType]::Warning)
                 $answer= Read-Host
                 if($answer.ToLower() -eq "y" )
                 {
@@ -365,8 +375,7 @@ if(-not $RestoreFromBackup)
                 {
                     return
                 }
-            }
-	         
+            }    
         }
 
         Copy-Item -Path $PolicyCopyFolderPath  -Destination "$PolicyBackupFolderPath" -Recurse -Force    
@@ -464,7 +473,33 @@ if(-not $RestoreFromBackup)
             $coreSetupAzSkVersionForOrgUrl = GetSubString $RunbookCoreSetupContent $pattern   
             $AzSkVersionForOrgUrl = $AzSKPre.ICloudBlob.Uri.AbsoluteUri  
 
-            if($coreSetupAzSkVersionForOrgUrl -notlike "*$AzSkVersionForOrgUrl*" )
+            if([string]::IsNullOrEmpty($coreSetupAzSkVersionForOrgUrl) )
+            {
+                WriteMessage "Warning:Org policy contains older version of RunbookCoreSetup.ps1 and RunbookScanAgent.ps1.`nWould you like to update it with latest version:" $([MessageType]::Warning)
+                $answer= Read-Host
+                if($answer.ToLower() -eq "y" )
+                {
+                    #Take latest
+                    WriteMessage "Copying latest version of 'RunbookCoreSetup.ps1'..." $([MessageType]::Info)
+                    $RunbookUrl = "https://azsdkossep.azureedge.net/1.0.0/RunbookCoreSetup.ps1"
+
+                    IWR -Uri $RunbookUrl -OutFile $($RunbookCoreSetupPath.FullName) 
+                    $RunbookCoreSetupContent =  Get-Content -Path $RunbookCoreSetupPath.FullName        
+                    #Validate AzSkVersionForOrgUrl command 
+                    $pattern = 'azskVersionForOrg = "(.*?)"'
+                    $coreSetupAzSkVersionForOrgUrl = GetSubString $RunbookCoreSetupContent $pattern
+                    WriteMessage "Copying latest version of 'RunbookScanAgent.ps1'..." $([MessageType]::Info)
+                    $RunbookUrl = "https://azsdkossep.azureedge.net/1.0.0/RunbookScanAgent.ps1"
+                    $RunbookScanAgentPath =Get-ChildItem -Path $PolicyCopyFolderPath -Include "RunbookScanAgent.ps1" -Recurse 
+                    IWR -Uri $RunbookUrl -OutFile $($RunbookScanAgentPath.FullName) 
+
+                }
+                else
+                {
+                    WriteMessage "Skipping RunbookCoreSetup and RunbookScanAgent updates." $([MessageType]::Info)
+                }
+            }
+            if($coreSetupAzSkVersionForOrgUrl -ne "Not Available" -and  $coreSetupAzSkVersionForOrgUrl -notlike "*$AzSkVersionForOrgUrl*" )
             {
                 $AzSkVersionForOrgUrl += $sasToken
                 WriteMessage "Property Name: [AzSKVersionForOrg]" $([MessageType]::Info)
@@ -561,13 +596,18 @@ if(-not $RestoreFromBackup)
         WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
         WriteMessage "Updated policy folder path: $PolicyCopyFolderPath" $([MessageType]::Info)
         WriteMessage "Backup policy folder path: $PolicyBackupFolderPath" $([MessageType]::Info)
+        WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
         WriteMessage "`nPlease perform below tasks to validate successful update of policy" $([MessageType]::Info)
-        WriteMessage "`t 1. Run installer(IWR) and validate if it is able to install AzSK successfully with Org version defined" $([MessageType]::Info)
-        WriteMessage "`t 2. Run scan command in local machine with Org policy and validate there is no exceptions" $([MessageType]::Info)
+        WriteMessage "`t 1. Run installer(IWR) and validate if it is able to install AzSK successfully." $([MessageType]::Info)
+        WriteMessage "`t 2. Run scan command in local machine and validate there is no exceptions" $([MessageType]::Info)
         WriteMessage "`t 3. Run CA runbook and check if job gets executed and scans are logged in storage account" $([MessageType]::Info)
-        WriteMessage "`t 4. If one of the step(from 1,2,3) is failing, you can restore policy settings with the help of backup." $([MessageType]::Info)
-        WriteMessage "`t 5. If all steps(from 1,2,3) are passing, you can copy these policy configurations to your Org policy folder." $([MessageType]::Info)
-        WriteMessage "================================================================================" $([MessageType]::Info)
+        WriteMessage "`t 4. If one of the step(from 1,2,3) is failing, you can restore policy settings with the help of backup using same script with parameter RestoreFromBackup and PolicyBackupFolderPath)." $([MessageType]::Info)
+        WriteMessage "`t 5. If all steps(from 1,2,3) are passing, you can copy these latest updated policy configurations to your Org policy folder (Default location:[<Desktop>/AzSK-[OrgName]-Policy/]) which was created at time of policy installation. " $([MessageType]::Info)
+        WriteMessage "`t  Source Path : [$PolicyCopyFolderPath] Destination(Default) Path : [<Desktop>/AzSK-[OrgName]-Policy/]" $([MessageType]::Info)
+        WriteMessage "`t  [policies\3.1803.0] ---->  [Config]" $([MessageType]::Info)
+        WriteMessage "`t  [policies\1.0.0]    ---->  [CA-Runbook]" $([MessageType]::Info)
+        WriteMessage "`t  [installer]         ---->  [Installer]" $([MessageType]::Info)
+        WriteMessage "================================================================================" 
     }
     catch
     {
@@ -625,9 +665,9 @@ else
             WriteMessage "Policy updated successfully." $([MessageType]::Update) 
             WriteMessage  "--------------------------------------------------------------------------------" $([MessageType]::Warning)
             WriteMessage "Please perform below tasks to validate successful update of policy from backup folder" $([MessageType]::Info)
-            WriteMessage "`t 1. Run installer(IWR) and validate if it is able to install AzSK successfully with Org version defined" $([MessageType]::Info)
+            WriteMessage "`t 1. Run installer(IWR) and validate if it is able to install AzSK successfully" $([MessageType]::Info)
             WriteMessage "`t 2. Run scan command in local machine with Org policy and validate there is no exceptions" $([MessageType]::Info)
-            WriteMessage "`t 3. Run CA runbook and check if job gets executed and scans are logged in storage account" $([MessageType]::Info)
+            WriteMessage "`t 3. Run CA runbook and check if job gets executed and scan results are logged in storage account" $([MessageType]::Info)
             WriteMessage "`t 4. If any of above steps is failing after policy update from backup. You can contact support team to resolve the issue" $([MessageType]::Info)                    
             WriteMessage "================================================================================" $([MessageType]::Info)
         }
