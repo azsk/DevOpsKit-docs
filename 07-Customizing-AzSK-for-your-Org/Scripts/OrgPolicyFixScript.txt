@@ -436,7 +436,7 @@ if(-not $RestoreFromBackup)
             {
                 WriteMessage "Property Name: [AutoUpdateCommand]" $([MessageType]::Info)
                 $IWRCommand = "iwr '$($installerUrl)' -UseBasicParsing | iex";
-                $InstallerContent=$InstallerContent.Replace($InstallerPolicyUrl,$IWRCommand)
+                $InstallerContent=$InstallerContent.Replace($autoUpdateCommandUrl,$IWRCommand)
             }
 
 
