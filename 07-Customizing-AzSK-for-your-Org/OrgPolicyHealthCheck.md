@@ -21,7 +21,9 @@ Below steps will guide you through steps
 
 Steps to execute Org policy health scan script
 
-1.	Download OrgPolicyHealthCheck script from [here] (https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyFixScript.txt) and save it with extension ".ps1" 
+1.	Download OrgPolicyHealthCheck script from [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyHealthCheck.txt) and save it with extension ".ps1". 
+
+**Note:** After saving file you may have to unblock the file.(Right click on file --> Click Properties --> Select "Unblock" checkbox --> Click "Apply" and "Ok"
 
 
 
@@ -39,7 +41,7 @@ Script will validate components of Org Policy and reports any missing configurat
 Fix script will try to remediate or provide instructions for missing configurations present Org policy. You can follow below stesp to execute fix script
 
 
-1.	Download Fix script from [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/ContosoDocUpdate/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyFixScript.txt) and save it with extension ".ps1"
+1.	Download Fix script from [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyFixScript.txt) and save it with extension ".ps1"
 
 
 
