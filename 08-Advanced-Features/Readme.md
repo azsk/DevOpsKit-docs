@@ -5,6 +5,7 @@
 - [Overview](Readme.md#overview)
 - [Subscription information](Readme.md#subscription-information)
 - [Control information](Readme.md#control-information)
+- [Compliance information](Readme.md#compliance-information)
 - [Attestation information](Readme.md#attestation-information)
 - [Host information](Readme.md#host-information)
 
@@ -73,6 +74,28 @@ Output of control details summary
 Output of control details verbose
 ![08_Info_ControlInfo_Verbose_PS](../Images/08_Info_ControlInfo_Verbose_PS.PNG)  
 [Back to top…](Readme.md#contents)
+
+### Compliance information 
+
+Run below command to generate a compliance summary for a subscription. This lets subscription owners list the current (latest) view of all controls from a compliance standpoint.  
+
+```PowerShell
+	Get-AzSKInfo -SubscriptionId <SubscriptionId> -InfoType 'ComplianceInfo' 
+```
+
+Below is the sample output
+
+* PowerShell console output
+
+![08_Info_ComplianceInfo_Summary_PS](../Images/08_Info_ComplianceInfo_Summary_PS.PNG)  
+
+* CSV report
+
+![08_Info_ComplianceInfo_Summary_DetailedCSV](../Images/08_Info_ComplianceInfo_Summary_DetailedCSV.PNG)  
+
+
+[Back to top…](Readme.md#contents)
+
 
 ### Attestation information
 
