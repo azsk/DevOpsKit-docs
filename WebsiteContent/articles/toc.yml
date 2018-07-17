@@ -3,9 +3,6 @@
   topicHref: ../../README.md
 - name: Setup
   href: ../../00a-Setup/Readme.md
-  items:
-    - name: Migration.md
-      href: ../../00a-Setup/Migration.md
 - name: Getting Started
   href: ../../00b-Getting-Started/Readme.md
   items:
