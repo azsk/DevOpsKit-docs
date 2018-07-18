@@ -61,7 +61,7 @@ This can be done using the '-GenerateFixScript' flag in the scan commands. Wheth
 auto-generating the fix script for a control is represented by the 'SupportsAutoFix' column for that control.
 
 Also, sometimes, you will need to complement or override AzSK's control evaluation result with additional 
-contextual knowledge. This is called 'Control Attestation' and is supported by the '-AttestControls' flag in the scan commands. 
+contextual knowledge. This is called 'Control Attestation' and is supported by the '-ControlsToAttest' flag in the scan commands. 
 
 The rest of this section explains these two capabilities in detail.
 
@@ -173,7 +173,7 @@ be combined with the user's input in order to determine the overall or effective
 and, after the process is performed once, AzSK remembers it and generates an effective control result for subsequent control scans _until_ there 
 is a state change.
 
-The attestation feature is implemented via a new switch called *AttestControls* which can be specified in any of the standard security scan cmdlets
+The attestation feature is implemented via a new switch called *ControlsToAttest* which can be specified in any of the standard security scan cmdlets
 of the AzSK. When this switch is specified, the AzSK first performs a scan of the target resource(s) like it is business as usual and, once
 the scan is complete, it enters a special interactive 'attest mode' where it walks through each resource and relevant attestable controls
 and captures inputs from the user and records them in the subscription (along with details about the person who attested, the time, etc.). 
@@ -189,14 +189,14 @@ the permissions required section below.
 [Back to top...](Readme.md#contents)
 ### Starting attestation
       
-The AzSK subscription and services scan cmdlets now support a new switch called *AttestControls*. When this switch is specified, 
+The AzSK subscription and services scan cmdlets now support a new switch called *ControlsToAttest*. When this switch is specified, 
 AzSK enters 'attest' mode immediately after a scan is completed. This ensures that attestation is done on the basis of the most current
 control statuses.
 
 All controls that have a technical evaluation status of anything other than 'Passed' (i.e., 'Verify' or 'Failed' or 'Manual' or 'Error') are considered 
 valid targets for attestation.
 
-To manage attestation flow effectively, 4 options are provided for the *AttestControls* switch to specify which subset of controls to target for attestation. These are described below:
+To manage attestation flow effectively, 4 options are provided for the *ControlsToAttest* switch to specify which subset of controls to target for attestation. These are described below:
 
 |Attestation Option|Description|
 |------------------|-----------|
@@ -208,7 +208,7 @@ To manage attestation flow effectively, 4 options are provided for the *AttestCo
 For example, to attest controls corresponding to a subscription security scan, run the command below:
 ```PowerShell  
 $subscriptionId = <Your SubscriptionId>
-Get-AzSKSubscriptionSecurityStatus -SubscriptionId $subscriptionId -AttestControls NotAttested -DoNotOpenOutputFolder  
+Get-AzSKSubscriptionSecurityStatus -SubscriptionId $subscriptionId -ControlsToAttest NotAttested -DoNotOpenOutputFolder  
 ``` 
 As shown in the images, the command enters 'attest' mode after completing a scan and does the following:
 
@@ -236,7 +236,7 @@ $resourceName = <ResourceName>
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId `
                 -ResourceGroupNames $resourceGroupName `
                 -ResourceName $resourceName `
-                -AttestControls NotAttested `
+                -ControlsToAttest NotAttested `
                 -DoNotOpenOutputFolder 
 ``` 
 If, for any reason, the attestations of previously attested controls need to be revisited, it can be done by simply changing the 'NotAttested' flag in the commands above with 'AlreadyAttested'.  
@@ -347,7 +347,7 @@ you may have 35 storage accounts for which you need to perform attestation for o
 a time can be inefficient - especially if the reason for attesting the control is the same across all those resource instances. The
 bulk attestation feature helps by empowering subscription/security owners to provide a common justification for a set of resources
 all of which have a specific (single) controlId that requires attestation. This essentially 'automates' attestation by using 
-a slightly different combination of parameters alongside '-AttestControls'.
+a slightly different combination of parameters alongside '-ControlsToAttest'.
 
  ```PowerShell  
 $subscriptionId = 'Your subscription Id'
@@ -359,7 +359,7 @@ $justificationText = 'Rationale behind your choice of AttestationStatus here...'
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId `
                 -ResourceGroupNames $resourceGroupNames `
                 -ResourceNames $resourceNames `
-                -AttestControls NotAttested `
+                -ControlsToAttest NotAttested `
                 -BulkAttestControlId $bulkAttestControlId `                 # ControlId to be attested
                 -AttestationStatus <NotAnIssue | WillFixLater | WillNotFix> ` # Attestation choice/input, use one of these.
                 -JustificationText $justificationText                   # Additional (text) justification
@@ -370,7 +370,7 @@ Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId `
 |Parameter Name| Description|
 |---|---|
 |BulkAttestControlId |ControlId to bulk-attest. Bulk attest mode supports only one controlId at a time.|
-|AttestControls | See table in the  [Starting Attestation](Readme.md#starting-attestatio) section. |
+|ControlsToAttest | See table in the  [Starting Attestation](Readme.md#starting-attestatio) section. |
 |AttestationStatus | Attester must select one of the attestation reasons (NotAnIssue, WillNotFix, WillFixLater)|
 |JustificationText | Attester must provide an apt justification with proper business reason.|
 
@@ -394,7 +394,7 @@ $justificationText = 'AAD authentication has been enabled through code and has b
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId `
                 -ResourceTypeName AppService `
                 -ResourceNames $resourceName `
-                -AttestControls NotAttested `
+                -ControlsToAttest NotAttested `
                 -BulkAttestControlId $bulkAttestControlId `
                 -AttestationStatus NotAnIssue `
                 -JustificationText $justificationText
@@ -433,7 +433,7 @@ Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId `
                 -ResourceTypeName Storage `
                 -ResourceName $resourceName `
                 -BulkAttestControlId $bulkAttestControlId `
-                -AttestControls NotAttested `
+                -ControlsToAttest NotAttested `
                 -AttestationStatus NotAnIssue `
                 -JustificationText $justificationText
  ``` 
@@ -464,9 +464,9 @@ $resourceName = <ResourceName>
 $bulkAttestControlId = <AzSK ControlId string>
 $justificationText = <Your justification text for attestation>
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId -ResourceGroupNames $resourceGroupName -ResourceName $resourceName `
-				-BulkAttestControlId $bulkAttestControlId -AttestControls AlreadyAttested -BulkClear
+				-BulkAttestControlId $bulkAttestControlId -ControlsToAttest AlreadyAttested -BulkClear
  ``` 
-> **Note**: Usage of BulkClear with 'NotAttested' Option of AttestControls param, would result in failure.
+> **Note**: Usage of BulkClear with 'NotAttested' Option of ControlsToAttest param, would result in failure.
 
 ### FAQs
 
