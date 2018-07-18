@@ -135,10 +135,6 @@ Below is the sample output:
 
 To track compliance progress on your subscription you can place 'custom tags/comments' on controls, these comments will be persisted inside your subscription's AzSK storage account. Anyone across your subscription can read the comments later by running GSS/GRS/GCS command with switch "-IncludeUserComments". 
 
-> **Note:** You need to explicitly enable this feature for your subscription. To do so, Please run following command:
->```PowerShell
->    Set-AzSKUserPreference -PersistScanReportInSubscription
->```
 	
 #### How to add/update user comments?
 
