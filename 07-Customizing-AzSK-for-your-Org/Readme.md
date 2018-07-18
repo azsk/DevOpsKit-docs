@@ -21,7 +21,7 @@
  
 ### [Create Cloud Security Compliance Report for your org in PowerBI](Readme.md#create-cloud-security-compliance-report-for-your-org-in-powerbi-1)
 
-### [Frequently Asked Questions] (Readme.md#frequently-asked-questions)
+### [Frequently Asked Questions](Readme.md#frequently-asked-questions)
 
 ----------------------------------------------------------------
 
