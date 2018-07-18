@@ -130,7 +130,7 @@ Below is the sample output:
 
 ![08_Info_HostInfo_PS](../Images/08_Info_HostInfo_PS.PNG) 
 
-### User comments/Custom Tags
+### User comments
 
 To track compliance progress on your subscription you can place 'custom tags/comments' on controls, these comments will be persisted inside your subscription's AzSK storage account. Anyone across your subscription can read the comments later by running GSS/GRS/GCS command with switch "-IncludeUserComments". 
 
