@@ -114,9 +114,10 @@ Here's a quick summary of the permissions required for the user who sets up CA:
 is download and add PowerShell modules for Azure PS library and for AzSK. This is a slow and sometimes flaky process and, 
 as a result, the setup internally retries failed downloads. The Azure Automation product team is aware of this challenge and are working on a resolution.)
 
-
 **Note-2**: Due to the complexity of various dependent activities involved, there are multiple places where CA setup can run into issues. 
 It is important to verify that everything has worked without hiccups. Please review and ascertain each of the "Verifying" steps below carefully.
+
+**Note-3**: If the person who had set up CA leaves organization/team then it's strongly advised to remove the service principal (configured in runtime aaccount) access from subscription/AzSKRG to prevent any misuse.
 
 
 **Step-2: Verifying that CA Setup is complete**  
