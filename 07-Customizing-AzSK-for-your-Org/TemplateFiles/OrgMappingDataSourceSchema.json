@@ -1,0 +1,12 @@
+[
+    {"location": "0", "name": "BGName", "type": "string"},
+
+    {"location": "1", "name": "ServiceGroupName", "type": "string"},
+
+    {"location": "2", "name": "SubscriptionId", "type": "string"},
+
+    {"location": "3", "name": "SubscriptionName", "type": "string"},
+
+    {"location": "4", "name": "OwnerDetails", "type": "string"}
+
+]
