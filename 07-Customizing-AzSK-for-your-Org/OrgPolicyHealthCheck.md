@@ -6,7 +6,7 @@
 
 ### [Update Org Policy with help of fix script ](OrgPolicyHealthCheck.md#run-org-policy-fix-script)
 
-
+### [Frequently Asked Questions] ()
 
 ## Overview
 
@@ -57,5 +57,36 @@ After execution of fix script, you may need to validate policy update is success
 ```PowerShell
 & "<FolderPath>\OrgPolicyFixScript.ps1" -SubscriptionId <SubscriptionId> -PolicyResourceGroupName <PolicyResourceGroupName> -RestoreFromBackup
 ```
+
+
+## Frequently Asked Questions
+
+#### I am getting exception "DevOps Kit was configured to run with '***' policy for this subscription. However, the current command is using 'org-neutral' (generic) policy.Please contact your organization policy owner (***@microsoft.com) for correcting the policy setup."
+
+When your subscription is running under Org policy, AzSK marks subscription for that Org. If user is running scan commands on that subscription using Org-neutral policy, it will block those commands as that scan/updates can give invalid results against Org policy. You may face this issue in different environments. Below steps will help you to fix issue
+
+**Local Machine:**
+
+- Run  "**IWR**" installation command shared by Policy Owner. This will ensure latest version installed with Org policy settings
+
+- Run "Clear-AzSKSessionState" followed by any scan command and validate its running with Org policy. It gets dispayed at the start of command execution "Running AzSK cmdlet using  ***** policy"
+
+**Continueous Assurance:**
+
+- Run "Update-AzSKContinuousAssurance" command with Org policy. This will ensure that continueous assurance setup is configured with Org policy settings.
+
+- After above step, you can trigger runbook and ensure that after job completion, scan exported in storage account are with Org policy. You can download logs and validate it in file under path <YYYYMMDD_HHMMSS_GRS>/ETC/PowerShellOutput.LOG. 
+Check for message during start of command "Running AzSK cmdlet using  ***** policy"
+
+
+**CICD:**
+- You need to configure policy url in pipeline using step **5** defined [here](https://github.com/azsk/DevOpsKit-docs/tree/master/03-Security-In-CICD#adding-svts-in-the-release-pipeline)
+
+- To validate if pipeline AzSK task is running with Org policy. You can download release logs from pipeline. Expand "AzSK_Logs.zip" -->  Open file under path "<YYYYMMDD_HHMMSS_GRS>/ETC/PowerShellOutput.LOG" --> Check for message at the start of command execution "Running AzSK cmdlet using  ***** policy"
+
+
+If you want to run commands with Org-neutral policy only, you can delete tag(AzSKOrgName_{OrgName}) present on AzSKRG and run the commands.
+
+If you are maintaining multiple Org policies and you want to switch scan from one policy to other, you can run  Set/Update commands with '-Force' flag using policy you wanted to switch. 
 
 
