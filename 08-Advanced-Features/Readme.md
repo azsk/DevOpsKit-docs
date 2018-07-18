@@ -7,6 +7,7 @@
 - [Control information](Readme.md#control-information)
 - [Attestation information](Readme.md#attestation-information)
 - [Host information](Readme.md#host-information)
+- [User comments](Readme.md#user-comments)
 
 ### Overview
 
