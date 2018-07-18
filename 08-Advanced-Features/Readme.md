@@ -129,6 +129,7 @@ Run below command to get information about,
 Below is the sample output:
 
 ![08_Info_HostInfo_PS](../Images/08_Info_HostInfo_PS.PNG) 
+[Back to top…](Readme.md#contents)
 
 ### User comments
 
@@ -161,3 +162,4 @@ Step 3: Upload edited .CSV file using below cmdlt,
 To read user comments on any controls you just need to run GCS/GSS/GRS cmd  with an extra switch "-IncludeUserComments". Once a scan completes the .CSV file will contain "UserComments" column which will show comments/custom tags.
 
 ![08_Info_UserComments_PS](../Images/08_Info_UserComments_PS.JPG)  
+[Back to top…](Readme.md#contents)
