@@ -212,6 +212,7 @@ For instance, you may use it to:
 - update the target resource groups to include in the scanning
 - switch the OMS workspace information that CA should use to send control evaluation events to
 - use a different AAD SPN for the runbooks 
+- remove previously set OMS,AltOMS or Webhook settings
 - etc.
 
 To do any or all of these:
@@ -251,6 +252,7 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 |FixRuntimeAccount|Use this switch to fix CA runtime account in case of below issues.<ol><li>Runtime account deleted<br>(Permissions required: Subscription owner)</li><li>Runtime account permissions missing<br>(Permissions required: Subscription owner and AD App owner)</li><li>Certificate deleted/expired<br>(Permissions required: Subscription owner and AD App owner)</li></ol>|FALSE|None||
 |FixModules|Use this switch in case 'AzureRm.Automation' module extraction fails in CA Automation Account.|FALSE|None||
 |RenewCertificate|Renews certificate credential of CA SPN if the caller is Owner of the AAD Application (SPN). If the caller is not Owner, a new application is created with a corresponding SPN and a certificate owned by the caller. CA uses the updated credential going forward.|FALSE|None||
+|Remove|Use this switch to clear previously set OMS, AltOMS,Webhook settings from CA Automation Account or to unregister from scan on deployment mode|False|None||
 
 [Back to top…](Readme.md#contents)
 ## Removing a Continuous Assurance setup
