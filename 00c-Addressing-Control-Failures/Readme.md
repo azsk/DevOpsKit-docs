@@ -386,7 +386,7 @@ Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId `
 |Parameter Name| Description|
 |---|---|
 |BulkAttestControlId |ControlId to bulk-attest. Bulk attest mode supports only one controlId at a time.|
-|ControlsToAttest | See table in the  [Starting Attestation](Readme.md#starting-attestatio) section. |
+|ControlsToAttest | See table in the  [Starting Attestation](Readme.md#starting-attestation) section. |
 |AttestationStatus | Attester must select one of the attestation reasons (NotAnIssue, WillNotFix, WillFixLater)|
 |JustificationText | Attester must provide an apt justification with proper business reason.|
 
