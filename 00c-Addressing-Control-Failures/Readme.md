@@ -252,10 +252,16 @@ fixing the issue for the time being):
 |Attestation Status | Description|
 |---|---|
 |None | There is no attestation done for a given control. User can select this option during the workflow to skip the attestation|
-|NotAnIssue | User has verified the control data and attesting it as not a issue with proper justification|
+|NotAnIssue | User has verified the control data and attesting it as not an issue with proper justification to represent situations where the control is implemented in another way, so the finding does not apply. |
 |WillNotFix | User has verified the control data and attesting it as not fixed with proper justification|
 |WillFixLater | User has verified the control data and attesting it as not fixed with proper justification stating the future fix plan|
 
+For some controls, we have enabled two special attestation statuses which users can use to acknowledge the drift in control state as an expected result and, therefore, attest the control as passed.
+
+|Special Attestation Status | Description|
+|---|---|
+|NotApplicable | User has verified the control data and attesting it as not applicable for the given design/context with proper justification. |
+|StateConfirmed | User has verified the control data and attesting it as state confirmed to represent that the control state is correct/appropriate with proper justification. |
 
 The following table shows the complete 'state machine' that is used by AzSK to support control attestation. 
 The columns are described as under:
@@ -272,18 +278,26 @@ The columns are described as under:
 |Verify |NotAnIssue |Passed |Yes | 90 |User has ratified in the past. E.g., SQL firewall IPs scenario, where all are IPs are legitimate.|
 |Verify |WillNotFix |Exception |Yes | Based on the control severity table below|Valid security issue but a fix cannot be implemented immediately. E.g., A 'deprecated' account was found in the subscription. However, the user wants to check any dependencies before removal.|
 |Verify |WillFixLater |Remediate |Yes| Based on the control severity table below|Valid security issue but a fix cannot be implemented immediately. E.g., A 'deprecated' account was found in the subscription. However, the user wants to check any dependencies before removal.|
+|Verify |NotApplicable |Passed |Yes| 90 ||
+|Verify |StateConfirmed |Passed |Yes| Based on the control severity table below||
 |Failed |None |Failed |No | -NA- | Control has failed but has not been attested. Perhaps a fix is in the works...|	 
 |Failed |NotAnIssue |Passed |Yes | 90 |Control has failed but the issue is benign in a given context business. E.g., Failover instance for a non-BC-DR critical service|
 |Failed |WillNotFix |Exception |Yes | Based on the control severity table below| Control has failed. The issue is not benign, but the user has some other constraint and cannot fix it. E.g., Need an SPN to be in Owner role at subscription scope.|
 |Failed |WillFixLater |Remediate |Yes | Based on the control severity table below| Control has failed. The issue is not benign, but the user wishes to defer fixing it for later. E.g., AAD is not enabled for Azure SQL DB.|
+|Failed |NotApplicable |Passed |Yes| 90 ||
+|Failed |StateConfirmed |Passed |Yes| Based on the control severity table below||
 |Error |None |Error |No | -NA- | There was an error during evaluation. Manual verification is needed and is still pending.|
 |Error |NotAnIssue |Passed |Yes | 90| There was an error during evaluation. However, control has been manually verified by the user.|
 |Error |WillNotFix |Exception |Yes | Based on the control severity table below| There was an error during evaluation. Manually verification by the user indicates a valid security issue.|
 |Error |WillFixLater |Remediate |Yes | Based on the control severity table below| There was an error during evaluation. Manually verification by the user indicates a valid security issue.|
+|Error |NotApplicable |Passed |Yes| 90 ||
+|Error |StateConfirmed |Passed |Yes| Based on the control severity table below||
 |Manual |None |Manual |No | -NA-| The control is not automated and has to be manually verified. Verification is still pending.| 
 |Manual |NotAnIssue |Passed |Yes | 90| The control is not automated and has to be manually verified. User has verified that there's no security concern.|
 |Manual |WillNotFix |Exception |Yes | Based on the control severity table below| The control is not automated and has to be manually verified. User has reviewed and found a security issue to be fixed.|
 |Manual |WillFixLater |Remediate |Yes | Based on the control severity table below| The control is not automated and has to be manually verified. User has reviewed and found a security issue to be fixed.|
+|Manual |NotApplicable |Passed |Yes| 90 ||
+|Manual |StateConfirmed |Passed |Yes| Based on the control severity table below||
 
 -NA- => Not Applicable
 
@@ -326,8 +340,8 @@ Expiry of an attestation is determined through different parameters like control
 There are two simple rules for determining the attestation expiry. Those are:
 
 Any control with evaluation result as not passed, 
- 1. and attested as 'NotAnIssue', such controls would expire in 90 days.
- 2. and attested as 'WillFixLater' or 'WillNotFix', such controls would expire based on the control severity table below.
+ 1. and attested as 'NotAnIssue' or 'NotApplicable', such controls would expire in 90 days.
+ 2. and attested as 'WillFixLater' or 'WillNotFix' or 'StateConfirmed', such controls would expire based on the control severity table below.
 
 |ControlSeverity| ExpiryInDays|
 |----|---|
@@ -336,7 +350,9 @@ Any control with evaluation result as not passed,
 |Medium| 60|
 |Low| 90|
  
-The detailed matrix of attestation details and its expiry can be found under [this](Readme.md#how-AzSK-determines-the-effective-control-result) section.
+The detailed matrix of attestation details and its expiry can be found under [this](Readme.md#how-azsk-determines-the-effective-control-result) section.
+
+> **Note**: All the controls are subjected to an initial grace period from the first scanned date, post which 'WillFixLater' option will be disabled and attestation for any control that is attested as 'WillFixLater' will expire.
 
 [Back to top...](Readme.md#contents)
 
