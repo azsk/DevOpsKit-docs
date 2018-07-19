@@ -11,6 +11,7 @@
 - [Removing a Continuous Assurance setup](Readme.md#removing-a-continuous-assurance-setup)
 - [Getting details about a Continuous Assurance setup](Readme.md#getting-details-about-a-continuous-assurance-setup)
 - [Continuous Assurance (CA) - 'Central Scan' mode](Readme.md#continuous-assurance-ca---central-scan-mode)
+- [Continuous Assurance (CA) - 'ScanOnDeployment' mode](Readme.md#continuous-assurance-ca---scanondeployment-mode)
 - [FAQ](Readme.md#faq)
 
 -----------------------------------------------------------------
@@ -708,6 +709,49 @@ The main/dominant component of the cost is automation runtime (storage/OMS costs
 
 - Total OMS Cost (Upload + Retention)  
      - 0.27+0.07 = $0.34/year
+
+
+[Back to top…](Readme.md#contents)
+
+## Continuous Assurance (CA) - 'ScanOnDeployment' mode
+
+When you want to trigger scan on resource deployment in a subscription, need to use the flag -ScanOnDeployment. Using this flag will make sure to add an alert which will trigger the newly added runbook and scan the resource group in which the resource(s) have been added.ScanOnDeployment currently is not supported for Multi CA and Central Scan mode CA.
+Also on using flag it will be scanning the resource group in which the resource(s) are being deployed.
+ScanOnDeployment works for resource deployment operation only, doesn't work on resource deletion.
+
+#### 1. Install CA with flag -ScanOnDeployment
+
+This can be achieved by adding extra param to the existing CA command as shown in the command below:
+
+```PowerShell
+$SubscriptionId = '<subscriptionId>'
+$ResourceGroupNames = '*' #This should always be '*'
+$OMSWorkspaceId = '<omsWorkspaceId>'
+$OMSSharedKey = '<omsSharedKey>' 
+
+Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId  
+        -ResourceGroupNames $ResourceGroupNames -OMSWorkspaceId $OMSWorkspaceId -OMSSharedKey $OMSSharedKey -ScanOnDeployment
+```
+
+#### 2. Update CA with flag -ScanOnDeployment
+
+In case you want to add/edit subscriptions covered via scan on deployment mode you can use Update-AzSKContinuousAssurance as shown below.
+
+```PowerShell
+$SubscriptionId = '<subscriptionId>' 
+
+Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -ScanOnDeployment
+```
+
+#### 3. Remove flag -ScanOnDeployment
+
+In case you want to unregister sub from scan on deployment mode need to run command as below:
+
+```PowerShell
+$SubscriptionId = '<subscriptionId>' 
+
+Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -Remove ScanOnDeployment
+```
 
 
 #### Troubleshooting
