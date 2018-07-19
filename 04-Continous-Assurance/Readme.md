@@ -715,8 +715,7 @@ The main/dominant component of the cost is automation runtime (storage/OMS costs
 
 ## Continuous Assurance (CA) - 'ScanOnDeployment' mode
 
-When you want to trigger scan on resource deployment in a subscription, need to use the flag -ScanOnDeployment. Using this flag will make sure to add an alert which will trigger the newly added runbook and scan the resource group in which the resource(s) have been added.ScanOnDeployment currently is not supported for Multi CA and Central Scan mode CA.
-Also on using flag it will be scanning the resource group in which the resource(s) are being deployed.
+When you want to trigger scan on resource deployment in a subscription, need to use the flag -ScanOnDeployment. Using this flag will make sure to add an alert which will trigger the newly added runbook and scan the resource group in which the resource(s) have been deployed.ScanOnDeployment currently is not supported for Multi CA and Central Scan mode CA.
 ScanOnDeployment works for resource deployment operation only, doesn't work on resource deletion.
 
 #### 1. Install CA with flag -ScanOnDeployment
