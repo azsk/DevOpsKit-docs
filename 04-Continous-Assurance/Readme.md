@@ -212,7 +212,7 @@ For instance, you may use it to:
 - update the target resource groups to include in the scanning
 - switch the OMS workspace information that CA should use to send control evaluation events to
 - use a different AAD SPN for the runbooks 
-- remove previously set OMS,AltOMS,Webhook settings or ScanOnDeployment mode for CA account.
+- remove previously set OMS, AltOMS, Webhook settings or ScanOnDeployment mode for CA account.
 - etc.
 
 To do any or all of these:
