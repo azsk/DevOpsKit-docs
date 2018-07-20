@@ -196,6 +196,7 @@ Linking to the release definition:
   
 ![03_Save_Release_Definition](../Images/03_Save_Release_Definition.PNG)  
 
+> **Note:** Please make sure that service principal that you are using for AzSK_SVT task should have at least 'Contributor' access on AzSKRG resource group and 'Reader' access on subscription.
 
 [Back to top...](Readme.md#contents)
 ### Verifying that the SVTs have been added and configured correctly
