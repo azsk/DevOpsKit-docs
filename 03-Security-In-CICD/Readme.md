@@ -165,7 +165,7 @@ next to it so that it gets masked.
 This feature enables you to set up the CICD task to use your organization's AzSK policies. 
 To use org-specific policies, you can get your org-specific url by (a) running Get-AzSKInfo -InfoType HostInfo and looking at the value of OnlinePolicyStoreUrl or (b) getting it from the AzSKSettings.json file on your machine under 'C:\Users\<userName>\AppData\Local\Microsoft\AzSK' folder.
 
-Below, we have added configuration info of 'AzSKServerURL' used by the AzSK team. The URL at your org can be different assuming there is an org-policy setup unique to your org.  
+Below, we have added configuration info of 'AzSKServerURL' and 'EnableServerAuth' used by the AzSK team. The URL at your org can be different assuming there is an org-policy setup unique to your org.  
 
 The online policy URL can be configured for the CICD extension using one of the two options below:  
 
