@@ -187,7 +187,7 @@ Below is snapshot of the dashboard
 All subsequent runs of the (same) command above will pick up the JSON files from local PolicyFolderPath and upload 
 to policy store, provided the values for OrgName and DepartmentName remain unchanged. (This is required
 because the command internally evaluates the locations of various artifacts based on these values.) To modify policy
-or add more policy customizations, we shall be reusing the same command as used for first-time setup or update command (Update-AzSKOrganizationPolicy).
+or add more policy customizations, we shall be reusing the same command as used for first-time setup or update command (*Update-AzSKOrganizationPolicy*).
 
 > **Note**: ServerConfigMetadata.json and AzSK-EasyInstaller.ps1 will always get overwritten on the subsequent run of the command. 
 
@@ -775,7 +775,10 @@ Azure_CloudService_AuthN_Use_AAD_for_Client_AuthN - no API available to check th
 
 Azure_Storage_AuthN_Dont_Allow_Anonymous - needs 'data plane' access to storage account (CA SPN being a 'Reader' cannot do 'ListKeys' to access actual data).
 
-In general, we make practice to individual teams to perform scan with high privileged role on regular basis to validate Owner access controls results. If you wanted to scan all controls using continuous assurance, you have to provide SPN as [Owner RBAC role](https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal#grant-access) at subscription scope and [graph API read permissions](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications#updating-an-application).
+In general, we make practice to individual teams to perform scan with high privileged role on regular basis to validate Owner access controls results. If you wanted to scan all controls using continuous assurance, you have to 
 
+- Provide CA SPN's as [Owner/Co-Admin RBAC role](https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal#grant-access) at subscription scope and [graph API read permissions](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications#updating-an-application).
+
+- Remove *-ExcludeTags "OwnerAccess"* parameter against scan commands (Get-AzSKAzureServicesSecurityStatus and Get-AzSKSubscriptionSecurityStatu) present in RunbookScanAgent.ps1 file on policy store. 
 
 
