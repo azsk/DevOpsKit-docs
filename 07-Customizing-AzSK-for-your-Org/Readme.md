@@ -160,7 +160,6 @@ It will also create a very basic 'customized' policy involving below files uploa
 | RunbookCoreSetup.ps1 | policies  | Used in Continuous Assurance to setup AzSK module
 | RunbookScanAgent.ps1 | policies  | Used in Continuous Assurance to run daily scan 
 | AzSk.json | policies | Includes org-specific message, telemetry key, InstallationCommand, CASetupRunbookURL etc.
-| Migration.ps1 | policies | This script helps to Contoso subscription to migrate from AzSDK to AzSK with Org policy.
 | ServerConfigMetadata.json | policies | Index file with list of policy files.  
 
 
@@ -730,11 +729,11 @@ When your subscription is running under Org policy, AzSK marks subscription for 
 
 - Run “**IWR**" installation command shared by Policy Owner. This will ensure latest version installed with Org policy settings
 
-- Run "Clear-AzSKSessionState" followed by any scan command and validate its running with Org policy. It gets dispayed at the start of command execution "Running AzSK cmdlet using ***** policy"
+- Run "*Clear-AzSKSessionState*" followed by any scan command and validate its running with Org policy. It gets dispayed at the start of command execution "Running AzSK cmdlet using ***** policy"
 
 **Continuous Assurance:**
 
-- Run "Update-AzSKContinuousAssurance" command with Org policy. This will ensure that continuous assurance setup is configured with Org policy settings.
+- Run "*Update-AzSKContinuousAssurance*" command with Org policy. This will ensure that continuous assurance setup is configured with Org policy settings.
 
 - After above step, you can trigger runbook and ensure that after job completion, scan exported in storage account are with Org policy. You can download logs and validate it in file under path <YYYYMMDD_HHMMSS_GRS>/ETC/PowerShellOutput.LOG. 
 Check for message during start of command "Running AzSK cmdlet using ***** policy"
@@ -779,6 +778,6 @@ In general, we make practice to individual teams to perform scan with high privi
 
 - Provide CA SPN's as [Owner/Co-Admin RBAC role](https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal#grant-access) at subscription scope and [graph API read permissions](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications#updating-an-application).
 
-- Remove *-ExcludeTags "OwnerAccess"* parameter against scan commands (Get-AzSKAzureServicesSecurityStatus and Get-AzSKSubscriptionSecurityStatu) present in RunbookScanAgent.ps1 file on policy store. 
+- Remove *-ExcludeTags "OwnerAccess"* parameter against scan commands (*Get-AzSKAzureServicesSecurityStatus* and *Get-AzSKSubscriptionSecurityStatus*) present in RunbookScanAgent.ps1 file on policy store. 
 
 
