@@ -187,10 +187,19 @@ Below is snapshot of the dashboard
 All subsequent runs of the (same) command above will pick up the JSON files from local PolicyFolderPath and upload 
 to policy store, provided the values for OrgName and DepartmentName remain unchanged. (This is required
 because the command internally evaluates the locations of various artifacts based on these values.) To modify policy
-or add more policy customizations, we shall be reusing the same command as used for first-time setup.
+or add more policy customizations, we shall be reusing the same command as used for first-time setup or update command (Update-AzSKOrganizationPolicy).
 
 > **Note**: ServerConfigMetadata.json and AzSK-EasyInstaller.ps1 will always get overwritten on the subsequent run of the command. 
 
+If you don't have existing configured Org policy, you can download policy to your local machine with below command
+
+```PowerShell
+Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
+           -OrgName "Contoso" `
+           -DepartmentName "IT" `
+           -DownloadPolicy `
+           -PolicyFolderPath "D:\ContosoPolicies"
+```
 	
 #### Common scenarios for org policy customization
 
@@ -534,6 +543,23 @@ you set up a 'Staging' environment where you can do all pre-testing of policy se
 people could be engaged for testing the actual end user effects of changes before deploying them broadly. 
 Also, you can choose to retain the staging setup or just re-create a fresh one for each major policy change.
 
+You can validate health of Org policy for mandatory configurations using below command. You can review the failed check and follow the remedy suggested.
+
+```PowerShell
+Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
+           -OrgName "Contoso" `
+           -DepartmentName "IT"
+```
+
+If you have used customized resource names, you can use below parameter sets to run health check
+
+```PowerShell
+Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
+           -OrgName "Contoso-IT" `
+           -ResourceGroupName "RGName" `
+           -StorageAccountName "PolicyStorageAccountName" 
+```
+
 For your actual (production) policies, we recommend that you check them into source control and use the local close of *that* folder as the location
 for the AzSK org policy setup command when uploading to the policy server. In fact, setting things up so that any policy
 modifications are pushed to the policy server via a CICD pipeline would be ideal. (That is how we do it at CSE.)
@@ -696,39 +722,44 @@ Add refresh scheduling timings and click on "Apply"
 
 ## Frequently Asked Questions
 
-#### I am getting exception "DevOps Kit was configured to run with '***' policy for this subscription. However, the current command is using 'org-neutral' (generic) policy.Please contact your organization policy owner (***@microsoft.com) for correcting the policy setup."
+#### I am getting exception "DevOps Kit was configured to run with '***' policy for this subscription. However, the current command is using 'org-neutral' (generic) policy. Please contact your organization policy owner (***@microsoft.com) for correcting the policy setup."
 
 When your subscription is running under Org policy, AzSK marks subscription for that Org. If user is running scan commands on that subscription using Org-neutral policy, it will block those commands as that scan/updates can give invalid results against Org policy. You may face this issue in different environments. Below steps will help you to fix issue
 
 **Local Machine:**
 
-- Run  "**IWR**" installation command shared by Policy Owner. This will ensure latest version installed with Org policy settings
+- Run “**IWR**" installation command shared by Policy Owner. This will ensure latest version installed with Org policy settings
 
-- Run "Clear-AzSKSessionState" followed by any scan command and validate its running with Org policy. It gets dispayed at the start of command execution "Running AzSK cmdlet using  ***** policy"
+- Run "Clear-AzSKSessionState" followed by any scan command and validate its running with Org policy. It gets dispayed at the start of command execution "Running AzSK cmdlet using ***** policy"
 
-**Continueous Assurance:**
+**Continuous Assurance:**
 
-- Run "Update-AzSKContinuousAssurance" command with Org policy. This will ensure that continueous assurance setup is configured with Org policy settings.
+- Run "Update-AzSKContinuousAssurance" command with Org policy. This will ensure that continuous assurance setup is configured with Org policy settings.
 
 - After above step, you can trigger runbook and ensure that after job completion, scan exported in storage account are with Org policy. You can download logs and validate it in file under path <YYYYMMDD_HHMMSS_GRS>/ETC/PowerShellOutput.LOG. 
-Check for message during start of command "Running AzSK cmdlet using  ***** policy"
+Check for message during start of command "Running AzSK cmdlet using ***** policy"
 
 
 **CICD:**
 - You need to configure policy url in pipeline using step **5** defined [here](https://github.com/azsk/DevOpsKit-docs/tree/master/03-Security-In-CICD#adding-svts-in-the-release-pipeline)
 
-- To validate if pipeline AzSK task is running with Org policy. You can download release logs from pipeline. Expand "AzSK_Logs.zip" -->  Open file under path "<YYYYMMDD_HHMMSS_GRS>/ETC/PowerShellOutput.LOG" --> Check for message at the start of command execution "Running AzSK cmdlet using  ***** policy"
+- To validate if pipeline AzSK task is running with Org policy. You can download release logs from pipeline. Expand "AzSK_Logs.zip" --> Open file under path "<YYYYMMDD_HHMMSS_GRS>/ETC/PowerShellOutput.LOG" --> Check for message at the start of command execution "Running AzSK cmdlet using ***** policy"
 
 
-If you want to run commands with Org-neutral policy only, you can delete tag(AzSKOrgName_{OrgName}) present on AzSKRG and run the commands.
+If you want to run commands with Org-neutral policy only, you can delete tag (AzSKOrgName_{OrgName}) present on AzSKRG and run the commands.
 
-If you are maintaining multiple Org policies and you want to switch scan from one policy to other, you can run  Set/Update commands with '-Force' flag using policy you wanted to switch. 
+If you are maintaining multiple Org policies and you want to switch scan from one policy to other, you can run Set/Update commands with '-Force' flag using policy you wanted to switch. 
 
-#### We have configured baseline controls using ControlSettings.json on Policy Store, But Contineous Assurance(CA) is scanning all SVT controls on subscription
+#### Latest AzSK is available but our Org CA are running with older version
 
-Continuous Assurance(CA) is configured to scan all the controls. We have kept this as a default behavior since Org users often tend to miss out on configuring baseline controls. This behavior is controlled from Org policy. If you observed, there are two files present in policy store, RunbookCoreSetup.ps1 (Responsible to install AzSK) and RunbookScanAgent.ps1 (Performs CA scans and export results to storage account). You can update RunbookScanAgent to make only baseline scan. (By passing -UseBaselineControls parameter to Get-AzSKAzureServicesSecurityStatus and Get-AzSKSubscriptionSecurityStatus commands present in RunbookScanAgent.ps1 file). 
+AzSK keeps on adding and enhancing features with different capabilities to monitor Security compliance for Org subscriptions. During these enhancement in new releases, it may include latest features and some breaking changes. To provide smoother upgrade and avoid policy breaks, AzSK provides feature for Org policy to run AzSK with specific version by using configuration present in AzSK.Pre.json. This configuration is referred in multiple places for installing Org supported AzSK version in different environments like Installer (IWR) (Installs AzSK in local machine), RunbookCoreSetup (Install AzSK in CA). You need to update property "CurrentVersionForOrg" in AzSK.Pre.json to latest available version after validating if Org policy is compatible with latest AzSK version.
 
-#### Contineous Assurance(CA) is scanning less number of controls as compared with manual scan
+
+#### We have configured baseline controls using ControlSettings.json on Policy Store, But Continuous Assurance (CA) is scanning all SVT controls on subscription
+
+Continuous Assurance (CA) is configured to scan all the controls. We have kept this as a default behavior since Org users often tend to miss out on configuring baseline controls. This behavior is controlled from Org policy. If you observed, there are two files present in policy store, RunbookCoreSetup.ps1 (Responsible to install AzSK) and RunbookScanAgent.ps1 (Performs CA scans and export results to storage account). You can update RunbookScanAgent to make only baseline scan. (By passing -UseBaselineControls parameter to Get-AzSKAzureServicesSecurityStatus and Get-AzSKSubscriptionSecurityStatus commands present in RunbookScanAgent.ps1 file). 
+
+#### Continuous Assurance (CA) is scanning less number of controls as compared with manual scan
  CA automation account runs with minimum privileges i.e. 'Reader' RBAC permission and cannot scan some controls that require more access.
  Here are a few examples of controls that CA cannot fully scan or can only 'partially' infer compliance for:
 
@@ -736,7 +767,7 @@ Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities - requires Graph API access t
 
 Azure_Subscription_AuthZ_Remove_Management_Certs - querying for management certs requires Co-Admin permission
 
-Azure_AppService_AuthN_Use_AAD_for_Client_AuthN - often this is implemented in code so an app owner has to attest this control. Also, any 'security-related' config info is not accessible to the 'Reader' RBAC role.
+Azure_AppService_AuthN_Use_AAD_for_Client_AuthN - often this is implemented in code, so an app owner has to attest this control. Also, any 'security-related' config info is not accessible to the 'Reader' RBAC role.
 
 Azure_CloudService_SI_Enable_AntiMalware - needs co-admin access
 
@@ -744,5 +775,7 @@ Azure_CloudService_AuthN_Use_AAD_for_Client_AuthN - no API available to check th
 
 Azure_Storage_AuthN_Dont_Allow_Anonymous - needs 'data plane' access to storage account (CA SPN being a 'Reader' cannot do 'ListKeys' to access actual data).
 
-In general, we make practice to individual teams to perform scan with high privileged role on regular basis to validate Owner access controls results. If you wanted to scan all controls using continueous assurance, you have to provide SPN as [Owner RBAC role](https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal#grant-access) at subscription scope and [graph API read permissions](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications#updating-an-application).
+In general, we make practice to individual teams to perform scan with high privileged role on regular basis to validate Owner access controls results. If you wanted to scan all controls using continuous assurance, you have to provide SPN as [Owner RBAC role](https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal#grant-access) at subscription scope and [graph API read permissions](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications#updating-an-application).
+
+
 
