@@ -723,3 +723,26 @@ Check for message during start of command "Running AzSK cmdlet using  ***** poli
 If you want to run commands with Org-neutral policy only, you can delete tag(AzSKOrgName_{OrgName}) present on AzSKRG and run the commands.
 
 If you are maintaining multiple Org policies and you want to switch scan from one policy to other, you can run  Set/Update commands with '-Force' flag using policy you wanted to switch. 
+
+#### We have configured baseline controls using ControlSettings.json on Policy Store, But Contineous Assurance(CA) is scanning all SVT controls on subscription
+
+Continuous Assurance(CA) is configured to scan all the controls. We have kept this as a default behavior since Org users often tend to miss out on configuring baseline controls. This behavior is controlled from Org policy. If you observed, there are two files present in policy store, RunbookCoreSetup.ps1 (Responsible to install AzSK) and RunbookScanAgent.ps1 (Performs CA scans and export results to storage account). You can update RunbookScanAgent to make only baseline scan. (By passing -UseBaselineControls parameter to Get-AzSKAzureServicesSecurityStatus and Get-AzSKSubscriptionSecurityStatus commands present in RunbookScanAgent.ps1 file). 
+
+#### Contineous Assurance(CA) is scanning less number of controls as compared with manual scan
+ CA automation account runs with minimum privileges i.e. 'Reader' RBAC permission and cannot scan some controls that require more access.
+ Here are a few examples of controls that CA cannot fully scan or can only 'partially' infer compliance for:
+
+Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities - requires Graph API access to determine if an AAD object is an 'external' identity
+
+Azure_Subscription_AuthZ_Remove_Management_Certs - querying for management certs requires Co-Admin permission
+
+Azure_AppService_AuthN_Use_AAD_for_Client_AuthN - often this is implemented in code so an app owner has to attest this control. Also, any 'security-related' config info is not accessible to the 'Reader' RBAC role.
+
+Azure_CloudService_SI_Enable_AntiMalware - needs co-admin access
+
+Azure_CloudService_AuthN_Use_AAD_for_Client_AuthN - no API available to check this (has to be manually attested)
+
+Azure_Storage_AuthN_Dont_Allow_Anonymous - needs 'data plane' access to storage account (CA SPN being a 'Reader' cannot do 'ListKeys' to access actual data).
+
+In general, we make practice to individual teams to perform scan with high privileged role on regular basis to validate Owner access controls results. If you wanted to scan all controls using continueous assurance, you have to provide SPN as [Owner RBAC role](https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal#grant-access) at subscription scope and [graph API read permissions](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications#updating-an-application).
+
