@@ -349,7 +349,7 @@ Any control with evaluation result as not passed,
 |Medium| 60|
 |Low| 90|
  
-The detailed matrix of attestation details and its expiry can be found under [this](Readme.md#how-azsk-determines-the-effective-control-result) section. Attestation expiry date is also emitted in CSV scan result.
+The detailed matrix of attestation details and its expiry can be found under [this](Readme.md#how-azsk-determines-the-effective-control-result) section. Attestation expiry date is also emitted in CSV scan result as shown in [this](../Images/02_SVT_Attest_3.PNG) image.
 
 > **Note**: All the controls are subjected to an initial grace period from the first scanned date. On expiry of grace period for a control,
 >  1. 'WillFixLater' option will be disabled for further attestation.
