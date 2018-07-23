@@ -196,6 +196,8 @@ control statuses.
 All controls that have a technical evaluation status of anything other than 'Passed' (i.e., 'Verify' or 'Failed' or 'Manual' or 'Error') are considered 
 valid targets for attestation.
 
+> **Note**: AzSK does not support attestation of some selected controls, and therefore fixing them is mandatory.
+
 To manage attestation flow effectively, 4 options are provided for the *ControlsToAttest* switch to specify which subset of controls to target for attestation. These are described below:
 
 |Attestation Option|Description|
@@ -255,13 +257,10 @@ fixing the issue for the time being):
 |NotAnIssue | User has verified the control data and attesting it as not an issue with proper justification to represent situations where the control is implemented in another way, so the finding does not apply. |
 |WillNotFix | User has verified the control data and attesting it as not fixed with proper justification|
 |WillFixLater | User has verified the control data and attesting it as not fixed with proper justification stating the future fix plan|
+|**NotApplicable | User has verified the control data and attesting it as not applicable for the given design/context with proper justification. |
+|**StateConfirmed | User has verified the control data and attesting it as state confirmed to represent that the control state is correct/appropriate with proper justification. |
 
-For some controls, we have enabled two special attestation statuses which users can use to acknowledge the drift in control state as an expected result and, therefore, attest the control as passed.
-
-|Special Attestation Status | Description|
-|---|---|
-|NotApplicable | User has verified the control data and attesting it as not applicable for the given design/context with proper justification. |
-|StateConfirmed | User has verified the control data and attesting it as state confirmed to represent that the control state is correct/appropriate with proper justification. |
+ >  ** These are special attestation status which are supported only in selected controls.
 
 The following table shows the complete 'state machine' that is used by AzSK to support control attestation. 
 The columns are described as under:
@@ -350,9 +349,13 @@ Any control with evaluation result as not passed,
 |Medium| 60|
 |Low| 90|
  
-The detailed matrix of attestation details and its expiry can be found under [this](Readme.md#how-azsk-determines-the-effective-control-result) section.
+The detailed matrix of attestation details and its expiry can be found under [this](Readme.md#how-azsk-determines-the-effective-control-result) section. Attestation expiry date is also emitted in CSV scan result.
 
-> **Note**: All the controls are subjected to an initial grace period from the first scanned date, post which 'WillFixLater' option will be disabled and attestation for any control that is attested as 'WillFixLater' will expire.
+> **Note**: All the controls are subjected to an initial grace period from the first scanned date. On expiry of grace period for a control,
+>  1. 'WillFixLater' option will be disabled for further attestation.
+>  2. attestation will expiry if the control is attested as 'WillFixLater'.
+> 
+> User will then have the option to either fix the control or use other available attestation state with proper justification.
 
 [Back to top...](Readme.md#contents)
 

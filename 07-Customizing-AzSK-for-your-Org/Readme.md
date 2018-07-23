@@ -201,6 +201,7 @@ We will cover the following:
    1. Turning controls On/Off
    2. Changing Recommendation Text
    3. Changing Severity, etc.
+   4. Disable attestation
 5. Changing ARM policy/Alerts set (coming soon…)
 6. Changing RBAC mandatory/deprecated lists (coming soon…)
 
@@ -414,7 +415,7 @@ in your org has developed. Let us do this for the Storage.json file. Specificall
 of `Azure_Storage_Audit_Issue_Alert_AuthN_Req` altogether. We will modify severity of 
 `Azure_Storage_AuthN_Dont_Allow_Anonymous` to `Critical` for our org (it is `High` by default) and
 we will change the recommendation people in our org will follow if they need to address an issue with 
-the `Azure_Storage_DP_Encrypt_In_Transit` control.
+the `Azure_Storage_DP_Encrypt_In_Transit` control. We will also disable attestation of `Azure_Storage_DP_Restrict_CORS_Access` by adding 'ValidAttestationStates' object as given below.
 
 ###### Steps: 
  
@@ -441,6 +442,12 @@ the `Azure_Storage_DP_Encrypt_In_Transit` control.
       "ControlID": "Azure_Storage_DP_Encrypt_In_Transit",
       "Id": "AzureStorage160",
       "Recommendation": "**Note**: Use our Contoso-IT-EncryptInTransit.ps1 tool for this!"
+   },
+   {
+      "ControlID": "Azure_Storage_DP_Restrict_CORS_Access",
+      "ValidAttestationStates" : [
+        "None"
+      ]
    }
   ]
 }
