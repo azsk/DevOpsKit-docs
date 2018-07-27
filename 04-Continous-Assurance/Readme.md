@@ -94,7 +94,7 @@ for your application.)
 |WebhookAuthZHeaderValue|(Optional) Value of the AuthZ heade |FALSE|None||
 |ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value |FALSE|None||
 |AzureADAppName|(Optional) Name for the Azure Active Directory(AD) Application that will be created in the subscription for running the runbooks. |FALSE|None||
-|ScanOnDeployment|(Optional) CA scan can be auto-triggered upon resource deployment |FALSE|None||
+|ScanOnDeployment|(Optional) CA scan can be auto-triggered upon resource deployment.Installing CA with this flag will make sure that the Resource Group in which resource is deployed will be scanned. |FALSE|None||
 
 **More about the 'AzureADAppName' parameter:**
 
@@ -253,7 +253,7 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 |FixRuntimeAccount|Use this switch to fix CA runtime account in case of below issues.<ol><li>Runtime account deleted<br>(Permissions required: Subscription owner)</li><li>Runtime account permissions missing<br>(Permissions required: Subscription owner and AD App owner)</li><li>Certificate deleted/expired<br>(Permissions required: Subscription owner and AD App owner)</li></ol>|FALSE|None||
 |FixModules|Use this switch in case 'AzureRm.Automation' module extraction fails in CA Automation Account.|FALSE|None||
 |RenewCertificate|Renews certificate credential of CA SPN if the caller is Owner of the AAD Application (SPN). If the caller is not Owner, a new application is created with a corresponding SPN and a certificate owned by the caller. CA uses the updated credential going forward.|FALSE|None||
-|ScanOnDeployment|CA scan can be auto-triggered upon resource deployment.|FALSE|None||
+|ScanOnDeployment|CA scan can be auto-triggered upon resource deployment.Updating CA with this flag will make sure that the Resource Group in which resource is deployed will be scanned.|FALSE|None||
 
 [Back to top…](Readme.md#contents)
 ## Removing a Continuous Assurance setup
