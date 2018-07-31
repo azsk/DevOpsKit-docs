@@ -196,6 +196,8 @@ Linking to the release definition:
   
 ![03_Save_Release_Definition](../Images/03_Save_Release_Definition.PNG)  
 
+> **Note:** Please make sure that the service principal (SPN) that is used for the CICD pipeline task has the following permissions: (a) ‘Reader’ access on the resource groups that are to be scanned (or ‘Reader’ access at subscription level if all resource groups are being scanned) and (b) ‘Contributor’ access on the ‘AzSKRG’ resource group.
+<br>The first permission is required so that the SVTs can scan resources for security issues successfully and the second permission is requires so that any past attestations for controls are respected by the scan.
 
 [Back to top...](Readme.md#contents)
 ### Verifying that the SVTs have been added and configured correctly
