@@ -84,7 +84,7 @@ To get compliance info run below command.
 ```PowerShell
 	Get-AzSKInfo -SubscriptionId <SubscriptionId> -InfoType 'ComplianceInfo' 
 ```
-**Note: It's recommended to scan the complete subscription (commands: Get-AzSKSubscriptionSecurityStatus & Get-AzSKAzureServicesSecurityStatus) with co-administrator/owner access atleast once before running above command. This onetime activity is required to ensure all controls are scanned and stored in subscription first time. Afterwords stored scan results will get updated with every CA/CICD/Ad-hoc scan and you can get accurate compliance numbers.         
+> Note: It's recommended to scan the complete subscription (commands: Get-AzSKSubscriptionSecurityStatus & Get-AzSKAzureServicesSecurityStatus) with co-administrator/owner access atleast once before running above command. This onetime activity is required to ensure all controls are scanned and stored in subscription first time. Afterwords stored scan results will get updated with every CA/CICD/Ad-hoc scan and you can get accurate compliance numbers.         
 
 Below is the sample output
 
