@@ -76,10 +76,9 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
     $storageType = 'Standard_LRS';
     Write-Host "Checking if AzSK storage account is present..." -ForegroundColor Yellow
     #check if storage account is present
-    $storageAccount = Find-AzureRmResource -ResourceGroupNameEquals $rgName `
-                  -ResourceNameContains $storageAccountPreName `
+    $storageAccount = Get-AzureRmResource -ResourceGroupName $rgName `
                   -ResourceType $storageResourceType `
-                  -ErrorAction Stop
+                  -ErrorAction SilentlyContinue
     $isStoragePreset = (($storageAccount | Where-Object{$_.ResourceName -match '^azsk\d{14}$'} | Measure-Object).Count -ne 0)
     if(-not $isStoragePreset)
     {
@@ -90,29 +89,28 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
                         -Location $Location `
                         -Kind BlobStorage `
                         -AccessTier Cool `
-                        -EnableEncryptionService "Blob,File" `
                         -EnableHttpsTrafficOnly $true `
                         -ErrorAction Stop
  
         $retryAccount = 6
         $localTimeout = $baseTimeout;
-        while($null -ne $storageObject -and $retryAccount -gt 0)
+        while($null -eq $storageObject -and $retryAccount -gt 0)
         {
             $storageObject = Get-AzureRmStorageAccount -ResourceGroupName 'AzSKRG' -Name $storageAccountName -ErrorAction SilentlyContinue
-            if($null -ne $storageObject)
+            if($null -eq $storageObject)
             {
                 Write-Host "Waiting...sleep interval: [$localTimeout] RetryCount: [$retryCount]"
                 Start-Sleep -seconds $localTimeout
                 $localTimeout += 5;
-                $retryAccount++;
+                $retryAccount--;
             }
         }
  
         #the below settings are required to create compliant AzSK storage
         if ($storageObject) {
             $currentContext = $storageObject.Context
-            Set-AzureStorageServiceLoggingProperty -ServiceType Blob -LoggingOperations All -Context $currentContext -RetentionDays 365 -PassThru -ErrorAction Stop
-            Set-AzureStorageServiceMetricsProperty -MetricsType Hour -ServiceType Blob -Context $currentContext -MetricsLevel ServiceAndApi -RetentionDays 365 -PassThru -ErrorAction Stop
+           $logging= Set-AzureStorageServiceLoggingProperty -ServiceType Blob -LoggingOperations All -Context $currentContext -RetentionDays 365 -PassThru -ErrorAction Stop
+           $metrics= Set-AzureStorageServiceMetricsProperty -MetricsType Hour -ServiceType Blob -Context $currentContext -MetricsLevel ServiceAndApi -RetentionDays 365 -PassThru -ErrorAction Stop
         }
         Write-Host "Created a new AzSK storage account [$storageAccountName]" -ForegroundColor Green
     }

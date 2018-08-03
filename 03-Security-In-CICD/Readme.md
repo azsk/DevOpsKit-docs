@@ -27,6 +27,7 @@
   - [Verifying that ARM Template Checker have been added and configured correctly](Readme.md#verifying-that-the-arm-template-checker-have-been-added-and-configured-correctly)
   - [Exclude files from scan](Readme.md#exclude-files-from-scan)
   - [Skip certain controls during scan](Readme.md#skip-certain-controls-during-scan)
+  
 ------------------------------------------------------------------
 ### Overview 
 The AzSK contains Security Verification Tests (SVTs) for multiple PaaS and IaaS services of the Azure platform. 
@@ -163,9 +164,9 @@ next to it so that it gets masked.
 **Step-5:** Setup Online Policy URL  
 (You may skip this step in a first-pass exploration of CICD integration of SVTs and come back to it later when setting the extension up for a real project.) 
 This feature enables you to set up the CICD task to use your organization's AzSK policies. 
-To use org-specific policies, you can get your org-specific url by (a) running Get-AzSKInfo -InfoType HostInfo and looking at the value of OnlinePolicyStoreUrl or (b) getting it from the AzSKSettings.json file on your machine under 'C:\Users\<userName>\AppData\Local\Microsoft\AzSK' folder.
+To use org-specific policies, you can get your org-specific settings by (a) running Get-AzSKInfo -InfoType HostInfo and looking at the value of 'OnlinePolicyStoreUrl' and 'EnableAADAuthForOnlinePolicyStore'(it specifies whether Org policy URL (AzSKServerURL) is protected by AAD authentication) or (b) getting it from the AzSKSettings.json file on your machine under 'C:\Users\<userName>\AppData\Local\Microsoft\AzSK' folder.
 
-Below, we have added configuration info of 'AzSKServerURL' used by the AzSK team. The URL at your org can be different assuming there is an org-policy setup unique to your org.  
+Below, we have added configuration info of 'AzSKServerURL' and 'EnableServerAuth' used by the AzSK team. The URL at your org can be different assuming there is an org-policy setup unique to your org.  
 
 The online policy URL can be configured for the CICD extension using one of the two options below:  
 
@@ -196,6 +197,8 @@ Linking to the release definition:
   
 ![03_Save_Release_Definition](../Images/03_Save_Release_Definition.PNG)  
 
+> **Note:** Please make sure that the service principal (SPN) that is used for the CICD pipeline task has the following permissions: (a) ‘Reader’ access on the resource groups that are to be scanned (or ‘Reader’ access at subscription level if all resource groups are being scanned) and (b) ‘Contributor’ access on the ‘AzSKRG’ resource group.
+<br>The first permission is required so that the SVTs can scan resources for security issues successfully and the second permission is requires so that any past attestations for controls are respected by the scan.
 
 [Back to top...](Readme.md#contents)
 ### Verifying that the SVTs have been added and configured correctly

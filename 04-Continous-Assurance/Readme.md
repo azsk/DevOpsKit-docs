@@ -114,9 +114,10 @@ Here's a quick summary of the permissions required for the user who sets up CA:
 is download and add PowerShell modules for Azure PS library and for AzSK. This is a slow and sometimes flaky process and, 
 as a result, the setup internally retries failed downloads. The Azure Automation product team is aware of this challenge and are working on a resolution.)
 
-
 **Note-2**: Due to the complexity of various dependent activities involved, there are multiple places where CA setup can run into issues. 
 It is important to verify that everything has worked without hiccups. Please review and ascertain each of the "Verifying" steps below carefully.
+
+**Note-3**: If the person who had set up CA leaves organization/team then it's strongly advised to remove the service principal (configured in runtime aaccount) access from subscription/AzSKRG to prevent any misuse.
 
 
 **Step-2: Verifying that CA Setup is complete**  
@@ -231,6 +232,7 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
     [-ScanIntervalInHours <ScanIntervalInHours>] `
     [-AzureADAppName <AzureADAppName>] `
     [-FixRuntimeAccount] ` 
+    [-NewRuntimeAccount] `
     [-FixModules] `
     [-RenewCertificate]
 ```
@@ -249,7 +251,8 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 |ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value |FALSE|None||
 |AzureADAppName|Use this parameter if you want to update the connection (used for running the runbook) with new AD App and Service principal|FALSE|None|This is useful if existing connection is changed/removed by mistake|
 |FixRuntimeAccount|Use this switch to fix CA runtime account in case of below issues.<ol><li>Runtime account deleted<br>(Permissions required: Subscription owner)</li><li>Runtime account permissions missing<br>(Permissions required: Subscription owner and AD App owner)</li><li>Certificate deleted/expired<br>(Permissions required: Subscription owner and AD App owner)</li></ol>|FALSE|None||
-|FixModules|Use this switch in case 'AzureRm.Automation' module extraction fails in CA Automation Account.|FALSE|None||
+|NewRuntimeAccount|Use this switch to setup new runtime account and the person running the command will become new SPN owner.This feature is helpful in case when CA certificate is expired but the SPN owner who had setup CA is not available and certificate can't be renewed. |FALSE|None||
+|FixModules|Use this switch in case AzureRm.Automation/AzureRm.Profile module(s) extraction fails in CA Automation Account.|FALSE|None||
 |RenewCertificate|Renews certificate credential of CA SPN if the caller is Owner of the AAD Application (SPN). If the caller is not Owner, a new application is created with a corresponding SPN and a certificate owned by the caller. CA uses the updated credential going forward.|FALSE|None||
 
 [Back to top…](Readme.md#contents)
@@ -597,12 +600,17 @@ However, setting up the AzSK OMS solution is recommended as it will help you get
 
 The SPN used for daily scanning by AzSK CA uses a cert credential which has a default expiry of 6 months. When the cert comes close to expiry both the Azure portal and the Get-AzSKContinuousAssurance command warn about a need to renew the credential. Here's how to renew the cert:
 
-The SPN belongs to an AAD application that is created on behalf of the person who setup CA for the first time. You need to ensure that either that person performs the renewal or you can request that person to give you 'Owner' permission to that application. If the owner is unavailable (or has left the org) then altogether new application in AAD (owned by you), SPN and a certificate credential will be created and new SPN will be used for scanning your subscription moving forward.
+The SPN belongs to an AAD application that is created on behalf of the person who setup CA for the first time. You need to ensure that either that person performs the renewal or you can request that person to give you 'Owner' permission to that application. If the owner is unavailable (or has left the org) then you can create altogether new application in AAD (owned by you), SPN and a certificate credential and new SPN will be used for scanning your subscription moving forward.
 
 Run the following command to renew CA certificate.
 
 ```PowerShell
 Update-AzSKContinuousAssurance -SubscriptionId <sub_id_here> -RenewCertificate
+```
+Run the following command to create new application in AAD (owned by you).
+
+```PowerShell
+Update-AzSKContinuousAssurance -SubscriptionId <sub_id_here> -NewRuntimeAccount
 ```
 
 Verify that it worked by running Get-AzSKContinuousAssurance again to confirm that the warning is gone.
