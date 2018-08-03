@@ -157,7 +157,6 @@ It will also create a very basic 'customized' policy involving below files uploa
 | RunbookCoreSetup.ps1 | policies  | Used in Continuous Assurance to setup AzSK module
 | RunbookScanAgent.ps1 | policies  | Used in Continuous Assurance to run daily scan 
 | AzSk.json | policies | Includes org-specific message, telemetry key, InstallationCommand, CASetupRunbookURL etc.
-| Migration.ps1 | policies | This script helps to Contoso subscription to migrate from AzSDK to AzSK with Org policy.
 | ServerConfigMetadata.json | policies | Index file with list of policy files.  
 
 
