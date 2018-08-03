@@ -6,8 +6,6 @@
 
 ### [Update Org Policy with help of fix script ](OrgPolicyHealthCheck.md#run-org-policy-fix-script)
 
-
-
 ## Overview
 
 #### When and why should I check org policy health 
@@ -57,5 +55,3 @@ After execution of fix script, you may need to validate policy update is success
 ```PowerShell
 & "<FolderPath>\OrgPolicyFixScript.ps1" -SubscriptionId <SubscriptionId> -PolicyResourceGroupName <PolicyResourceGroupName> -RestoreFromBackup
 ```
-
-
