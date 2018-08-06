@@ -542,7 +542,7 @@ you set up a 'Staging' environment where you can do all pre-testing of policy se
 people could be engaged for testing the actual end user effects of changes before deploying them broadly. 
 Also, you can choose to retain the staging setup or just re-create a fresh one for each major policy change.
 
-You can validate health of Org policy for mandatory configurations using below command. You can review the failed check and follow the remedy suggested.
+Also its recommended to validate health of Org policy for mandatory configurations using below command on regular interval. You can review the failed check and follow the remedy suggested. (**Note:** This command is available from AzSK version 3.4.0 and above)
 
 ```PowerShell
 Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
