@@ -445,9 +445,7 @@ the `Azure_Storage_DP_Encrypt_In_Transit` control. We will also disable attestat
    },
    {
       "ControlID": "Azure_Storage_DP_Restrict_CORS_Access",
-      "ValidAttestationStates" : [
-        "None"
-      ]
+      "ValidAttestationStates" : ["None"]  // Passing 'None' in the property 'ValidAttestationStates' will block further attestation for the particular control.
    }
   ]
 }

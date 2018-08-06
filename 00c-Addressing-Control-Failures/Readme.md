@@ -274,28 +274,28 @@ The columns are described as under:
 |---|---|---|---|---|---|
 |Passed |None |Passed |No | -NA- |No need for attestation. Control has passed outright!|
 |Verify |None |Verify |No | -NA- |User has to ratify based on manual examination of AzSK evaluation log. E.g., SQL DB firewall IPs list.|
-|Verify |NotAnIssue |Passed |Yes | 90 |User has ratified in the past. E.g., SQL firewall IPs scenario, where all are IPs are legitimate.|
+|Verify |NotAnIssue |Passed |Yes | 90 |User has ratified in the past. E.g., E.g., Azure_AppService_AuthN_Use_AAD_for_Client_AuthN, where AAD authentication is implemented through code|
 |Verify |WillNotFix |Exception |Yes | Based on the control severity table below|Valid security issue but a fix cannot be implemented immediately. E.g., A 'deprecated' account was found in the subscription. However, the user wants to check any dependencies before removal.|
 |Verify |WillFixLater |Remediate |Yes| Based on the control severity table below|Valid security issue but a fix cannot be implemented immediately. E.g., A 'deprecated' account was found in the subscription. However, the user wants to check any dependencies before removal.|
-|Verify |NotApplicable |Passed |Yes| 90 ||
-|Verify |StateConfirmed |Passed |Yes| Based on the control severity table below||
+|Verify |NotApplicable |Passed |Yes| 90 |E.g., Azure_AppService_AuthN_Use_Managed_Service_Identity |
+|Verify |StateConfirmed |Passed |Yes| Based on the control severity table below|E.g.,Azure_SQLDatabase_AuthZ_Configure_IP_Range|
 |Failed |None |Failed |No | -NA- | Control has failed but has not been attested. Perhaps a fix is in the works...|	 
 |Failed |NotAnIssue |Passed |Yes | 90 |Control has failed but the issue is benign in a given context business. E.g., Failover instance for a non-BC-DR critical service|
 |Failed |WillNotFix |Exception |Yes | Based on the control severity table below| Control has failed. The issue is not benign, but the user has some other constraint and cannot fix it. E.g., Need an SPN to be in Owner role at subscription scope.|
 |Failed |WillFixLater |Remediate |Yes | Based on the control severity table below| Control has failed. The issue is not benign, but the user wishes to defer fixing it for later. E.g., AAD is not enabled for Azure SQL DB.|
-|Failed |NotApplicable |Passed |Yes| 90 ||
+|Failed |NotApplicable |Passed |Yes| 90 |Control has failed. This control is not applicable for given design. E.g.,Azure_Storage_AuthN_Dont_Allow_Anonymous|
 |Failed |StateConfirmed |Passed |Yes| Based on the control severity table below||
 |Error |None |Error |No | -NA- | There was an error during evaluation. Manual verification is needed and is still pending.|
 |Error |NotAnIssue |Passed |Yes | 90| There was an error during evaluation. However, control has been manually verified by the user.|
 |Error |WillNotFix |Exception |Yes | Based on the control severity table below| There was an error during evaluation. Manually verification by the user indicates a valid security issue.|
 |Error |WillFixLater |Remediate |Yes | Based on the control severity table below| There was an error during evaluation. Manually verification by the user indicates a valid security issue.|
-|Error |NotApplicable |Passed |Yes| 90 ||
-|Error |StateConfirmed |Passed |Yes| Based on the control severity table below||
+|Error |NotApplicable |Passed |Yes| 90 |There was an error during evaluation. Manually verification by the user indicates a valid security issue.|
+|Error |StateConfirmed |Passed |Yes| Based on the control severity table below|There was an error during evaluation. Manually verification by the user indicates a valid security issue.|
 |Manual |None |Manual |No | -NA-| The control is not automated and has to be manually verified. Verification is still pending.| 
 |Manual |NotAnIssue |Passed |Yes | 90| The control is not automated and has to be manually verified. User has verified that there's no security concern.|
 |Manual |WillNotFix |Exception |Yes | Based on the control severity table below| The control is not automated and has to be manually verified. User has reviewed and found a security issue to be fixed.|
 |Manual |WillFixLater |Remediate |Yes | Based on the control severity table below| The control is not automated and has to be manually verified. User has reviewed and found a security issue to be fixed.|
-|Manual |NotApplicable |Passed |Yes| 90 ||
+|Manual |NotApplicable |Passed |Yes| 90 |The control is not automated and has to be manually verified. User has reviewed and found a security issue to be fixed. E.g., Azure_Automation_DP_Use_Secure_Assets|
 |Manual |StateConfirmed |Passed |Yes| Based on the control severity table below||
 
 -NA- => Not Applicable
@@ -351,12 +351,13 @@ Any control with evaluation result as not passed,
  
 The detailed matrix of attestation details and its expiry can be found under [this](Readme.md#how-azsk-determines-the-effective-control-result) section. Attestation expiry date is also emitted in CSV scan result as shown in [this](../Images/02_SVT_Attest_3.PNG) image.
 
-> **Note**: All the controls are subjected to an initial grace period from the first scanned date. On expiry of grace period for a control,
+> **Note**: 
+> * All the controls are subjected to an initial grace period from the first scanned date. On expiry of grace period for a control,
 >  1. 'WillFixLater' option will be disabled for further attestation.
->  2. attestation will expiry if the control is attested as 'WillFixLater'.
+>  2.  Attestation will expire if the control was attested as 'WillFixLater'.
+> User will then have the option to either fix the control or use other available attestation states with proper justification.
 > 
-> User will then have the option to either fix the control or use other available attestation state with proper justification.
-
+>* Attestation may also expire before actual expiry in cases when the attested state for the control doesn't match with current control state.
 [Back to top...](Readme.md#contents)
 
 ### Bulk attestation
