@@ -11,6 +11,7 @@
 - [Removing a Continuous Assurance setup](Readme.md#removing-a-continuous-assurance-setup)
 - [Getting details about a Continuous Assurance setup](Readme.md#getting-details-about-a-continuous-assurance-setup)
 - [Continuous Assurance (CA) - 'Central Scan' mode](Readme.md#continuous-assurance-ca---central-scan-mode)
+- [Continuous Assurance (CA) - Trigger scan on resource deployment (Preview)](Readme.md#continuous-assurance-ca---scanondeployment-mode)
 - [FAQ](Readme.md#faq)
 
 -----------------------------------------------------------------
@@ -103,6 +104,7 @@ for your application.)
 |WebhookAuthZHeaderValue|(Optional) Value of the AuthZ heade |FALSE|None||
 |ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value |FALSE|None||
 |AzureADAppName|(Optional) Name for the Azure Active Directory(AD) Application that will be created in the subscription for running the runbooks. |FALSE|None||
+|ScanOnDeployment|(Optional) CA scan can be auto-triggered upon resource deployment.Installing CA with this flag will make sure that the Resource Group in which resource is deployed will be scanned. |FALSE|None||
 
 **More about the 'AzureADAppName' parameter:**
 
@@ -266,6 +268,7 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 |NewRuntimeAccount|Use this switch to setup new runtime account and the person running the command will become new SPN owner.This feature is helpful in case when CA certificate is expired but the SPN owner who had setup CA is not available and certificate can't be renewed. |FALSE|None||
 |FixModules|Use this switch in case AzureRm.Automation/AzureRm.Profile module(s) extraction fails in CA Automation Account.|FALSE|None||
 |RenewCertificate|Renews certificate credential of CA SPN if the caller is Owner of the AAD Application (SPN). If the caller is not Owner, a new application is created with a corresponding SPN and a certificate owned by the caller. CA uses the updated credential going forward.|FALSE|None||
+|ScanOnDeployment|CA scan can be auto-triggered upon resource deployment.Updating CA with this flag will make sure that the Resource Group in which resource is deployed will be scanned.|FALSE|None||
 |Remove|Use this switch to clear previously set OMS, AltOMS,Webhook settings from CA Automation Account or to unregister from scan on deployment mode|False|None||
 
 [Back to top…](Readme.md#contents)
@@ -742,6 +745,48 @@ The main/dominant component of the cost is automation runtime (storage/OMS costs
 
 - Total OMS Cost (Upload + Retention)  
      - 0.27+0.07 = $0.34/year
+
+
+[Back to top…](Readme.md#contents)
+
+## Continuous Assurance (CA) - Trigger scan on resource deployment (Preview)
+
+When you want to trigger scan on resource deployment in a subscription, need to use the flag -ScanOnDeployment. Using this flag will make sure to add an alert which will trigger the newly added runbook and scan the resource group in which the resource(s) have been deployed.ScanOnDeployment currently is not supported for Multi CA and Central Scan mode CA.
+ScanOnDeployment works for resource deployment operation only, doesn't work on resource deletion.
+
+#### 1. Install CA with flag -ScanOnDeployment
+
+This can be achieved by adding extra param to the existing CA command as shown in the command below:
+
+```PowerShell
+$SubscriptionId = '<subscriptionId>'
+$ResourceGroupNames = '*' #This should always be '*'
+$OMSWorkspaceId = '<omsWorkspaceId>'
+$OMSSharedKey = '<omsSharedKey>' 
+
+Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId  
+        -ResourceGroupNames $ResourceGroupNames -OMSWorkspaceId $OMSWorkspaceId -OMSSharedKey $OMSSharedKey -ScanOnDeployment
+```
+
+#### 2. Update CA with flag -ScanOnDeployment
+
+In case you want to add/edit subscriptions covered via scan on deployment mode you can use Update-AzSKContinuousAssurance as shown below.
+
+```PowerShell
+$SubscriptionId = '<subscriptionId>' 
+
+Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -ScanOnDeployment
+```
+
+#### 3. Remove flag -ScanOnDeployment
+
+In case you want to unregister sub from scan on deployment mode need to run command as below:
+
+```PowerShell
+$SubscriptionId = '<subscriptionId>' 
+
+Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -Remove ScanOnDeployment
+```
 
 
 #### Troubleshooting
