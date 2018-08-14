@@ -30,7 +30,7 @@ in the table below:
 
 ## Complete list of AzSK commands
 
-| Command (alias) | What it does |	Reqd Permission |
+| Command (alias) | What it does |	Required Permission |
 |----|----|-----|
 |Clear-AzSKSessionState (CSS)|Command to clear AzSK session object|NA|
 |Get-AzSKAzureServicesSecurityStatus (GRS)|Scans a set of RGs (or the entire subscription)|Reader on subscription or respective RGs|

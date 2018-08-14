@@ -7,10 +7,10 @@
 -	Save your work (in script, not TXT files)
 -	Use auto-complete
 -   Use backtick for long command lines
--	Search for commands…
--	Look for loaded modules…
+-	Search for commandsï¿½
+-	Look for loaded modulesï¿½
 -	Variables..
--	Strings, “ “ v ‘ ‘ 
+-	Strings, ï¿½ ï¿½ v ï¿½ ï¿½ 
 -	List Subscriptions
 -	Switch context
 -	Find resources/resource groups
@@ -454,7 +454,7 @@ Get-AzSKSubscriptionSecurityStatus -SubscriptionId $subId
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subId
 ```
 
-Here's a slighly more interesting example... 
+Here's a slightly more interesting example... 
 
 If you have multiple subscriptions and need to run various commands on some of them, you 
 can setup a variable for each subscription. Then have a common variable representing the target subscription. The script below will

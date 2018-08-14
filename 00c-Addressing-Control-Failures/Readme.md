@@ -489,7 +489,7 @@ The AzSK docs for control attestation are [here](../00c-Addressing-Control-Failu
 #### Attestation fails with permission error even though I am Owner.
 
 It can happen due to below reasons
-1. User who is attesting doesnt have Contributor/ Owner access on the AzSKRG </br>
+1. User who is attesting doesn't have Contributor/ Owner access on the AzSKRG </br>
    Sol. => In this scenario the user is already co-admin.
 
 2. "AzSK-controls-state" Container is missing in the AzSK storage account </br>
