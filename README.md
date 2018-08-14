@@ -65,7 +65,7 @@ As you get familiar with and begin to use the 'downstream' capabilities (CICD, C
 ### What do you want to use the secure devops kit for?
 As you can see from the summary description above, the "Secure DevOps Kit for Azure" (we will call it AzSK to be brief hereafter), can be used by many different stakeholders. So depending on your role in the DevOps ecosystem, one or more of the below scenarios may apply to you. The skillset needed to use the capabilities of the kit and the prerequisites you need to have on your machine will vary based on your scenario. Here are a few sample stakeholders and some points about *how* they may try to use the AzSK:  
 
-|Stakeholders / Persona   |Capabilties of the kit     |
+|Stakeholders / Persona   |Capabilities of the kit     |
 | ---- | ---- |
 |**Subscription Owners**| Check the overall security health of your Azure subscription.<br> Ensure that artifacts such as Alerts for important activities, ARM policy, resource locks, RBAC roles, etc. are properly provisioned. |
 |**Development/Engineering**| Get inline support with security tips and corrections while writing code for Azure apps (and also standard web applications in general).<br>  Test that Azure resources you are using for your application/solutions are configured and deployed securely.<br> Enable security in CICD by including various security tests in the build/release pipelines|
