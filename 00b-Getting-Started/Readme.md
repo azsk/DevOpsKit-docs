@@ -78,4 +78,4 @@ in the table below:
 |ResourceNames (rns)|
 |ControlIds (cids)|
 |ControlsToAttest (cta)|
-|ControlsToAttest (ubc)|
+|UseBaselineControls (ubc)|
