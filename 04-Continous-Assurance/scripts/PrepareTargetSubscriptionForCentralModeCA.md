@@ -13,8 +13,8 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
  
     #region Step 2: Create the AzSK resource group
  
-    #check if the resourcegroup exists
-    Write-Host "Checking if resource rroup [$rgName] exists in the target subscription..." -ForegroundColor Yellow
+    #check if the resource group exists
+    Write-Host "Checking if resource group [$rgName] exists in the target subscription..." -ForegroundColor Yellow
     if((Get-AzureRmResourceGroup -Name $rgName -ErrorAction SilentlyContinue | Measure-Object).Count -eq 0)
     {
         Write-Host "Creating new resource group [$rgName]..." -ForegroundColor Yellow
@@ -22,7 +22,7 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
     }
     $azSKRG = $null;
  
-    #wait  untill resourcegroup creation is completed
+    #wait  until resource group creation is completed
     $retryCount = 6
     $localTimeout = $baseTimeout;
     while($retryCount -gt 0 -and $null -eq $azSKRG)
@@ -66,7 +66,7 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
                 $localTimeout += 5
             }    
         }
-        Write-Host "Completed registereing resource provider [$provideNamespace]" -ForegroundColor Green
+        Write-Host "Completed registering resource provider [$provideNamespace]" -ForegroundColor Green
     }
     #endregion
  

@@ -191,12 +191,12 @@ are the same fields that display in the CSV file when you run the AzSK manually 
 This section walks you through the queries present in the AzSK OMS solution. To get the latest queries make sure that you have the latest solution installed in your OMS workspace. To get the latest version of solution you need to re-install OMS solution using step **[[1-c]](#setting-up-the-azsk-oms-solution-step-by-step)** mentioned above. The queries show the status of controls based on the following criteria.
 - Each blade shows the aggregated control status for all subscriptions whose data is sent to the OMS workspace.
 - By default, each blade shows the status of baseline controls.
-- The queries show counts based on control status recieved for last scan data(done with required access) received by the OMS workspace.
+- The queries show counts based on control status received for last scan data(done with required access) received by the OMS workspace.
 - Any control status other than "Passed" is treated as "Failed"(including "Verify",Manual,etc.) in queries for calculating failure counts.
 
 Details of various blades of Azure Security Health View are as follows:
 
-**1) Subsciption Security Status:** This blade shows the status of baseline Subsciption Security controls of your subscription(s).
+**1) Subscription Security Status:** This blade shows the status of baseline Subscription Security controls of your subscription(s).
 
 - Donut: The below query shows the aggregated control status of Subscription Security controls.
 

@@ -259,7 +259,7 @@ Below resource types can be checked for validating the security controls
 |Analysis Services |AnalysisService |Microsoft.AnalysisServices/servers|
 |API Connection|APIConnection|Microsoft.Web/connections|
 |App Services|AppService |Microsoft.Web/sites|
-|Automation Acocunt|Automation|Microsoft.Automation/automationAccounts|
+|Automation Account|Automation|Microsoft.Automation/automationAccounts|
 |Batch accounts |Batch |Microsoft.Batch/batchAccounts|
 |CDN profiles |CDN |Microsoft.Cdn/profiles|
 |Cloud Services|CloudService |Microsoft.ClassicCompute/domainNames|
