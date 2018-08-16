@@ -421,8 +421,9 @@ To address findings, you should do the following:
 2. Review controls that are marked as "Failed", "Verify" or "Manual"
 3. Use the following approach based on control status:
      - For the “Verify” controls, look at the expected property, expected value and description column in .CSV file to decide whether to consider the    control as "Passed" or not. 
-     - For the “Failed” controls, look at the .CSV file to get the supporting information like expected property, expected value, line no. and resource path etc. 
-	 
+     - For the “Failed” controls, look at the .CSV file to get the supporting information like expected property, expected value, line no. and resource path etc.
+> **Note**: If 'ExpectedProperty' column in .CSV file contains multiple properties (for e.g. $.properties.siteConfig.alwaysOn | $.properties.alwaysOn), in this case you only need to provide expected value in anyone of these properties to fix the failed control.
+
 #### Scan multiple ARM Templates :-	 
 To scan multiple ARM Templates at a time you can pass folder path containing different ARM Template(s) to “–ARMTemplatePath” parameter in “Get-AzSKARMTemplateSecurityStatus” cmdlet.
 e.g. :
