@@ -420,8 +420,8 @@ To address findings, you should do the following:
 1. See the summary of control evaluation first in the CSV file. (Open the CSV in XLS. Use "Format as Table", "Hide Columns", "Filter", etc.)
 2. Review controls that are marked as "Failed", "Verify" or "Manual"
 3. Use the following approach based on control status:
-     - For the “Verify” controls, look at the expected value and description column in .CSV file to decide whether to consider the    control as "Passed" or not. 
-     - For the “Failed” controls, look at the .CSV file to get the supporting information like Expected value , Line No. and Resource path etc. 
+     - For the “Verify” controls, look at the expected property, expected value and description column in .CSV file to decide whether to consider the    control as "Passed" or not. 
+     - For the “Failed” controls, look at the .CSV file to get the supporting information like expected property, expected value, line no. and resource path etc. 
 	 
 #### Scan multiple ARM Templates :-	 
 To scan multiple ARM Templates at a time you can pass folder path containing different ARM Template(s) to “–ARMTemplatePath” parameter in “Get-AzSKARMTemplateSecurityStatus” cmdlet.
