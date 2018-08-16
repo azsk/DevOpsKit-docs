@@ -35,7 +35,7 @@
         - name: Batch
           href: ../../02-Secure-Development/ControlCoverage/Feature/Batch.md
         - name: Bot
-          href:../../02-Secure-Development/ControlCoverage/Feature/BotService.md
+          href: ../../02-Secure-Development/ControlCoverage/Feature/BotService.md
         - name: CDN
           href: ../../02-Secure-Development/ControlCoverage/Feature/CDN.md
         - name: Cloud Service
@@ -92,9 +92,9 @@
   href: ../../03-Security-In-CICD/Readme.md
 - name: Continous Assurance
   href: ../../04-Continous-Assurance/Readme.md
-  item:
-    -name: Script for preparing target subscription for CentralMode CA
-     href: ../../04-Continous-Assurance/scripts/PrepareTargetSubscriptionForCentralModeCA.md
+  items:
+    - name: Script for preparing target subscription for CentralMode CA
+      href: ../../04-Continous-Assurance/scripts/PrepareTargetSubscriptionForCentralModeCA.md
 - name: Alerting and Monitoring
   href: ../../05-Alerting-and-Monitoring/Readme.md
   items:
@@ -106,9 +106,9 @@
     - name: App Insight Queries
       href: ../../06-Security-Telemetry/App-Insights-Queries/Readme.md
 - name: Customizing AzSK for your organization
-  href: ../../07-Customizing-AzSK-for-your-Org/OrgPolicyHealthCheck.md
+  href: ../../07-Customizing-AzSK-for-your-Org/Readme.md
   items: 
     - name: Org Policy Health Check
-      href: ../../07-Customizing-AzSK-for-your-Org/Readme.md
+      href: ../../07-Customizing-AzSK-for-your-Org/OrgPolicyHealthCheck.md
 - name: Advanced features
   href: ../../08-Advanced-Features/Readme.md
