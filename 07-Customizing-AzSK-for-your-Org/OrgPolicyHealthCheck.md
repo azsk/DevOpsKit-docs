@@ -11,7 +11,7 @@
 #### When and why should I check org policy health 
 
 AzSK keeps on adding and enhancing features with different capabilities to monitor Security compliance for Org subscriptions. During these enhancement in new releases, it may include latest features and also some breaking changes. To provide smoother upgrade and avoid policy break, AzSK provides feature for Org policy to run AzSK components with specific version using configuration(mentioned in AzSK.Pre.json). Currently, we have come up with health and fix script which will validate all mandatory resources and latest configurations are in place. In upcoming release these scripts will be part of AzSK commands. 
-It is recommendated to run health scan before and after updating AzSK version for Org. 
+It is recommended to run health scan before and after updating AzSK version for Org. 
 Below steps will guide you through steps
 
 
@@ -36,7 +36,7 @@ Script will validate components of Org Policy and reports any missing configurat
 
 ## Run Org Policy Fix Script
 
-Fix script will try to remediate or provide instructions for missing configurations present Org policy. You can follow below stesp to execute fix script
+Fix script will try to remediate or provide instructions for missing configurations present Org policy. You can follow below steps to execute fix script
 
 
 1.	Download Fix script from [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyFixScript.txt) and save it with extension ".ps1"

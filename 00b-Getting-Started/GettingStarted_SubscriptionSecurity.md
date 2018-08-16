@@ -1,7 +1,7 @@
 ## Scan your Azure Subscription for security vulnerabilities
 ###### :clock10: 30 minutes to complete
 The Subscription Security health check features in AzSK contains a set of scripts that examines a subscription and flags off security issues, misconfigurations or obsolete artifacts/settings which can put your subscription at higher risk.
-This package adds-on to the exiting Azure capabilities like Security Center, IAM, etc. and extends it further to check for the presence for non-tenant accounts, SPN with higher priviliges, alerting configuration, etc.
+This package adds-on to the exiting Azure capabilities like Security Center, IAM, etc. and extends it further to check for the presence for non-tenant accounts, SPN with higher privileges, alerting configuration, etc.
 
 > Note: Ensure that you already have the latest version of AzSK installed on your machine. If not, please follow instruction [here.](../00a-Setup/Readme.md)
 
@@ -26,12 +26,12 @@ Once all rules have been processed execution completes and the output folder is 
 
 ![00_Security_Status_OP_Folder](../Images/00_Security_Status_OP_Folder.PNG)   
 
-**Understanding the ouputs** 
+**Understanding the outputs** 
 
 As the rules are checked, in the background AzSK collates the following: 
 - summary information of the control evaluation (pass/fail) status in a CSV file, 
 - detailed control evaluation log in a LOG file and
-- a few other anciliary files for additional support
+- a few other ancillary files for additional support
 
 > **Note:** The overall layout and files in the output folder are also described in the **ReadMe.txt** file present in the root output folder (the one that is opened automatically). 
 
