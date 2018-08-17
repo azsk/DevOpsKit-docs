@@ -274,29 +274,29 @@ The columns are described as under:
 |---|---|---|---|---|---|
 |Passed |None |Passed |No | -NA- |No need for attestation. Control has passed outright!|
 |Verify |None |Verify |No | -NA- |User has to ratify based on manual examination of AzSK evaluation log. E.g., SQL DB firewall IPs list.|
-|Verify |NotAnIssue |Passed |Yes | 90 |User has ratified in the past. E.g., E.g., Azure_AppService_AuthN_Use_AAD_for_Client_AuthN, where AAD authentication is implemented through code|
+|Verify |NotAnIssue |Passed |Yes | 90 |User has to ratify based manual examination that finding does not apply as the control has been implemented in another way. For example, AAD authentication for App Service was implemented through code. |
 |Verify |WillNotFix |Exception |Yes | Based on the control severity table below|Valid security issue but a fix cannot be implemented immediately. E.g., A 'deprecated' account was found in the subscription. However, the user wants to check any dependencies before removal.|
 |Verify |WillFixLater |Remediate |Yes| Based on the control severity table below|Valid security issue but a fix cannot be implemented immediately. E.g., A 'deprecated' account was found in the subscription. However, the user wants to check any dependencies before removal.|
-|Verify |NotApplicable |Passed |Yes| 90 |E.g., Azure_AppService_AuthN_Use_Managed_Service_Identity |
-|Verify |StateConfirmed |Passed |Yes| Based on the control severity table below|E.g.,Azure_SQLDatabase_AuthZ_Configure_IP_Range|
+|Verify |NotApplicable |Passed |Yes| 90 |User has to ratify based on manual examination that the finding is not applicable for given design/context. E.g., Runbook does not contain any hard-coded secure information. |
+|Verify |StateConfirmed |Passed |Yes| Based on the control severity table below|User has to ratify based on manual examination that the control state is correct/appropriate. E.g., SQL firewall IPs scenario, where all are IPs are legitimate.|
 |Failed |None |Failed |No | -NA- | Control has failed but has not been attested. Perhaps a fix is in the works...|	 
-|Failed |NotAnIssue |Passed |Yes | 90 |Control has failed but the issue is benign in a given context business. E.g., Failover instance for a non-BC-DR critical service|
+|Failed |NotAnIssue |Passed |Yes | 90 |Control has failed. However, the finding does not apply as the control has been implemented in another way. For example, AAD authentication for App Service was implemented through code.|
 |Failed |WillNotFix |Exception |Yes | Based on the control severity table below| Control has failed. The issue is not benign, but the user has some other constraint and cannot fix it. E.g., Need an SPN to be in Owner role at subscription scope.|
 |Failed |WillFixLater |Remediate |Yes | Based on the control severity table below| Control has failed. The issue is not benign, but the user wishes to defer fixing it for later. E.g., AAD is not enabled for Azure SQL DB.|
-|Failed |NotApplicable |Passed |Yes| 90 |Control has failed. This control is not applicable for given design. E.g.,Azure_Storage_AuthN_Dont_Allow_Anonymous|
-|Failed |StateConfirmed |Passed |Yes| Based on the control severity table below||
+|Failed |NotApplicable |Passed |Yes| 90 |Control has failed. However, user confirms based on manual examination that the finding is not applicable for given design/context.|
+|Failed |StateConfirmed |Passed |Yes| Based on the control severity table below|Control has failed. However, user confirms based on manual examination that the control state is correct/appropriate. |
 |Error |None |Error |No | -NA- | There was an error during evaluation. Manual verification is needed and is still pending.|
-|Error |NotAnIssue |Passed |Yes | 90| There was an error during evaluation. However, control has been manually verified by the user.|
+|Error |NotAnIssue |Passed |Yes | 90| There was an error during evaluation. Manual verification by user indicates that the finding does not apply as the control has been implemented in another way.|
 |Error |WillNotFix |Exception |Yes | Based on the control severity table below| There was an error during evaluation. Manually verification by the user indicates a valid security issue.|
 |Error |WillFixLater |Remediate |Yes | Based on the control severity table below| There was an error during evaluation. Manually verification by the user indicates a valid security issue.|
-|Error |NotApplicable |Passed |Yes| 90 |There was an error during evaluation. Manually verification by the user indicates a valid security issue.|
-|Error |StateConfirmed |Passed |Yes| Based on the control severity table below|There was an error during evaluation. Manually verification by the user indicates a valid security issue.|
+|Error |NotApplicable |Passed |Yes| 90 |There was an error during evaluation. However, user confirms based on manual examination that the finding is not applicable for given design/context.|
+|Error |StateConfirmed |Passed |Yes| Based on the control severity table below|There was an error during evaluation. However, user confirms based on manual examination that the control state is correct/appropriate.|
 |Manual |None |Manual |No | -NA-| The control is not automated and has to be manually verified. Verification is still pending.| 
-|Manual |NotAnIssue |Passed |Yes | 90| The control is not automated and has to be manually verified. User has verified that there's no security concern.|
+|Manual |NotAnIssue |Passed |Yes | 90| The control is not automated and has to be manually verified. User has reviewed the security concern and implemented the fix in another way.|
 |Manual |WillNotFix |Exception |Yes | Based on the control severity table below| The control is not automated and has to be manually verified. User has reviewed and found a security issue to be fixed.|
 |Manual |WillFixLater |Remediate |Yes | Based on the control severity table below| The control is not automated and has to be manually verified. User has reviewed and found a security issue to be fixed.|
-|Manual |NotApplicable |Passed |Yes| 90 |The control is not automated and has to be manually verified. User has reviewed and found a security issue to be fixed. E.g., Azure_Automation_DP_Use_Secure_Assets|
-|Manual |StateConfirmed |Passed |Yes| Based on the control severity table below||
+|Manual |NotApplicable |Passed |Yes| 90 |The control is not automated and has to be manually verified. User confirms based on manual examination that the finding for given design/context is not applicable. |
+|Manual |StateConfirmed |Passed |Yes| Based on the control severity table below| The control is not automated and has to be manually verified. User has verified that there's no security concern.|
 
 -NA- => Not Applicable
 
