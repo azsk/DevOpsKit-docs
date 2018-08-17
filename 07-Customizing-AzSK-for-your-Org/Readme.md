@@ -537,12 +537,65 @@ or more of the following using AzSK:
 ## Testing and troubleshooting org policy
 
 #### Testing the overall policy setup
-The policy setup command is fairly lightweight - both in terms of effort/time and in terms of costs incurred. We recommend that
+The policy setup command is fairly lightweight - both in terms of effort/time and in terms of costs incurred. You can test policy using below options
+
+**Option 1:**
+    
+    Validate configuration changes by running AzSK commands using local policy folder.
+
+    Step 1: Point AzSK settings to local Org policy folder("D:\ContosoPolicies\"). 
+    
+    ```PowerShell
+    Set-AzSKPolicySettings -LocalOrgPolicyFolderPath "D:\ContosoPolicies\"
+    ```
+    Step 2: Clear session state and run scan commands (Get-AzSKAzureServicesSecurityStatus and Get-AzSKSubscriptionSecurityStatus) with respective parameters sets like UseBaselineControls,ResourceGroupNames etc.
+
+    ```PowerShell
+    Clear-AzSKSessionState
+    Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubscriptionId>
+    
+    Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -UseBaselineControls
+
+    ```    
+
+    Step 3: If scan commands are running fine, you can update policy based on parameter set used during installations. If you see some issue in sccan commands, you can fix configurations and repeat step 2. 
+
+    ```PowerShell
+    Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+           -OrgName "Contoso" `
+           -DepartmentName "IT" `
+           -PolicyFolderPath "D:\ContosoPolicies"
+    ```
+
+     ```PowerShell
+    Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+           -OrgName "Contoso-IT" `           
+           -ResourceGroupName "Contoso-IT-RG" `
+           -StorageAccountName "contosoitsa" `
+           -AppInsightName "ContosoITAppInsight" `
+           -PolicyFolderPath "D:\ContosoPolicies"
+    ```
+
+    Step 4: Validate if policy is correctly uploaded and there is no missing mandatory policies using policy health check command
+
+    ```PowerShell
+        Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
+           -OrgName "Contoso" `
+           -DepartmentName "IT"
+    ```
+
+    Step 5: If all above steps works fine. You can point your AzSK setting to policy server by running "IWR" command generated at the end of *Update-AzSKOrganizationPolicy*
+
+
+**Option 2:**
+
 you set up a 'Staging' environment where you can do all pre-testing of policy setup, policy changes, etc. A limited number of 
 people could be engaged for testing the actual end user effects of changes before deploying them broadly. 
 Also, you can choose to retain the staging setup or just re-create a fresh one for each major policy change.
 
-You can validate health of Org policy for mandatory configurations using below command. You can review the failed check and follow the remedy suggested.
+
+**Note:**
+It is always recommendated to validate health of Org policy for mandatory configurations and policy schema syntax issues using below command. You can review the failed checks and follow the remedy suggested.
 
 ```PowerShell
 Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
