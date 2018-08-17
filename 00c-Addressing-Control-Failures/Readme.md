@@ -196,7 +196,7 @@ control statuses.
 All controls that have a technical evaluation status of anything other than 'Passed' (i.e., 'Verify' or 'Failed' or 'Manual' or 'Error') are considered 
 valid targets for attestation.
 
-> **Note**: AzSK does not support attestation of some selected controls, and therefore fixing them is mandatory.
+> **Note**: Some controls are very crucial from security stand point and hence AzSK does not support attesting them.
 
 To manage attestation flow effectively, 4 options are provided for the *ControlsToAttest* switch to specify which subset of controls to target for attestation. These are described below:
 
@@ -354,7 +354,7 @@ The detailed matrix of attestation details and its expiry can be found under [th
 > **Note**: 
 > * All the controls are subjected to an initial grace period from the first scanned date. On expiry of grace period for a control,
 >  1. 'WillFixLater' option will be disabled for further attestation.
->  2.  Attestation will expire if the control was attested as 'WillFixLater'.
+>  2. if the control was attested as 'WillFixLater', then attestation will expire.
 > User will then have the option to either fix the control or use other available attestation states with proper justification.
 > 
 >* Attestation may also expire before actual expiry in cases when the attested state for the control doesn't match with current control state.
@@ -509,7 +509,7 @@ The AzSK docs for control attestation are [here](../00c-Addressing-Control-Failu
 #### Attestation fails with permission error even though I am Owner.
 
 It can happen due to below reasons
-1. User who is attesting doesnt have Contributor/ Owner access on the AzSKRG </br>
+1. User who is attesting doesn't have Contributor/ Owner access on the AzSKRG </br>
    Sol. => In this scenario the user is already co-admin.
 
 2. "AzSK-controls-state" Container is missing in the AzSK storage account </br>
@@ -540,7 +540,7 @@ There are many reasons why you may see 'new' control failures after you put in t
 a- You may have net new resources that were created/deployed to the subscription. The first time CA scans these resources (usually within 24 hours of their creation), it will flag any security control failures. </br>
 b- Someone on the team perhaps changed the configuration of an existing resource. In a large subscription with many stakeholders acting on different resources and resource groups, this is quite a possibility. That is where CA helps! It watches over the drift and reports it. </br>
 c- Baseline control set may change. As attacks get sophisticated, so must our defense. It is quite possible that a control that was not considered "core hygiene" might become so a few months down. This will mean that for existing resources, everyone now has a new control to fix. </br>
-d- New controls may get added. Azure is a very dynamic environment. The PG adds new features and security capabilities every quarter in some services and every six months in most others. When a new security feature is added, the AzSK may be modified to add a new control to cover it. If the control is core/fundamental, then everyone will be expected to fix it on existing resources. (Remember that CA automatically picks up latest AzSK bits for scanning. So the moment a version of AzSK gets released with a new control and it is a 'baseline' control, CA scans will start checking the control on existing resources.) </br>
+d- New controls may get added. Azure is a very dynamic environment. The PG adds new features and security capabilities every quarter in some services and every six months in most others. When a new security feature is added, the AzSK may be modified to add a new control to cover it. If the control is core/fundamental, then everyone will be expected to fix it on existing resources. (Remember that CA automatically picks up latest AzSK bits for scanning. So, the moment a version of AzSK gets released with a new control and it is a 'baseline' control, CA scans will start checking the control on existing resources.) </br>
 e- Control logic for existing controls may change - due to bug fixes or additional conditions in the detection logic. This change in control behavior will, again, start reflecting in CA scans when a version of AzSK with the 'fix' or 'logic change' is released. </br>
 f- Configuration baselines may change. What is considered a mandatory account today may not remain so tomorrow or in 6 months. Certificates expire, credentials/accounts get deprecated. The AzSK is able to detect that your subscription contains these accounts but the access permissions that CA has does not let CA make any changes. </br>
 Phew...We hope we covered the main reasons. One last thought is that in the current "agile + dev ops + cloud" era, with all rapid iterations and changes happening at all layers, security has also become a much more 'continuous' effort compared to the past.
