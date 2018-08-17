@@ -1,5 +1,5 @@
 # Installation Guide
-> <h4><font color="blue">IMPORTANT:</font></h4> If you are from CSE, please install the AzSK via instructions at https://aka.ms/devopskit so that CSE-specific policies are configured for your installation. <u>Do not</u> use the installation instructions on this page.
+> <h4><font color="blue">IMPORTANT:</font></h4> If you are from CSE, please install the AzSK via instructions at https://aka.ms/devopskit/onboarding so that CSE-specific policies are configured for your installation. <u>Do not</u> use the installation instructions on this page.
 
 
  <!-- **Release Version: AzSDK 2.11.xx <=> AzSK 3.0.x ** -->

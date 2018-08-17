@@ -57,7 +57,7 @@ Coming soon
 The team that created the instrumentation key (in [section](#application-insights)) can share the key with the below command for the application development teams to use it. It is preferred to have this step as part of on-boarding.
 
 ``` PowerShell
-Set-AzSKLocalControlTelemetrySettings -LocalControlTelemetryKey '<instrumentation-key>' -EnableLocalControlTelemetry $true
+Set-AzSKLocalAIOrgTelemetrySettings -LocalAIOrgTelemetryKey '<instrumentation-key>' -EnableLocalAIOrgTelemetry $true
 ```
 
 The command configures the AzSK toolkit to send data to the given Applications Insights account from user's machine.
