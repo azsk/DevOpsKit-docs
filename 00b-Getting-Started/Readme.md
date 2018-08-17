@@ -70,7 +70,7 @@ in the table below:
 ## List of commonly used parameters
 
 | Parameter (alias) |
-|----|----|-----|
+|-------------------|
 |SubscriptionId (s,sid)|
 |ResourceGroupNames (rgns)|
 |ResourceType (rt)|
