@@ -541,50 +541,49 @@ The policy setup command is fairly lightweight - both in terms of effort/time an
 
 **Option 1:**
     
-    Validate configuration changes by running AzSK commands using local policy folder.
+Validate configuration changes by running AzSK commands using local policy folder.
 
-    Step 1: Point AzSK settings to local Org policy folder("D:\ContosoPolicies\"). 
+Step 1: Point AzSK settings to local Org policy folder("D:\ContosoPolicies\"). 
     
-    ```PowerShell
-    Set-AzSKPolicySettings -LocalOrgPolicyFolderPath "D:\ContosoPolicies\"
-    ```
-    Step 2: Clear session state and run scan commands (Get-AzSKAzureServicesSecurityStatus and Get-AzSKSubscriptionSecurityStatus) with respective parameters sets like UseBaselineControls,ResourceGroupNames etc.
+```PowerShell
+Set-AzSKPolicySettings -LocalOrgPolicyFolderPath "D:\ContosoPolicies\"
+```
+Step 2: Clear session state and run scan commands (Get-AzSKAzureServicesSecurityStatus and Get-AzSKSubscriptionSecurityStatus) with respective parameters sets like UseBaselineControls,ResourceGroupNames etc.
 
-    ```PowerShell
-    Clear-AzSKSessionState
-    Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubscriptionId>
-    
-    Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -UseBaselineControls
+```PowerShell
+Clear-AzSKSessionState
+Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubscriptionId>
 
-    ```    
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -UseBaselineControls
+```    
 
-    Step 3: If scan commands are running fine, you can update policy based on parameter set used during installations. If you see some issue in sccan commands, you can fix configurations and repeat step 2. 
+Step 3: If scan commands are running fine, you can update policy based on parameter set used during installations. If you see some issue in sccan commands, you can fix configurations and repeat step 2. 
 
-    ```PowerShell
-    Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
-           -OrgName "Contoso" `
-           -DepartmentName "IT" `
-           -PolicyFolderPath "D:\ContosoPolicies"
-    ```
+```PowerShell
+Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+   -OrgName "Contoso" `
+   -DepartmentName "IT" `
+   -PolicyFolderPath "D:\ContosoPolicies"
+```
 
-     ```PowerShell
-    Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
-           -OrgName "Contoso-IT" `           
-           -ResourceGroupName "Contoso-IT-RG" `
-           -StorageAccountName "contosoitsa" `
-           -AppInsightName "ContosoITAppInsight" `
-           -PolicyFolderPath "D:\ContosoPolicies"
-    ```
+```PowerShell
+Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+   -OrgName "Contoso-IT" `           
+   -ResourceGroupName "Contoso-IT-RG" `
+   -StorageAccountName "contosoitsa" `
+   -AppInsightName "ContosoITAppInsight" `
+   -PolicyFolderPath "D:\ContosoPolicies"
+```
 
-    Step 4: Validate if policy is correctly uploaded and there is no missing mandatory policies using policy health check command
+Step 4: Validate if policy is correctly uploaded and there is no missing mandatory policies using policy health check command
 
-    ```PowerShell
-        Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
-           -OrgName "Contoso" `
-           -DepartmentName "IT"
-    ```
+```PowerShell
+Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
+   -OrgName "Contoso" `
+   -DepartmentName "IT"
+```
 
-    Step 5: If all above steps works fine. You can point your AzSK setting to policy server by running "IWR" command generated at the end of *Update-AzSKOrganizationPolicy*
+Step 5: If all above steps works fine. You can point your AzSK setting to online policy server by running "IWR" command generated at the end of *Update-AzSKOrganizationPolicy*
 
 
 **Option 2:**
