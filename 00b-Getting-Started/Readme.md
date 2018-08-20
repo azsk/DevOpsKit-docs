@@ -84,20 +84,20 @@ in the table below:
 
 
 ```PowerShell 
-	grs -s <SubscriptionId> -rgns <ResourceGroupNames> -rns <ResourceNames> -ubc 
+grs -s <SubscriptionId> -rgns <ResourceGroupNames> -rns <ResourceNames> -ubc 
 ```
 ```PowerShell  
-	gss -s <SubscriptionId> 
+gss -s <SubscriptionId> 
 ```
 ```PowerShell  
-	ica -hsid <SubscriptionId> -rgns <ResourceGroupNames> -owid <OMSWorkspaceId> -okey <OMSSharedKey> 
+ica -hsid <SubscriptionId> -rgns <ResourceGroupNames> -owid <OMSWorkspaceId> -okey <OMSSharedKey> 
 ```
 ```PowerShell  
-	uca -hsid <SubscriptionId> 
+uca -hsid <SubscriptionId> 
 ```
 ```PowerShell  
-	gacs -s <SubscriptionId> -rgns <ResourceGroupNames> -rns <ResourceNames> -cids <ControlIds> 
+gacs -s <SubscriptionId> -rgns <ResourceGroupNames> -rns <ResourceNames> -cids <ControlIds> 
 ```
 ```PowerShell  
-	uss -s <SubscriptionId> -f -dnof 
+uss -s <SubscriptionId> -f -dnof 
 ```
