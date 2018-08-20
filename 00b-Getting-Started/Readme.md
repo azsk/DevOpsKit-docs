@@ -82,9 +82,22 @@ in the table below:
 
 ## Some commonly used commands
 
-``` grs -s <SubscriptionId> -rgns <ResourceGroupNames> -rns <ResourceNames> -ubc ```
-```  gss -s <SubscriptionId> ```
-```  ica -hsid <SubscriptionId> -rgns <ResourceGroupNames> -owid <OMSWorkspaceId> -okey <OMSSharedKey> ```
-```  uca -hsid <SubscriptionId> ```
-```  gacs -s <SubscriptionId> -rgns <ResourceGroupNames> -rns <ResourceNames> -cids <ControlIds> ```
-```  uss -s <SubscriptionId> -f -dnof ```
+
+```PowerShell 
+	grs -s <SubscriptionId> -rgns <ResourceGroupNames> -rns <ResourceNames> -ubc 
+```
+```PowerShell  
+	gss -s <SubscriptionId> 
+```
+```PowerShell  
+	ica -hsid <SubscriptionId> -rgns <ResourceGroupNames> -owid <OMSWorkspaceId> -okey <OMSSharedKey> 
+```
+```PowerShell  
+	uca -hsid <SubscriptionId> 
+```
+```PowerShell  
+	gacs -s <SubscriptionId> -rgns <ResourceGroupNames> -rns <ResourceNames> -cids <ControlIds> 
+```
+```PowerShell  
+	uss -s <SubscriptionId> -f -dnof 
+```
