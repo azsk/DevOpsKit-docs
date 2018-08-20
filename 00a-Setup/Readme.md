@@ -151,7 +151,7 @@ The AzSK depends upon AzureRm PowerShell modules. AzureRm modules are created/ma
 
 The AzSK setup installs the required version of AzureRm. It is possible that this is the first time your system is being setup for AzureRm. In such a situation, you will get a 'data collection' related notice/warning from AzureRm. You can choose to 'accept' or 'decline' permission to collect data. The AzSK functionality will not be affected by that.  
 
-#### When will AzSK support the newest AzureRm service modules? Can I run both side by side? In the meantime, what if I need to run both AzSK and the new version of AzureRm modules (for different tasks)?
+#### When will AzSK support the newest AzureRm dependencies? Can I run both side by side? In the meantime, what if I need to run both AzSK and the new version of AzureRm modules (for different tasks)?
 At any time, AzSK is bound to a specific version of AzureRm service modules. We have found that it keeps our dependencies in check and limits randomizations from minor version updates of one of the many modules that ship under the "AzureRm umbrella".
 
 However, after each major update to AzureRm, we wait for a dot-release and migrate AzSK to the latest version. This usually happens within a couple of months after the major AzureRm release.
