@@ -82,11 +82,9 @@ in the table below:
 
 ## Some commonly used commands
 
-| Commands |
-|-------------------|
-|``` grs -s <SubscriptionId> -rgns <ResourceGroupNames> -rns <ResourceNames> -ubc ```|
-|```  gss -s <SubscriptionId> ```|
-|```  ica -hsid <SubscriptionId> -rgns <ResourceGroupNames> -owid <OMSWorkspaceId> -okey <OMSSharedKey> ```|
-|```  uca -hsid <SubscriptionId> ```|
-|```  gacs -s <SubscriptionId> -rgns <ResourceGroupNames> -rns <ResourceNames> -cids <ControlIds> ```|
-|```  uss -s <SubscriptionId> -f -dnof ```|
+``` grs -s <SubscriptionId> -rgns <ResourceGroupNames> -rns <ResourceNames> -ubc ```
+```  gss -s <SubscriptionId> ```
+```  ica -hsid <SubscriptionId> -rgns <ResourceGroupNames> -owid <OMSWorkspaceId> -okey <OMSSharedKey> ```
+```  uca -hsid <SubscriptionId> ```
+```  gacs -s <SubscriptionId> -rgns <ResourceGroupNames> -rns <ResourceNames> -cids <ControlIds> ```
+```  uss -s <SubscriptionId> -f -dnof ```
