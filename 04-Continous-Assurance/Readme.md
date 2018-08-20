@@ -11,6 +11,7 @@
 - [Removing a Continuous Assurance setup](Readme.md#removing-a-continuous-assurance-setup)
 - [Getting details about a Continuous Assurance setup](Readme.md#getting-details-about-a-continuous-assurance-setup)
 - [Continuous Assurance (CA) - 'Central Scan' mode](Readme.md#continuous-assurance-ca---central-scan-mode)
+- [Continuous Assurance (CA) - Trigger scan on resource deployment (Preview)](Readme.md#continuous-assurance-ca---scanondeployment-mode)
 - [FAQ](Readme.md#faq)
 
 -----------------------------------------------------------------
@@ -49,6 +50,12 @@ AzSK adds the service principal runtime account as a 'Reader' to the subscriptio
 
 2. Target OMS WorkspaceID* and SharedKey. (The OMS workspace can be in a different subscription, see note below)
 
+**Prerequisite:**
+
+**1.** We currently support following OS options: 	
+- Windows 10
+- Windows Server 2016
+
 
 > **\*Note** CA leverages an OMS repository for aggregating security scan results, you must determine which OMS workspace 
 you will use to view the security state of your subscription and applications (If you don't have an OMS repository please 
@@ -67,6 +74,8 @@ for your application.)
 ```PowerShell
 	Install-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 		[-AutomationAccountLocation <AutomationAccountLocation>] `
+		[-AutomationAccountRGName <AutomationAccountRGName>] `
+		[-AutomationAccountName <AutomationAccountName>] `
 	        -ResourceGroupNames <ResourceGroupNames> `
 	        -OMSWorkspaceId <OMSWorkspaceId> `
 	        -OMSSharedKey <OMSSharedKey> `
@@ -83,6 +92,8 @@ for your application.)
 |----|----|----|----|----|
 |SubscriptionId|Subscription ID of the Azure subscription in which an Automation Account for Continuous Assurance will be created |TRUE|None||
 |AutomationAccountLocation|(Optional) The location in which this cmdlet creates the Automation Account|FALSE|EastUS2|To obtain valid locations, use the Get-AzureRMLocation cmdlet|
+|AutomationAccountRGName|(Optional) Name of ResourceGroup where AutomationAccount will be installed|FALSE|AzSKRG|Don't pass default value explicitly for this param|
+|AutomationAccountName|(Optional) Name of AutomationAccount|FALSE|AzSKContinuousAssurance|Don't pass default value explicitly for this param|
 |ResourceGroupNames|Comma separated list of resource groups within which the application resources are contained.|TRUE|None||
 |OMSWorkspaceId|Workspace ID of OMS which is used to monitor security scan results|TRUE|None||
 |OMSSharedKey|Shared key of OMS which is used to monitor security scan results|TRUE|None||
@@ -90,9 +101,10 @@ for your application.)
 |AltOMSSharedKey|(Optional) Shared key of Alternate OMS which is used to monitor security scan results|FALSE|None||
 |WebhookUrl|(Optional) All the scan results shall be posted to this configured webhook |FALSE|None||
 |WebhookAuthZHeaderName|(Optional) Name of the AuthZ header (typically 'Authorization')|FALSE|None||
-|WebhookAuthZHeaderValue|(Optional) Value of the AuthZ heade |FALSE|None||
+|WebhookAuthZHeaderValue|(Optional) Value of the AuthZ header |FALSE|None||
 |ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value |FALSE|None||
 |AzureADAppName|(Optional) Name for the Azure Active Directory(AD) Application that will be created in the subscription for running the runbooks. |FALSE|None||
+|ScanOnDeployment|(Optional) CA scan can be auto-triggered upon resource deployment.Installing CA with this flag will make sure that the Resource Group in which resource is deployed will be scanned. |FALSE|None||
 
 **More about the 'AzureADAppName' parameter:**
 
@@ -114,9 +126,10 @@ Here's a quick summary of the permissions required for the user who sets up CA:
 is download and add PowerShell modules for Azure PS library and for AzSK. This is a slow and sometimes flaky process and, 
 as a result, the setup internally retries failed downloads. The Azure Automation product team is aware of this challenge and are working on a resolution.)
 
-
 **Note-2**: Due to the complexity of various dependent activities involved, there are multiple places where CA setup can run into issues. 
 It is important to verify that everything has worked without hiccups. Please review and ascertain each of the "Verifying" steps below carefully.
+
+**Note-3**: If the person who had set up CA leaves organization/team then it's strongly advised to remove the service principal (configured in runtime account) access from subscription/AzSKRG to prevent any misuse.
 
 
 **Step-2: Verifying that CA Setup is complete**  
@@ -212,6 +225,7 @@ For instance, you may use it to:
 - update the target resource groups to include in the scanning
 - switch the OMS workspace information that CA should use to send control evaluation events to
 - use a different AAD SPN for the runbooks 
+- remove previously set OMS, AltOMS, Webhook settings or ScanOnDeployment mode for CA account.
 - etc.
 
 To do any or all of these:
@@ -231,8 +245,10 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
     [-ScanIntervalInHours <ScanIntervalInHours>] `
     [-AzureADAppName <AzureADAppName>] `
     [-FixRuntimeAccount] ` 
+    [-NewRuntimeAccount] `
     [-FixModules] `
-    [-RenewCertificate]
+    [-RenewCertificate]`
+    [-Remove <OMSSettings/AltOMSSettings/WebhookSettings/ScanOnDeployment"]
 ```
 
 |Param Name|Purpose|Required?|Default Value|Comments
@@ -249,8 +265,11 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 |ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value |FALSE|None||
 |AzureADAppName|Use this parameter if you want to update the connection (used for running the runbook) with new AD App and Service principal|FALSE|None|This is useful if existing connection is changed/removed by mistake|
 |FixRuntimeAccount|Use this switch to fix CA runtime account in case of below issues.<ol><li>Runtime account deleted<br>(Permissions required: Subscription owner)</li><li>Runtime account permissions missing<br>(Permissions required: Subscription owner and AD App owner)</li><li>Certificate deleted/expired<br>(Permissions required: Subscription owner and AD App owner)</li></ol>|FALSE|None||
-|FixModules|Use this switch in case 'AzureRm.Automation' module extraction fails in CA Automation Account.|FALSE|None||
+|NewRuntimeAccount|Use this switch to setup new runtime account and the person running the command will become new SPN owner.This feature is helpful in case when CA certificate is expired but the SPN owner who had setup CA is not available and certificate can't be renewed. |FALSE|None||
+|FixModules|Use this switch in case AzureRm.Automation/AzureRm.Profile module(s) extraction fails in CA Automation Account.|FALSE|None||
 |RenewCertificate|Renews certificate credential of CA SPN if the caller is Owner of the AAD Application (SPN). If the caller is not Owner, a new application is created with a corresponding SPN and a certificate owned by the caller. CA uses the updated credential going forward.|FALSE|None||
+|ScanOnDeployment|CA scan can be auto-triggered upon resource deployment.Updating CA with this flag will make sure that the Resource Group in which resource is deployed will be scanned.|FALSE|None||
+|Remove|Use this switch to clear previously set OMS, AltOMS,Webhook settings from CA Automation Account or to unregister from scan on deployment mode|False|None||
 
 [Back to top…](Readme.md#contents)
 ## Removing a Continuous Assurance setup
@@ -292,7 +311,7 @@ Unlike the 'individual subscription' mode where each subscription get its own in
   (See [here](../07-Customizing-AzSK-for-your-Org/Readme.md) for more details on org policy.)
 
 ### Central Scan mode - single versus multiple Automation accounts:
-When setting up CA with central scan mode, you have a choice regarding division of the scanning workload between automation accounts. You can choose to have all target subscriptions scanned via a single automation account *or* you can configure multiple automation accounts to divide the scanning workload amongst them by assigning each automation account a subset of the subscriptions for scaning. These two options and when to choose which one are covered below: 
+When setting up CA with central scan mode, you have a choice regarding division of the scanning workload between automation accounts. You can choose to have all target subscriptions scanned via a single automation account *or* you can configure multiple automation accounts to divide the scanning workload amongst them by assigning each automation account a subset of the subscriptions for scanning. These two options and when to choose which one are covered below: 
 
 #### 1. Central Scan mode CA using a single Automation account (default behavior):
 
@@ -319,7 +338,7 @@ The table below lists only the parameters that are mandatory or have specific ne
 
 |Param Name| Purpose| Required?| DefaultValue| Comments|
 |----------|--------|----------|-------------|---------|
-|SubscritionId| Central subscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
+|SubscriptionId| Central subscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
 |TargetSubscriptionIds| Comma separated list of subscriptionIds that needs to be scanned by the central subscription. Host subscription is always appended by default. No need to pass that value in this param| True | The user executing this command should be owner on these subscriptions. |
 |ResourceGroupNames| Comma separated list of ResourceGroupNames| True | Since you are planning to run in the central mode, you should use * as its value. This is because you need not have the same RG across all the subscriptions|
 |OMSWorkspaceId| All the scanning events will be send to this OMSWorkspace. This will act as central monitoring dashboard | True | |
@@ -353,7 +372,7 @@ Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscripti
 
 |Param Name| Purpose| Required?| DefaultValue| Comments|
 |----------|--------|----------|-------------|---------|
-|SubscritionId| Central subscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
+|SubscriptionId| Central subscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
 |TargetSubscriptionIds| Comma separated list of subscriptionIds that needs to be scanned by the central subscription. It would always append the values provided in this param to the current scanning list.| True | The user executing this command should be owner on these subscriptions. |
 |LoggingOption| "IndividualSubs/CentralSub" | False | Only provide if you want to change the logging option|
 |FixRuntimeAccount| This will correct all the permissions issues related to the scanning account| False | Provide this switch only when you want to add new subscriptions for central scanning mode |
@@ -361,7 +380,7 @@ Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscripti
 
 ##### 1.3 Diagnosing the health of Central Mode CA (single Automation account option)
 
-You can run the command below to enquire the health of CA setup in your subscription. Note that the '-CentralScanMode' flag is not requied for this command.
+You can run the command below to enquire the health of CA setup in your subscription. Note that the '-CentralScanMode' flag is not required for this command.
 
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
@@ -372,7 +391,7 @@ Get-AzSKContinuousAssurance -SubscriptionId $SubscriptionId [-ExhaustiveCheck]
 
 |Param Name| Purpose| Required?| DefaultValue| Comments|
 |----------|--------|----------|-------------|---------|
-|SubscritionId| Central SubscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
+|SubscriptionId| Central SubscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
 |ExhaustiveCheck| (Optional) By appending this switch it would check whether all the modules installed in central automation account are up to date| False | Only include if default diagnosis is not resulting in any issue |
 
 ##### 1.4  Remove Central Scan mode CA from the master subscription (single Automation account option)
@@ -391,12 +410,12 @@ Remove-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -DeleteStorageRep
 
 |Param Name| Purpose| Required?| DefaultValue| Comments|
 |----------|--------|----------|-------------|---------|
-|SubscritionId| Central SubscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
+|SubscriptionId| Central SubscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
 |TargetSubscriptionIds| Comma separated list of target subIds which will be un-registered from the central scanning mode. | False | |
 |DeleteStorageReports| Deletes all the scan logs from the azsk storage account based on the logging option and value provided in the target subscription. If used with out CentralScanMode switch, it would remove all logs from the host sub central storage account.| False | Only include if default diagnosis is not resulting in any issue |
 |CentralScanMode| It is mandatory to use CentralScanMode switch| True | |
 
->**Note** If just subscrptionId is passed, then it would check if the host sub is in central scanning mode, if so, user needs to pass CentralScanMode switch specifically. In these scenarios, it would remove the whole automation account from host sub.
+>**Note** If just subscriptionId is passed, then it would check if the host sub is in central scanning mode, if so, user needs to pass CentralScanMode switch specifically. In these scenarios, it would remove the whole automation account from host sub.
 
  
 #### 2. Central Scan mode CA using multiple Automation accounts
@@ -407,7 +426,7 @@ using multiple independent automation accounts with in the same host/central sub
 In this scenario, all your logs, scanning configuration, attestation data is persisted under the default AzSKRG whereas each automation account will have its own dedicated RG for CA bookkeeping.
 
 
-##### 2.1 Setting up Continuous Assurance (CA) in Central Scan mode (mutiple Automation accounts option):
+##### 2.1 Setting up Continuous Assurance (CA) in Central Scan mode (multiple Automation accounts option):
 
 When you have more than about 40-50 subscriptions to scan, it is better to use multiple Automation accounts option of the Central Scan mode. You need to split the overall set of target subscriptions into multiple groups and then decide names to use for the Automation account and the resource groups that will host the CA for each group. Once this grouping and naming is done, you simply run the central scan mode CA setup command once for each group (with additional parameters identifying the Automation account name and the resource group that will serve as the host for scanning the respective group).
 
@@ -421,6 +440,14 @@ $ResourceGroupNames = '*' #This should always be '*' for Central Scan mode CA
 $OMSWorkspaceId = '<omsWorkspaceId>'
 $OMSSharedKey = '<omsSharedKey>' 
 $TargetSubscriptionIds = '<SubId1, SubId2, SubId3...>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
+
+#if you have text file containing subscription ids then run below script
+#$FileContent = Get-Content -Path "<TextFilePath>"
+#$TargetSubscriptionIds = ($FileContent| foreach {$_.Trim()}) -join "," 
+
+#if you have PowerShell array object containing subscription ids e.g. $SubIdArray = @("subid1","subid2","subid3") then run below script
+#$TargetSubscriptionIds = ($SubIdArray| foreach {$_.Trim()}) -join "," 
+
 $AutomationAccountLocation = '<location>'
 $AutomationAccountRGName = '<RGName>' # e.g. AzSK-Category-ScanRG01
 $AutomationAccountName = '<accountName>' # e.g. AzSKScanningAccount01
@@ -436,7 +463,7 @@ Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscript
 
 |Param Name| Purpose| Required?| DefaultValue| Comments|
 |----------|--------|----------|-------------|---------|
-|SubscritionId| Central subscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
+|SubscriptionId| Central subscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
 |TargetSubscriptionIds| Comma separated list of subscriptionIds that needs to be scanned by the central subscription. Host subscription is always appended by default. No need to pass that value in this param| True | The user executing this command should be owner on these subscriptions. |
 |ResourceGroupNames| Comma separated list of ResourceGroupNames| True | Since you are planning to run in the central mode, you should use * as its value. This is because you need not have the same RG across all the subscriptions|
 |OMSWorkspaceId| All the scanning events will be send to this OMSWorkspace. This will act as central monitoring dashboard | True | |
@@ -457,13 +484,20 @@ Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscript
 
 ##### 2.2 Updating/modifying Central Scan mode CA (multiple Automation accounts option)
 
-In case you want to add/update new subscriptions to any of the groups, you can do so using the command below (this is similer to the single Automation account command, except that you have to specify the AutomationAccountRGName and AutomationAccountName):
+In case you want to add/update new subscriptions to any of the groups, you can do so using the command below (this is similar to the single Automation account command, except that you have to specify the AutomationAccountRGName and AutomationAccountName):
 
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
 $AutomationAccountRGName = '<RGName>' # e.g. AzSK-Category-ScanRG01
 $AutomationAccountName = '<accountName>' # e.g. AzSKScanningAccount01
 $TargetSubscriptionIds = '<SubId1, SubId2, SubId3,...>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
+
+#if you have text file containing subscription ids then run below script
+#$FileContent = Get-Content -Path "<TextFilePath>"
+#$TargetSubscriptionIds = ($FileContent| foreach {$_.Trim()}) -join "," 
+
+#if you have PowerShell array object containing subscription ids e.g. $SubIdArray = @("subid1","subid2","subid3") then run below script
+#$TargetSubscriptionIds = ($SubIdArray| foreach {$_.Trim()}) -join "," 
 
 Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds 
         -AutomationAccountRGName $AutomationAccountRGName -AutomationAccountName $AutomationAccountName -CentralScanMode -FixRuntimeAccount
@@ -475,7 +509,7 @@ Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscripti
 
 |Param Name| Purpose| Required?| DefaultValue| Comments|
 |----------|--------|----------|-------------|---------|
-|SubscritionId| Central subscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
+|SubscriptionId| Central subscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
 |TargetSubscriptionIds| Comma separated list of subscriptionIds that needs to be scanned by the central subscription. It would always append the values provided in this param to the current scanning list.| True | The user executing this command should be owner on these subscriptions. |
 |AutomationAccountRGName| Name of Resource Group which will hold the scanning automation account | True | e.g. AzSK-Category-ScanRG01 |
 |AutomationAccountName| Name of the Automation Account which will scan target subscriptions | True | e.g. AzSKScanningAccount01|
@@ -485,7 +519,7 @@ Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscripti
 
 ##### 2.3 Diagnosing the health of Central Mode CA (multiple Automation accounts option)
 
-You can run the command below to enquire the health of CA setup in your subscription. In the case of multi-Automation account setup, you can query the status of one setup at a time. As a result, you must pass the name of the automation account and the automation account resource group as parameters. Note that the '-CentralScanMode' flag is not requied for this command.
+You can run the command below to enquire the health of CA setup in your subscription. In the case of multi-Automation account setup, you can query the status of one setup at a time. As a result, you must pass the name of the automation account and the automation account resource group as parameters. Note that the '-CentralScanMode' flag is not required for this command.
 
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
@@ -498,7 +532,7 @@ Get-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -AutomationAccountRG
 
 |Param Name| Purpose| Required?| DefaultValue| Comments|
 |----------|--------|----------|-------------|---------|
-|SubscritionId| Central SubscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions
+|SubscriptionId| Central SubscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions
 |AutomationAccountRGName| Name of Resource Group which will hold the scanning automation account | True | e.g. AzSK-Category-ScanRG01 |
 |AutomationAccountName| Name of the Automation Account which will scan target subscriptions | True | e.g. AzSKScanningAccount01|
 |ExhaustiveCheck| (Optional) By appending this switch it would check whether all the modules installed in central automation account are up to date| False | Only include if default diagnosis is not resulting in any issue |
@@ -522,14 +556,14 @@ Remove-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -DeleteStorageRep
 
 |Param Name| Purpose| Required?| DefaultValue| Comments|
 |----------|--------|----------|-------------|---------|
-|SubscritionId| Central SubscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
+|SubscriptionId| Central SubscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
 |TargetSubscriptionIds| Comma separated list of target subIds which will be un-registered from the central scanning mode. | False | |
 |AutomationAccountRGName| Name of Resource Group which will hold the scanning automation account | True | e.g. AzSK-Category-ScanRG01 |
 |AutomationAccountName| Name of the Automation Account which will scan target subscriptions | True | e.g. AzSKScanningAccount01|
 |DeleteStorageReports| Deletes all the scan logs from the azsk storage account based on the logging option and value provided in the target subscription. If used with out CentralScanMode switch, it would remove all logs from the host sub central storage account.| False | Only include if default diagnosis is not resulting in any issue |
 |CentralScanMode| It is mandatory to use CentralScanMode switch| True | |
 
->**Note** If just subscrptionId is passed, then it would check if the host sub is in central scanning mode, if so, user needs to pass CentralScanMode switch. In these scenarios, it would remove the whole automation account from host sub.
+>**Note** If just subscriptionId is passed, then it would check if the host sub is in central scanning mode, if so, user needs to pass CentralScanMode switch. In these scenarios, it would remove the whole automation account from host sub.
 
 [Back to top…](Readme.md#contents)
 
@@ -597,12 +631,17 @@ However, setting up the AzSK OMS solution is recommended as it will help you get
 
 The SPN used for daily scanning by AzSK CA uses a cert credential which has a default expiry of 6 months. When the cert comes close to expiry both the Azure portal and the Get-AzSKContinuousAssurance command warn about a need to renew the credential. Here's how to renew the cert:
 
-The SPN belongs to an AAD application that is created on behalf of the person who setup CA for the first time. You need to ensure that either that person performs the renewal or you can request that person to give you 'Owner' permission to that application. If the owner is unavailable (or has left the org) then altogether new application in AAD (owned by you), SPN and a certificate credential will be created and new SPN will be used for scanning your subscription moving forward.
+The SPN belongs to an AAD application that is created on behalf of the person who setup CA for the first time. You need to ensure that either that person performs the renewal or you can request that person to give you 'Owner' permission to that application. If the owner is unavailable (or has left the org) then you can create altogether new application in AAD (owned by you), SPN and a certificate credential and new SPN will be used for scanning your subscription moving forward.
 
 Run the following command to renew CA certificate.
 
 ```PowerShell
 Update-AzSKContinuousAssurance -SubscriptionId <sub_id_here> -RenewCertificate
+```
+Run the following command to create new application in AAD (owned by you).
+
+```PowerShell
+Update-AzSKContinuousAssurance -SubscriptionId <sub_id_here> -NewRuntimeAccount
 ```
 
 Verify that it worked by running Get-AzSKContinuousAssurance again to confirm that the warning is gone.
@@ -651,7 +690,7 @@ Such controls will be counted as 'failing' by default until you run the scans ma
 
 Also, when running scans manually, make sure you are on the latest version of the kit. That may also cause a discrepancy between a CA scan and a local scan. (CA always runs using the latest version of the kit.)
 
-#### How much does it cost to setup Continuous Assurance alongwith OMS monitoring solution?
+#### How much does it cost to setup Continuous Assurance along with OMS monitoring solution?
 Using the following ballpark calculations (and service costs as of Q1-FY18), we estimate that a Continuous Assurance
 setup along with an OMS workspace for monitoring will cost a little about $80/year for a typical
 subscription with about 30-40 resources of various types. 
@@ -706,6 +745,48 @@ The main/dominant component of the cost is automation runtime (storage/OMS costs
 
 - Total OMS Cost (Upload + Retention)  
      - 0.27+0.07 = $0.34/year
+
+
+[Back to top…](Readme.md#contents)
+
+## Continuous Assurance (CA) - Trigger scan on resource deployment (Preview)
+
+When you want to trigger scan on resource deployment in a subscription, need to use the flag -ScanOnDeployment. Using this flag will make sure to add an alert which will trigger the newly added runbook and scan the resource group in which the resource(s) have been deployed.ScanOnDeployment currently is not supported for Multi CA and Central Scan mode CA.
+ScanOnDeployment works for resource deployment operation only, doesn't work on resource deletion.
+
+#### 1. Install CA with flag -ScanOnDeployment
+
+This can be achieved by adding extra param to the existing CA command as shown in the command below:
+
+```PowerShell
+$SubscriptionId = '<subscriptionId>'
+$ResourceGroupNames = '*' #This should always be '*'
+$OMSWorkspaceId = '<omsWorkspaceId>'
+$OMSSharedKey = '<omsSharedKey>' 
+
+Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId  
+        -ResourceGroupNames $ResourceGroupNames -OMSWorkspaceId $OMSWorkspaceId -OMSSharedKey $OMSSharedKey -ScanOnDeployment
+```
+
+#### 2. Update CA with flag -ScanOnDeployment
+
+In case you want to add/edit subscriptions covered via scan on deployment mode you can use Update-AzSKContinuousAssurance as shown below.
+
+```PowerShell
+$SubscriptionId = '<subscriptionId>' 
+
+Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -ScanOnDeployment
+```
+
+#### 3. Remove flag -ScanOnDeployment
+
+In case you want to unregister sub from scan on deployment mode need to run command as below:
+
+```PowerShell
+$SubscriptionId = '<subscriptionId>' 
+
+Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -Remove ScanOnDeployment
+```
 
 
 #### Troubleshooting

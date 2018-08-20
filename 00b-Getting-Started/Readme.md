@@ -30,7 +30,7 @@ in the table below:
 
 ## Complete list of AzSK commands
 
-| Command (alias) | What it does |	Reqd Permission |
+| Command (alias) | What it does |	Required Permission |
 |----|----|-----|
 |Clear-AzSKSessionState (CSS)|Command to clear AzSK session object|NA|
 |Get-AzSKAzureServicesSecurityStatus (GRS)|Scans a set of RGs (or the entire subscription)|Reader on subscription or respective RGs|
@@ -60,7 +60,7 @@ in the table below:
 |Set-AzSKUsageTelemetryLevel|Command to switch the default TM level for AzSK. The generic version of AzSK comes with 'Anonymous' level telemetry. The other levels supported is 'None'. |NA|	
 |Set-AzSKLocalAIOrgTelemetrySettings|Command to set local control telemetry settings. |NA|	
 |Set-AzSKWebhookSettings|Configures AzSK to send scan results to the provided webhook. Currently available only in 'ad hoc' or 'SDL' mode.<br>This capability can be used to receive AzSK scan results in arbitrary downstream systems. (E.g., Splunk)|NA|
-|Set-AzSKUserPreference|This command can be used to set user preferences (e.g.: output folder path) for AzSK commands.|NA|
+|Set-AzSKUserPreference|This command is useful to set user preferences for AzSK commands. E.g. 1. Run 'Set-AzSKUserPreference -OutputFolderPath <OutputFolderPath>' to override default path 2. Rn 'Set-AzSKUserPreference -DoNotOpenOutputFolder' to not open output folder by default. |NA|
 |Install-AzSKOrganizationPolicy (IOP)|This command is intended to be used by central Organization team to setup Organization specific policies. |Contributor on subscription|
 |Update-AzSKContinuousAssurance (UCA)|Updates various parameters that were used when CA was originally setup. This command can be used to change things like target resource groups that were scanned, OMS workspaceID and sharedKey, run as account used by CA for scanning, update/renew certificate credential as run as account. | Owner on subscription.|
 |Update-AzSKSubscriptionSecurity (USS)|This command can be used to update various security baseline elements and bring your subscription up to speed from a baseline policy compliance of subscription security controls. It updates one or more of the following elements after checking the ones that are out of date - alerts, Security Center, ARM policy, RBAC (mandatory accounts and deprecated accounts), continuous assurance runbook, etc.|Owner on subscription.|

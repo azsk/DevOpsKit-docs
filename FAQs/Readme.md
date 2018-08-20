@@ -59,4 +59,10 @@
     - [Attestation fails with permission error even though I am Owner.](../00c-Addressing-Control-Failures/Readme.md#attestation-fails-with-permission-error-even-though-i-am-owner)
     - [Why do I have new control failures from AzSK?](../00c-Addressing-Control-Failures/Readme.md#why-do-i-have-new-control-failures-from-azsk)
 
+- ### Org Policy
+    - [I am getting exception "DevOps Kit was configured to run with '***' policy for this subscription. However, the current command is using 'org-neutral' (generic) policy....."?](../07-Customizing-AzSK-for-your-Org/Readme.md#i-am-getting-exception-devops-kit-was-configured-to-run-with--policy-for-this-subscription-however-the-current-command-is-using-org-neutral-generic-policy-please-contact-your-organization-policy-owner-microsoftcom-for-correcting-the-policy-setup)
+    - [Latest AzSK is available but our Org CA are running with older version?](../07-Customizing-AzSK-for-your-Org/Readme.md#latest-azsk-is-available-but-our-org-ca-are-running-with-older-version)
+    - [We have configured baseline controls using ControlSettings.json on Policy Store, But Continuous Assurance (CA) is scanning all SVT controls on subscription?](../07-Customizing-AzSK-for-your-Org/Readme.md#we-have-configured-baseline-controls-using-controlsettingsjson-on-policy-store-but-continuous-assurance-ca-is-scanning-all-svt-controls-on-subscription)
+    - [Continuous Assurance (CA) is scanning less number of controls as compared with manual scan?](../07-Customizing-AzSK-for-your-Org/Readme.md#continuous-assurance-ca-is-scanning-less-number-of-controls-as-compared-with-manual-scan)
+    
     
