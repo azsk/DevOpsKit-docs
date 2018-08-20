@@ -5,7 +5,6 @@
  <!-- **Release Version: AzSDK 2.11.xx <=> AzSK 3.0.x ** -->
 >**Pre-requisites**:
 > - PowerShell 5.0 or higher. 
-> - AzureRM Version 5.2.0
 	
 1. First verify that prerequisites are already installed:  
     Ensure that you have PowerShell version 5.0 or higher by typing **$PSVersionTable** in the PowerShell ISE console window and looking at the PSVersion in the output as shown below.) 
@@ -19,8 +18,9 @@
 ```
 
 Note: You may need to use `-AllowClobber` and `-Force` options with the Install-Module command 
-above if you have a different version of AzureRM installed on your machine. 
-AzSK depends on a specific version of AzureRM and installs that during the installation above.  
+above if you have a different version of AzureRM modules installed on your machine. 
+AzSK depends on specific version of different AzureRM service modules and installs that during the installation above.
+Run command 'Find-Module AzSK -includedependencies' to see all dependencies.  
 
 ------------------------------------------------
 ### Backward compatibility
