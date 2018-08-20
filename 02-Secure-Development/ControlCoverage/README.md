@@ -17,6 +17,7 @@ This page displays security controls that are automated via the devops kit and a
 |[CDN](Feature/CDN.md)|Microsoft.Cdn/profiles|
 |[CloudService](Feature/CloudService.md)|Microsoft.ClassicCompute/domainNames|
 |[ContainerInstances](Feature/ContainerInstances.md)|Microsoft.ContainerInstance/containerGroups|
+|[ContainerRegistry](Feature/ContainerRegistry.md)|Microsoft.ContainerRegistry/registries|
 |[CosmosDB](Feature/CosmosDB.md)|Microsoft.DocumentDb/databaseAccounts|
 |[DataFactory](Feature/DataFactory.md)|Microsoft.DataFactory/dataFactories|
 |[DataLakeAnalytics](Feature/DataLakeAnalytics.md)|Microsoft.DataLakeAnalytics/accounts|
