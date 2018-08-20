@@ -431,21 +431,21 @@ in your org has developed. Let us do this for the Storage.json file. Specificall
    {
       "ControlID": "Azure_Storage_AuthN_Dont_Allow_Anonymous",
       "Id": "AzureStorage110",
-      "ControlSeverity": "Critical" // Modifying control severity.
+      "ControlSeverity": "Critical"
    },
    {
       "ControlID": "Azure_Storage_Audit_Issue_Alert_AuthN_Req",
       "Id": "AzureStorage120",
-      "Enabled": false // Turning off control evaluation.
+      "Enabled": false
    },
    {
       "ControlID": "Azure_Storage_DP_Encrypt_In_Transit",
       "Id": "AzureStorage160",
-      "Recommendation": "**Note**: Use our Contoso-IT-EncryptInTransit.ps1 tool for this!" // Modifying recommendation.
+      "Recommendation": "**Note**: Use our Contoso-IT-EncryptInTransit.ps1 tool for this!"
    },
    {
       "ControlID": "Azure_Storage_DP_Restrict_CORS_Access",
-      "ValidAttestationStates" : ["None"]  // Passing 'None' in the property 'ValidAttestationStates' will block further attestation for the particular control.
+      "ValidAttestationStates" : ["None"]
    }
   ]
 }
