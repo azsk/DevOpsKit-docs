@@ -773,7 +773,7 @@ Add refresh scheduling timings and click on "Apply"
 
 ## Frequently Asked Questions
 
-#### I am getting exception "DevOps Kit was configured to run with '***' policy for this subscription. However, the current command is using 'org-neutral' (generic) policy. Please contact your organization policy owner (***@microsoft.com) for correcting the policy setup."
+#### I am getting exception "DevOps Kit was configured to run with '***' policy for this subscription. However, the current command is using 'org-neutral' (generic) policy. Please contact your organization policy owner (***@microsoft.com) for correcting the policy setup."?
 
 When your subscription is running under Org policy, AzSK marks subscription for that Org. If user is running scan commands on that subscription using Org-neutral policy, it will block those commands as that scan/updates can give invalid results against Org policy. You may face this issue in different environments. Below steps will help you to fix issue
 
@@ -801,16 +801,16 @@ If you want to run commands with Org-neutral policy only, you can delete tag (Az
 
 If you are maintaining multiple Org policies and you want to switch scan from one policy to other, you can run Set/Update commands with '-Force' flag using policy you wanted to switch. 
 
-#### Latest AzSK is available but our Org CA are running with older version
+#### Latest AzSK is available but our Org CA are running with older version?
 
 AzSK keeps on adding and enhancing features with different capabilities to monitor Security compliance for Org subscriptions. During these enhancement in new releases, it may include latest features and some breaking changes. To provide smoother upgrade and avoid policy breaks, AzSK provides feature for Org policy to run AzSK with specific version by using configuration present in AzSK.Pre.json. This configuration is referred in multiple places for installing Org supported AzSK version in different environments like Installer (IWR) (Installs AzSK in local machine), RunbookCoreSetup (Install AzSK in CA). You need to update property "CurrentVersionForOrg" in AzSK.Pre.json to latest available version after validating if Org policy is compatible with latest AzSK version.
 
 
-#### We have configured baseline controls using ControlSettings.json on Policy Store, But Continuous Assurance (CA) is scanning all SVT controls on subscription
+#### We have configured baseline controls using ControlSettings.json on Policy Store, But Continuous Assurance (CA) is scanning all SVT controls on subscription?
 
 Continuous Assurance (CA) is configured to scan all the controls. We have kept this as a default behavior since Org users often tend to miss out on configuring baseline controls. This behavior is controlled from Org policy. If you observed, there are two files present in policy store, RunbookCoreSetup.ps1 (Responsible to install AzSK) and RunbookScanAgent.ps1 (Performs CA scans and export results to storage account). You can update RunbookScanAgent to make only baseline scan. (By passing -UseBaselineControls parameter to Get-AzSKAzureServicesSecurityStatus and Get-AzSKSubscriptionSecurityStatus commands present in RunbookScanAgent.ps1 file). 
 
-#### Continuous Assurance (CA) is scanning less number of controls as compared with manual scan
+#### Continuous Assurance (CA) is scanning less number of controls as compared with manual scan?
  CA automation account runs with minimum privileges i.e. 'Reader' RBAC permission and cannot scan some controls that require more access.
  Here are a few examples of controls that CA cannot fully scan or can only 'partially' infer compliance for:
 
@@ -831,5 +831,26 @@ In general, we make practice to individual teams to perform scan with high privi
 - Provide CA SPN's as [Owner/Co-Admin RBAC role](https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal#grant-access) at subscription scope and [graph API read permissions](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications#updating-an-application).
 
 - Remove *-ExcludeTags "OwnerAccess"* parameter against scan commands (*Get-AzSKAzureServicesSecurityStatus* and *Get-AzSKSubscriptionSecurityStatus*) present in RunbookScanAgent.ps1 file on policy store. 
+
+#### Is it possible to control default resource group name (AzSKRG) and location (EastUS2) created for AzSK components?
+Yes. You can control default resource group name and location using AzSK config present in Org policy. Follow below steps to override default behaviour.
+
+Steps:
+
+i) Open the AzSK.json from your local org-policy folder
+
+ii) Add the properties for  as under:
+
+    "AzSKRGName" : "<ResourceGroupName>",
+    "AzSKLocation" : "<Location>"
+
+iii) Save the file
+
+iv) Run the policy setup command (the same command you ran for the first-time setup) or update command.
+
+Testing:
+
+Run "IWR" in new session (you can ask any other user to run this IWR) to setup policy setting in local. If you have already installed policy using IWR, just run CSS (Clear-AzSKSessionState) followed by command *Set-AzSKSubscriptionSecurity* with required parameters as per [doc](../01-Subscription-Security/Readme.md#azsk-subscription-security-provisioning-1). This will provision AzSK components(Alerts/Storage etc) under new resource group and location.
+
 
 
