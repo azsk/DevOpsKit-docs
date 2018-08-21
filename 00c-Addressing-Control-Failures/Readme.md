@@ -61,7 +61,7 @@ This can be done using the '-GenerateFixScript' flag in the scan commands. Wheth
 auto-generating the fix script for a control is represented by the 'SupportsAutoFix' column for that control.
 
 Also, sometimes, you will need to complement or override AzSK's control evaluation result with additional 
-contextual knowledge. This is called 'Control Attestation' and is supported by the '-AttestControls' flag in the scan commands. 
+contextual knowledge. This is called 'Control Attestation' and is supported by the '-ControlsToAttest' flag in the scan commands. 
 
 The rest of this section explains these two capabilities in detail.
 
@@ -173,7 +173,7 @@ be combined with the user's input in order to determine the overall or effective
 and, after the process is performed once, AzSK remembers it and generates an effective control result for subsequent control scans _until_ there 
 is a state change.
 
-The attestation feature is implemented via a new switch called *AttestControls* which can be specified in any of the standard security scan cmdlets
+The attestation feature is implemented via a new switch called *ControlsToAttest* which can be specified in any of the standard security scan cmdlets
 of the AzSK. When this switch is specified, the AzSK first performs a scan of the target resource(s) like it is business as usual and, once
 the scan is complete, it enters a special interactive 'attest mode' where it walks through each resource and relevant attestable controls
 and captures inputs from the user and records them in the subscription (along with details about the person who attested, the time, etc.). 
@@ -189,14 +189,16 @@ the permissions required section below.
 [Back to top...](Readme.md#contents)
 ### Starting attestation
       
-The AzSK subscription and services scan cmdlets now support a new switch called *AttestControls*. When this switch is specified, 
+The AzSK subscription and services scan cmdlets now support a new switch called *ControlsToAttest*. When this switch is specified, 
 AzSK enters 'attest' mode immediately after a scan is completed. This ensures that attestation is done on the basis of the most current
 control statuses.
 
 All controls that have a technical evaluation status of anything other than 'Passed' (i.e., 'Verify' or 'Failed' or 'Manual' or 'Error') are considered 
 valid targets for attestation.
 
-To manage attestation flow effectively, 4 options are provided for the *AttestControls* switch to specify which subset of controls to target for attestation. These are described below:
+> **Note**: Some controls are very crucial from security stand point and hence AzSK does not support attesting them.
+
+To manage attestation flow effectively, 4 options are provided for the *ControlsToAttest* switch to specify which subset of controls to target for attestation. These are described below:
 
 |Attestation Option|Description|
 |------------------|-----------|
@@ -208,7 +210,7 @@ To manage attestation flow effectively, 4 options are provided for the *AttestCo
 For example, to attest controls corresponding to a subscription security scan, run the command below:
 ```PowerShell  
 $subscriptionId = <Your SubscriptionId>
-Get-AzSKSubscriptionSecurityStatus -SubscriptionId $subscriptionId -AttestControls NotAttested -DoNotOpenOutputFolder  
+Get-AzSKSubscriptionSecurityStatus -SubscriptionId $subscriptionId -ControlsToAttest NotAttested -DoNotOpenOutputFolder  
 ``` 
 As shown in the images, the command enters 'attest' mode after completing a scan and does the following:
 
@@ -236,7 +238,7 @@ $resourceName = <ResourceName>
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId `
                 -ResourceGroupNames $resourceGroupName `
                 -ResourceName $resourceName `
-                -AttestControls NotAttested `
+                -ControlsToAttest NotAttested `
                 -DoNotOpenOutputFolder 
 ``` 
 If, for any reason, the attestations of previously attested controls need to be revisited, it can be done by simply changing the 'NotAttested' flag in the commands above with 'AlreadyAttested'.  
@@ -252,10 +254,13 @@ fixing the issue for the time being):
 |Attestation Status | Description|
 |---|---|
 |None | There is no attestation done for a given control. User can select this option during the workflow to skip the attestation|
-|NotAnIssue | User has verified the control data and attesting it as not a issue with proper justification|
+|NotAnIssue | User has verified the control data and attesting it as not an issue with proper justification to represent situations where the control is implemented in another way, so the finding does not apply. |
 |WillNotFix | User has verified the control data and attesting it as not fixed with proper justification|
 |WillFixLater | User has verified the control data and attesting it as not fixed with proper justification stating the future fix plan|
+|**NotApplicable | User has verified the control data and attesting it as not applicable for the given design/context with proper justification. |
+|**StateConfirmed | User has verified the control data and attesting it as state confirmed to represent that the control state is correct/appropriate with proper justification. |
 
+ >  ** These are special attestation status which are supported only in selected controls.
 
 The following table shows the complete 'state machine' that is used by AzSK to support control attestation. 
 The columns are described as under:
@@ -269,21 +274,29 @@ The columns are described as under:
 |---|---|---|---|---|---|
 |Passed |None |Passed |No | -NA- |No need for attestation. Control has passed outright!|
 |Verify |None |Verify |No | -NA- |User has to ratify based on manual examination of AzSK evaluation log. E.g., SQL DB firewall IPs list.|
-|Verify |NotAnIssue |Passed |Yes | 90 |User has ratified in the past. E.g., SQL firewall IPs scenario, where all are IPs are legitimate.|
+|Verify |NotAnIssue |Passed |Yes | 90 |User has to ratify based manual examination that finding does not apply as the control has been implemented in another way. For example, AAD authentication for App Service was implemented through code. |
 |Verify |WillNotFix |Exception |Yes | Based on the control severity table below|Valid security issue but a fix cannot be implemented immediately. E.g., A 'deprecated' account was found in the subscription. However, the user wants to check any dependencies before removal.|
 |Verify |WillFixLater |Remediate |Yes| Based on the control severity table below|Valid security issue but a fix cannot be implemented immediately. E.g., A 'deprecated' account was found in the subscription. However, the user wants to check any dependencies before removal.|
+|Verify |NotApplicable |Passed |Yes| 90 |User has to ratify based on manual examination that the finding is not applicable for given design/context. E.g., Runbook does not contain any hard-coded secure information. |
+|Verify |StateConfirmed |Passed |Yes| Based on the control severity table below|User has to ratify based on manual examination that the control state is correct/appropriate. E.g., SQL firewall IPs scenario, where all IPs are legitimate.|
 |Failed |None |Failed |No | -NA- | Control has failed but has not been attested. Perhaps a fix is in the works...|	 
-|Failed |NotAnIssue |Passed |Yes | 90 |Control has failed but the issue is benign in a given context business. E.g., Failover instance for a non-BC-DR critical service|
+|Failed |NotAnIssue |Passed |Yes | 90 |Control has failed. However, the finding does not apply as the control has been implemented in another way. For example, AAD authentication for App Service was implemented through code.|
 |Failed |WillNotFix |Exception |Yes | Based on the control severity table below| Control has failed. The issue is not benign, but the user has some other constraint and cannot fix it. E.g., Need an SPN to be in Owner role at subscription scope.|
 |Failed |WillFixLater |Remediate |Yes | Based on the control severity table below| Control has failed. The issue is not benign, but the user wishes to defer fixing it for later. E.g., AAD is not enabled for Azure SQL DB.|
+|Failed |NotApplicable |Passed |Yes| 90 |Control has failed. However, user confirms based on manual examination that the finding is not applicable for given design/context.|
+|Failed |StateConfirmed |Passed |Yes| Based on the control severity table below|Control has failed. However, user confirms based on manual examination that the control state is correct/appropriate. |
 |Error |None |Error |No | -NA- | There was an error during evaluation. Manual verification is needed and is still pending.|
-|Error |NotAnIssue |Passed |Yes | 90| There was an error during evaluation. However, control has been manually verified by the user.|
+|Error |NotAnIssue |Passed |Yes | 90| There was an error during evaluation. Manual verification by user indicates that the finding does not apply as the control has been implemented in another way.|
 |Error |WillNotFix |Exception |Yes | Based on the control severity table below| There was an error during evaluation. Manually verification by the user indicates a valid security issue.|
 |Error |WillFixLater |Remediate |Yes | Based on the control severity table below| There was an error during evaluation. Manually verification by the user indicates a valid security issue.|
+|Error |NotApplicable |Passed |Yes| 90 |There was an error during evaluation. However, user confirms based on manual examination that the finding is not applicable for given design/context.|
+|Error |StateConfirmed |Passed |Yes| Based on the control severity table below|There was an error during evaluation. However, user confirms based on manual examination that the control state is correct/appropriate.|
 |Manual |None |Manual |No | -NA-| The control is not automated and has to be manually verified. Verification is still pending.| 
-|Manual |NotAnIssue |Passed |Yes | 90| The control is not automated and has to be manually verified. User has verified that there's no security concern.|
+|Manual |NotAnIssue |Passed |Yes | 90| The control is not automated and has to be manually verified. User has reviewed the security concern and implemented the fix in another way.|
 |Manual |WillNotFix |Exception |Yes | Based on the control severity table below| The control is not automated and has to be manually verified. User has reviewed and found a security issue to be fixed.|
 |Manual |WillFixLater |Remediate |Yes | Based on the control severity table below| The control is not automated and has to be manually verified. User has reviewed and found a security issue to be fixed.|
+|Manual |NotApplicable |Passed |Yes| 90 |The control is not automated and has to be manually verified. User confirms based on manual examination that the finding for given design/context is not applicable. |
+|Manual |StateConfirmed |Passed |Yes| Based on the control severity table below| The control is not automated and has to be manually verified. User has verified that there's no security concern.|
 
 -NA- => Not Applicable
 
@@ -326,8 +339,8 @@ Expiry of an attestation is determined through different parameters like control
 There are two simple rules for determining the attestation expiry. Those are:
 
 Any control with evaluation result as not passed, 
- 1. and attested as 'NotAnIssue', such controls would expire in 90 days.
- 2. and attested as 'WillFixLater' or 'WillNotFix', such controls would expire based on the control severity table below.
+ 1. and attested as 'NotAnIssue' or 'NotApplicable', such controls would expire in 90 days.
+ 2. and attested as 'WillFixLater' or 'WillNotFix' or 'StateConfirmed', such controls would expire based on the control severity table below.
 
 |ControlSeverity| ExpiryInDays|
 |----|---|
@@ -336,8 +349,15 @@ Any control with evaluation result as not passed,
 |Medium| 60|
 |Low| 90|
  
-The detailed matrix of attestation details and its expiry can be found under [this](Readme.md#how-AzSK-determines-the-effective-control-result) section.
+The detailed matrix of attestation details and its expiry can be found under [this](Readme.md#how-azsk-determines-the-effective-control-result) section. Attestation expiry date is also emitted in CSV scan result as shown in [this](../Images/02_SVT_Attest_3.PNG) image.
 
+> **Note**: 
+> * All the controls are subjected to an initial grace period from the first scanned date. On expiry of grace period for a control,
+>  1. 'WillFixLater' option will be disabled for further attestation.
+>  2. if the control was attested as 'WillFixLater', then attestation will expire.
+> User will then have the option to either fix the control or use other available attestation states with proper justification.
+> 
+>* Attestation may also expire before actual expiry in cases when the attested state for the control doesn't match with current control state.
 [Back to top...](Readme.md#contents)
 
 ### Bulk attestation
@@ -347,7 +367,7 @@ you may have 35 storage accounts for which you need to perform attestation for o
 a time can be inefficient - especially if the reason for attesting the control is the same across all those resource instances. The
 bulk attestation feature helps by empowering subscription/security owners to provide a common justification for a set of resources
 all of which have a specific (single) controlId that requires attestation. This essentially 'automates' attestation by using 
-a slightly different combination of parameters alongside '-AttestControls'.
+a slightly different combination of parameters alongside '-ControlsToAttest'.
 
  ```PowerShell  
 $subscriptionId = 'Your subscription Id'
@@ -359,7 +379,7 @@ $justificationText = 'Rationale behind your choice of AttestationStatus here...'
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId `
                 -ResourceGroupNames $resourceGroupNames `
                 -ResourceNames $resourceNames `
-                -AttestControls NotAttested `
+                -ControlsToAttest NotAttested `
                 -BulkAttestControlId $bulkAttestControlId `                 # ControlId to be attested
                 -AttestationStatus <NotAnIssue | WillFixLater | WillNotFix> ` # Attestation choice/input, use one of these.
                 -JustificationText $justificationText                   # Additional (text) justification
@@ -370,7 +390,7 @@ Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId `
 |Parameter Name| Description|
 |---|---|
 |BulkAttestControlId |ControlId to bulk-attest. Bulk attest mode supports only one controlId at a time.|
-|AttestControls | See table in the  [Starting Attestation](Readme.md#starting-attestatio) section. |
+|ControlsToAttest | See table in the  [Starting Attestation](Readme.md#starting-attestation) section. |
 |AttestationStatus | Attester must select one of the attestation reasons (NotAnIssue, WillNotFix, WillFixLater)|
 |JustificationText | Attester must provide an apt justification with proper business reason.|
 
@@ -394,7 +414,7 @@ $justificationText = 'AAD authentication has been enabled through code and has b
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId `
                 -ResourceTypeName AppService `
                 -ResourceNames $resourceName `
-                -AttestControls NotAttested `
+                -ControlsToAttest NotAttested `
                 -BulkAttestControlId $bulkAttestControlId `
                 -AttestationStatus NotAnIssue `
                 -JustificationText $justificationText
@@ -433,7 +453,7 @@ Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId `
                 -ResourceTypeName Storage `
                 -ResourceName $resourceName `
                 -BulkAttestControlId $bulkAttestControlId `
-                -AttestControls NotAttested `
+                -ControlsToAttest NotAttested `
                 -AttestationStatus NotAnIssue `
                 -JustificationText $justificationText
  ``` 
@@ -464,9 +484,9 @@ $resourceName = <ResourceName>
 $bulkAttestControlId = <AzSK ControlId string>
 $justificationText = <Your justification text for attestation>
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId -ResourceGroupNames $resourceGroupName -ResourceName $resourceName `
-				-BulkAttestControlId $bulkAttestControlId -AttestControls AlreadyAttested -BulkClear
+				-BulkAttestControlId $bulkAttestControlId -ControlsToAttest AlreadyAttested -BulkClear
  ``` 
-> **Note**: Usage of BulkClear with 'NotAttested' Option of AttestControls param, would result in failure.
+> **Note**: Usage of BulkClear with 'NotAttested' Option of ControlsToAttest param, would result in failure.
 
 ### FAQs
 
@@ -520,7 +540,7 @@ There are many reasons why you may see 'new' control failures after you put in t
 a- You may have net new resources that were created/deployed to the subscription. The first time CA scans these resources (usually within 24 hours of their creation), it will flag any security control failures. </br>
 b- Someone on the team perhaps changed the configuration of an existing resource. In a large subscription with many stakeholders acting on different resources and resource groups, this is quite a possibility. That is where CA helps! It watches over the drift and reports it. </br>
 c- Baseline control set may change. As attacks get sophisticated, so must our defense. It is quite possible that a control that was not considered "core hygiene" might become so a few months down. This will mean that for existing resources, everyone now has a new control to fix. </br>
-d- New controls may get added. Azure is a very dynamic environment. The PG adds new features and security capabilities every quarter in some services and every six months in most others. When a new security feature is added, the AzSK may be modified to add a new control to cover it. If the control is core/fundamental, then everyone will be expected to fix it on existing resources. (Remember that CA automatically picks up latest AzSK bits for scanning. So the moment a version of AzSK gets released with a new control and it is a 'baseline' control, CA scans will start checking the control on existing resources.) </br>
+d- New controls may get added. Azure is a very dynamic environment. The PG adds new features and security capabilities every quarter in some services and every six months in most others. When a new security feature is added, the AzSK may be modified to add a new control to cover it. If the control is core/fundamental, then everyone will be expected to fix it on existing resources. (Remember that CA automatically picks up latest AzSK bits for scanning. So, the moment a version of AzSK gets released with a new control and it is a 'baseline' control, CA scans will start checking the control on existing resources.) </br>
 e- Control logic for existing controls may change - due to bug fixes or additional conditions in the detection logic. This change in control behavior will, again, start reflecting in CA scans when a version of AzSK with the 'fix' or 'logic change' is released. </br>
 f- Configuration baselines may change. What is considered a mandatory account today may not remain so tomorrow or in 6 months. Certificates expire, credentials/accounts get deprecated. The AzSK is able to detect that your subscription contains these accounts but the access permissions that CA has does not let CA make any changes. </br>
 Phew...We hope we covered the main reasons. One last thought is that in the current "agile + dev ops + cloud" era, with all rapid iterations and changes happening at all layers, security has also become a much more 'continuous' effort compared to the past.
