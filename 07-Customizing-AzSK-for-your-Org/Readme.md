@@ -848,9 +848,15 @@ iii) Save the file
 
 iv) Run the policy setup command (the same command you ran for the first-time setup) or update command.
 
+
 Testing:
 
 Run "IWR" in new session (you can ask any other user to run this IWR) to setup policy setting in local. If you have already installed policy using IWR, just run CSS (Clear-AzSKSessionState) followed by command *Set-AzSKSubscriptionSecurity* with required parameters as per [doc](../01-Subscription-Security/Readme.md#azsk-subscription-security-provisioning-1). This will provision AzSK components(Alerts/Storage etc) under new resource group and location.
 
+**Note:** For contineous assurance setup, you need to follow two extra steps.
+
+i) Pass location parameter "AutomationAccountLocation" explicitly during execution of installation command (Install-AzSKContinuousAssurance). 
+
+ii) Update $StorageAccountRG variable ( In RunbookScanAgent.ps1 file present in policy store) value  to AzSKRGName value.
 
 
