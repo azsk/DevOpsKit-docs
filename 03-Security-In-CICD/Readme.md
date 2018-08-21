@@ -266,6 +266,7 @@ that are supported by the VSTS task:
 |AzSKVersion| You could specify which version of toolkit you want to use in your CICD scan. And version specified should be >= N-2 where N is latest prod version. If variable is not provided, it uses the latest version available| e.g. 2.8.1|
 |AzSKModuleName| This variable enable use to participate in the Preview testing. If you want to participate in preview, Provide the module name as "AzSKPreview". If not used, it would by default uses AzSK as module name| e.g. AzSKPreview|
 |ExtendedCommand| Enables you to provide other switches supported by the Get-AzSKAzureServicesSecurityStatus command to perform focused scanning in the CICD pipeline | e.g. -ControlIds "Azure_Storage_DP_Encrypt_In_Transit,</br>Azure_Storage_DP_Encrypt_At_Rest_Blob" or -UseBaselineControls|
+|TreatAsPassed| This variable is to provide users with more control over behavior of the SVT extension in case of various control statuses other than ‘Passed’ or ‘Failed’. For e.g., using this, one may choose to have the extension treat statuses such as 'Verify','Manual','Exception' or 'Remediate' as 'Passed'.|e.g. Verify,Manual  can be passed as value to the variable to skip Verfiy and Manual controls|
 
 
 [Back to top...](Readme.md#contents)
@@ -284,7 +285,9 @@ This error typically occurs when AzSK scan identifies non-compatible AzureRm and
 > **Note:** For Non-Hosted agent, it is always recommended to check if latest AzSK module is present on your machine before marking 'Do not auto-update AzSK' CheckBox as checked, since scan should always use latest AzSK module.  
 > **Note:** You will need to keep the above checkbox unchecked if you are running the AzSK_SVTs task on any release agent for the first time OR you are running the task on Hosted VS2017 agent OR if non-hosted agent is already running on latest version.
 
-
+#### Why AzSK_SVTs task in my release pipeline has suddenly started failing 'Verify'/'Manual'/'Remediate'/'Exception' controls.
+ All the control statuses other than passed would be treated as 'Failed' in the AzSK_SVT Task(going forward from AzSK_SVTs version 3.0.3). To treat control statuses other than 'Failed' as 'Passed' you can use 'TreatAsPassed' variable. Refer this [link](Readme.md#advanced-cicd-scanning-capabilities)
+ 
 [Back to top...](Readme.md#contents)
 
 # Security Verification Tests (SVTs) in Jenkins pipeline (Preview)
