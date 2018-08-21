@@ -288,6 +288,10 @@ This error typically occurs when AzSK scan identifies non-compatible AzureRm and
 #### Why AzSK_SVTs task in my release pipeline has suddenly started failing 'Verify'/'Manual'/'Remediate'/'Exception' controls.
  All the control statuses other than passed would be treated as 'Failed' in the AzSK_SVT Task(going forward from AzSK_SVTs version 3.0.3). To treat control statuses other than 'Failed' as 'Passed' you can use 'TreatAsPassed' variable. Refer this [link](Readme.md#advanced-cicd-scanning-capabilities)
  
+ ### I want to run AzSK_SVT on non-hosted agent.What are the pre-requisites for running AzSK_SVTs task on non-hosted agent?
+If you are using non-hosted agents you need to have azureps installed on it for AzSK_SVTs to run.
+Make sure you have latest version of AzSK installed on the machine,since scan should always use latest AzSK module.
+ 
 [Back to top...](Readme.md#contents)
 
 # Security Verification Tests (SVTs) in Jenkins pipeline (Preview)
