@@ -79,3 +79,25 @@ in the table below:
 |ControlIds (cids)|
 |ControlsToAttest (cta)|
 |UseBaselineControls (ubc)|
+
+## Some commonly used commands
+
+
+```PowerShell 
+grs -s <SubscriptionId> -rgns <ResourceGroupNames> -rns <ResourceNames> -ubc 
+```
+```PowerShell  
+gss -s <SubscriptionId> 
+```
+```PowerShell  
+ica -hsid <SubscriptionId> -rgns <ResourceGroupNames> -owid <OMSWorkspaceId> -okey <OMSSharedKey> 
+```
+```PowerShell  
+uca -hsid <SubscriptionId> 
+```
+```PowerShell  
+gacs -s <SubscriptionId> -rgns <ResourceGroupNames> -rns <ResourceNames> -cids <ControlIds> 
+```
+```PowerShell  
+uss -s <SubscriptionId> -f -dnof 
+```
