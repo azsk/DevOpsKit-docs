@@ -778,13 +778,13 @@ Add refresh scheduling timings and click on "Apply"
 
 ## Frequently Asked Questions
 
-#### I am getting exception "DevOps Kit was configured to run with '***' policy for this subscription. However, the current command is using 'org-neutral' (generic) policy. Please contact your organization policy owner (***@microsoft.com) for correcting the policy setup."?
+#### I am getting exception "The current subscription has been configured with DevOps kit policy for the '***' Org, However the DevOps kit command is running with a different ('org-neutral') Org policy....."?
 
 When your subscription is running under Org policy, AzSK marks subscription for that Org. If user is running scan commands on that subscription using Org-neutral policy, it will block those commands as that scan/updates can give invalid results against Org policy. You may face this issue in different environments. Below steps will help you to fix issue
 
 **Local Machine:**
 
-- Run “**IWR**" installation command shared by Policy Owner. This will ensure latest version installed with Org policy settings
+- Run “**IWR**" installation command shared by Policy Owner. This will ensure latest version installed with Org policy settings.(**Note:** If you are from CSE, please install the AzSK via instructions at https://aka.ms/devopskit/onboarding so that CSE-specific policies are configured for your installation.)
 
 - Run "*Clear-AzSKSessionState*" followed by any scan command and validate its running with Org policy. It gets dispayed at the start of command execution "Running AzSK cmdlet using ***** policy"
 
