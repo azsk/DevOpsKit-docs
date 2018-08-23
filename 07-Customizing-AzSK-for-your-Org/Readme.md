@@ -124,7 +124,7 @@ host and maintain a custom set of policy files that override the default AzSK be
 
 | Parameter| Description | Required? | Default Value | Comments |
 | ---- | ---- | ---- |----|---- |
-| SubscriptionId | Subscription ID of the Azure subscription in which organization policy  store will be created. | Yes | None | 
+| SubscriptionId | Subscription ID of the Azure subscription in which organization policy store will be created. | Yes | None | 
 |OrgName | The name of your organization. The value will be used to generate names of Azure resources being created as part of policy setup. This should be alphanumeric. | Yes | None |
 | DepartmentName | The name of a department in your organization. If provided, this value is concatenated to the org name parameter. This should be alphanumeric. | No | None |
 | PolicyFolderPath | The local folder in which the policy files capturing org-specific changes will be stored for reference. This location can be used to manage policy files. | No | User Desktop |
@@ -212,6 +212,7 @@ We will cover the following:
    1. Turning controls On/Off
    2. Changing Recommendation Text
    3. Changing Severity, etc.
+   4. Disable attestation
 5. Changing ARM policy/Alerts set (coming soon…)
 6. Changing RBAC mandatory/deprecated lists (coming soon…)
 
@@ -398,7 +399,7 @@ and 'ControlIds' for that resource...making it fairly easy to customize/tweak yo
 > resource's JSON file in the SVT folder and the control ids must match those included in the JSON file. 
 
 > Note: Here we have used a very simple baseline with just a couple of resource types and a very small control set.
-> A more realitic baseline control set will be more expansive. 
+> A more realistic baseline control set will be more expansive. 
 > <!-- TODO - add CDN-baseline pointer --> 
     
  ii) Save the ControlSettings.json file
@@ -421,11 +422,11 @@ In this example, we will make a slightly more involved change in the context of 
 
 Imagine that you want to turn off the evaluation of some control altogether (regardless of whether people use the `-UseBaselineControls` parameter or not).
 Also, for another control, you want people to use a recommendation which leverages an internal tool the security team
-in your org has developed. Let us do this for the Storage.json file. Specifically, we will turn off the evaluation
-of `Azure_Storage_Audit_Issue_Alert_AuthN_Req` altogether. We will modify severity of 
-`Azure_Storage_AuthN_Dont_Allow_Anonymous` to `Critical` for our org (it is `High` by default) and
-we will change the recommendation people in our org will follow if they need to address an issue with 
-the `Azure_Storage_DP_Encrypt_In_Transit` control.
+in your org has developed. Let us do this for the Storage.json file. Specifically, we will:
+1. Turn off the evaluation of `Azure_Storage_Audit_Issue_Alert_AuthN_Req` altogether.
+2. Modify severity of `Azure_Storage_AuthN_Dont_Allow_Anonymous` to `Critical` for our org (it is `High` by default).
+3. Change the recommendation people in our org will follow if they need to address an issue with the `Azure_Storage_DP_Encrypt_In_Transit` control.
+4. Disable attestation of `Azure_Storage_DP_Restrict_CORS_Access` by adding 'ValidAttestationStates' object.
 
 ###### Steps: 
  
@@ -452,6 +453,10 @@ the `Azure_Storage_DP_Encrypt_In_Transit` control.
       "ControlID": "Azure_Storage_DP_Encrypt_In_Transit",
       "Id": "AzureStorage160",
       "Recommendation": "**Note**: Use our Contoso-IT-EncryptInTransit.ps1 tool for this!"
+   },
+   {
+      "ControlID": "Azure_Storage_DP_Restrict_CORS_Access",
+      "ValidAttestationStates" : ["None"]
    }
   ]
 }
@@ -758,7 +763,7 @@ Click on "Open [Report Name] in Power BI"
 
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_21.png)
 
-**(c)** Now report got published successfully. You can can schedule refresh for report with below steps
+**(c)** Now report got published successfully. You can schedule refresh for report with below steps
 
 Go to Workspace --> Datasets --> Click on "..." --> Click on "Schedule Refresh"
 
@@ -773,13 +778,13 @@ Add refresh scheduling timings and click on "Apply"
 
 ## Frequently Asked Questions
 
-#### I am getting exception "DevOps Kit was configured to run with '***' policy for this subscription. However, the current command is using 'org-neutral' (generic) policy. Please contact your organization policy owner (***@microsoft.com) for correcting the policy setup."?
+#### I am getting exception "The current subscription has been configured with DevOps kit policy for the '***' Org, However the DevOps kit command is running with a different ('org-neutral') Org policy....."?
 
 When your subscription is running under Org policy, AzSK marks subscription for that Org. If user is running scan commands on that subscription using Org-neutral policy, it will block those commands as that scan/updates can give invalid results against Org policy. You may face this issue in different environments. Below steps will help you to fix issue
 
 **Local Machine:**
 
-- Run “**IWR**" installation command shared by Policy Owner. This will ensure latest version installed with Org policy settings
+- Run “**IWR**" installation command shared by Policy Owner. This will ensure latest version installed with Org policy settings.(**Note:** If you are from CSE, please install the AzSK via instructions at https://aka.ms/devopskit/onboarding so that CSE-specific policies are configured for your installation.)
 
 - Run "*Clear-AzSKSessionState*" followed by any scan command and validate its running with Org policy. It gets dispayed at the start of command execution "Running AzSK cmdlet using ***** policy"
 
