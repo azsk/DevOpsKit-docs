@@ -840,7 +840,7 @@ In general, we make practice to individual teams to perform scan with high privi
 #### Is it possible to control default resource group name (AzSKRG) and location (EastUS2) created for AzSK components?
 Yes. You can control default resource group name and location using AzSK config present in Org policy. Follow below steps to override default behaviour.
 
-Steps:
+**Steps:**
 
 i) Open the AzSK.json from your local org-policy folder
 
@@ -854,7 +854,7 @@ iii) Save the file
 iv) Run the policy setup command (the same command you ran for the first-time setup) or update command.
 
 
-Testing:
+##### Testing:
 
 Run "IWR" in new session (you can ask any other user to run this IWR) to setup policy setting in local. If you have already installed policy using IWR, just run CSS (Clear-AzSKSessionState) followed by command *Set-AzSKSubscriptionSecurity* with required parameters as per [doc](../01-Subscription-Security/Readme.md#azsk-subscription-security-provisioning-1). This will provision AzSK components(Alerts/Storage etc) under new resource group and location.
 
@@ -865,3 +865,30 @@ i) Pass location parameter "AutomationAccountLocation" explicitly during executi
 ii) Update $StorageAccountRG variable ( In RunbookScanAgent.ps1 file present in policy store) value  to AzSKRGName value.
 
 
+#### Can I completely override policy. I do not want policy to be run in Overlay method?
+
+Yes. You can completely override policy configuration with the help index file. 
+
+**Steps:**
+
+i) Copy local version of configuration file to policy folder. Here we will copy complete AppService.json. 
+
+Source location: "%userprofile%\Documents\WindowsPowerShell\Modules\AzSK\<version>\Framework\Configurations\SVT"
+
+Destination location:
+ "D:\ContosoPolicies"
+![Copy Configurations](../Images/07_OrgPolicy_CopyConfiguration.png)
+
+
+ii) Update configurations for all required controls in AppService.json
+
+iii) Add entry for configuration in index file(ServerConfigMetadata.json) with OverrideOffline property 
+
+![Overide Configurations](../Images/07_OrgPolicy_ServerConfigOverride.png)
+
+iv) Run update/install Org policy command with required parameters. 
+
+
+##### Testing:
+
+Run clear session state command(Clear-AzSKSessionState) followed by services scan (Get-AzSKAzureServicesSecurityStatus). Scan should reflect configuration changes done.
