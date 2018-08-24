@@ -165,7 +165,7 @@ next to it so that it gets masked.
 **Step-5:** Setup Online Policy URL  
 (You may skip this step in a first-pass exploration of CICD integration of SVTs and come back to it later when setting the extension up for a real project.) 
 This feature enables you to set up the CICD task to use your organization's AzSK policies. 
-To use org-specific policies, you can get your org-specific settings by (a) running Get-AzSKInfo -InfoType HostInfo and looking at the value of 'OnlinePolicyStoreUrl' and 'EnableAADAuthForOnlinePolicyStore'(it specifies whether Org policy URL (AzSKServerURL) is protected by AAD authentication) or (b) getting it from the AzSKSettings.json file on your machine under 'C:\Users\<userName>\AppData\Local\Microsoft\AzSK' folder.
+To use org-specific policies, you can get your org-specific settings by (a) running Get-AzSKInfo -InfoType HostInfo and looking at the value of 'OnlinePolicyStoreUrl' and 'EnableAADAuthForOnlinePolicyStore'(it specifies whether Org policy URL (AzSKServerURL) is protected by AAD authentication).
 
 Below, we have added configuration info of 'AzSKServerURL' and 'EnableServerAuth' used by the AzSK team. The URL at your org can be different assuming there is an org-policy setup unique to your org.  
 
