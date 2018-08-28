@@ -38,5 +38,11 @@ AzSK_CL | join kind= inner (
 ```
 
 --------------------------
+### Get expiring CA cert details 
+Following query will give you details of subscriptions CA for which CA certificate is going to expire within 7 days
 
+``` AIQL
+AzSKMetaData_CL | where TimeGenerated > ago(15d) | summarize arg_max(TimeGenerated, *) by SubscriptionId | where CACertExpiryTime_t < ago(-7d) 
+| project SubscriptionId, SubscriptionName_s, CACertExpiryTime_t 
+```
 
