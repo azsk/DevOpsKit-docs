@@ -664,19 +664,26 @@ If you don't know who ran CA setup earlier, you can find the owner of the AAD SP
 **Steps to renew certificate from portal:**
 
 1) Go to Automation Account Resoure Group 
+
 ![01_RenewCertfromPortal](../Images/01_RenewCertfromPortal.png)
 2) On clicking Automation Account, if the certificate is about to expire you will see the warning as highlighted in below screenshot.
+
 ![02_RenewCertfromPortal](../Images/02_RenewCertfromPortal.png)
 3) On clicking the expiration error if you do not have owner access to the SPN and Subscription you will get below error.
+
 ![08_RenewCertfromPortalError](../Images/08_RenewCertfromPortalError.PNG)
 4) If you have required access then on clicking on the warning you can see the "Run as Accounts" as shown in below screenshot.
+
 ![03_RenewCertfromPortal](../Images/03_RenewCertfromPortal.png)
 5) On clicking the "Run as Accounts" you will see the option to renew the certificate.Click on it to renew the certificate.
+
 ![04_RenewCertfromPortal](../Images/04_RenewCertfromPortal.png)
 6) On clicking it click on option "Yes" and then it will proceed the renewal of the certificate and gets successfully renewed as shown in below screenshots. 
+
 ![05_RenewCertfromPortal](../Images/05_RenewCertfromPortal.png)
 ![06_RenewCertfromPortal](../Images/06_RenewCertfromPortal.png)
 8) After renewal of certificate you will able to see the warning removed on "Run as Accounts" which was coming previously. 
+
 ![07_RenewCertfromPortal](../Images/07_RenewCertfromPortal.png)
 
 #### What are some example controls that are not scanned by CA?
