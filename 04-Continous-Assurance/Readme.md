@@ -658,8 +658,7 @@ If you don't know who ran CA setup earlier, you can find the owner of the AAD SP
 **Renew certificate from Portal**
 
 **Prerequisites:**
-1. You need to be owner on the subscription which you want to renew the certificate.
-2. Ensure you have the owner access on SPN.
+You need to be owner on the Subscription and SPN
 
 **Steps to renew certificate from portal:**
 
@@ -667,23 +666,23 @@ If you don't know who ran CA setup earlier, you can find the owner of the AAD SP
 
 ![01_RenewCertfromPortal](../Images/01_RenewCertfromPortal.png)
 
-2) On clicking Automation Account, if the certificate is about to expire you will see the warning as highlighted in below screenshot.
+2) Click on Automation Account, if the certificate is about to expire you will see the warning as highlighted in below screenshot.
 
 ![02_RenewCertfromPortal](../Images/02_RenewCertfromPortal.png)
 
-3) On clicking the expiration error if you do not have owner access to the SPN and Subscription you will get below error.
+3) Click on the expiration warning if you do not have owner access to the SPN and Subscription you will get below error.
 
 ![08_RenewCertfromPortalError](../Images/08_RenewCertfromPortalError.PNG)
 
-4) If you have required access then on clicking on the warning you can see the "Run as Accounts" as shown in below screenshot.
+4) If you have required access then on clicking the warning you can see the "Run as Accounts" as shown in below screenshot.
 
 ![03_RenewCertfromPortal](../Images/03_RenewCertfromPortal.png)
 
-5) On clicking the "Run as Accounts" you will see the option to renew the certificate.Click on it to renew the certificate.
+5) Click on "Run as Accounts" and you will see the option to renew the certificate.Click on "Renew certificate".
 
 ![04_RenewCertfromPortal](../Images/04_RenewCertfromPortal.png)
 
-6) On clicking it click on option "Yes" and then it will proceed the renewal of the certificate and gets successfully renewed as shown in below screenshots. 
+6) On clicking "Renew certificate" click on option "Yes" and then it will proceed the renewal of the certificate and gets successfully renewed as shown in below screenshots. 
 
 ![05_RenewCertfromPortal](../Images/05_RenewCertfromPortal.png)
 ![06_RenewCertfromPortal](../Images/06_RenewCertfromPortal.png)
