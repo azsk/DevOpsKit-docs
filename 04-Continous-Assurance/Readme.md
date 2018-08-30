@@ -629,6 +629,8 @@ However, setting up the AzSK OMS solution is recommended as it will help you get
 
 #### How to renew the certificate used for Continuous Assurance? 
 
+**Renew certificate using powershell command**
+
 The SPN used for daily scanning by AzSK CA uses a cert credential which has a default expiry of 6 months. When the cert comes close to expiry both the Azure portal and the Get-AzSKContinuousAssurance command warn about a need to renew the credential. Here's how to renew the cert:
 
 The SPN belongs to an AAD application that is created on behalf of the person who setup CA for the first time. You need to ensure that either that person performs the renewal or you can request that person to give you 'Owner' permission to that application. If the owner is unavailable (or has left the org) then you can create altogether new application in AAD (owned by you), SPN and a certificate credential and new SPN will be used for scanning your subscription moving forward.
@@ -652,6 +654,30 @@ Get-AzSKContinuousAssurance -SubscriptionId <sub_id_here>
 
 Note:
 If you don't know who ran CA setup earlier, you can find the owner of the AAD SPN by going to "Azure Active Directory" in the left pane in the portal and clicking "Enterprise Applications" and searching for the specific SPN (as shown below). Once you find the SPN, click on it and click "Owners". You can now contact one of the listed owners to either perform the above steps or add you as the owner so you can.
+
+**Renew certificate from Portal**
+
+**Prerequisites:**
+1. You need to be owner on the subscription which you want to renew the certificate.
+2. Ensure you have the owner access on SPN.
+
+**Steps to renew certificate from portal:**
+
+1) Go to Automation Account Resoure Group 
+![01_RenewCertfromPortal](../Images/01_RenewCertfromPortal.PNG)
+2) On clicking Automation Account, if the certificate is about to expire you will see the warning as highlighted in below screenshot.
+![02_RenewCertfromPortal](../Images/02_RenewCertfromPortal.PNG)
+3) On clicking the expiration error if you do not have owner access to the SPN and Subscription you will get below error.
+![08_RenewCertfromPortalError](../Images/08_RenewCertfromPortalError.PNG)
+4) If you have required access then on clicking on the warning you can see the "Run as Accounts" as shown in below screenshot.
+![03_RenewCertfromPortal](../Images/03_RenewCertfromPortal.PNG)
+5) On clicking the "Run as Accounts" you will see the option to renew the certificate.Click on it to renew the certificate.
+![04_RenewCertfromPortal](../Images/04_RenewCertfromPortal.PNG)
+6) On clicking it click on option "Yes" and then it will proceed the renewal of the certificate and gets successfully renewed as shown in below screenshots. 
+![05_RenewCertfromPortal](../Images/05_RenewCertfromPortal.PNG)
+![06_RenewCertfromPortal](../Images/06_RenewCertfromPortal.PNG)
+8) After renewal of certificate you will able to see the warning removed on "Run as Accounts" which was coming previously. 
+![07_RenewCertfromPortal](../Images/07_RenewCertfromPortal.PNG)
 
 #### What are some example controls that are not scanned by CA?
 
