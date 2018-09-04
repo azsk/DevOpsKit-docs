@@ -629,7 +629,7 @@ However, setting up the AzSK OMS solution is recommended as it will help you get
 
 #### How to renew the certificate used for Continuous Assurance? 
 
-####**Option 1:** Renew certificate using powershell command
+#### Option 1: Renew certificate using powershell command
 
 The SPN used for daily scanning by AzSK CA uses a cert credential which has a default expiry of 6 months. When the cert comes close to expiry both the Azure portal and the Get-AzSKContinuousAssurance command warn about a need to renew the credential. Here's how to renew the cert:
 
@@ -655,7 +655,7 @@ Get-AzSKContinuousAssurance -SubscriptionId <sub_id_here>
 Note:
 If you don't know who ran CA setup earlier, you can find the owner of the AAD SPN by going to "Azure Active Directory" in the left pane in the portal and clicking "Enterprise Applications" and searching for the specific SPN (as shown below). Once you find the SPN, click on it and click "Owners". You can now contact one of the listed owners to either perform the above steps or add you as the owner so you can.
 
-####**Option 2:** Renew certificate from Portal
+#### Option 2: Renew certificate from Portal
 
 **Prerequisites:**
 You need to be owner on the Subscription and SPN
