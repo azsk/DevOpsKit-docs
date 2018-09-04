@@ -666,16 +666,16 @@ You need to be owner on the Subscription and SPN
 
 ![01_RenewCertfromPortal](../Images/01_RenewCertfromPortal.png)
 
-2) Traverse to "Run as Accounts" in Account Settings of Automation Account and click on it and option to renew the certificate will be available.Click on "Renew certificate".
+2) Got to "Automation Account -> Run as accounts -> Azure Run as account".Click on "Renew certificate".
 
 ![04_RenewCertfromPortal](../Images/04_RenewCertfromPortal.png)
 
-3) After clicking "Renew certificate" click on option "Yes" and then it will proceed the renewal of the certificate.On successful renewal it would be visible as shown in below screenshots. 
+3) After clicking "Renew certificate" click on option "Yes" and then it will initiate the certificate renewal as displayed in below screenshots. 
 
 ![05_RenewCertfromPortal](../Images/05_RenewCertfromPortal.png)
 ![06_RenewCertfromPortal](../Images/06_RenewCertfromPortal.png)
 
-4) After renewal of certificate you will be able to see that the warning gets removed on "Run as Accounts". 
+4) After renewal of certificate you will be able to see that the expiration date gets extended. 
 
 ![07_RenewCertfromPortal](../Images/07_RenewCertfromPortal.png)
 
