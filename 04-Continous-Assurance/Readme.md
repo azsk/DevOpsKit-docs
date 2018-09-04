@@ -666,7 +666,7 @@ You need to be owner on the Subscription and SPN
 
 ![01_RenewCertfromPortal](../Images/01_RenewCertfromPortal.png)
 
-2) Got to "Automation Account -> Run as accounts -> Azure Run as account".Click on "Renew certificate".
+2) Go to "Automation Account -> Run as accounts -> Azure Run as account".Click on "Renew certificate".
 
 ![04_RenewCertfromPortal](../Images/04_RenewCertfromPortal.png)
 
