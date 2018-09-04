@@ -629,7 +629,7 @@ However, setting up the AzSK OMS solution is recommended as it will help you get
 
 #### How to renew the certificate used for Continuous Assurance? 
 
-**Option 1:** Renew certificate using powershell command
+####**Option 1:** Renew certificate using powershell command
 
 The SPN used for daily scanning by AzSK CA uses a cert credential which has a default expiry of 6 months. When the cert comes close to expiry both the Azure portal and the Get-AzSKContinuousAssurance command warn about a need to renew the credential. Here's how to renew the cert:
 
@@ -655,7 +655,7 @@ Get-AzSKContinuousAssurance -SubscriptionId <sub_id_here>
 Note:
 If you don't know who ran CA setup earlier, you can find the owner of the AAD SPN by going to "Azure Active Directory" in the left pane in the portal and clicking "Enterprise Applications" and searching for the specific SPN (as shown below). Once you find the SPN, click on it and click "Owners". You can now contact one of the listed owners to either perform the above steps or add you as the owner so you can.
 
-**Option 2:** Renew certificate from Portal
+####**Option 2:** Renew certificate from Portal
 
 **Prerequisites:**
 You need to be owner on the Subscription and SPN
@@ -666,28 +666,16 @@ You need to be owner on the Subscription and SPN
 
 ![01_RenewCertfromPortal](../Images/01_RenewCertfromPortal.png)
 
-2) Click on Automation Account. If the certificate is about to expire you will see the expiration warning as highlighted in below screenshot.
-
-![02_RenewCertfromPortal](../Images/02_RenewCertfromPortal.png)
-
-3) Click on the expiration warning. If you do not have owner access to the SPN and subscription you will get below error.
-
-![08_RenewCertfromPortalError](../Images/08_RenewCertfromPortalError.PNG)
-
-4) If you have required access then on clicking the expiration warning you can see the "Run as Accounts" as shown in below screenshot.
-
-![03_RenewCertfromPortal](../Images/03_RenewCertfromPortal.png)
-
-5) Click on "Run as Accounts" and you will see the option to renew the certificate.Click on "Renew certificate".
+2) Traverse to "Run as Accounts" in Account Settings of Automation Account and click on it and option to renew the certificate will be available.Click on "Renew certificate".
 
 ![04_RenewCertfromPortal](../Images/04_RenewCertfromPortal.png)
 
-6) After clicking "Renew certificate" click on option "Yes" and then it will proceed the renewal of the certificate.On successful renewal it would be visible as shown in below screenshots. 
+3) After clicking "Renew certificate" click on option "Yes" and then it will proceed the renewal of the certificate.On successful renewal it would be visible as shown in below screenshots. 
 
 ![05_RenewCertfromPortal](../Images/05_RenewCertfromPortal.png)
 ![06_RenewCertfromPortal](../Images/06_RenewCertfromPortal.png)
 
-8) After renewal of certificate you will be able to see that the warning gets removed on "Run as Accounts". 
+4) After renewal of certificate you will be able to see that the warning gets removed on "Run as Accounts". 
 
 ![07_RenewCertfromPortal](../Images/07_RenewCertfromPortal.png)
 
