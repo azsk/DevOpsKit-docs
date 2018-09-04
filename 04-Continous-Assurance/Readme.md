@@ -675,7 +675,7 @@ You need to be owner on the Subscription and SPN
 ![05_RenewCertfromPortal](../Images/05_RenewCertfromPortal.png)
 ![06_RenewCertfromPortal](../Images/06_RenewCertfromPortal.png)
 
-4) After renewal of certificate you will be able to see that the expiration date gets extended. 
+4) On successful renewal of certificate you will be able to see that the expiration date gets extended. 
 
 ![07_RenewCertfromPortal](../Images/07_RenewCertfromPortal.png)
 
