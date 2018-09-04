@@ -162,8 +162,8 @@ Important: Ensure that the variable names used are exactly as above and the valu
 to *your* OMS workspace. Moreover, when you specify the OMS shared key, click on the 'lock' icon 
 next to it so that it gets masked.
 
-**Step-5:** Setup Online Policy URL  
-(You may skip this step in a first-pass exploration of CICD integration of SVTs and come back to it later when setting the extension up for a real project.) 
+**Step-5:** Setup Online Policy URL (Mandatory for Org policy users e.g. CSE users)
+
 This feature enables you to set up the CICD task to use your organization's AzSK policies. 
 To use org-specific policies, you can get your org-specific settings by (a) running Get-AzSKInfo -InfoType HostInfo and looking at the value of 'OnlinePolicyStoreUrl' and 'EnableAADAuthForOnlinePolicyStore'(it specifies whether Org policy URL 'AzSKServerURL' is protected by AAD authentication).
 
