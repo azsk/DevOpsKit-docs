@@ -662,7 +662,7 @@ You need to be owner on the Subscription and SPN
 
 **Steps to renew certificate from portal:**
 
-1) Go to Automation Account Resoure Group.
+1) Go to AzSKRG Resoure Group (or the one which has your AzSK CA automation account).
 
 ![01_RenewCertfromPortal](../Images/01_RenewCertfromPortal.png)
 
