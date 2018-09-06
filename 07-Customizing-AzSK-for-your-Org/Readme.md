@@ -198,6 +198,16 @@ Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
            -DepartmentName "IT" `
            -DownloadPolicy `
            -PolicyFolderPath "D:\ContosoPolicies"
+	   
+#If custom resource group is used
+
+Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
+           -OrgName "Contoso-IT" `
+           -ResourceGroupName "ContosoResourceGoupName" `
+           -StorageAccountName "contosostorageaccountname" `
+           -DownloadPolicy `
+           -PolicyFolderPath "D:\ContosoPolicies"
+
 ```
 	
 #### Common scenarios for org policy customization
