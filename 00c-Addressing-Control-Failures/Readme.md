@@ -544,4 +544,11 @@ d- New controls may get added. Azure is a very dynamic environment. The PG adds 
 e- Control logic for existing controls may change - due to bug fixes or additional conditions in the detection logic. This change in control behavior will, again, start reflecting in CA scans when a version of AzSK with the 'fix' or 'logic change' is released. </br>
 f- Configuration baselines may change. What is considered a mandatory account today may not remain so tomorrow or in 6 months. Certificates expire, credentials/accounts get deprecated. The AzSK is able to detect that your subscription contains these accounts but the access permissions that CA has does not let CA make any changes. </br>
 Phew...We hope we covered the main reasons. One last thought is that in the current "agile + dev ops + cloud" era, with all rapid iterations and changes happening at all layers, security has also become a much more 'continuous' effort compared to the past.
+
+
+#### I am trying to enable diagnostic logs using the recommendation command 'Set-AzureRmDiagnosticSetting' given in the AzSK control. But the command fails with error 'The diagnostic setting 'service' doesn't exist'. How do I resolve this error?
+
+There is an [open issue](https://github.com/Azure/azure-powershell/issues/6833) with Set-AzureRmDiagnosticSetting command provided by AzureRm. You can enable the diagnostic logs using Azure portal until that issue is resolved. Steps are available [here](https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-archive-diagnostic-logs#archive-diagnostic-logs-using-the-portal).
+Just make sure that logs are retained for a minimum of 365 days.
+
 [Back to top...](Readme.md#contents)
