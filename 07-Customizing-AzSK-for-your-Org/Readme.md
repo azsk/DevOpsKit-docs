@@ -680,6 +680,9 @@ The table below describes the different columns in the CSV file and their intent
 
 
 #### Step 2: Upload your mapping to the Application Insights (AI) workspace
+
+> **Note:** Recently, importing data using application insight is deprecated by PG team ([Link](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-analytics-import)). We will be updating alternate method soon. You can skip this step and follow from Step 3 
+
 In this step we will import the data above into the AI workspace created during org policy setup. 
 
  **(a)** Locate the AI resource that was created during org policy setup in your central subscription. This should be present under Org Policy resource group. After selecting the AI resource click on "Analytics view" as shown below:
