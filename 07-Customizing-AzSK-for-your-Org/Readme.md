@@ -148,9 +148,13 @@ Install-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
 The execution of command will create following resources in the subscription (if they don't already exist): 
 1. Resource Group (AzSK-Contoso-IT-RG) - AzSK-\<OrgName>-\<DepartmentName>-RG. 
 2. Storage Account (azskcontosoitsa) - azsk\<OrgName>\<DepartmentName>sa.
-3. Application Insight (AzSK-Contoso-IT-AppInsight) - AzSK-\<OrgName>-\<DepartmentName>-AppInsight. 
+3. Application Insight (AzSK-Contoso-IT-AppInsight) - AzSK-\<OrgName>-\<DepartmentName>-AppInsight.
+4. Monitoring dashboard (DevOpsKitMonitoring (DevOps Kit Monitoring Dashboard [Contoso-IT])) 
+
+> **Note:** You must not have any other resources than created by setup command in Org policy resource group.
 
 It will also create a very basic 'customized' policy involving below files uploaded to the policy storage account.
+
 ##### Basic files setup during Policy Setup 
  
 | File | Container | Description  
