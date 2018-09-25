@@ -17,10 +17,15 @@
   Install-Module AzSK -Scope CurrentUser
 ```
 
-Note: You may need to use `-AllowClobber` and `-Force` options with the Install-Module command 
+Note: 
+
+You may need to use `-AllowClobber` and `-Force` options with the Install-Module command 
 above if you have a different version of AzureRM modules installed on your machine. 
 AzSK depends on specific version of different AzureRM service modules and installs that during the installation above.
-Run command 'Find-Module AzSK -includedependencies' to see all dependencies.  
+Run command 'Find-Module AzSK -includedependencies' to see all dependencies. 
+
+In version 3.6.x, if you are facing issue during scan, you may have to register "Microsoft.Security" and "Microsoft.PolicyInsights" providers on subscriptions. Refer [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-manager-supported-services#portal) for provider registration.
+
 
 ------------------------------------------------
 ### Backward compatibility

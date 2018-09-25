@@ -223,6 +223,19 @@ You can run cmdlets in isolation for the following:
 3. ARM Policy - Set-AzSKARMPolicies
 4. Azure Security Center configuration - Set-AzSKAzureSecurityCenterPolicies
 
+#### Set-AzSKSubscriptionSecurity  or Set-AzSKAzureSecurityCenterPolicies returns - InvalidOperation: The remote server returned an error: (500) Internal Server Error
+
+Currently we are seeing an issue with an Azure Security Center API which is causing the error you are seeing. You can follow the steps below until the issue is resolved:
+
+1. Login to your subscription.
+2. Go to 'Security Center' > 'Security policy'.
+3. Select your subscription and click on 'Edit settings'.
+4. Select 'Email notifications'.
+5. Update 'Security contact emails' and 'Phone number'.
+6. Click on 'Save'.
+
+You can try running the recommendation command again after doing the above change.
+
 [Back to top…](Readme.md#contents)
 	
 ------------------------------------------------------------
