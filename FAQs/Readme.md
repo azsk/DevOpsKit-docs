@@ -14,7 +14,7 @@
   - #### AzSK: Subscription Security Provisioning
     - [Is it possible to setup an individual feature (e.g., just alerts or just ARM Policy)?](../01-Subscription-Security/Readme.md#is-it-possible-to-setup-an-individual-feature-eg-just-alerts-or-just-arm-policy)
 
-    - [Set-AzSKSubscriptionSecurity  or Set-AzSKAzureSecurityCenterPolicies returns - InvalidOperation: The remote server returned an error: (500) Internal Server Error?](../01-Subscription-Security/Readme.md#is-it-possible-to-setup-an-individual-feature-eg-just-alerts-or-just-arm-policy)
+    - [Set-AzSKSubscriptionSecurity  or Set-AzSKAzureSecurityCenterPolicies returns - InvalidOperation: The remote server returned an error: (500) Internal Server Error?](../01-Subscription-Security/Readme.md#set-azsksubscriptionsecurity--or-set-azskazuresecuritycenterpolicies-returns---invalidoperation-the-remote-server-returned-an-error-500-internal-server-error)
 
 
   - #### AzSK: Subscription Activity Alerts  
