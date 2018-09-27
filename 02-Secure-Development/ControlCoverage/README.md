@@ -19,7 +19,7 @@ This page displays security controls that are automated via the devops kit and a
 |[ContainerInstances](Feature/ContainerInstances.md)|Microsoft.ContainerInstance/containerGroups|
 |[ContainerRegistry](Feature/ContainerRegistry.md)|Microsoft.ContainerRegistry/registries|
 |[CosmosDB](Feature/CosmosDB.md)|Microsoft.DocumentDb/databaseAccounts|
-|[DataBricks](Feature/DataBricks.md)|Microsoft.Databricks/workspaces|
+|[DataBricks](Feature/Databricks.md)|Microsoft.Databricks/workspaces|
 |[DataFactory](Feature/DataFactory.md)|Microsoft.DataFactory/dataFactories|
 |[DataFactoryV2](Feature/DataFactoryV2.md)|Microsoft.DataFactory/factories|
 |[DataLakeAnalytics](Feature/DataLakeAnalytics.md)|Microsoft.DataLakeAnalytics/accounts|
