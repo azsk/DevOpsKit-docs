@@ -43,6 +43,8 @@
           href: ../../02-Secure-Development/ControlCoverage/Feature/CloudService.md
         - name: Cosmos DB
           href: ../../02-Secure-Development/ControlCoverage/Feature/CosmosDB.md
+        - name: Databricks
+          href: ../../02-Secure-Development/ControlCoverage/Feature/Databricks.md    
         - name: DataFactory
           href: ../../02-Secure-Development/ControlCoverage/Feature/DataFactory.md
         - name: DataLakeAnalytics
