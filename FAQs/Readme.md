@@ -73,9 +73,4 @@
     - [Latest AzSK is available but our Org CA are running with older version?](../07-Customizing-AzSK-for-your-Org/Readme.md#latest-azsk-is-available-but-our-org-ca-are-running-with-older-version)
     - [We have configured baseline controls using ControlSettings.json on Policy Store, But Continuous Assurance (CA) is scanning all SVT controls on subscription?](../07-Customizing-AzSK-for-your-Org/Readme.md#we-have-configured-baseline-controls-using-controlsettingsjson-on-policy-store-but-continuous-assurance-ca-is-scanning-all-svt-controls-on-subscription)
     - [Continuous Assurance (CA) is scanning less number of controls as compared with manual scan?](../07-Customizing-AzSK-for-your-Org/Readme.md#continuous-assurance-ca-is-scanning-less-number-of-controls-as-compared-with-manual-scan)
-    - ### Customizing AzSK for your Org
-      - [When and why should I setup org policy](../07-Customizing-AzSK-for-your-Org/Readme.md#when-and-why-should-i-setup-org-policy)
-      - [How does AzSK use online policy?](../07-Customizing-AzSK-for-your-Org/Readme.md#how-does-azsk-use-online-policy)
-      - ### Setting up Org Policy
-          - [What happens during org policy setup?](../07-Customizing-AzSK-for-your-Org/Readme.md#what-happens-during-org-policy-setup)
       
