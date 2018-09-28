@@ -24,8 +24,8 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
 
 > **Note:** If you are upgrading from version 3.5.0 or below. you need to follow below steps
 > 1. Update runbook files with latest compatible version
-*Update-AzSKOrganizationPolicy -SubscriptionId `<SubId>` -OrgName `<OrgName>` -DepartmentName `<DeptName>` -OverrideBaseConfig CARunbooks*
-> 2. If Org policy contains SecurityCenter policy. You have to update policy with latest schema.
+*"Update-AzSKOrganizationPolicy -SubscriptionId `<SubId>` -OrgName `<OrgName>` -DepartmentName `<DeptName>` -OverrideBaseConfig CARunbooks"* If you have customized these files for your Org(like adding -UseBaselineControls inside RunbookScanAgent etc.), You will need to re-do changes after running update command.
+> 2. If Org policy is customized with SecurityCenter configurations. You have to update policy with latest (SecurityCenter.json) schema from 3.6.1.
   
 
 * Fixed issue related to ASC API in GSS command. Any subscription not having security contacts details setup, ASC API was throwing exception and causing issue (InvalidOperation: The remote server returned an error: (404) Not Found.)
