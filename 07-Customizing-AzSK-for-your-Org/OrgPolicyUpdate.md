@@ -1,7 +1,7 @@
 
 # Org Policy Updates
 
-This page will notify updates for Org Policy with different AzSK versions. You need to follow specific instruction/notes before updating Org policy with respective AzSK version. For all updates related to AzSK version, you can refer to [release page](https://azsk.azurewebsites.net/ReleaseNotes/RN180917.html)
+This page will notify updates for Org Policy with different AzSK versions. You need to follow specific instruction/notes before updating Org policy with respective AzSK version. For all updates related to AzSK version, you can refer to [release page](https://azsk.azurewebsites.net/ReleaseNotes/RN180927.html)
 
 To update Org policy with specific AzSK version, you need to run update Org policy command after installing AzSK module (in new PowerShell session). This will update AzSK.Pre.json present on Org policy with respective version. After policy updade, CA will auto-upgrade to latest Org version. If application teams are using older version(or any other version than mentioned in Org Policy), will start getting update warning.    
 
