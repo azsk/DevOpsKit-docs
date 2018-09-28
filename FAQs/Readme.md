@@ -62,6 +62,7 @@
     - [What permission should I have to perform attestation in AzSK?](../00c-Addressing-Control-Failures/Readme.md#what-permission-should-i-have-to-perform-attestation-in-azsk)
     - [Attestation fails with permission error even though I am Owner.](../00c-Addressing-Control-Failures/Readme.md#attestation-fails-with-permission-error-even-though-i-am-owner)
     - [Why do I have new control failures from AzSK?](../00c-Addressing-Control-Failures/Readme.md#why-do-i-have-new-control-failures-from-azsk)
+    - [I am trying to enable diagnostic logs using the recommendation command 'Set-AzureRmDiagnosticSetting' given in the AzSK control. But the command fails with error 'The diagnostic setting 'service' doesn't exist'. How do I resolve this error?](../00c-Addressing-Control-Failures/Readme.md#i-am-trying-to-enable-diagnostic-logs-using-the-recommendation-command-set-azurermdiagnosticsetting-given-in-the-azsk-control-but-the-command-fails-with-error-the-diagnostic-setting-service-doesnt-exist-how-do-i-resolve-this-error)
 
 - ### Org Policy
     - [I am getting exception "DevOps Kit was configured to run with '***' policy for this subscription. However, the current command is using 'org-neutral' (generic) policy....."?](../07-Customizing-AzSK-for-your-Org/Readme.md#i-am-getting-exception-devops-kit-was-configured-to-run-with--policy-for-this-subscription-however-the-current-command-is-using-org-neutral-generic-policy-please-contact-your-organization-policy-owner-microsoftcom-for-correcting-the-policy-setup)
