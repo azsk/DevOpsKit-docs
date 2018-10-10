@@ -25,6 +25,7 @@
     - [What happens if an action in the subscription violates the policy?](../01-Subscription-Security/Readme.md#what-happens-if-an-action-in-the-subscription-violates-the-policy)
     - [Which ARM policies are installed by the setup script?](../01-Subscription-Security/Readme.md#which-arm-policies-are-installed-by-the-setup-script)
     - [How can I check for policy violations?](../01-Subscription-Security/Readme.md#how-can-i-check-for-policy-violations)
+    - [Are there more policies available for use?](../01-Subscription-Security/Readme.md#are-there-more-policies-available-for-use)
     
 - ### Secure Development   
   - #### Security Verification Tests (SVT)
@@ -37,6 +38,9 @@
   - #### Security Verification Tests (SVTs) in VSTS pipeline
     - [I have enabled AzSK_SVTs task in my release pipeline. I am getting an error ‘The specified module 'AzSK' was not loaded because no valid module file was found in any module directory’. How do I resolve this issue?](../03-Security-In-CICD/Readme.md#i-have-enabled-AzSK_svts-task-in-my-release-pipeline-i-am-getting-an-error-the-specified-module-AzSK-was-not-loaded-because-no-valid-module-file-was-found-in-any-module-directory-how-do-i-resolve-this-issue)
     - [I have enabled AzSK_SVTs task in my release pipeline. It is taking too much time every time I queue a release, how can I reduce that time?](../03-Security-In-CICD/Readme.md#i-have-enabled-AzSK_svts-task-in-my-release-pipeline-it-is-taking-too-much-time-every-time-i-queue-a-release-how-can-i-reduce-that-time)
+    - [Why AzSK_SVTs task in my release pipeline has suddenly started failing 'Verify'/'Manual'/'Remediate'/'Exception' controls?](../03-Security-In-CICD/Readme.md#why-azsk_svts-task-in-my-release-pipeline-has-suddenly-started-failing-verifymanualremediateexception-controls)
+    - [I want to run AzSK_SVT on non-hosted agent. What are the pre-requisites for running AzSK_SVTs task on non-hosted agent?](../03-Security-In-CICD/Readme.md#i-want-to-run-azsk_svt-on-non-hosted-agent-what-are-the-pre-requisites-for-running-azsk_svts-task-on-non-hosted-agent)
+    - [Why attestation is not getting respected in AzSK_SVT task in CICD pipeline?](../03-Security-In-CICD/Readme.md#why-attestation-is-not-getting-respected-in-azsk_svt-task-in-cicd-pipeline)
 
 - ### Continuous Assurance (CA)  
   - #### Baseline Continuous Assurance
@@ -69,5 +73,4 @@
     - [Latest AzSK is available but our Org CA are running with older version?](../07-Customizing-AzSK-for-your-Org/Readme.md#latest-azsk-is-available-but-our-org-ca-are-running-with-older-version)
     - [We have configured baseline controls using ControlSettings.json on Policy Store, But Continuous Assurance (CA) is scanning all SVT controls on subscription?](../07-Customizing-AzSK-for-your-Org/Readme.md#we-have-configured-baseline-controls-using-controlsettingsjson-on-policy-store-but-continuous-assurance-ca-is-scanning-all-svt-controls-on-subscription)
     - [Continuous Assurance (CA) is scanning less number of controls as compared with manual scan?](../07-Customizing-AzSK-for-your-Org/Readme.md#continuous-assurance-ca-is-scanning-less-number-of-controls-as-compared-with-manual-scan)
-    
-    
+      
