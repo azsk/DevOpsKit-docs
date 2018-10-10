@@ -707,6 +707,10 @@ AzSK is reliant on a specific version of AzureRm PowerShell modules. It is exten
 
 Note that once in a few months, the AzSK team reviews new releases of AzureRm modules and updates the dependencies after extensive testing. At that point, the CA automation account will be automatically updated to import the newer modules. (No action is needed from your side.)
 
+If Azure modules happens to be updated other than AzSK dependancy version(One option is using "Update Azure Module" in Portal), you can recover module dependency by deleting AzSK module from automation account and triggering Runbook job. Runbook will install AzSK with all dependencies. 
+
+**Note:** If you are using Org policy feature, make sure you have latest RunbookCoreSetup file present in policy store. Org Policy update (page)[https://aka.ms/devopskit/orgpolicy/updates] gives instruction to update coresetup file against latest AzSK versions.
+
 #### Difference between scanned controls from CA v. ad hoc scans
 
 Some controls require elevated access and are not scanned by CA because the CA runtime account is only configured with 'Reader' privilege on the subscription. 
