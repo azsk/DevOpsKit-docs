@@ -14,7 +14,6 @@
   - [App Insights Visualization](#app-insights-visualization)
 - [Usage Telemetry](#usage-telemetry)
   - [Enable/Disable Usage Telemetry](#enabledisable-usage-telemetry)
-- [FAQs](#faqs)
 
 ## Overview
 
