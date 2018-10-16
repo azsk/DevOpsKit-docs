@@ -30,6 +30,8 @@
           href: ../../02-Secure-Development/ControlCoverage/Feature/AnalysisServices.md
         - name: App Service
           href: ../../02-Secure-Development/ControlCoverage/Feature/AppService.md
+        - name: Application Proxy
+          href: ../../02-Secure-Development/ControlCoverage/Feature/ApplicationProxy.md
         - name: Automation
           href: ../../02-Secure-Development/ControlCoverage/Feature/Automation.md
         - name: Batch
