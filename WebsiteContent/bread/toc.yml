@@ -24,6 +24,8 @@
             topicHref: ../../02-Secure-Development/ControlCoverage/Feature/AnalysisServices.md
           - name: App Service
             topicHref: ../../02-Secure-Development/ControlCoverage/Feature/AppService.md
+          - name: Application Proxy
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/ApplicationProxy.md  
           - name: Automation
             topicHref: ../../02-Secure-Development/ControlCoverage/Feature/Automation.md
           - name: Batch
