@@ -112,5 +112,7 @@
   items: 
     - name: Org Policy Health Check
       href: ../../07-Customizing-AzSK-for-your-Org/OrgPolicyHealthCheck.md
+    - name: Org Policy Updates
+      href: ../../07-Customizing-AzSK-for-your-Org/OrgPolicyUpdate.md
 - name: Advanced features
   href: ../../08-Advanced-Features/Readme.md
