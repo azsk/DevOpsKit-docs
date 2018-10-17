@@ -58,6 +58,8 @@
           href: ../../02-Secure-Development/ControlCoverage/Feature/ERvNet.md
         - name: EventHub
           href: ../../02-Secure-Development/ControlCoverage/Feature/EventHub.md
+        - name: HDInsight
+          href: ../../02-Secure-Development/ControlCoverage/Feature/HDInsight.md
         - name: KeyVault
           href: ../../02-Secure-Development/ControlCoverage/Feature/KeyVault.md
         - name: LoadBalancer
