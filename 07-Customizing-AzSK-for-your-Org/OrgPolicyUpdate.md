@@ -20,6 +20,15 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
    -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
 ```
 
+# AzSK v.3.7.0
+
+> **Note:** If you are upgrading from version 3.5.0 or below. you need to follow below steps
+> 1. Update runbook files with latest compatible version
+*"Update-AzSKOrganizationPolicy -SubscriptionId `<SubId>` -OrgName `<OrgName>` -DepartmentName `<DeptName>` -OverrideBaseConfig CARunbooks"* If you have customized these files for your Org(like adding -UseBaselineControls inside RunbookScanAgent etc.), You will need to re-do changes after running update command.
+> 2. If Org policy is customized with SecurityCenter configurations. You have to update policy with latest (SecurityCenter.json) schema from 3.7.0.
+
+No specific updates for Org policy features
+
 # AzSK v.3.6.1
 
 > **Note:** If you are upgrading from version 3.5.0 or below. you need to follow below steps
