@@ -165,7 +165,7 @@ Let us verify that the runbook output is generated as expected and that the OMS 
 **1:** Verify that CSV file and LOG file are getting generated as expected.  
  
 1. Go to Storage Explorer and look for a storage account with a name in azsk<YYYYMMDDHHMMSS> format in your subscription in 'AzSKRG' resource group.
-2. Find a container called 'azskexecutionlogs' in this storage account.
+2. Find a blob container called 'ca-scan-logs' in this storage account.
 3. There should be a ZIP file named using a timestamp based on the date time for the manual execution in this container (most likely the ZIP file with the most recent creation date). 
 4. Download the ZIP file and extract its contents locally. The folder structure will be similar to how SVTs/Subscription Health scan generate when run locally. 
 5. In a single zip file you will find two folders (name format: Timestamp). One folder contains reports of Subscription Health scan and another folder contains reports of application(s) resource groups security scan.
