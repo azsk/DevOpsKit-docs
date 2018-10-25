@@ -1,0 +1,50 @@
+######--------------------------Prerequisite----------------------------------######
+# 1. You should be AAD Application Administrator (or higher privilege) in Azure Active Directory. 
+#    Refer: https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-assign-admin-roles#application-administrator
+# 2. Provide user input as mentioned in script
+
+######------------------------------------------------------------------------###### 
+
+#User input - Provide ObjectID of AAD application configured for Application Proxy in Azure Active Directory
+$aadAppObjID = '<Enter AAD App ObjectID here>' 
+
+#Install and import AD module
+$moduleName = "AzureAD"
+$module = Get-Module -Name $moduleName -ListAvailable
+if($null -eq $module)
+{
+    Install-Module -Name $moduleName
+}
+Import-Module $moduleName
+
+#Login 
+Connect-AzureAD 
+
+#ControlID: Azure_ApplicationProxy_AuthN_Use_AAD_PreAuth
+write-host "Checking: [Application Proxy]-[AAD Authentication must be enabled as a pre-authentication method on your app]"
+$appProxy = Get-AzureADApplicationProxyApplication -ObjectId $aadAppObjID
+$preAuthType = $appProxy.ExternalAuthenticationType
+if($preAuthType -eq 'AadPreAuthentication')
+{
+    write-host "**Passed**"
+}
+else 
+{
+    write-host "**Failed**"
+}
+
+#ControlID: Azure_ApplicationProxy_Config_Enable_HTTPOnly_Cookie
+write-host "Checking: [Application Proxy]-[HTTP-Only cookie must be enabled while configuring App Proxy wherever possible]"
+if($appProxy.IsHttpOnlyCookieEnabled -eq $true)
+{
+    write-host "**Passed**"
+}
+else 
+{
+    write-host "**Failed**"
+}
+
+
+
+
+
