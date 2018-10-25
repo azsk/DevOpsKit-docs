@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+**Note:** You can scan your application proxy instance by executing [script](../Feature/Scripts/ADAppProxyScanScript.ps1.txt) in PowerShell.
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 
@@ -19,6 +21,8 @@
 <tr><td><b>Use a security hardened, locked down OS image for the connector machine</b>
 <br/>The connector machine is serving as a 'gateway' into the corporate environment allowing internet based client endpoints access to enterprise data. Using a locked-down, secure baseline configuration ensures that this machine does not get leveraged as an entry point to attack the applications/corporate network.</td>
 <td>High</td><td>No</td><td>No</td></tr>
-<table>
 </table>
+  
+ 
+  
 </body></html>
