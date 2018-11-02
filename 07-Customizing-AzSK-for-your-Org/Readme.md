@@ -884,6 +884,45 @@ i) Pass location parameter "AutomationAccountLocation" explicitly during executi
 ii) Update $StorageAccountRG variable ( In RunbookScanAgent.ps1 file present in policy store) value  to AzSKRGName value.
 
 
+#### How should I protect Org policy with AAD based auth?
+
+Currently basic Org policy setup uses read only SAS token to fetch policy files. You will be able to protect policy based on AAD auth using below steps
+
+1. Setup AAD based API: 
+
+	Create API Service with [AAD auth](https://docs.microsoft.com/en-us/azure/app-service/app-service-mobile-how-to-configure-active-directory-authentication) which will point to and return files from Policy container present under Org policy Store. API URL looks like below
+
+    ```
+	https://<APIName>.azurewebsites.net/api/files?version=$Version&fileName=$FileName
+    ```
+
+**Note:** Here version and file name are dynamic and passed during execution of AzSK commands. 
+
+2. Update Installer(IWR) with latest policy store url:
+
+	Go to IWR file location(present in policy store --> installer
+	--> AzSK-EasyInstaller.ps1) 
+
+	a. Update OnlinePolicyStoreUrl with AD based auth API URL from step 1. (**Note:** Keep tilt(\`) escape character as is)
+
+		https://<APIName>.azurewebsites.net/api/files?version=`$Version&fileName=`$FileName
+
+	b. Search for command "Set-AzSKPolicySettings" in IWR and add parameter "-EnableAADAuthForOnlinePolicyStore"
+
+3. Update local settings to point to latest API:
+	
+	Run IWR command in local machine PowerShell. This will point your local machine to latest policy store URL and AzSK commands will start using AAD based auth.  
+	
+4. Update existing CA to point to latest API:
+
+	If CA is already installed on subscriptions. You can just run Update-CA command. This will update runbook to use latest policy store URL.
+	
+5. Update CICD task to point to latest API:
+	
+	Refer [step 5](https://github.com/azsk/DevOpsKit-docs/tree/master/03-Security-In-CICD#adding-svts-in-the-release-pipeline) from SVT Task documentation to update policy url in pipeline. Make sure you set EnableServerAuth variable to true. 
+
+**Note:** We are already exploring on latest AAD based auth feature available on Storage to protect policy. Above steps will be updated in future once AzSK is compatible with latest features.
+
 #### Can I completely override policy. I do not want policy to be run in Overlay method?
 
 Yes. You can completely override policy configuration with the help index file. 
