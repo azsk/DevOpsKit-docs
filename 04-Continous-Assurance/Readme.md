@@ -344,7 +344,7 @@ The table below lists only the parameters that are mandatory or have specific ne
 |OMSWorkspaceId| All the scanning events will be send to this OMSWorkspace. This will act as central monitoring dashboard | True | |
 |OMSSharedKey| OMSSharedKey for the central monitoring dashboard| True | |
 |LoggingOption| "IndividualSubs/CentralSub". This provides the capability to users to store the CA scan logs on central subscription or on individual subscriptions| False |CentralSub |
-|SkipTargetSubscriptionConfig| (Optional) Use this switch if you dont have the owner permission on the target sub. This option assumes you have already one all the required configuration on the target sub. Check the note below| False| |
+|SkipTargetSubscriptionConfig| (Optional) Use this switch if you dont have the owner permission on the target sub. This option assumes you have already done all the required configuration on the target sub. Check the note below| False| |
 |CentralScanMode| Mandatory switch to specify in central scan mode| True | |
 
 </br>
