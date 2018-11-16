@@ -12,6 +12,9 @@
 - [Execute SVTs for a specific resource type](Readme.md#execute-svts-for-a-specific-resource-type)
 - [Execute SVTs in Baseline mode](Readme.md#execute-svts-in-baseline-mode) 
 - [Execute SVTs using "-UsePartialCommits" switch](Readme.md#execute-svts-using--usepartialcommits-switch)
+- [Execute SVT excluding some resource groups](Readme.md#execute-svts-excluding-some-resource-groups)
+- [Execute SVT excluding some resources](Readme.md#execute-svts-excluding-some-resources)
+- [Execute SVT excluding a resource type](Readme.md#execute-svts-excluding-a-resource-type)
 - [Understand the scan reports](Readme.md#understand-the-scan-reports)
 - [Generate output report in PDF format](Readme.md#generate-output-report-in-pdf-format)
 - [FAQs](Readme.md#faqs)
@@ -182,7 +185,31 @@ The Get-AzSKAzureServicesSecurityStatus command now supports checkpointing via a
 ```PowerShell
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -UsePartialCommits
 ```
-		
+[Back to top…](Readme.md#contents)
+
+### Execute SVTs excluding some resource groups
+The Get-AzSKAzureServicesSecurityStatus command now supports switch 'ExcludeResourceGroupNames' to exclude some of the resource groups from getting scanned. The cmdlet below will not scan the resource groups 'azsktestRg' and 'azsktestRg1'.
+```PowerShell
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeResourceGroupNames "azsktestRg,azsktestRg2"
+```
+[Back to top…](Readme.md#contents)
+
+### Execute SVTs excluding some resources
+The Get-AzSKAzureServicesSecurityStatus command now supports switch 'ExcludeResourceNames' to exclude some of the resources from getting scanned. The cmdlet below will not scan the resource groups 'azsktestApp' and 'azsktestApp2'.
+```PowerShell
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeResourceNames "azsktestApp,azsktestApp2"
+```
+[Back to top…](Readme.md#contents)
+
+### Execute SVTs excluding a resource type
+The Get-AzSKAzureServicesSecurityStatus command now supports switch 'ExcludeResourceTypeName' to exclude resources of a particular type supported by AzSK from getting scanned. The cmdlet below will not scan any Databricks resources.
+```PowerShell
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeResourceTypeName Databricks
+```
+> **Note:** Currently there is provision to exclude only one type of resources using switch '-ExcludeResourceTypeName'. To exclude multiple types of resources from getting scanned the switch'-ExcludeTags' can be used passing the user friendly name for the resource type as specified [here](Readme.md#execute-svts-for-a-specific-resource-type). The cmdlet below will exclude all resources belonging to the type 'AppServices' or 'Databricks' from getting scanned.
+```PowerShell
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeResourceTypeName Databricks -ExcludeTags 'AppService'
+```
 [Back to top…](Readme.md#contents)
 
 ### Understand the scan reports
