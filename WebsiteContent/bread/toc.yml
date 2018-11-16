@@ -25,7 +25,9 @@
           - name: App Service
             topicHref: ../../02-Secure-Development/ControlCoverage/Feature/AppService.md
           - name: Application Proxy
-            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/ApplicationProxy.md  
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/ApplicationProxy.md
+          - name: API Management
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/APIManagement.md
           - name: Automation
             topicHref: ../../02-Secure-Development/ControlCoverage/Feature/Automation.md
           - name: Batch
@@ -34,6 +36,10 @@
             topicHref: ../../02-Secure-Development/ControlCoverage/Feature/CDN.md
           - name: Cloud Service
             topicHref: ../../02-Secure-Development/ControlCoverage/Feature/CloudService.md
+          - name: Container Instances
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/ContainerInstances.md
+          - name: Container Registry
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/ContainerRegistry.md
           - name: Cosmos DB
             topicHref: ../../02-Secure-Development/ControlCoverage/Feature/CosmosDB.md
           - name: DataFactory
@@ -50,6 +56,8 @@
             topicHref: ../../02-Secure-Development/ControlCoverage/Feature/HDInsight.md
           - name: KeyVault
             topicHref: ../../02-Secure-Development/ControlCoverage/Feature/KeyVault.md
+          - name: Kubernetes Service
+            topicHref: ../../02-Secure-Development/ControlCoverage/Feature/KubernetesService.md
           - name: LoadBalancer
             topicHref: ../../02-Secure-Development/ControlCoverage/Feature/LoadBalancer.md
           - name: LogicApps

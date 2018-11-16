@@ -263,6 +263,8 @@ Below resource types can be checked for validating the security controls
 |Batch accounts |Batch |Microsoft.Batch/batchAccounts|
 |CDN profiles |CDN |Microsoft.Cdn/profiles|
 |Cloud Services|CloudService |Microsoft.ClassicCompute/domainNames|
+|Container Instances |ContainerInstances |Microsoft.ContainerInstance/containerGroups |
+|Container Registry |ContainerRegistry |Microsoft.ContainerRegistry/registries |
 |Cosmos DB|Cosmos DB|Microsoft.DocumentDb/databaseAccounts|
 |Data Factories |DataFactory |Microsoft.DataFactory/dataFactories|
 |Data Lake Analytics|DataLakeAnalytics |Microsoft.DataLakeAnalytics/accounts|
@@ -270,6 +272,7 @@ Below resource types can be checked for validating the security controls
 |Express Route-connected Virtual Networks|ERvNet |Microsoft.Network/virtualNetworks|
 |Event Hubs|EventHub |Microsoft.Eventhub/namespaces|
 |Key Vaults|KeyVault |Microsoft.KeyVault/vaults|
+|Kubernetes Service |KubernetesService |Microsoft.ContainerService/ManagedClusters |
 |Load Balancer|LoadBalancer|Microsoft.Network/loadBalancers|
 |Logic Apps|LogicApps |Microsoft.Logic/Workflows|
 |Notification Hubs|NotificationHub |Microsoft.NotificationHubs/namespaces/notificationHubs|
