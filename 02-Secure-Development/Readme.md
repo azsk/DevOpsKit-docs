@@ -200,8 +200,7 @@ The Get-AzSKAzureServicesSecurityStatus command now supports switch 'ExcludeReso
 ```PowerShell
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeResourceTypeName Databricks
 ```
-> **Note:** Currently there is provision to exclude only one type of resource, to exclude multiple types of resources from getting 
-'-ExcludeTags' switch can be used passing the user friendly name for the resource type as specified [here](Readme.md#execute-svts-for-a-specific-resource-type). The cmdlet below will exclude all resources of type AppServices or Databricks from getting scanned.
+> **Note:** Currently there is provision to exclude only one type of resources using switch '-ExcludeResourceTypeName'. To exclude multiple types of resources from getting scanned the switch'-ExcludeTags' can be used passing the user friendly name for the resource type as specified [here](Readme.md#execute-svts-for-a-specific-resource-type). The cmdlet below will exclude all resources of type AppServices or Databricks from getting scanned.
 ```PowerShell
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeResourceTypeName Databricks -ExcludeTags 'AppService'
 ```
