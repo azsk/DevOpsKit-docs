@@ -258,6 +258,7 @@ Below resource types can be checked for validating the security controls
 |-------| ------------- | ----------- |
 |Analysis Services |AnalysisService |Microsoft.AnalysisServices/servers|
 |API Connection|APIConnection|Microsoft.Web/connections|
+|API Management|APIManagement|Microsoft.ApiManagement/service|
 |App Services|AppService |Microsoft.Web/sites|
 |Automation Account|Automation|Microsoft.Automation/automationAccounts|
 |Batch accounts |Batch |Microsoft.Batch/batchAccounts|
