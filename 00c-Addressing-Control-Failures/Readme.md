@@ -551,4 +551,13 @@ Phew...We hope we covered the main reasons. One last thought is that in the curr
 There is an [open issue](https://github.com/Azure/azure-powershell/issues/6833) with Set-AzureRmDiagnosticSetting command provided by AzureRm. You can enable the diagnostic logs using Azure portal until that issue is resolved. Steps are available [here](https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-archive-diagnostic-logs#archive-diagnostic-logs-using-the-portal).
 Just make sure that logs are retained for a minimum of 365 days.
 
+
+#### I wish to deploy virtual networking in a hub and spoke architecture, where ExpressRoute is connected to a Core network, which is then connected via VNET Peering, or VPN to other VNET’s, or other Azure datacentres. But some of the controls regarding ExpressRoute-connected Virtual Networks contradict my requirement. How does AzSK justify the controls like "There should not be another virtual network gateway (GatewayType = Vpn) in an ER-vNet" and "There should not be any virtual network peerings on an ER-vNet"? How should I satisfy them without changing my implementation plans?
+
+The control regarding ‘do not peer another vNet with ER-connected vNet’ is a precautionary one and one that we expect would apply to most typical users of ER-Networks. However, when there are advanced users/scenarios like the one described above, you can certainly ‘attest’ the control and tell the DevOps Kit to treat it as passed in the future. However, it assumes that the person/team doing so is doing the proper diligence in ensuring that the configuration is setup securely and that it would not lead to new pathways between the wild internet and the corporate environment.
+
+This same thinking applies to many of the other network-infra related controls. For example, we have a control that flags off ‘IP forwarding’. This would apply to 99% of scenarios…however, there are legit cases where the control may not apply and can be ‘attested’ (e.g., you may be doing additional traffic inspection using a virtual appliance on a network).
+
+To understand the concept of attestation and how it works, you can go through the other FAQs in the Addressing Control Failures section in our documentation.
+
 [Back to top...](Readme.md#contents)

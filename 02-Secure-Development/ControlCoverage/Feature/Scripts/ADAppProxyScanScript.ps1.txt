@@ -1,0 +1,67 @@
+######--------------------------Prerequisite----------------------------------######
+# 1. You should be AAD Application Administrator (or higher privilege) in Azure Active Directory. 
+#    Refer: https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-assign-admin-roles#application-administrator
+# 2. Provide user input as mentioned in script
+
+######------------------------------------------------------------------------###### 
+
+#Install and import AD module
+$moduleName = "AzureAD"
+$module = Get-Module -Name $moduleName -ListAvailable
+if($null -eq $module)
+{
+    Install-Module -Name $moduleName
+}
+Import-Module $moduleName
+
+#Login 
+Connect-AzureAD 
+
+#User input - Provide ObjectID of AAD application configured for Application Proxy in Azure Active Directory
+$AADAppObjID = $null
+while([string]::IsNullOrWhiteSpace($AADAppObjID) -and $AADAppObjID -ne 'N')
+{
+    $AADAppObjID = Read-Host "Provide ObjectID of AAD application configured for Application Proxy in Azure Active Directory. Enter 'N' to exit.`n"
+}
+if($AADAppObjID -eq 'N')
+{
+    return;
+}
+else
+{
+ $AADAppObjID = $AADAppObjID.Trim()
+}
+
+#ControlID: Azure_ApplicationProxy_AuthN_Use_AAD_PreAuth
+write-host "Checking: [Application Proxy]-[AAD Authentication must be enabled as a pre-authentication method on your app]" -ForegroundColor Cyan
+$appProxy = Get-AzureADApplicationProxyApplication -ObjectId $aadAppObjID
+if($appProxy)
+{
+    $preAuthType = $appProxy.ExternalAuthenticationType
+    if($preAuthType -eq 'AadPreAuthentication')
+    {
+        write-host "**Passed**" -ForegroundColor Green
+    }
+    else 
+    {
+        write-host "**Failed**" -ForegroundColor Red
+    }
+
+    #ControlID: Azure_ApplicationProxy_Config_Enable_HTTPOnly_Cookie
+    write-host "Checking: [Application Proxy]-[HTTP-Only cookie must be enabled while configuring App Proxy wherever possible]" -ForegroundColor Cyan
+    if($appProxy.IsHttpOnlyCookieEnabled -eq $true)
+    {
+        write-host "**Passed**" -ForegroundColor Green
+    }
+    else 
+    {
+        write-host "**Failed**" -ForegroundColor Red
+    }
+}
+else
+{
+    write-host "Something went wrong. Check prerequisites and try again."  
+}
+
+
+

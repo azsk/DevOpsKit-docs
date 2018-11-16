@@ -95,6 +95,30 @@ You could find more details about CICD [here.](../03-Security-In-CICD/Readme.md)
  
 ------------------------------------------------
 ### FAQs
+
+#### Getting exception: Package 'AzureRM.profile' failed to be installed because End of Central Directory record could not be found.
+
+Recently we have seen some users are facing issue during installation of latest AzSK module from PSGallery. AzSK is mainly dependant of AzureRM module versions and its failing to install specific versions. We are investigating more on issue. You can use below method to install module from AzSK repository.
+
+```PowerShell
+$AzSKModuleRepoPath = "https://azsdkossep.azureedge.net/3.7.0/AzSK.zip"
+
+#Copy module zip to temp location
+$CopyFolderPath = $env:temp + "\AzSKTemp\"
+if(-not (Test-Path -Path $CopyFolderPath))
+{
+  mkdir -Path $CopyFolderPath -Force | Out-Null
+}
+$ModuleFilePath = $CopyFolderPath + "AzSK.zip"           
+Invoke-WebRequest -Uri $AzSKModuleRepoPath -OutFile $ModuleFilePath
+
+#Extract zip file to module location
+Expand-Archive -Path $ModuleFilePath -DestinationPath "$Env:USERPROFILE\documents\WindowsPowerShell\modules" -Force
+
+#Clean up temp location
+Remove-Item –path $CopyFolderPath –recurse
+```
+
 #### Should I run PowerShell ISE as administrator or regular user?
 Please run PowerShell ISE as a regular user. The AzSK has been thoroughly tested to run in normal user (non-elevated) mode. As much as possible, please do not launch your PS sessions in "Administrator" mode. There is nothing that the AzSK does that needs elevated privileges on the local system. Even the installation command itself uses a '-Scope CurrentUser' parameter internally.  
 

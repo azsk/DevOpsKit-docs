@@ -11,6 +11,7 @@ This page displays security controls that are automated via the devops kit and a
 |[AzSKCfg](Feature/AzSKCfg.md)||
 |[APIConnection](Feature/APIConnection.md)|Microsoft.Web/connections|
 |[AppService](Feature/AppService.md)|Microsoft.Web/sites|
+|[ApplicationProxy](Feature/ApplicationProxy.md)|NA|
 |[Automation](Feature/Automation.md)|Microsoft.Automation/automationAccounts|
 |[Batch](Feature/Batch.md)|Microsoft.Batch/batchAccounts|
 |[BotService](Feature/BotService.md)|Microsoft.BotService/botServices|
@@ -26,6 +27,7 @@ This page displays security controls that are automated via the devops kit and a
 |[DataLakeStore](Feature/DataLakeStore.md)|Microsoft.DataLakeStore/accounts|
 |[ERvNet](Feature/ERvNet.md)|Microsoft.Network/virtualNetworks|
 |[EventHub](Feature/EventHub.md)|Microsoft.Eventhub/namespaces|
+|[HDInsight](Feature/HDInsight.md)|Microsoft.HDInsight/clusters|
 |[KeyVault](Feature/KeyVault.md)|Microsoft.KeyVault/vaults|
 |[LoadBalancer](Feature/LoadBalancer.md)|Microsoft.Network/loadBalancers|
 |[LogicApps](Feature/LogicApps.md)|Microsoft.Logic/Workflows|
