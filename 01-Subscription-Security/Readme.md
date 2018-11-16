@@ -46,13 +46,12 @@
 - [Update subscription security baseline configuration](Readme.md#update-subscription-security-baseline-configuration)
 
 ### [AzSK support for Azure Government and Azure China](Readme.md#azsk-support-for-azure-government-and-azure-china)
-AzSK support for Azure Government and Azure China
 
-- [Spotcheck/Manual Scans](Readme.md#Spotcheck/Manual-Scans)
+- [Spotcheck/Manual Scans](Readme.md#spotcheck/manual-scans)
 
-- [CICD](Readme.md#CICD)
+- [CICD](Readme.md#cicd)
 
-- [CA](Readme.md#CA)
+- [CA](Readme.md#ca)
 
 
 ----------------------------------------------------------
