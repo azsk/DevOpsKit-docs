@@ -12,6 +12,9 @@
 - [Execute SVTs for a specific resource type](Readme.md#execute-svts-for-a-specific-resource-type)
 - [Execute SVTs in Baseline mode](Readme.md#execute-svts-in-baseline-mode) 
 - [Execute SVTs using "-UsePartialCommits" switch](Readme.md#execute-svts-using--usepartialcommits-switch)
+- [Execute SVT excluding some resource groups](Readme.md#execute-svts-excluding-some-resource-groups)
+- [Execute SVT excluding some resources](Readme.md#execute-svts-excluding-some-resources)
+- [Execute SVT excluding a resource type](Readme.md#execute-svts-excluding-a-resource-type)
 - [Understand the scan reports](Readme.md#understand-the-scan-reports)
 - [Generate output report in PDF format](Readme.md#generate-output-report-in-pdf-format)
 - [FAQs](Readme.md#faqs)
@@ -182,7 +185,7 @@ The Get-AzSKAzureServicesSecurityStatus command now supports checkpointing via a
 ```PowerShell
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -UsePartialCommits
 ```
-### Execute SVTs excluding some resource group
+### Execute SVTs excluding some resource groups
 The Get-AzSKAzureServicesSecurityStatus command now supports switch 'ExcludeResourceGroupNames' to exclude some of the resource groups from getting scanned. The cmdlet below will not scan the resource groups 'azsktestRg' and 'azsktestRg1'.
 ```PowerShell
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeResourceGroupNames "azsktestRg,azsktestRg2"
@@ -199,9 +202,9 @@ Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeRes
 ```
 > **Note:** Currently there is provision to exclude only one type of resource, to exclude multiple types of resources from getting 
 '-ExcludeTags' switch can be used passing the user friendly name for the resource type as specified [here](Readme.md#execute-svts-for-a-specific-resource-type). The cmdlet below will exclude all resources of type AppServices or Databricks from getting scanned.
-	```PowerShell
-	Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeResourceTypeName Databricks -ExcludeTags 'AppService'
-	```
+```PowerShell
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeResourceTypeName Databricks -ExcludeTags 'AppService'
+```
 
 [Back to top…](Readme.md#contents)
 
