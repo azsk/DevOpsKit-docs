@@ -30,6 +30,7 @@ This page displays security controls that are automated via the devops kit and a
 |[EventHub](Feature/EventHub.md)|Microsoft.Eventhub/namespaces|
 |[HDInsight](Feature/HDInsight.md)|Microsoft.HDInsight/clusters|
 |[KeyVault](Feature/KeyVault.md)|Microsoft.KeyVault/vaults|
+|[KubernetesService](Feature/KubernetesService.md)|Microsoft.ContainerService/ManagedClusters|
 |[LoadBalancer](Feature/LoadBalancer.md)|Microsoft.Network/loadBalancers|
 |[LogicApps](Feature/LogicApps.md)|Microsoft.Logic/Workflows|
 |[NotificationHub](Feature/NotificationHub.md)|Microsoft.NotificationHubs/namespaces/notificationHubs|
