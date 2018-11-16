@@ -10,6 +10,7 @@ This page displays security controls that are automated via the devops kit and a
 |[ARMPolicy List](Feature/ARMPolicyList.md)||
 |[AzSKCfg](Feature/AzSKCfg.md)||
 |[APIConnection](Feature/APIConnection.md)|Microsoft.Web/connections|
+|[APIManagement](Feature/APIManagement.md)|Microsoft.ApiManagement/service|
 |[AppService](Feature/AppService.md)|Microsoft.Web/sites|
 |[ApplicationProxy](Feature/ApplicationProxy.md)|NA|
 |[Automation](Feature/Automation.md)|Microsoft.Automation/automationAccounts|
