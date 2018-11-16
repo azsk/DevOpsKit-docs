@@ -45,7 +45,8 @@
 ### [AzSK: Update subscription security baseline configuration](Readme.md#azsk-update-subscription-security-baseline-configuration-1)
 - [Update subscription security baseline configuration](Readme.md#update-subscription-security-baseline-configuration)
 
-### [AzSK support for Azure Government and Azure China](Readme.md#azsk-support-for-Azure-Government-and-Azure-China)
+### [AzSK support for Azure Government and Azure China](Readme.md#azsk-support-for-azure-government-and-azure-china)
+AzSK support for Azure Government and Azure China
 
 - [Spotcheck/Manual Scans](Readme.md#Spotcheck/Manual-Scans)
 
