@@ -45,6 +45,14 @@
 ### [AzSK: Update subscription security baseline configuration](Readme.md#azsk-update-subscription-security-baseline-configuration-1)
 - [Update subscription security baseline configuration](Readme.md#update-subscription-security-baseline-configuration)
 
+### [AzSK support for Azure Government and Azure China](Readme.md#azsk-support-for-azure-government-and-azure-china-1)
+
+- [Spotcheck/Manual Scans](Readme.md#spotcheckmanual-scans)
+
+- [CICD](Readme.md#cicd)
+
+- [CA](Readme.md#ca)
+
 
 ----------------------------------------------------------
 ## AzSK: Subscription Health Scan
@@ -524,3 +532,40 @@ Update-AzSKSubscriptionSecurity -SubscriptionId <subscriptionid>
 
 
 [Back to top…](Readme.md#contents)
+
+## AzSK support for Azure Government and Azure China
+
+>**Pre-requisites**:
+> - AzSK version 3.8.0 or above.
+
+From release 3.8.0, AzSK has started supporting a few core scenarios for Azure Government and Azure China environments. Please follow the steps as under to use AzSK in those environments.
+
+### Spotcheck/Manual Scans:
+
+Follow the steps below to successfully run the local AzSK scans (GRS, GSS and other commands):
+
+1. Follow instructions in our [installation guide](00a-Setup/Readme.md#installation-guide) to download the latest version of AzSK (3.8.0 or above).
+
+2. Configure AzSK for your Azure environment using the following command:
+```PowerShell
+Set-AzSKPolicySettings -AzureEnvironment '<your environment name>'
+```   
+```PowerShell
+E.g., Set-AzSKPolicySettings -AzureEnvironment AzureUSGovernment 
+```   
+
+Once you have run through the steps above, any AzSK commands you run will start targeting the configured Azure cloud environment. 
+
+Notes:
+  * When no specific environment is configured (as in Step-2 above), AzSK assume AzureCloud as the default environment.
+  * If you have access to multiple Azure environments and need to switch from one to the other (e.g., AzurePublic to AzureChina) then you can use the  Clear-AzSKSessionState command after running Step-2. This will cause AzSK to reload the newly configured environment.
+
+CICD:
+
+To use the CICD extension, no special steps are required beyond those outlined in the AzSK CICD extensions [doc](03-Security-In-CICD#contents).
+
+
+CA:
+
+We are currently testing to determine if any extra step is needed for CA beyond those outlined in the 'Spotcheck/Manual' section above.
+
