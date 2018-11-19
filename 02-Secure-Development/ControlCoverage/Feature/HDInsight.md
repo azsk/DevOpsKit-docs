@@ -7,7 +7,7 @@
 
 <tr><td><b>HDInsight must have supported HDI cluster version</b>
 <br/>Being on the latest/supported HDInsight version significantly reduces risks from security bugs or updates that may be present in older or retired cluster versions.  </td>
-<td>High</td><td>No</td><td>No</td></tr>
+<td>High</td><td>No</td><td>Yes</td></tr>
 
 <tr><td><b>Use Public-Private key pair together with a passcode for SSH login</b>
 <br/>Public-Private key pair help to protect against password guessing and brute force attacks</td>
@@ -15,7 +15,7 @@
 
 <tr><td><b>HDInsight cluster access must be restricted using virtual network or Azure VPN gateway service with NSG traffic rules</b>
 <br/>Restricting cluster access with inbound and outbound traffic via NSGs limits the network exposure for cluster and reduces the attack surface.</td>
-<td>High</td><td>No</td><td>No</td></tr>
+<td>High</td><td>No</td><td>Yes</td></tr>
 
 <tr><td><b>Secure transfer protocol must be used for accessing storage account resources</b>
 <br/>Use of secure transfer ensures server/service authentication and protects data in transit from network layer man-in-the-middle, eavesdropping, session-hijacking attacks. When enabling HTTPS one must remember to simultaneously disable access over plain HTTP else data can still be subject to compromise over clear text connections.</td>
@@ -47,6 +47,10 @@
 
 <tr><td><b>Diagnostics must be enabled for cluster operations</b>
 <br/>Diagnostics logs are needed for creating activity trail while investigating an incident or a compromise.</td>
+<td>Medium</td><td>No</td><td>No</td></tr>
+
+<tr><td><b>Secrets and keys must not be in plain text in notebooks and jobs</b>
+<br/>Keeping secrets such as connection strings, passwords, keys, etc. in clear text can lead to easy compromise. Storing them in a secure place (like KeyVault) ensures that they are protected at rest.</td>
 <td>Medium</td><td>No</td><td>No</td></tr>
 
 <table>
