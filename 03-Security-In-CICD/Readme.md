@@ -19,7 +19,7 @@
   - [Verifying that SVTs have been added and configured correctly](Readme.md#verifying-that-the-svts-have-been-added-and-configured-correctly-1)
 - [Remediating Failures and Next Steps](Readme.md#remediating-failures-and-next-steps)
 
-## [AzSK ARM Template Checker (Preview)](Readme.md#azsk-arm-template-checker)
+## [AzSK ARM Template Checker](Readme.md#azsk-arm-template-checker)
 - [Overview](Readme.md#overview-1) 
 - [Enable AzSK extension for your VSTS](Readme.md#enable-azsk-extension-for-your-vsts-1)
 - [Walkthrough](Readme.md#walkthrough-2)
@@ -409,11 +409,10 @@ The ARM Template security check script runs a scan on your given ARM Template to
 The ARM Template health check script can be run using the command below after replacing `<Path to ARM Template>`
  with the path of your ARM Template
 ```PowerShell
-Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -Preview 
+Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> 
 ```
 The parameters used are:
 - ARMTemplatePath – Path to ARM Template file or folder
-> **Note**: This feature is in preview mode only. So, passing "–Preview" switch is mandatory. 
 
 [Back to top…](Readme.md#contents)
 
@@ -440,7 +439,7 @@ To address findings, you should do the following:
 To scan multiple ARM Templates at a time you can pass folder path containing different ARM Template(s) to “–ARMTemplatePath” parameter in “Get-AzSKARMTemplateSecurityStatus” cmdlet.
 e.g. :
 ```PowerShell
- Get-AzSKARMTemplateSecurityStatus  –ARMTemplatePath "D:\DSRE\TestARMChecker\" –Preview [-Recurse]
+ Get-AzSKARMTemplateSecurityStatus  –ARMTemplatePath "D:\DSRE\TestARMChecker\" [-Recurse]
 ```
 > **Note**: You need to pass “-Recurse” switch in cmdlet if you want to scan ARM Templates in the specified location and in all child folders of the location.
 
