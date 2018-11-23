@@ -423,14 +423,14 @@ ARM Template checker covers Baseline controls for following services:
 
 |FeatureName|Resource Type|
 |-----------|-------------|
-|[AppService](Feature/AppService.md)|Microsoft.Web/sites|
-|[CDN](Feature/CDN.md)|Microsoft.Cdn/profiles|
-|[CosmosDB](Feature/CosmosDB.md)|Microsoft.DocumentDb/databaseAccounts|
-|[DataLakeStore](Feature/DataLakeStore.md)|Microsoft.DataLakeStore/accounts|
-|[RedisCache](Feature/RedisCache.md)|Microsoft.Cache/Redis|
-|[SQLDatabase](Feature/SQLDatabase.md)|Microsoft.Sql/servers|
-|[Storage](Feature/Storage.md)|Microsoft.Storage/storageAccounts|
-|[TrafficManager](Feature/TrafficManager.md)|Microsoft.Network/trafficmanagerprofiles|
+| AppService |Microsoft.Web/sites|
+| CDN |Microsoft.Cdn/profiles|
+| CosmosDB |Microsoft.DocumentDb/databaseAccounts|
+| DataLakeStore |Microsoft.DataLakeStore/accounts|
+| RedisCache |Microsoft.Cache/Redis|
+| SQLDatabase |Microsoft.Sql/servers|
+| Storage |Microsoft.Storage/storageAccounts|
+| TrafficManager |Microsoft.Network/trafficmanagerprofiles|
 
 ARM Templates for reference are available [here](../ARMTemplates).
 
