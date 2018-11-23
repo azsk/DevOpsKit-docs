@@ -279,7 +279,7 @@ The PDF report consists of following sections:
 ### FAQs
 #### What Azure resource types that can be checked?
 
-Below resource types can be checked for validating the security controls 
+Below resource types can be checked for validating the security controls in SVT(GRS, GSS and CICD SVT task). please refer [this] for supported resource types in ARMChecker) 
 
 | Resource Name |Resource Type Name	|Resource Type|
 |-------| ------------- | ----------- |
