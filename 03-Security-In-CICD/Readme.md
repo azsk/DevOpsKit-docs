@@ -21,7 +21,7 @@
 
 ## [AzSK ARM Template Checker](Readme.md#azsk-arm-template-checker)
 - [Overview](Readme.md#overview-1) 
-   -[ARM Template Checker - Control coverage](Readme.md#ARM-Template-Checker-Control-coverage)
+  - [ARM Template Checker - Control coverage](Readme.md#ARM-Template-Checker-Control-coverage)
 - [Enable AzSK extension for your VSTS](Readme.md#enable-azsk-extension-for-your-vsts-1)
 - [Walkthrough](Readme.md#walkthrough-2)
   - [Adding ARM Template Checker in VSTS pipeline](Readme.md#adding-arm-template-checker-in-vsts-pipeline)
