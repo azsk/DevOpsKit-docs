@@ -3,7 +3,7 @@
 This page displays security controls that are automated via the devops kit and also controls that have to manually verified. Controls have a 'Severity' field to help distinguish issues by degree of risk. Apart from that the automated flag indicates whether a particular control is automated and 'Fix Script' provides the availability of  a 'control fix' script that the user can review and run to apply the fixes. 
 ### Azure Services supported by AzSK
 
-Below resource types can be checked for validating the security controls in SVT(GRS, GSS and CICD SVT task). please refer [this](Readme.md#arm-template-checker---control-coverage) for supported resource types in ARMChecker) 
+Below resource types can be checked for validating the security controls in SVT(GRS, GSS and CICD SVT task). please refer [this](03-Security-In-CICD/Readme.md#arm-template-checker---control-coverage) for supported resource types in ARMChecker) 
 
 |FeatureName|Resource Type|
 |---|---|
