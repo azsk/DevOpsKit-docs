@@ -21,6 +21,7 @@
 
 ## [AzSK ARM Template Checker](Readme.md#azsk-arm-template-checker)
 - [Overview](Readme.md#overview-1) 
+  - [ARM Template Checker - Control coverage](Readme.md#arm-template-checker---control-coverage)
 - [Enable AzSK extension for your VSTS](Readme.md#enable-azsk-extension-for-your-vsts-1)
 - [Walkthrough](Readme.md#walkthrough-2)
   - [Adding ARM Template Checker in VSTS pipeline](Readme.md#adding-arm-template-checker-in-vsts-pipeline)
@@ -416,10 +417,22 @@ The parameters used are:
 
 [Back to top…](Readme.md#contents)
 
-### ARM Template Checker - What is covered?  
+### ARM Template Checker - Control coverage
+ 
 ARM Template checker covers Baseline controls for following services:
-App Service, Storage, SQL, CDN, Traffic Manager, Document DB, Redis Cache, and Data Lake.
-ARM Template for reference are available [here](../ARMTemplates).
+
+|FeatureName|Resource Type|
+|-----------|-------------|
+| AppService |Microsoft.Web/sites|
+| CDN |Microsoft.Cdn/profiles|
+| CosmosDB |Microsoft.DocumentDb/databaseAccounts|
+| DataLakeStore |Microsoft.DataLakeStore/accounts|
+| RedisCache |Microsoft.Cache/Redis|
+| SQLDatabase |Microsoft.Sql/servers|
+| Storage |Microsoft.Storage/storageAccounts|
+| TrafficManager |Microsoft.Network/trafficmanagerprofiles|
+
+ARM Templates for reference are available [here](../ARMTemplates).
 
 ### ARM Template Checker Scan - How to fix findings?
 
