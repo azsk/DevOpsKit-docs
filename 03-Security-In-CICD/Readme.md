@@ -420,8 +420,9 @@ The parameters used are:
 ### ARM Template Checker - Control coverage
  
 ARM Template checker covers Baseline controls for following services:
+
 |FeatureName|Resource Type|
-|---|---| 
+|-----------|-------------|
 |[AppService](Feature/AppService.md)|Microsoft.Web/sites|
 |[CDN](Feature/CDN.md)|Microsoft.Cdn/profiles|
 |[CosmosDB](Feature/CosmosDB.md)|Microsoft.DocumentDb/databaseAccounts|
