@@ -567,5 +567,5 @@ To use the CICD extension, no special steps are required beyond those outlined i
 
 CA:
 
-We are currently testing to determine if any extra step is needed for CA beyond those outlined in the 'Spotcheck/Manual' section above.
+Once you have run through the steps outlined in the 'Spotcheck/Manual' section, You can easily use AzSK Continuous Assurance. Click [here](/04-Continous-Assurance#continuous-assurance-ca) for more details on Continuous Assuance.
 
