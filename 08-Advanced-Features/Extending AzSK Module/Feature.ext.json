@@ -1,0 +1,24 @@
+{
+    "FeatureName": "Feature",
+    "Reference": "aka.ms/azsktcp/feature", // This value should be same as original Feature.json
+    "IsMaintenanceMode": false,
+    "Controls": [
+            {
+            "ControlID": "Azure_Feature_Functionality",  // Define the new control id
+            "Description": "Latest TLS version should be used", // Description for your control
+            "Id": "Feature1001", // Ensure that all the internal ids are appended with 4 digit integer code
+            "ControlSeverity": "Medium", // Control the severity
+            "Automated": "Yes",  // Control the automation status
+            "MethodName": "FunctionToExtend", // Update the method name with the new one provided above
+            "Recommendation": "Steps to fix the extended control",
+            "Tags": [
+            "SDL",
+            "Best Practice",
+            "Automated",
+            "Feature" // Feature specific required Tag (if any)
+            ],
+            "Enabled": true,
+            "Rationale": "Logical intention for the extended control"
+        }
+    ]
+}
