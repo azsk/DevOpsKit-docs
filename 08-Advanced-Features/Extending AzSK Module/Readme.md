@@ -293,8 +293,8 @@ Control in the services like Storage/AppService/VirtualMachine must have some re
       For more details about Tag please refer: [Tag details](https://github.com/azsk/DevOpsKit-docs/blob/master/01-Subscription-Security/Readme.md#target-specific-controls-during-a-subscription-health-scan) 
     
 ### References:
-- [SubscriptionCore.ext.json](/SubscriptionCore.ext.json)
-- [SubscriptionCore.ext.ps1](/SubscriptionCore.ext.ps1)
-- [Feature.ext.json](/Feature.ext.json)
-- [Feature.ext.ps1](/Feature.ext.ps1)
-- [ListenerName.ext.ps1](/ListenerName.ext.ps1)
+- [SubscriptionCore.ext.json](SubscriptionCore.ext.json)
+- [SubscriptionCore.ext.ps1](SubscriptionCore.ext.ps1)
+- [Feature.ext.json](Feature.ext.json)
+- [Feature.ext.ps1](Feature.ext.ps1)
+- [ListenerName.ext.ps1](ListenerName.ext.ps1)
