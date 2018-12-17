@@ -571,7 +571,7 @@ To use the CICD extension, no special steps are required beyond those outlined i
 
 Once you have run through the steps outlined in the 'Spotcheck/Manual' section, You can easily use AzSK Continuous Assurance. Click [here](/04-Continous-Assurance#continuous-assurance-ca) for more details on Continuous Assurance.
 
-Please refer [this](04-Continous-Assurance/Readme.md#setting-up-continuous-assurance---step-by-step) set up CA. As Azure Government and Azure China are limited to particular location, provide 'AutomationAccountLocation' parameter because the default value is EastUS2.
+Please refer [this](../04-Continous-Assurance/Readme.md#setting-up-continuous-assurance---step-by-step) set up CA. As Azure Government and Azure China are limited to particular location, provide 'AutomationAccountLocation' parameter because the default value is EastUS2.
 
 ```PowerShell
 E.g., Install-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
@@ -583,7 +583,7 @@ E.g., Install-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 
 ### Customizing AzSK for your organization:
 
-Please refer [this](07-Customizing-AzSK-for-your-Org#customizing-azsk-for-your-organization) for more details
+Please refer [this](../07-Customizing-AzSK-for-your-Org#customizing-azsk-for-your-organization) for more details
 
 Note:
 
