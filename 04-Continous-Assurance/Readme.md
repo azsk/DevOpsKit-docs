@@ -88,6 +88,10 @@ for your application.)
 	        [-AzureADAppName <AzureADAppName>]
 ```
 
+Note:
+
+For Azure environments otherthan Azure Cloud, don't forget to provide AutomationAccountLocation as the default value won't work in those environments.
+
 |Param Name|Purpose|Required?|Default value|Comments|
 |----|----|----|----|----|
 |SubscriptionId|Subscription ID of the Azure subscription in which an Automation Account for Continuous Assurance will be created |TRUE|None||
