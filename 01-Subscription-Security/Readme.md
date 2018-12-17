@@ -53,7 +53,7 @@
 
 - [CA](Readme.md#ca)
 
-- [Customizing AzSK for your organization](Readme.md#)
+- [Customizing AzSK for your organization](Readme.md#customizing-azsk-for-your-organization)
 
 
 ----------------------------------------------------------
