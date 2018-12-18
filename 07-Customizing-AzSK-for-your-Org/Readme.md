@@ -535,6 +535,7 @@ file already present in your org policy folder.)
 }
 ```
  ii) Save the file
+ 
  iii) Run the policy setup command (the same command you ran for the first-time setup)
 
  ###### Testing: 
