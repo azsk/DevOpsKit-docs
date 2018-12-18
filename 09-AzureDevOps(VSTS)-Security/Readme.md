@@ -44,7 +44,7 @@ Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -Projec
 Similar to Azure AzSK SVT scan, outcome of the analysis is printed on the console during SVT execution and a CSV and LOG files are 
 also generated for subsequent use.
 
-The CSV file and LOG file are generated under a subscription-specific sub-folder in the folder  
+The CSV file and LOG file are generated under a Org-specific sub-folder in the folder  
 *%LOCALAPPDATA%\Microsoft\AzSK.AzureDevOpsLogs\Org_[yourOrganizationName]*  
 E.g.  
 C:\Users\UserName\AppData\Local\Microsoft\Azure.DevOpsLogs\Org_[yourOrganizationName]\20181218_103136_GADS
