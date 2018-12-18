@@ -26,3 +26,4 @@ To get started, we need the following:
 3. When prompted enter personal access token(PAT).
 
 **Step-2: Verifying that Job Setup is complete** 
+**1:** Go to your Databricks workspace that was used above. In workspace you should see an folder created by the name 'AzSK'. Inside this folder, there will be a notebook by the name "AzSK_CA_Notebook", clicking on it will display the contents of the Notebook.
