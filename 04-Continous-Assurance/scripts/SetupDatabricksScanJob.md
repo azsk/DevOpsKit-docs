@@ -26,7 +26,7 @@ function InvokeRestAPICall($EndPoint, $Method, $Body,$ErrorMessage)
 function SetupDatabricksScanJob($DatabricksHost)
 {
     $WorkSpaceBaseUrl = $DatabricksHost
-    $PAT = Read-Host -Prompt 'Input Personal  Access Token(PAT) for Databricks Workspace: '
+    $PAT = Read-Host -Prompt 'Input Personal  Access Token(PAT) for Databricks Workspace'
     $PersonalAccessToken = $PAT.Trim()
 
     # Please don't modify these values
