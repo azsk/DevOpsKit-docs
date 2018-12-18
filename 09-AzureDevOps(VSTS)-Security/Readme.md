@@ -50,18 +50,3 @@ E.g.
 C:\Users\UserName\AppData\Local\Microsoft\Azure.DevOpsLogs\Org_[yourOrganizationName]\20181218_103136_GADS
 
 You can refer this [link](../02-Secure-Development#understand-the-scan-reports) for understanding the scan report. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
