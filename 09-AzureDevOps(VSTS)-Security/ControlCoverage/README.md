@@ -6,11 +6,11 @@ This page displays security controls that are automated via the devops kit and a
 
 Below resource types can be checked for validating the security controls. 
 
-|FeatureName|Resource Type|
-|---|---|
-|[Organizaiton](Feature/Organizaiton.md)||
-|[Project](Feature/Project.md)||
-|[ServiceConnection](Feature/ServiceConnection.md)||
-|[User](Feature/User.md)||
-|[Build](Feature/Build.md)||
-|[Release](Feature/Release.md)||
+|FeatureName|
+|---|
+|[Organizaiton](Feature/Organizaiton.md)|
+|[Project](Feature/Project.md)|
+|[ServiceConnection](Feature/ServiceConnection.md)|
+|[User](Feature/User.md)|
+|[Build](Feature/Build.md)|
+|[Release](Feature/Release.md)|
