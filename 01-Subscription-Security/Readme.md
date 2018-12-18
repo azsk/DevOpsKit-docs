@@ -53,6 +53,8 @@
 
 - [CA](Readme.md#ca)
 
+- [Customizing AzSK for your organization](Readme.md#customizing-azsk-for-your-organization)
+
 
 ----------------------------------------------------------
 ## AzSK: Subscription Health Scan
@@ -560,12 +562,36 @@ Notes:
   * When no specific environment is configured (as in Step-2 above), AzSK assume AzureCloud as the default environment.
   * If you have access to multiple Azure environments and need to switch from one to the other (e.g., AzurePublic to AzureChina) then you can use the  Clear-AzSKSessionState command after running Step-2. This will cause AzSK to reload the newly configured environment.
 
-CICD:
+### CICD:
 
 To use the CICD extension, no special steps are required beyond those outlined in the AzSK CICD extensions [doc](03-Security-In-CICD#contents).
 
 
-CA:
+### CA:
 
-Once you have run through the steps outlined in the 'Spotcheck/Manual' section, You can easily use AzSK Continuous Assurance. Click [here](/04-Continous-Assurance#continuous-assurance-ca) for more details on Continuous Assuance.
+Once you have run through the steps outlined in the 'Spotcheck/Manual' section, You can easily use AzSK Continuous Assurance. Click [here](/04-Continous-Assurance#continuous-assurance-ca) for more details on Continuous Assurance.
 
+Please refer [this](../04-Continous-Assurance/Readme.md#setting-up-continuous-assurance---step-by-step) set up CA. As Azure Government and Azure China are limited to particular location, provide 'AutomationAccountLocation' parameter because the default value is EastUS2.
+
+```PowerShell
+E.g., Install-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
+		    -AutomationAccountLocation "USGov Virginia" `                    (for Azure Government)
+	        -ResourceGroupNames <ResourceGroupNames> `
+	        -OMSWorkspaceId <OMSWorkspaceId> `
+	        -OMSSharedKey <OMSSharedKey> 
+```
+
+### Customizing AzSK for your organization:
+
+Please refer [this](../07-Customizing-AzSK-for-your-Org#customizing-azsk-for-your-organization) for more details
+
+Note:
+
+As Azure Government and Azure China are limited to particular location, provide 'ResourceGroupLocation' parameter because the default value is EastUS2
+
+```PowerShell
+E.g., Install-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+           -OrgName <OrgName> `
+           -PolicyFolderPath <PolicyFolderPath> `
+           -ResourceGroupLocation "USGov Virginia"                          (for Azure Government)
+```

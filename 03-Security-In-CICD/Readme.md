@@ -499,7 +499,13 @@ Along with input parameter, you can check for below options
 
 ![03_IP_Parameter_for_Task](../Images/03_IP_Parameter_for_Task_ARM.JPG)
 
-**Step-4**: Save the Release Definition.
+**Step-4**: Specify AzSKServerURL and EnableServerAuth variables if you want to customize ARM controls
+AzSKServerURL -> AzSK OnlinePolicyStoreUrl
+EnableServerAuth -> EnableAADAuthForOnlinePolicyStore
+  
+![03_IP_Parameter_for_Task](../Images/ARMChecker_Orgpolicy_Variables.JPG)
+
+**Step-5**: Save the Release Definition.
   
 [Back to top...](Readme.md#contents)
 
