@@ -12,6 +12,7 @@
 - [Getting details about a Continuous Assurance setup](Readme.md#getting-details-about-a-continuous-assurance-setup)
 - [Continuous Assurance (CA) - 'Central Scan' mode](Readme.md#continuous-assurance-ca---central-scan-mode)
 - [Continuous Assurance (CA) - Trigger scan on resource deployment (Preview)](Readme.md#continuous-assurance-ca---scanondeployment-mode)
+- [Scan Databricks using custom AzSK Job](Readme.md#scan-databricks-using-custom-azsk-job)
 - [FAQ](Readme.md#faq)
 
 -----------------------------------------------------------------
@@ -567,6 +568,8 @@ Remove-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -DeleteStorageRep
 >**Note** If just subscriptionId is passed, then it would check if the host sub is in central scanning mode, if so, user needs to pass CentralScanMode switch. In these scenarios, it would remove the whole automation account from host sub.
 
 [Back to top…](Readme.md#contents)
+
+## Scan Databricks using custom AzSK Job
 
 ### FAQ
 
