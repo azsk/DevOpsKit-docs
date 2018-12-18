@@ -592,9 +592,9 @@ To get started, we need the following:
 
 **Step-2: Verifying that Job Setup is complete** 
 
-**1:** Go to your Databricks workspace that was used above. In workspace you should see an folder created by the name 'AzSK'. Inside this folder, there will be a notebook by the name "AzSK_CA_Notebook", clicking on it will display the contents of the Notebook.
+**1:** Go to your Databricks workspace that was used above. In workspace you should see an folder created by the name 'AzSK'. Inside this folder, there should be a notebook by the name "AzSK_CA_Scan_Notebook".
 
-**2:**
+**2:** Go to jobs in your workspace, there should be a job by the name "AzSK_CA_Scan_Job".
 
 ### FAQ
 
