@@ -90,7 +90,7 @@ for your application.)
 
 Note:
 
-For Azure environments otherthan Azure Cloud, don't forget to provide AutomationAccountLocation as the default value won't work in those environments.
+For Azure environments other than Azure Cloud, don't forget to provide AutomationAccountLocation as the default value won't work in those environments.
 
 |Param Name|Purpose|Required?|Default value|Comments|
 |----|----|----|----|----|

@@ -148,7 +148,7 @@ Install-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
 
 Note:
 
-For Azure environments otherthan Azure Cloud, don't forget to provide ResourceGroupLocation as the default value won't work in those environments.
+For Azure environments other than Azure Cloud, don't forget to provide ResourceGroupLocation as the default value won't work in those environments.
 
 The execution of command will create following resources in the subscription (if they don't already exist): 
 1. Resource Group (AzSK-Contoso-IT-RG) - AzSK-\<OrgName>-\<DepartmentName>-RG. 
