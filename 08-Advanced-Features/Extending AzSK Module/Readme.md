@@ -16,63 +16,63 @@
 
 Before we get started with extending the toolkit, it is important to understand the structure of the PowerShell module. Below represent the tree structure of DevOpsKit PS module, out which currently you can extend only SVT (subscription & services) and Listeners. SVTs stand for Security Verification Tests, which constitute of different azure security controls that are scanned by DevOps Kit. Listeners as like subscribers for control evaluation results. You can route the control results data to data source choice of yours. 
 		
-    ```
+    
       
-      ├───AlertMonitoring
-      ├───ARMChecker
-      ├───ARMCheckerLib
-      ├───AzSKInfo
-      ├───ContinuousAssurance
-      ├───Framework
-      │   ├───Abstracts
-      │   │   └───FixControl
-      │   ├───Configurations
-      │   │   ├───AlertMonitoring
-      │   │   ├───ARMChecker
-      │   │   ├───AutoUpdate
-      │   │   ├───ContinuousAssurance
-      │   │   ├───PolicySetup
-      │   │   ├───SubscriptionSecurity
-      │   │   └───SVT
-      │   │       ├───AzSKCfg
-      │   │       ├───Services
-      │   │       └───SubscriptionCore
-      │   ├───Core
-      │   │   ├───ARMChecker
-      │   │   ├───AzSKInfo
-      │   │   ├───AzureMonitoring
-      │   │   ├───ContinuousAssurance
-      │   │   ├───FixControl
-      │   │   │   └───Services
-      │   │   ├───PolicySetup
-      │   │   ├───SubscriptionSecurity
-      │   │   └───SVT
-      │   │       ├───AzSKCfg
-      │   │       ├───Services
-      │   │       └───SubscriptionCore
-      │   ├───Helpers
-      │   ├───Listeners
-      │   │   ├───CA
-      │   │   ├───EventHub
-      │   │   ├───FixControl
-      │   │   │   └───FixControlScripts
-      │   │   ├───OMS
-      │   │   ├───RemoteReports
-      │   │   ├───UserReports
-      │   │   └───Webhook
-      │   ├───Managers
-      │   └───Models
-      │       ├───ContinuousAssurance
-      │       ├───Exception
-      │       ├───FixControl
-      │       ├───RemoteReports
-      │       ├───SubscriptionCore
-      │       ├───SubscriptionSecurity
-      │       └───SVT
-      ├───PolicySetup
-      ├───SubscriptionSecurity
-      └───SVT
-      ```
+      ├───AlertMonitoring  
+      ├───ARMChecker  
+      ├───ARMCheckerLib  
+      ├───AzSKInfo  
+      ├───ContinuousAssurance  
+      ├───Framework  
+      │   ├───Abstracts  
+      │   │   └───FixControl  
+      │   ├───Configurations  
+      │   │   ├───AlertMonitoring  
+      │   │   ├───ARMChecker  
+      │   │   ├───AutoUpdate  
+      │   │   ├───ContinuousAssurance  
+      │   │   ├───PolicySetup  
+      │   │   ├───SubscriptionSecurity  
+      │   │   └───SVT  
+      │   │       ├───AzSKCfg  
+      │   │       ├───Services  
+      │   │       └───SubscriptionCore  
+      │   ├───Core  
+      │   │   ├───ARMChecker  
+      │   │   ├───AzSKInfo  
+      │   │   ├───AzureMonitoring  
+      │   │   ├───ContinuousAssurance  
+      │   │   ├───FixControl  
+      │   │   │   └───Services  
+      │   │   ├───PolicySetup  
+      │   │   ├───SubscriptionSecurity  
+      │   │   └───SVT  
+      │   │       ├───AzSKCfg  
+      │   │       ├───Services  
+      │   │       └───SubscriptionCore  
+      │   ├───Helpers  
+      │   ├───Listeners  
+      │   │   ├───CA  
+      │   │   ├───EventHub  
+      │   │   ├───FixControl  
+      │   │   │   └───FixControlScripts  
+      │   │   ├───OMS  
+      │   │   ├───RemoteReports  
+      │   │   ├───UserReports  
+      │   │   └───Webhook  
+      │   ├───Managers  
+      │   └───Models  
+      │       ├───ContinuousAssurance  
+      │       ├───Exception  
+      │       ├───FixControl  
+      │       ├───RemoteReports  
+      │       ├───SubscriptionCore  
+      │       ├───SubscriptionSecurity  
+      │       └───SVT  
+      ├───PolicySetup  
+      ├───SubscriptionSecurity  
+      └───SVT  
+
 
 ### Know more about SVTs:
 
@@ -171,7 +171,7 @@ class SubscriptionCore: SVTBase
     
    > e.g. class SubscriptionCore : SVTBase => SubscriptionCoreExt : SubscriptionCore
 	
-  ```PowerShell
+   ```PowerShell
 	Set-StrictMode -Version Latest
 	class SubscriptionCoreExtension: SubscriptionCore
 	{
@@ -180,8 +180,8 @@ class SubscriptionCore: SVTBase
 	    
 	  }
 	}
-  ```
-    All other functions from the class file should be removed.
+   ```
+   All other functions from the class file should be removed.
   
 3. 	 If you are modifying the logic a specific control, then just retain that function, or if you are adding a new control, just copy any control function from the base class to the extension class reference
 	> Note: For a given control in the json, the corresponding PowerShell function is provided as value under MethodName property. You can search for that method under the PS script. e.g. In this case let us assume you want to add a new control that fails if you have more than 2 co-admins. 
@@ -215,9 +215,9 @@ class SubscriptionCore: SVTBase
 			return $controlResult;
 		}
 	}
-  ```
+  ```  
   
-  4. 	 Now you need to prepare the json for the above new control. You can get started by copying the default base json, rename it to feature.ext.json. In this case you need to rename it as SubscriptionCore.ext.json. Remove all the other controls except for one. And you can update with new control details. See additional instructions as '//comments' on each line in the example JSON below. Remove these comments from JSON if you happen to use the below as-is.
+  4. 	Now you need to prepare the json for the above new control. You can get started by copying the default base json, rename it to feature.ext.json. In this case you need to rename it as SubscriptionCore.ext.json. Remove all the other controls except for one. And you can update with new control details. See additional instructions as '//comments' on each line in the example JSON below. Remove these comments from JSON if you happen to use the below as-is.
 	
   > IMPT: Do *not* tag 'Ext' to the 'FeatureName' here. Make sure ypu have updated the MethodName to the new method name. 
   > Note: Remove the comments in the above JSON before saving the file
@@ -256,9 +256,9 @@ class SubscriptionCore: SVTBase
     {
       "Name":  "SubscriptionCore.ext.ps1"
     }
-```
-    Refer below screenshot.
-    ![Block diagram of AzSK extension](../../../Images/08_AzSK_Extension_SVT_Storage_Policy_Example.png)
+```  
+   Refer below screenshot.  
+   ![Block diagram of AzSK extension](../../../Images/08_AzSK_Extension_SVT_Storage_Policy_Example.png)
   
 6. 	 That's it !! You can now scan new extended control like any other control.
   
@@ -282,7 +282,7 @@ class SubscriptionCore: SVTBase
 
 Extended Feature.ext.ps1 files are downloaded at C:\Users\<UserAccount>\AppData\Local\Microsoft\AzSK\Extensions folder in execution manchine. While debugging breakpoint needs be inserted in those files. 
 
-### FAQs
+### FAQs:
 
 #### I have added ext control in Storage/AppService/VirtualMachine feature as per documentation, still my control is not getting executed. Even the control not coming as Manual in csv.
 Control in the services like Storage/AppService/VirtualMachine must have some required "Tags" in the feature.ext.json. While initialization of the feature, calculation of applicable control should be done based on those Tags. If those tags are not present in the control then the control will be filter out and will not be execute. Below are some examples of the Tags which are required for that feature.  
