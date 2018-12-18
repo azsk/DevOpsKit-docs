@@ -586,7 +586,7 @@ To get started, we need the following:
 **Step-1: Setup** 
 
 0. Copy latest script from scripts section(SetupDatabricksScanJob.md).
-1. Open the PowerShell ISE and copy script. 
+1. Open the PowerShell ISE and paste script. 
 2. Run the script after updating required parameters.
 3. When prompted enter personal access token(PAT).
 
