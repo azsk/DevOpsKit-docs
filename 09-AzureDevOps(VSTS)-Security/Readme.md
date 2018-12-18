@@ -1,6 +1,6 @@
 # Secure Azure DevOps (VSTS) -Preview
 
-AzSK for AzureDevOps perform security scanning for core areas of AzureDevOps/VSTS like Organization, Projects, Users, Connections, Pipelines (Build & Release). 
+AzSK for AzureDevOps performs security scanning for core areas of AzureDevOps/VSTS like Organization, Projects, Users, Connections, Pipelines (Build & Release). 
 
 
 ## Installation Guide
@@ -49,7 +49,7 @@ The CSV file and LOG file are generated under a subscription-specific sub-folder
 E.g.  
 C:\Users\UserName\AppData\Local\Microsoft\Azure.DevOpsLogs\Org_[yourOrganizationName]\20181218_103136_GADS
 
-You can refer this [link](../02-Secure-Development#understand-the-scan-reports) for understanding the scan reports under. 
+You can refer this [link](../02-Secure-Development#understand-the-scan-reports) for understanding the scan report. 
 
 
 
