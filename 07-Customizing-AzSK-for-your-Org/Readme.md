@@ -224,16 +224,17 @@ Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
 In this section let us look at typical use cases for org policy customization and how to accomplish them. 
 We will cover the following:
 
-1. Changing the default 'Running AzSK using…' message  
-2. Changing a global setting for some control
-3. Changing/customizing a server baseline policy set
-4. Customizing specific controls for a service SVT (e.g., Storage.json)
+a. Changing the default 'Running AzSK using…' message  
+b. Changing a global setting for some control
+c. Changing/customizing a server baseline policy set
+d. Customizing specific controls for a service SVT (e.g., Storage.json)
    1. Turning controls On/Off
    2. Changing Recommendation Text
    3. Changing Severity, etc.
    4. Disable attestation
-5. Changing ARM policy/Alerts set (coming soon…)
-6. Changing RBAC mandatory/deprecated lists (coming soon…)
+e. Customizing Severity labels
+f. Changing ARM policy/Alerts set (coming soon…)
+g. Changing RBAC mandatory/deprecated lists (coming soon…)
 
 
 > Note: To edit policy JSON files, use a friendly JSON editor such as Visual Studio Code. It will save you lot of
@@ -517,6 +518,35 @@ from a baseline scan after this change:
 
 Likewise, if you run without the `-UseBaselineControls` parameter, you will see that the anon-alert control does not get evaluated and does not
 appear in the resulting CSV file. 
+
+##### e) Customizing Severity labels 
+Ability to customize naming of severity levels of controls (e.g., instead of High/Medium, etc. one can now have Important/Moderate, etc.) with the changes reflecting in all avenues (manual scan results/CSV, OMS, compliance summaries, dashboards, etc.)
+
+###### Steps: 
+
+(We will assume you have tried the max owner/admin count steps in (b) above and edit the ControlSettings.json 
+file already present in your org policy folder.)
+
+ i) Edit the ControlSettings.json file to add a 'ControlSeverity' object as per below:
+ 
+```JSON
+{
+   "ControlSeverity": {
+    "Critical": "Critical",
+    "High": "Important",
+    "Medium": "Moderate",
+    "Low": "Low"
+  }
+}
+```
+ ii) Save the file
+ 
+ iii) Run the policy setup command (the same command you ran for the first-time setup)
+
+ ###### Testing: 
+
+Someone in your org can test this change using the `Get-AzSKAzureServicesSecurityStatus`. You will see that
+the controls severity shows as `Important` instead of `High` and `Moderate` instead of `Medium` in the output CSV.
 
 
 ## Using CICD Extension with custom org-policy
