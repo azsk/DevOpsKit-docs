@@ -159,7 +159,7 @@ class SubscriptionCore: SVTBase
 ```
 
 ### Block diagram to represent extension model:
-![Block diagram of AzSK extension](../../../Images/08_Block_Diagram_AzSK_Extension.png)
+![Block diagram of AzSK extension](../../Images/08_Block_Diagram_AzSK_Extension.png)
 
 	
 ### Steps to extend the control SVT:
@@ -258,7 +258,7 @@ class SubscriptionCore: SVTBase
     }
 ```  
    Refer below screenshot.  
-   ![Block diagram of AzSK extension](../../../Images/08_AzSK_Extension_SVT_Storage_Policy_Example.png)
+   ![Block diagram of AzSK extension](../../Images/08_AzSK_Extension_SVT_Storage_Policy_Example.png)
   
 6. 	 That's it !! You can now scan new extended control like any other control.
   
