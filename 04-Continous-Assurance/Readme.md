@@ -12,6 +12,7 @@
 - [Getting details about a Continuous Assurance setup](Readme.md#getting-details-about-a-continuous-assurance-setup)
 - [Continuous Assurance (CA) - 'Central Scan' mode](Readme.md#continuous-assurance-ca---central-scan-mode)
 - [Continuous Assurance (CA) - Trigger scan on resource deployment (Preview)](Readme.md#continuous-assurance-ca---scanondeployment-mode)
+- [Scan Databricks using custom AzSK Job](Readme.md#scan-databricks-using-custom-azsk-job)
 - [FAQ](Readme.md#faq)
 
 -----------------------------------------------------------------
@@ -571,6 +572,43 @@ Remove-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -DeleteStorageRep
 >**Note** If just subscriptionId is passed, then it would check if the host sub is in central scanning mode, if so, user needs to pass CentralScanMode switch. In these scenarios, it would remove the whole automation account from host sub.
 
 [Back to top…](Readme.md#contents)
+
+## Scan Databricks using custom AzSK Job
+The basic idea behind setting up job in databricks workspace is to continuously validate security state of workspace. We are also exploring this as a general approach to expand AzSK scans into the ‘data’ plane for various cluster technologies.
+
+>**Note:** This feature is currently in preview, changes are expected in upcoming releases.
+
+### Setting up Job - Step by Step
+
+In this section, we will walk through the steps of setting up a AzSK Job in databricks workspace. 
+
+To get started, we need the following:
+1. The user setting up Job needs to have 'admin' access to the Databricks workspace.
+
+2. User should have generated a Personal Access Token(PAT).
+
+**Step-1: Setup** 
+
+0. Copy latest script from scripts section(SetupDatabricksScanJob.md).
+1. Open the PowerShell ISE and paste script. 
+2. Run the script after updating required parameters.
+3. When prompted enter personal access token(PAT).
+
+**Step-2: Verifying that Job Setup is complete** 
+
+**1:** Go to your Databricks workspace that was used above. In workspace you should see an folder created by the name 'AzSK'. Inside this folder, there should be a notebook by the name "AzSK_CA_Scan_Notebook".
+
+**2:** Go to jobs in your workspace, there should be a job by the name "AzSK_CA_Scan_Job".
+
+### How it works (under the covers)
+
+The Job installation script that sets up Job creates the following resources in your workspace:
+
+- Secret scope (Name : AzSK_CA_Secret_Scope) :- 
+To keep personal access token(PAT) that will be used further by Notebook to scan controls.
+- Folder (Name : AzSK) :- To store the scan Notebook.
+- Notebook (Name : AzSK_CA_Scan_Notebook) :- This is the notebook that will contain logic to run AzSK control scan over workspace.
+- Job (Name : AzSK_CA_Scan_Job) :- This is the job that will be used to run Notebook on a scheduled basis.
 
 ### FAQ
 
