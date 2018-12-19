@@ -185,7 +185,7 @@ function SetupDatabricksScanJob($DatabricksHost)
     #end region
 
 }
-$databricksHost = "<domain-name-of-your-azure-databricks>"
+$databricksHost = "<domain-name-of-your-azure-databricks>" # for e.g. "https://westus.azuredatabricks.net"
 SetupDatabricksScanJob -DatabricksHost $databricksHost
 
 ```
