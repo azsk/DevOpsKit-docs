@@ -596,6 +596,16 @@ To get started, we need the following:
 
 **2:** Go to jobs in your workspace, there should be a job by the name "AzSK_CA_Scan_Job".
 
+### How it works (under the covers)
+
+The Job installation script that sets up Job creates the following resources in your workspace:
+
+- Secret scope (Name : AzSK_CA_Secret_Scope) :- 
+To keep personal access token(PAT) that will be used further by Notebook to scan controls.
+- Folder (Name : AzSK) :- To store the scan Notebook.
+- Notebook (Name : AzSK_CA_Scan_Notebook) :- This is the notebook that will contain logic to run AzSK control scan over workspace.
+- Job (Name : AzSK_CA_Scan_Job) :- This is the job that will be used to run Notebook on a scheduled basis.
+
 ### FAQ
 
 #### What permission do I need to setup CA?
