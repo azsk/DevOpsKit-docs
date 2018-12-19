@@ -30,8 +30,8 @@ function SetupDatabricksScanJob($DatabricksHost)
     $PersonalAccessToken = $PAT.Trim()
 
     # Please don't modify these values
-    $ConfigBaseUrl = "https://azsdkosseppreview.azureedge.net/3.9.0/"
-    $NotebookBaseUrl = "https://azsdkosseppreview.azureedge.net/1.0.0/"
+    $ConfigBaseUrl = "https://azsdkossep.azureedge.net/3.9.0/"
+    $NotebookBaseUrl = "https://azsdkossep.azureedge.net/1.0.0/"
     $SecretScopeName = "AzSK_CA_Secret_Scope"
     $SecretKeyName = "AzSK_CA_Scan_Key"
     $NotebookFolderPath = "/AzSK"  
