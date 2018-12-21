@@ -600,6 +600,8 @@ To get started, we need the following:
 
 **2:** Go to jobs in your workspace, there should be a job by the name "AzSK_CA_Scan_Job".
 
+>**Note:** To ensure the proper access control of Notebook and Job, you should use Workspace Access Control and Job Access Control to prevent unauthorized access to notebook contents and job.
+
 ### How it works (under the covers)
 
 The Job installation script that sets up Job creates the following resources in your workspace:
