@@ -503,7 +503,7 @@ Along with input parameter, you can check for below options
 AzSKServerURL -> AzSK OnlinePolicyStoreUrl
 EnableServerAuth -> EnableAADAuthForOnlinePolicyStore
   
-![03_IP_Parameter_for_Task](../Images/ARMChecker_Orgpolicy_Variables.JPG)
+![ARMChecker_Orgpolicy_Variables](../Images/ARMChecker_Orgpolicy_Variables.jpg)
 
 **Step-5**: Save the Release Definition.
   
