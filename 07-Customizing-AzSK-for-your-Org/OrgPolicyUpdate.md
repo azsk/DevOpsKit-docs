@@ -20,6 +20,16 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
    -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
 ```
 
+# AzSK v.3.9.0
+
+*	The ARM Checker task in AzSK CICD Extension now respects org policy ' this will let org policy owners customize behavior of the task. (Note that this was possible for the SVT task earlier'only the ARM Checker task was missing the capability.)
+*	Ability to run CA in sovereign clouds + ability to apply custom org policy for SDL, CICD and CA for such subscriptions. (Please review GitHub docs for the steps needed.)
+
+# AzSK v.3.8.0
+
+*	Ability to run manual and CICD scans on sovereign clouds. Please review GitHub docs for the steps needed.
+*	For central mode CA scanning, if central subscription is used for logging, then CA will not write to target subscription storage account any more. (Earlier, it used still use the target subscription storage account for checkpoints and other metadata.) For new setups or new target subscriptions added to the configuration, DevOps Kit will not create resources (or AzSKRG) in the target subscription.
+
 # AzSK v.3.7.0
 
 > **Note:** If you are upgrading from version 3.5.0 or below. you need to follow below steps
