@@ -122,7 +122,7 @@
   href: ../../08-Advanced-Features/Readme.md
 - name: Secure Azure DevOps (VSTS) -Preview
   href: ../../09-AzureDevOps(VSTS)-Security/Readme.md
-   items: 
+  items: 
     - name: Control Coverage
       href: ../../09-AzureDevOps(VSTS)-Security/ControlCoverage/README.md
       items:
@@ -138,5 +138,3 @@
           href: ../../09-AzureDevOps(VSTS)-Security/ControlCoverage/Feature/ServiceConnection.md
         - name: User
           href: ../../09-AzureDevOps(VSTS)-Security/ControlCoverage/Feature/User.md   
-    
-  
