@@ -504,9 +504,7 @@ Along with input parameter, you can check for below options
 AzSKServerURL -> AzSK OnlinePolicyStoreUrl
 
 EnableServerAuth -> EnableAADAuthForOnlinePolicyStore
-
-Please follow [this](../07-Customizing-AzSK-for-your-Org#can-i-completely-override-policy-i-do-not-want-policy-to-be-run-in-overlay-method) if you want to completely override policy configuration.
-  
+ 
 ![ARMChecker_Orgpolicy_Variables](../Images/ARMChecker_Orgpolicy_Variables.jpg)
 
 **Step-5**: Save the Release Definition.

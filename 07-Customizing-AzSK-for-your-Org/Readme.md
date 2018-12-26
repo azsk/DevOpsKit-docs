@@ -981,6 +981,12 @@ iii) Add entry for configuration in index file(ServerConfigMetadata.json) with O
 
 iv) Run update/install Org policy command with required parameters. 
 
+### Control is getting scanned even though it has been removed from my custom org-policy.
+
+If you want only the controls which are present on your custom org-policy to be scanned, set the  OverrideOffline flag to true in the ServerConfigMetadata.json file.
+
+Example: If you want to scan only the ARMControls present in your org-policy, then set the OverrideOffline flag to true as shown below.
+
 
 ##### Testing:
 
