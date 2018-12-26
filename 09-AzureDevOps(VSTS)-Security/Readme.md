@@ -1,6 +1,6 @@
 # Secure Azure DevOps (VSTS) -Preview
 
-AzSK for AzureDevOps performs security scanning for core areas of AzureDevOps/VSTS like Organization, Projects, Users, Connections, Pipelines (Build & Release). 
+AzSK for Azure DevOps performs security scanning for core areas of Azure DevOps/VSTS like Organization, Projects, Users, Connections, Pipelines (Build & Release). 
 
 
 ## Installation Guide
@@ -27,8 +27,8 @@ above if you have a different version of same modules installed on your machine.
 
 ## Scan your Azure DevOps resources
 
-Run the command below after replacing `<OrganizationName>` with your AzureDevOps Org Name 
-and `<PRJ1, PRJ2, ..`> with a comma-separated list of project names where your AzureDevOps resources are hosted.
+Run the command below after replacing `<OrganizationName>` with your Azure DevOps Org Name 
+and `<PRJ1, PRJ2, ..`> with a comma-separated list of project names where your Azure DevOps resources are hosted.
 
 ```PowerShell
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1, PRJ2,...etc.>"
@@ -49,4 +49,4 @@ The CSV file and LOG file are generated under a Org-specific sub-folder in the f
 E.g.  
 C:\Users\UserName\AppData\Local\Microsoft\Azure.DevOpsLogs\Org_[yourOrganizationName]\20181218_103136_GADS
 
-You can refer this [link](../02-Secure-Development#understand-the-scan-reports) for understanding the scan report. 
+Refer [doc]((../02-Secure-Development#understand-the-scan-reports)) for understanding the scan report and [link](/ControlCoverage) for current control coverage for Azure DevOps
