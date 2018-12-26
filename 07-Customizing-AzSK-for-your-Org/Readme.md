@@ -716,42 +716,11 @@ The table below describes the different columns in the CSV file and their intent
 
 #### Step 2: Upload your mapping to the Application Insights (AI) workspace
 
-> **Note:** Recently, importing data using application insight is deprecated by PG team ([Link](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-analytics-import)). We will be updating alternate method soon. You can skip this step and follow from Step 3 
-
 In this step we will import the data above into the AI workspace created during org policy setup. 
 
- **(a)** Locate the AI resource that was created during org policy setup in your central subscription. This should be present under Org Policy resource group. After selecting the AI resource click on "Analytics view" as shown below:
-
-![Open Analytics view](../Images//07_OrgPolicy_PBI_OrgMetadata_AI_01.PNG)
-
-**(b)** Create a custom data source for your OrgData as shown below. (This will be used to store the org-subscription mapping data from the CSV above.)
-
-![Create custom data source](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_02.PNG)
-
-Please follow the screenshots below to create the datasource. Take care to follow the naming convention as specified in the screenshots.
-![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_03.PNG)
-
-
-![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_04.PNG)
-
-
-The schema required for this datasource may be imported from the schema file [here](./TemplateFiles/OrgMappingDataSourceSchema.json)
-![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_05.PNG)
-
-
-![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_06.PNG)
-
-**(c)** Upload your org-subscription mapping file to this datasource:
-
-> **Note**: During mapping file upload remove the header row if any (this is the row containing comma-separated headings for columns such as "BGName, ServiceGroupName, etc."). The file should basically contain only the actual subscription mapping data without any header row. 
-
-![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_07.PNG)
-
-![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_08.PNG)
-
-You should not be able to see the custom datasource in your analytics view as shown below:
-
-![Steps to define schema for datasource](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_09.PNG)
+ **(a)** Locate the AI resource that was created during org policy setup in your central subscription. This should be present under Org Policy resource group. After selecting the AI resource, copy the Instrumentation Key.
+ 
+ **(b)** To push Org Mapping details, copy and execute the script available [here](./TemplateFiles/AzSKComplianceReport.pbit).
 
 #### Step 3: Create a PowerBI report file
 In this section we shall create a PowerBI report locally within PowerBI Desktop using the AI workspace from org policy subscription as the datasource. We will start with a default (out-of-box) PowerBI template and configure it with settings specific to your environment. 
