@@ -720,7 +720,7 @@ In this step we will import the data above into the AI workspace created during 
 
  **(a)** Locate the AI resource that was created during org policy setup in your central subscription. This should be present under Org Policy resource group. After selecting the AI resource, copy the Instrumentation Key.
  
- **(b)** To push Org Mapping details, copy and execute the script available [here](./TemplateFiles/AzSKComplianceReport.pbit).
+ **(b)** To push Org Mapping details, copy and execute the script available [here](./Scripts/OrgPolicyPushOrgMappingEvents.txt).
 
 #### Step 3: Create a PowerBI report file
 In this section we shall create a PowerBI report locally within PowerBI Desktop using the AI workspace from org policy subscription as the datasource. We will start with a default (out-of-box) PowerBI template and configure it with settings specific to your environment. 
