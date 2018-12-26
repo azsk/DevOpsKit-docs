@@ -987,6 +987,8 @@ If you want only the controls which are present on your custom org-policy to be 
 
 Example: If you want to scan only the ARMControls present in your org-policy, then set the OverrideOffline flag to true as shown below.
 
+![ARM Controls override](../Images/07_Custom_Policy_ARMControls.png)
+
 
 ##### Testing:
 
