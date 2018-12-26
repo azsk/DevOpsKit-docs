@@ -1,4 +1,3 @@
-$telemetryKey = "Instrumentation Key"
 #Telemetry functions -- start here
 function SetCommonProperties([psobject] $EventObj) {
     $notAvailable = "NA"
@@ -81,9 +80,10 @@ function PublishEvent([string] $EventName, [hashtable] $Properties, [hashtable] 
 #Telemetry functions -- ends here
 
 
-function SendOrgDetailsEvent([string] $OrgMappingFilePath){
+function SendOrgDetailsEvent([string] $OrgMappingFilePath, [string] $InstrumentationKey){
      try
       {	
+        $telemetryKey = $InstrumentationKey
         # Read CSV file here 
         $EventName = "OrgDetails_Event"
         $FilePath = $OrgMappingFilePath
@@ -123,4 +123,4 @@ function SendOrgDetailsEvent([string] $OrgMappingFilePath){
 
 
 
-SendOrgDetailsEvent -OrgMappingFilePath "OrgMapping_CSV FilePath"
+SendOrgDetailsEvent -OrgMappingFilePath "OrgMapping.csv File Path" -InstrumentationKey "< Instrumentation Key >"
