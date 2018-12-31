@@ -1,0 +1,126 @@
+#Telemetry functions -- start here
+function SetCommonProperties([psobject] $EventObj) {
+    $notAvailable = "NA"
+
+}
+
+function GetEventBaseObject([string] $EventName) {
+    $eventObj = "" | Select-Object data, iKey, name, tags, time
+    $eventObj.iKey = $telemetryKey
+    $eventObj.name = "Microsoft.ApplicationInsights." + $telemetryKey.Replace("-", "") + ".Event"
+    $eventObj.time = [datetime]::UtcNow.ToString("o")
+
+    $eventObj.tags = "" | Select-Object ai.internal.sdkVersion
+    $eventObj.tags.'ai.internal.sdkVersion' = "dotnet: 2.1.0.26048"
+
+    $eventObj.data = "" | Select-Object baseData, baseType
+    $eventObj.data.baseType = "EventData"
+    $eventObj.data.baseData = "" | Select-Object ver, name, measurements, properties
+
+    $eventObj.data.baseData.ver = 2
+    $eventObj.data.baseData.name = $EventName
+
+    $eventObj.data.baseData.measurements = New-Object 'system.collections.generic.dictionary[string,double]'
+    $eventObj.data.baseData.properties = New-Object 'system.collections.generic.dictionary[string,string]'
+
+    return $eventObj;
+}
+
+function PublishEvent([string] $EventName, [hashtable] $Properties, [hashtable] $Metrics) {
+    try {
+		#return if telemetry key is empty
+        if ([string]::IsNullOrWhiteSpace($telemetryKey)) { return; };
+
+        $eventObj = GetEventBaseObject -EventName $EventName
+        SetCommonProperties -EventObj $eventObj
+
+        if ($null -ne $Properties) {
+            $Properties.Keys | ForEach-Object {
+                try {
+                    if (!$eventObj.data.baseData.properties.ContainsKey($_)) {
+                        $eventObj.data.baseData.properties.Add($_ , $Properties[$_].ToString())
+                    }
+                }
+                catch
+				{
+					# Left blank intentionally.
+					# Error while sending alert event to telemetry. No need to break the execution.
+				}
+            }
+        }
+        if ($null -ne $Metrics) {
+            $Metrics.Keys | ForEach-Object {
+                try {
+                    $metric = $Metrics[$_] -as [double]
+                    if (!$eventObj.data.baseData.measurements.ContainsKey($_) -and $null -ne $metric) {
+                        $eventObj.data.baseData.measurements.Add($_ , $Metrics[$_])
+                    }
+                }
+                catch {
+					# Left blank intentionally.
+					# Error while sending alert event to telemetry. No need to break the execution.
+				}
+            }
+        }
+
+        $eventJson = ConvertTo-Json $eventObj -Depth 100 -Compress
+        $eventObj
+        Invoke-WebRequest -Uri "https://dc.services.visualstudio.com/v2/track" `
+            -Method Post `
+            -ContentType "application/x-json-stream" `
+            -Body $eventJson `
+            -UseBasicParsing | Out-Null
+    }
+    catch {
+		# Left blank intentionally.
+		# Error while sending alert event to telemetry. No need to break the execution.
+    }
+}
+
+#Telemetry functions -- ends here
+
+
+function SendOrgDetailsEvent([string] $OrgMappingFilePath, [string] $InstrumentationKey){
+     try
+      {	
+        $telemetryKey = $InstrumentationKey
+        # Read CSV file here 
+        $EventName = "OrgDetails_Event"
+        $FilePath = $OrgMappingFilePath
+
+        if(-not([string]::IsNullOrEmpty($FilePath)) -and (Test-Path -path $FilePath -PathType Leaf))
+	    {
+	      $OrgMappingDetails = Get-Content $FilePath | ConvertFrom-Csv
+	    }else{
+
+          Write-Host "Unable to read file, Please check file path and try again." -ForegroundColor Red
+          return;
+        }
+
+
+
+        $OrgMappingDetails | ForEach-Object{
+
+        PublishEvent -EventName $EventName  -Properties @{
+	    "BGName"=$_.BGName ;`
+        "ServiceGroupName"=$_.ServiceGroupName ;`
+        "SubscriptionId"=$_.SubscriptionId ;`
+	    "SubscriptionName"=$_.SubscriptionName ;`
+        "IsActive" = $_.IsActive;`
+	    "OwnerDetails"=$_.OwnerDetails ;
+	    }
+    
+        }
+
+    
+       }
+       catch
+       {
+     
+         PublishEvent -EventName "OrgDetails_Event Error" -Properties @{ "ErrorRecord" = ($_ | Out-String) }
+       }  
+    }
+
+
+
+SendOrgDetailsEvent -OrgMappingFilePath "OrgMapping.csv File Path" -InstrumentationKey "< Instrumentation Key >"
