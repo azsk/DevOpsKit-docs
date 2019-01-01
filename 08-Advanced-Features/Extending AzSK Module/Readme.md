@@ -3,11 +3,11 @@
 ## Contents
 - [Structure](README.md#overview)  
 - [Know more about SVTs](README.md#setting-up-secure-devops-kit-for-azure)
-- [Block diagram to represent extension model](README.md#getting-started-with-secure-devops-kit-for-azure)
+- [Block diagram to represent the extension model](README.md#getting-started-with-secure-devops-kit-for-azure)
 - [Steps to extend the control SVT](README.md#complete-feature-set-of-secure-devops-kit-for-azure)  
 - [Steps to override the logic of existing SVT](README.md#what-do-you-want-to-use-the-secure-devops-kit-for)  
-- [Steps to add ext control in baseline control list](README.md#what-do-you-want-to-use-the-secure-devops-kit-for)  
-- [Steps to debuge the ext control while developement](README.md#what-do-you-want-to-use-the-secure-devops-kit-for)  
+- [Steps to add extended control in baseline control list](README.md#what-do-you-want-to-use-the-secure-devops-kit-for)  
+- [Steps to debug the extended control while developement](README.md#what-do-you-want-to-use-the-secure-devops-kit-for)  
 - [FAQ](README.md#what-do-you-want-to-use-the-secure-devops-kit-for)  
 - [References](README.md#references) 
 
@@ -162,7 +162,7 @@ class SubscriptionCore: SVTBase
 }
 ```
 
-### Block diagram to represent extension model:
+### Block diagram to represent the extension model:
 ![Block diagram of AzSK extension](../../Images/08_Block_Diagram_AzSK_Extension.png)
 
 	
@@ -276,13 +276,13 @@ class SubscriptionCore: SVTBase
 2. Customize Feature.json file as per https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Readme.md#d-customizing-specific-controls-for-a-service by overriding "MethodName" property value with the new function name that needs to be executed.
 3. That's it!! You can now scan the older control with overridden functionality. 
 
-### Steps to add ext control in baseline control list:
+### Steps to add extended control in baseline control list:
 
 1. Add new control to Feature.ext.json/SubscriptionCore.ext.json file as per the above documentation.
 2. Add the new ControlId in baseline control list as per https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Readme.md#c-creating-a-custom-control-baseline-for-your-org
 3. That's it!! The newly added control will be scanned while passing "-UseBaselineControls" switch to GSS/GRS cmdlets.
 
-### Steps to debug the ext control while development:
+### Steps to debug the extended control while development:
 
 Extended Feature.ext.ps1 files are downloaded at C:\Users\<UserAccount>\AppData\Local\Microsoft\AzSK\Extensions folder in the execution machine. While debugging, breakpoints need be inserted in those files. 
 
