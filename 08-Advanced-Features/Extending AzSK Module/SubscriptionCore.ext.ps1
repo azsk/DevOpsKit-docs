@@ -9,7 +9,7 @@ class SubscriptionCoreExt: SubscriptionCore
         
     }
 
-    hidden [ControlResult] FunctionToExtend([ControlResult] $controlResult)
+    hidden [ControlResult] CheckSubscriptionAdminCountExtension([ControlResult] $controlResult)
     {
         # Your function logic goes here.
         return $controlResult;
