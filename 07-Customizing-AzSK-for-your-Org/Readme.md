@@ -611,7 +611,7 @@ Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubscriptionId>
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -UseBaselineControls
 ```    
 
-Step 3: If scan commands are running fine, you can update policy based on parameter set used during installations. If you see some issue in sccan commands, you can fix configurations and repeat step 2. 
+Step 3: If scan commands are running fine, you can update policy based on parameter set used during installations. If you see some issue in scan commands, you can fix configurations and repeat step 2. 
 
 ```PowerShell
 Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
