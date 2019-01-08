@@ -1,14 +1,14 @@
 # Extending AzSK Modules
 
 ## Contents
-- [Structure](README.md#overview)  
-- [Know more about SVTs](README.md#setting-up-secure-devops-kit-for-azure)
-- [Block diagram to represent the extension model](README.md#getting-started-with-secure-devops-kit-for-azure)
-- [Steps to extend the control SVT](README.md#complete-feature-set-of-secure-devops-kit-for-azure)  
-- [Steps to override the logic of existing SVT](README.md#what-do-you-want-to-use-the-secure-devops-kit-for)  
-- [Steps to add extended control in baseline control list](README.md#what-do-you-want-to-use-the-secure-devops-kit-for)  
-- [Steps to debug the extended control while developement](README.md#what-do-you-want-to-use-the-secure-devops-kit-for)  
-- [FAQ](README.md#what-do-you-want-to-use-the-secure-devops-kit-for)  
+- [Structure](README.md#structure)  
+- [Know more about SVTs](README.md#know-more-about-svts)
+- [Block diagram to represent the extension model](README.md#block-diagram-to-represent-the-extension-model)
+- [Steps to extend the control SVT](README.md#steps-to-extend-the-control-svt)  
+- [Steps to override the logic of existing SVT](README.md#steps-to-override-the-logic-of-existing-svt)  
+- [Steps to add extended control in baseline control list](README.md#steps-to-add-extended-control-in-baseline-control-list)  
+- [Steps to debug the extended control while developement](README.md#steps-to-debug-the-extended-control-while-development)  
+- [FAQ](README.md#faqs)  
 - [References](README.md#references) 
 
 ----------------------------------------------
