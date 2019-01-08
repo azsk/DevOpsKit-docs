@@ -120,6 +120,20 @@
       href: ../../07-Customizing-AzSK-for-your-Org/OrgPolicyUpdate.md
 - name: Advanced features
   href: ../../08-Advanced-Features/Readme.md
+  items: 
+    - name: Extending AzSK Module
+      href: ../../08-Advanced-Features/Extending%20AzSK%20Module/Readme.md
+      items:
+        - name: Feature.ext.json
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/08-Advanced-Features/Extending%20AzSK%20Module/Feature.ext.json
+        - name: Feature.ext.ps1
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/08-Advanced-Features/Extending%20AzSK%20Module/Feature.ext.ps1
+        - name: ListenerName.ext.ps1
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/08-Advanced-Features/Extending%20AzSK%20Module/ListenerName.ext.ps1
+        - name: SubscriptionCore.ext.json
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/08-Advanced-Features/Extending%20AzSK%20Module/SubscriptionCore.ext.json
+        - name: SubscriptionCore.ext.ps1
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/08-Advanced-Features/Extending%20AzSK%20Module/SubscriptionCore.ext.ps1 
 - name: Secure Azure DevOps (VSTS) -Preview
   href: ../../09-AzureDevOps(VSTS)-Security/Readme.md
   items: 
