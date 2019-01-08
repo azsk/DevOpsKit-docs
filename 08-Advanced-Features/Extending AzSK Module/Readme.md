@@ -1,15 +1,15 @@
 # Extending AzSK Modules
 
 ## Contents
-- [Structure](README.md#structure)  
-- [Know more about SVTs](README.md#know-more-about-svts)
-- [Block diagram to represent the extension model](README.md#block-diagram-to-represent-the-extension-model)
-- [Steps to extend the control SVT](README.md#steps-to-extend-the-control-svt)  
-- [Steps to override the logic of existing SVT](README.md#steps-to-override-the-logic-of-existing-svt)  
-- [Steps to add extended control in baseline control list](README.md#steps-to-add-extended-control-in-baseline-control-list)  
-- [Steps to debug the extended control while developement](README.md#steps-to-debug-the-extended-control-while-development)  
-- [FAQ](README.md#faqs)  
-- [References](README.md#references) 
+- [Structure](Readme.md#structure)  
+- [Know more about SVTs](Readme.md#know-more-about-svts)
+- [Block diagram to represent the extension model](Readme.md#block-diagram-to-represent-the-extension-model)
+- [Steps to extend the control SVT](Readme.md#steps-to-extend-the-control-svt)  
+- [Steps to override the logic of existing SVT](Readme.md#steps-to-override-the-logic-of-existing-svt)  
+- [Steps to add extended control in baseline control list](Readme.md#steps-to-add-extended-control-in-baseline-control-list)  
+- [Steps to debug the extended control while developement](Readme.md#steps-to-debug-the-extended-control-while-development)  
+- [FAQ](Readme.md#faqs)  
+- [References](Readme.md#references) 
 
 ----------------------------------------------
 ### Structure
