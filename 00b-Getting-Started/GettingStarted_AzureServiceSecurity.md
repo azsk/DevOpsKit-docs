@@ -1,6 +1,6 @@
 ## Scan your cloud application (Azure resources) for security vulnerabilities
 ###### :clock10: 30 minutes to complete
-The AzSK contains cmdlets that dev ops teams can use to regularly keep their cloud applications
+The AzSK contains cmdlets that DevOps teams can use to regularly keep their cloud applications
 secure during the multiple sprints involving prototyping, core solution development, integration
 and deployment.
 These scripts are called Security Verification Tests (SVT) and cover all prominent features in 
@@ -23,7 +23,7 @@ cloud resources that constitute the application.
  
 The AzSK also supports other ways of representing an application.
 For instance, you can also make use of the 'tags' parameter to scan only resources with 
-a specific tag value. More details can be found [here.](../02-Secure-Development/Readme.md#execute-svts-for-specific-resource-groups-or-tagged-resources)  
+a specific tag value. More details can be found [here.](../02-Secure-Development/Readme.md#execute-svts-for-specific-resource-groups-or-tagged-resources) 
 
 When the command runs, you will start seeing output such as the following in the PowerShell console. 
 Time required for execution will depend on the number of resources that are being scanned.    
@@ -54,8 +54,8 @@ the resource groups under which the resources themselves are organized in your s
 ![00_ServiceSecurity_OP_Folder](../Images/00_ServiceSecurity_OP_Folder.PNG)  
 
 We can now examine the CSV file to see the control summary. (It opens by default in XLS and you can 
-use "Format as Table", "Hide Columns", "Filter", etc., to quickly look at controls that have "Failed" 
-or ones that are marked "Verify" (latter represents controls that need manual confirmations).  
+use "Format as Table", "Hide Columns", "Filter", etc., to quickly look at the controls that have "Failed" 
+or the ones that are marked "Verify" (latter represents controls that need manual confirmations).  
 
 ![00_Service_Status_OP_CSV](../Images/00_Service_Status_OP_CSV.PNG)  
 
