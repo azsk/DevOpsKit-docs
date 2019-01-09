@@ -103,7 +103,7 @@ the 'Run Selection' button is clicked (or F8 is pressed), then only the two scri
 all the other settings, variables, etc. that have been established in the current context.
 
 Using 'Run Script' has many advantages. For instance:
-- you can start with an old script that you have (by opening a saved file) and run just that one line that you need (for example to 
+- you can start with an old script that you have (by opening a saved file) and run just one line that you need (for example to 
 initialize some large object or to output a JSON object to a CSV file)
 - for single line situations, you don't even have to select the entire line. Just keep the cursor *anywhere* on the line and press 'F8'
 - you can have many related small snippets of script in a single large script file with the comfort that you can run a subset of those as you please
@@ -344,18 +344,18 @@ An easy way you can get into this situation is if you are using the 'Command Add
 options for basic commands like 'Login-AzureRmAccount'. You may choose any one of them thinking they are
 the same thing. Even if that may be the case, choosing to run one of them will cause the corresponding version
 of AzureRm to get loaded into your session. If that's not the version AzSK needs, then the same type conflict
-issue will pop up soon as you start using AzSK commands.
+issue will pop up as soon as you start using AzSK commands.
 
 An easy remedy for this is to ensure that the correct version of AzureRm gets loaded by using any of these options: 
-1) Just do an "import-module AzSK" first thing after opening a new PS session. This will internally load the correct AzureRm.
+1) Do an "import-module AzSK" first thing after opening a new PS session. This will internally load the correct AzureRm.
 2) Else, run any AzSK command (e.g., Get-AzSKSubscriptionSecurityStatus). This will trigger the Azure login flow and cause the correct AzureRm to get loaded.
 3) Else, explicitly load the AzureRm version required for AzSK (currently it is 4.1.0) using 'import-module AzureRm -Version 4.1' first thing in a new session.
 
 [Back to top...](GettingStarted_PowerShellTipsAzSK.md#list-of-tips)
 <!-------------------------------------------------------------------------------------------------->
 ### Listing your subscriptions
-A lot of AzSK commands need you to specify subscription id. To get the subscription id for any particular subscription
-you needn't go to the portal. The following command can quickly list all subscriptions by their name and subscription id.
+A lot of AzSK commands need you to specify subscription ID. To get the subscription ID for any particular subscription
+you needn't go to the portal. The following command can quickly list all subscriptions by their name and subscription ID.
 
 ```PowerShell
 PS C:\> Get-AzureRmSubscription | FT Name, Id
@@ -372,7 +372,7 @@ DSRE-DevTest-Subscription-01                cfeabcde-f012-3456-7890-abcdef01234d
 ```
 Note that the pipe character "|" is used to send the output of the Get-AzureRmSubscription command to a formatting helper "FT".
 Here FT is short for "Format-Table" which lets us pick specific fields to display in tabular form. So the overall command means
-"Get a list of subscriptions I have access to and show them in tabular form only displaying the Name and Id fields for each."
+"Get a list of subscriptions I have access to and show them in tabular form, only displaying the Name and Id fields for each."
 
 If you do not specify the "| FT Name, Id" part, you will get the output in a list format as below:
 
@@ -404,7 +404,7 @@ The "| FT" and "| FL" options are very handy in many other situations. We will s
 <!-------------------------------------------------------------------------------------------------->
 ### Switching to another subscription
 
-Normally, the AzSK command that you run will switch your context to the subscription Id you specified. If you explicitly want
+Normally, the AzSK command that you run will switch your context to the subscription ID you specified. If you explicitly want
 to switch to some subscription (e.g., to run AzureRm commands to examine resources in that subscription), you can do so using either of
 the Select-AzureRmSubscription or Set-AzureRmContext commands (both take either subscriptionName or subscriptionId as a parameter).
 
@@ -441,10 +441,10 @@ CurrentStorageAccount :
 [Back to top...](GettingStarted_PowerShellTipsAzSK.md#list-of-tips)
 <!-------------------------------------------------------------------------------------------------->
 ### Use variables effectively
-You can avoid repetition of scripts by putting commonly needed values in variables towards the top of your scripts. You can then use
-'Run Selection' to set their values up once and then repeat commands without having to edit everywhere.
+You can avoid repetition of scripts by putting commonly needed values in variables at the top of your scripts. You can then use
+'Run Selection' to set their values once and then repeat commands without having to edit everywhere.
 
-As a simple example, because subscriptionId is required in many places we can do the following:
+As a simple example, because SubscriptionId is required in many places we can do the following:
 
 ```PowerShell
 $subId = '2feabcde-f012-3456-7890-abcdef012349'
@@ -458,7 +458,7 @@ Here's a slightly more interesting example...
 
 If you have multiple subscriptions and need to run various commands on some of them, you 
 can setup a variable for each subscription. Then have a common variable representing the target subscription. The script below will
-run commands for the $s2 subscription. However, now if you want to run them for $s3, you just need to edit the "$subId = $s2" line, 
+run commands for the $s2 subscription. However, if you want to run them for $s3, you just need to edit the "$subId = $s2" line, 
 run that and thereafter run any other code that you wish to run with $s3 as target. 
 
 ```PowerShell
@@ -485,7 +485,7 @@ noticed that some examples use single quotes 'my string' while others use double
 If used in the context of just plain strings with no special characters (like the example above) the two are equivalent. So if all 
 you want to specify is a certain subscriptionId, then using '0e2abcde-f012-3456-7890-abcdef01234f' is the same as "0e2abcde-f012-3456-7890-abcdef01234f".
 
-However, if you want PS to do richer interpretation of stuff inside the quotes then you'd use double quotes. Here are a few examples:
+However, if you want PS to do a richer interpretation of what's written inside the quotes then you'd use double quotes. Here are a few examples:
 ```PowerShell
 Write-Host "My subscription id is: $subId"   #This will replace $subId with the actual value of the variable when printing
 ```
@@ -555,7 +555,7 @@ westus
 This basically tells PS to iterate through the collection returned from the left side of the '|' and, for each object, evaluate 
 the expression within the '{ }'. 
 The key players in the equation are the '|' pipe character, the '%' looping character and the "$\_" inside the '{ }'. 
-The $\_ basically plays the same role as 'i' in a standard for loop or 'thisObject' in a 'foreach' loop.
+The $\_ plays the same role as 'i' in a standard for loop or 'thisObject' in a 'foreach' loop.
 
 Here are a few more examples:
 ```PowerShell
@@ -597,7 +597,7 @@ $subscriptions | % {
 If you want to run a loop and evaluate some expression on only those items which meet a particular criteria, you can 
 use the 'where-object' or 'where' or simply the '?' operator to do so.
 
-Example the below command filters for resource groups that have 'rg' anywhere in the name:
+For example, the below command filters for resource groups that have 'rg' anywhere in their name:
 ```PowerShell
 Get-AzureRmResourceGroup | ? ResourceGroupName -match 'rg'
 # Can also be written like this:
@@ -606,8 +606,8 @@ Get-AzureRmResourceGroup | ? {$_.ResourceGroupName -match 'rg'}
 [Back to top...](GettingStarted_PowerShellTipsAzSK.md#list-of-tips)
 <!-------------------------------------------------------------------------------------------------->
 ### To '-match' or to '-like'?
-PowerShell has extremely powerful string operators. At some point you will look to run some logic based on a string
-property of some object. Here there are two operators 'like' and 'match' that can cause confusion (and trouble). 
+PowerShell has extremely powerful string operators. At some point you will want to run some logic based on a string
+property of some object. Here, there are two operators 'like' and 'match' that can cause confusion (and trouble). 
 
 A basic rule of thumb is that with 'match' you are specifying a regular expression whereas with 'like' you are describing
 the string just with the help of wildcard character '*'. 
