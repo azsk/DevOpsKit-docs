@@ -1,28 +1,65 @@
-## 181217 (AzSK v.3.9.0)
+## 190116 (AzSK v.3.10.0)
 
 ### Feature updates
 
-Security controls for Azure DevOps (VSTS)
-
-* New capability (available as a separate module [AzSK.AzureDevOps]) to perform security control scanning in Azure DevOps (VSTS). This leverages the core DevOps Kit framework to seamlessly extend security scanning to VSTS and covers the following areas/scopes: Organization, Projects, Users, Connections, Pipelines (Build & Release). The overall experience is very similar to other DevOps Kit cmdlets. 
-Follow [page](../09-AzureDevOps(VSTS)-Security) for module installation and command execution guide. 
-
 Security Verification Tests (SVTs):
-* Completed security controls for the following:
-	* Azure Kubernetes Service (AKS)
-	* API Management (APIM)
-* Ability to scan Databricks using an 'in-cluster' scan agent (Python notebook). Please see below for the steps on how to set this up. We are exploring this as a general approach to expand AzSK scans into the 'data' plane for various cluster technologies.
-* Ability to customize naming of severity levels of controls (e.g., instead of High/Medium, etc. one can now have Important/Moderate, etc.) with the changes reflecting in all avenues (manual scan results/CSV, OMS, compliance summaries, dashboards, etc.)
+* Added support for scanning preview baseline controls for commands GRS/GSS/GACS/GAI using flag -UsePreviewBaselineControls (upbc)
+  * This flag can be used solo or together with the -UseBaselineControls for each of these commands.
+  
+* Added control in subscription scan to validate mandatory tags at scopes as specified in org policy. Tags shall be validated for name and allowed set of values (or type).
+  * To try this, use:  gss -s 'subscriptionId' -ControlIds 'Azure_Subscription_Config_Add_Required_Tags'
+
+OMS product team migration/rebranding to ‘Log Analytics’:
+  * Validated that all DevOps Kit OMS scenarios continue to work post transition to 'Log Analytics'.
+
+
+(Preview) AzSK module for Azure DevOps (VSTS) 
+  * Added automation for more controls for Azure DevOps (VSTS)
+    *	AzureDevOps_Organization_SI_Review_InActive_Users
+    *	AzureDevOps_User_AuthN_Disable_Alternate_Cred
+    *	AzureDevOps_Build_SI_Review_InActive_Build
+    *	AzureDevOps_Build_SI_Review_InActive_Release
+    
+    To try the new Azure DevOps scanning functionality, use the following:
+    
+    #VSTS scanning is packaged in a separate module called AzSK.AzureDevOps!
+    
+    ``
+    Install-Module AzSK.AzureDevOps -Scope CurrentUser  
+    ``
+    
+    ``
+    Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "AzSKtestvso"`
+                                    -ProjectNames "AzSKDemoRepo"`
+                                    -BuildNames "AzSKDemo_CI"`
+                                    -ReleaseNames "AzSKDemo_CD" 
+    ``
+
 * Org-policy feature updates (non-CSE):
-	* The ARM Checker task in AzSK CICD Extension now respects org policy ' this will let org policy owners customize behavior of the task. (Note that this was possible for the SVT task earlier'only the ARM Checker task was missing the capability.)
-	* Ability to run CA in sovereign clouds + ability to apply custom org policy for SDL, CICD and CA for such subscriptions. (Please review [GitHub docs](https://github.com/azsk/DevOpsKit-docs/blob/master/01-Subscription-Security/Readme.md#azsk-support-for-azure-government-and-azure-china-1) for the steps needed.)
+	* ARM Template Checker:
+      *	Fixed an issue where the 'isEnabled' property was not being respected at individual control level.
+      *	Org policy schema has been updated to include recently added properties to various AzSK objects. 
+      *	No action needed from org policy owners.
+      *	If needed, the Get-AzSKOrganizationPolicyStatus command can be used to validate that properties used in your policy are schema  compliant    
+      *	Changed ‘org -> subscription’ mapping approach following deprecation of older approach by Application Insights product team. If   you need to upload/refresh your org -> subscription details, please use the new approach from the "Create Cloud Security Compliance Report…" section in AzSK organization policy docs at https://aka.ms/devopskit/docs.
+
 
 ### Other improvements/bug fixes
 
-Controls: 
-* Fixed a bug in the PIM-related ('Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access') control to check for (null) condition where there are no members in permanent role. 
-* The DevOps Kit config health control ('Azure_AzSKCfg_Check_Health_of_CA') was unnecessarily enforcing Security Reader permission. It should now work just with 'Reader' permission. 
-* Updated recommendations, rationale, etc. for multiple controls in preparation for the CSE compliance drive.
+*	SVTs: 
+    * N/A
+*	Controls:
+    *	Recommendation updated for firewall/IP-based controls to support the scenario of indeterminate IP range.
+    *	For Logic Apps SVT, if an API Connection object is shared by two different Logic Apps then, it will be scanned only once.
+    *	APIM controls - changed code to filter 'product/API' controls if these artefacts do not exist in the service instance.
+    *	Fixed an issue with AzSKCfg controls - if a user does not have permission then the result will be 'Manual' (as opposed to 'Failed').
+    *	Anon access check for Azure Storage Blobs control will not trigger for ADLS-v2 objects.
 
-CICD Extension:
-* Fixed an issue in ARM Template Checker where exclude files parameter was not honored recursively in a folder hierarchy.
+*	CICD Extension:
+    *	N/A
+
+*	CA:
+    *	N/A
+
+*	Log Analytics (OMS)
+    *	Added 'ScannedBy' field in the scan events sent to Log Analytics.
