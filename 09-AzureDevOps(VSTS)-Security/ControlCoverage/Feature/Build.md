@@ -30,7 +30,7 @@ Keeping secret files such as signing certificates, Apple Provisioning Profiles, 
 <tr><td><b>Inactive build must be removed </b>
 <br/>
 Each additional build having access at repositories increases the attack surface. To minimize this risk ensure that only activite and legitimate build resources present in Organization
-</td><td>Low</td><td>No</td><td>No</td></tr>
+</td><td>Low</td><td>Yes</td><td>No</td></tr>
 
 </table>
 <table>

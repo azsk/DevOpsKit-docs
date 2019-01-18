@@ -17,7 +17,7 @@ If a personal access token (PAT) gets compromised, the Azure DevOps assets acces
 <tr><td><b>Alternate credential must be disabled </b>
 <br/>
 Alternate credential allows user to create username and password to access your Git repository.Login with these credentials doesn't expire and can't be scoped to limit access to your Azure DevOps Services data.
-</td><td>High</td><td>No</td><td>No</td></tr>
+</td><td>High</td><td>Yes</td><td>No</td></tr>
 
 </table>
 <table>

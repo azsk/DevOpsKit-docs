@@ -171,11 +171,16 @@ In 'baseline mode' a centrally defined 'control baseline' is used as the target 
 The cmdlet below scans azure resources in a subscription in Baseline mode and generates a status report:
 ```PowerShell
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -UseBaselineControls
+
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -UsePreviewBaselineControls
+
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -UseBaselineControls -UsePreviewBaselineControls
 ```
 	
 The parameters required are:
 - SubscriptionId – Subscription ID is the identifier of your Azure subscription. 
 - UseBaselineControls – UseBaselineControls is the flag used to enable scanning of resources in Baseline mode.
+- UsePreviewBaselineControls – UsePreviewBaselineControls is the flag used to enable scanning of resources in Previwe Baseline mode.
 
 [Back to top…](Readme.md#contents)
 

@@ -49,6 +49,7 @@ Run below command to get information about Azure services security control(s). C
                 [-ResourceTypeName <ResourceTypeName>] `
                 [-ControlIds <ControlIds>] `
                 [-UseBaselineControls] `
+				[-UsePreviewBaselineControls] `
                 [-FilterTags <FilterTags>] `
 		[-ControlSeverity <ControlSeverity>] `
 		[-ControlIdContains <ControlIdContains>] `
@@ -60,6 +61,7 @@ Run below command to get information about Azure services security control(s). C
 |ResourceTypeName|Friendly name of resource type. Run command 'Get-AzSKSupportedResourceTypes' to get the list of supported values. E.g. AppService, KeyVault|TRUE|All|
 |ControlIds|Comma-separated list of Control Ids|FALSE|None|
 |UseBaselineControls|The flag used to get details of controls defined in baseline|FALSE|None|
+|UsePreviewBaselineControls|The flag used to get details of controls defined in preview baseline|FALSE|None|
 |FilterTags|Comma-separated tags to filter the security controls. E.g., RBAC, AuthN, etc.|FALSE|None|
 |ControlSeverity|Filter by severity of control E.g., Critical, High, Medium, Low|FALSE|None|
 |ControlIdContains|Filter by ControlId(s) contains keyword|FALSE|None|
@@ -112,7 +114,8 @@ Run below command to get information about attested security control(s) in user'
 		[-ResourceGroupNames <ResourceGroupNames>] `
 		[-ResourceNames <ResourceNames>] `
                 [-ControlIds <ControlIds>] `
-		[-UseBaselineControls] 
+		[-UseBaselineControls] `
+		[-UsePreviewBaselineControls] 
 ```
 
 |Param Name|Purpose|Required?|Default value|
@@ -123,6 +126,7 @@ Run below command to get information about attested security control(s) in user'
 |ResourceNames|Comma-separated list of the name of the resources|FALSE|   |
 |ControlIds|Comma-separated list of Control Ids|FALSE|None|
 |UseBaselineControls|The flag used to get attestation details of controls defined in baseline|FALSE|None|
+|UsePreviewBaselineControls|The flag used to get attestation details of controls defined in baseline|FALSE|None|
 
 Below is the sample output:
 
