@@ -22,7 +22,7 @@ OMS product team migration/rebranding to ‘Log Analytics’:
     
     To try the new Azure DevOps scanning functionality, use the following:
     
-    #VSTS scanning is packaged in a separate module called AzSK.AzureDevOps!
+    VSTS scanning is packaged in a separate module called AzSK.AzureDevOps!
     
     ``
     Install-Module AzSK.AzureDevOps -Scope CurrentUser  
