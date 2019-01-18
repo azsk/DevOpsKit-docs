@@ -38,7 +38,7 @@ Accounts with extension manager access can install/manage extensions for Organiz
 <tr><td><b>Unintended/inactive user access must be revoked</b>
 <br/>
 Each additional person having access at Organization level increases the attack surface for the entire resources. To minimize this risk ensure that critical resources present in Organization are accessed only by the legitimate users when required.
-</td><td>High</td><td>No</td><td>No</td></tr>
+</td><td>High</td><td>Yes</td><td>No</td></tr>
 
 <tr><td><b>All teams/groups must be granted minimum required permissions on Organization</b>
 <br/>
