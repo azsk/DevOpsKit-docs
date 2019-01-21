@@ -1,6 +1,6 @@
 # Security Verification Tests (SVTs)
 
-![Security_In_CICD](../Images/Security_In_CICD.jpg)
+![Security_In_CICD](../Images/Security_In_CICD.png)
  
 ## Contents
 - [Overview](Readme.md#overview) 
