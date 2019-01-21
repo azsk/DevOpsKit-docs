@@ -1,6 +1,6 @@
 # Continuous Assurance (CA)
 
-![Continous_Assurance](../Images/Continous_Assurance.PNG)
+![Continous_Assurance](../Images/Continous_Assurance.png)
 
 ## Baseline Continuous Assurance
 ### Contents
