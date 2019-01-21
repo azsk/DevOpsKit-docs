@@ -516,9 +516,9 @@ a subscription. A schematic of this (aggregate view model) is shown below:
 [Back to top…](Readme.md#contents)
 
 ### [D] Leveraging other Management Solutions from the Azure Marketplace ###
-The Log Analytics Solutions contains several out of the box solutions that are invaluable to use towards 
+The Azure Monitor contains several out of the box solutions that are invaluable to use towards 
 a comprehensive coverage of monitoring and alerts of various Azure resource types. Many resources generate
-a rich set of 'data plane' diagnostics and logs which can be routed into an Log Analytics dashboard for monitoring
+a rich set of 'data plane' diagnostics and logs which can be routed into a Log Analytics dashboard for monitoring
 using these solutions. In the part, we will look at how to leverage a couple of common solutions. You can
 add more based on the specific resources (SQL, VM, Service Fabric, Key Vault, etc.) you are using in your subscription.
 
