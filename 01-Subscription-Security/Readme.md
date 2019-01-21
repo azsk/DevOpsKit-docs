@@ -1,6 +1,6 @@
 # AzSK Subscription Security Package
 
-![Subscription_Security](../Images/Subscription_Security.JPG)
+![Subscription_Security](../Images/Subscription_Security.png)
 
 ### Contents:
 
