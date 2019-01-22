@@ -528,7 +528,7 @@ It can happen due to below reasons
 3. AzSKRG resource group is not present on the subscription </br>
    Sol. => By setting up Continuous Assurance on your subscription will create the required AzSK artifacts.
    ```PowerShell
-   Install-AzSKContinuousAssurance -SubscriptionId "<subId>" -ResourceGroupNames "*" -OMSWorkspaceId "<omsWorkspaceId>" -OMSSharedKey "<omsSharedKey>"
+   Install-AzSKContinuousAssurance -SubscriptionId "<subId>" -ResourceGroupNames "*" -OMSWorkspaceId "<WorkspaceId>" -OMSSharedKey "<SharedKey>"
    ```
 
     

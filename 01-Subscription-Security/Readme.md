@@ -323,7 +323,7 @@ Remove-AzSKSubscriptionRBAC -SubscriptionId <subscriptionId> [-Tags <TagName>]
 #### Subscription Activity Alerts (based on Azure Insights)
 
 > **Note**: The alerts setup covered on this page uses the native 'Insights-based' alerts mechanism 
-offered by the Azure PG. In the 'Alerting & Monitoring' section, we also cover support for OMS-based 
+offered by the Azure PG. In the 'Alerting & Monitoring' section, we also cover support for Log Analytics-based 
 alerts which enable similar scenarios (and more). We have found that both approaches are in use across 
 LoB application teams.
 
@@ -577,8 +577,8 @@ Please refer [this](../04-Continous-Assurance/Readme.md#setting-up-continuous-as
 E.g., Install-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 		    -AutomationAccountLocation "USGov Virginia" `                    (for Azure Government)
 	        -ResourceGroupNames <ResourceGroupNames> `
-	        -OMSWorkspaceId <OMSWorkspaceId> `
-	        -OMSSharedKey <OMSSharedKey> 
+	        -OMSWorkspaceId <WorkspaceId> `
+	        -OMSSharedKey <SharedKey> 
 ```
 
 ### Customizing AzSK for your organization:

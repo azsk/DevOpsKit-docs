@@ -107,7 +107,7 @@ Run the commands below in PS after replacing the various '<>' with
     $omsSubId ='<Log Analytics subscription id>'   #subscription hosting the Log Analytics workspace
     $omsWSId ='<Log Analytics workspace id>'
     $omsRGName ='<Log Analytics workspace resource group name>'     #RG where the Log Analytics workspace is hosted (See 1-a)
-    $azSkViewName = '<unique_name_for_your_AzSK_view>' #This will identify the tile for AzSK view in OMS. E.g., MyApp-View-1
+    $azSkViewName = '<unique_name_for_your_AzSK_view>' #This will identify the tile for AzSK view in Log Analytics workspace. E.g., MyApp-View-1
 
 
     #This command will deploy the AzSK view in the Log Analytics workspace. Happy monitoring!  
@@ -189,7 +189,7 @@ are the same fields that display in the CSV file when you run the AzSK manually 
 	
 [Back to top…](Readme.md#contents)
 ### Guide to AzSK Monitoring Solution queries
-This section walks you through the queries present in the AzSK Monitoring solution. To get the latest queries make sure that you have the latest solution installed in your Log Analytics workspace. To get the latest version of solution you need to re-install Monitoring solution using step **[[1-c]](#setting-up-the-azsk-oms-solution-step-by-step)** mentioned above. The queries show the status of controls based on the following criteria.
+This section walks you through the queries present in the AzSK Monitoring solution. To get the latest queries make sure that you have the latest solution installed in your Log Analytics workspace. To get the latest version of solution you need to re-install Monitoring solution using step **[[1-c]](#1-c)** mentioned above. The queries show the status of controls based on the following criteria.
 - Each blade shows the aggregated control status for all subscriptions whose data is sent to the Log Analytics workspace.
 - By default, each blade shows the status of baseline controls.
 - The queries show counts based on control status received for last scan data(done with required access) received by the Log Analytics workspace.

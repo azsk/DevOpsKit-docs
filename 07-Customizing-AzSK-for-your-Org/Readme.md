@@ -520,7 +520,7 @@ Likewise, if you run without the `-UseBaselineControls` parameter, you will see 
 appear in the resulting CSV file. 
 
 ##### e) Customizing Severity labels 
-Ability to customize naming of severity levels of controls (e.g., instead of High/Medium, etc. one can now have Important/Moderate, etc.) with the changes reflecting in all avenues (manual scan results/CSV, OMS, compliance summaries, dashboards, etc.)
+Ability to customize naming of severity levels of controls (e.g., instead of High/Medium, etc. one can now have Important/Moderate, etc.) with the changes reflecting in all avenues (manual scan results/CSV, Log Analytics workspace, compliance summaries, dashboards, etc.)
 
 ###### Steps: 
 
@@ -584,7 +584,7 @@ or more of the following using AzSK:
  - Teams will be able to configure the AzSK SVT release task in their CICD pipelines
  - Subscription owners will be able to setup Continuous Assurance (CA) from their local machines (**after** they've installed
  AzSK using your org-specific 'iwr' installer locally)
- - Monitoring teams will be able to setup AzSK OMS view and see scan results from CA (and also manual scans and CICD if configured) 
+ - Monitoring teams will be able to setup AzSK Log Analytics view and see scan results from CA (and also manual scans and CICD if configured) 
  - You will be able to do central governance for your org by leveraging telemetry events that will collect in the master subscription
  from all the AzSK activity across your org. 
 
