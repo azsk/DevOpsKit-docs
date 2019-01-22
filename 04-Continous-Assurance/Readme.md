@@ -60,7 +60,7 @@ AzSK adds the service principal runtime account as a 'Reader' to the subscriptio
 
 > **\*Note** CA leverages Azure Monitor repository for aggregating security scan results, you must determine which Log Analytics workspace 
 you will use to view the security state of your subscription and applications (If you don't have a Log Analytics workspace please 
-follow the steps in [Setting up the AzSK Monitoring Solution](../05-Alerting-and-Monitoring#alerting--monitoring). 
+follow the steps in [Setting up the AzSK Monitoring Solution](../05-Alerting-and-Monitoring/Readme.md#setting-up-the-azsk-monitoring-solution-step-by-step). 
 This can be a single workspace that is shared by multiple applications which may themselves be in different subscriptions. 
 Alternately, you can have a Log Analytics workspace that is dedicated to monitoring a single application as well. 
 (Ideally, you should use the same workspace that is being used to monitor other aspects like availability, performance, etc. 
@@ -183,7 +183,7 @@ Let us verify that the runbook output is generated as expected and that the Log 
 2. Navigate to 'Logs' window, and enter Type=AzSK_CL Source_s=CA. (Source_s used to be 'CC' in the past.)
 3. You should see results similar to the below:
 	
- ![04_CA_OMS](../Images/04_CA_OMS.PNG)
+ ![04_CA_Log_Analytics](../Images/04_CA_Log_Analytics.png)
 
 Once CA is setup in the subscription, an app team can start leveraging the Monitoring Solution from AzSK as a one-stop dashboard 
 for visibility of security state. Please follow the steps to setup the Monitoring solution [here](../05-Alerting-and-Monitoring#setting-up-the-azsk-monitoring-solution-step-by-step) to enable that part.
@@ -806,9 +806,9 @@ The main/dominant component of the cost is automation runtime (storage/Azure Mon
 - Total Blob Storage Cost (retention + listing + access)
 	- 0.00 + 0.12 + 0.02 = $0.14/year
  
-###### (c) OMS storage cost: ($0.34/year)
+###### (c) Log Analytics storage cost: ($0.34/year)
 
-- Assumes that the team is using OMS for monitoring in general, otherwise, just for AzSK, free tier is sufficient.
+- Assumes that the team is using Log Analytics for monitoring in general, otherwise, just for AzSK, free tier is sufficient.
 - Data Upload
     - Rate = $2.3 / GB / month
 	- Our usage = 10KB / resource scan => 300KB added per day = ~10MB data written for the month  = (2.3*10*12/1000) = $0.27/year
@@ -817,7 +817,7 @@ The main/dominant component of the cost is automation runtime (storage/Azure Mon
 	- Rate - $0.10 / GB / month
 	- Our usage = 60MB avg/month (at mid-year)  = $0.10 * 0.06 *12 = $0.07/year
 
-- Total OMS Cost (Upload + Retention)  
+- Total Log Analytics Cost (Upload + Retention)  
      - 0.27+0.07 = $0.34/year
 
 
