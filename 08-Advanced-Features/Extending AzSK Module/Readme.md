@@ -86,7 +86,7 @@ All our SVTs inherit from a base class called SVTBase which will take care of al
 Below is the typical schema for each control inside the feature json
   ```
 {
-    "ControlID": "Azure_Subscription_AuthZ_Limit_Admin_Owner_Count",   //Human friendly control Id. The format used is Azure_<FeatureName>_<Category>_<ControlName>
+    "ControlID": "Azure_Subscription_AuthZ_Limit_Admin_Count",   //Human friendly control Id. The format used is Azure_<FeatureName>_<Category>_<ControlName>
     "Description": "Minimize the number of admins/owners",  //Description for the control, which is rendered in all the reports it generates (CSV, AI telemetry, emails etc.).
     "Id": "SubscriptionCore1100",   //This is internal ID and should be unique. Since the ControlID can be modified, this internal ID ensures that we have a unique link to all the control results evaluation.
     "ControlSeverity": "Medium", //Represents the severity of the Control. 
