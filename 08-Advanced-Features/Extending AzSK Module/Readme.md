@@ -267,7 +267,7 @@ class SubscriptionCore: SVTBase
 6. 	 That's it!! You can now scan the new extended control like any other control.
   
 ```PowerShell
-	Get-AzSKSubscriptionSecurityStatus -SubscriptionId '<sid>' -ControlIds 'Azure_Subscription_AuthZ_Limit_Admin_Owner_Count_Ext'
+	Get-AzSKSubscriptionSecurityStatus -SubscriptionId '<sid>' -ControlIds 'Azure_Subscription_AuthZ_Limit_Admin_Count_Ext'
 ```
 
 ### Steps to override the logic of existing SVT:
