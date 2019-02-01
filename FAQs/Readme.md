@@ -45,7 +45,7 @@
 - ### Continuous Assurance (CA)  
   - #### Baseline Continuous Assurance
     - [What permission do I need to setup CA?](../04-Continous-Assurance/Readme.md#what-permission-do-i-need-to-setup-ca)
-    - [Is it possible to setup CA if there is no Log Analytics workspace?](../04-Continous-Assurance/Readme.md##is-it-possible-to-setup-ca-if-there-is-no-log-analytics-workspace)
+    - [Is it possible to setup CA if there is no Log Analytics workspace?](../04-Continous-Assurance/Readme.md#is-it-possible-to-setup-ca-if-there-is-no-log-analytics-workspace)
     - [Which Log Analytics workspace should I use for my team when setting up CA?](../04-Continous-Assurance/Readme.md#which-log-analytics-workspace-should-i-use-for-my-team-when-setting-up-ca)
     - [Why does CA setup ask for resource groups?](../04-Continous-Assurance/Readme.md#why-does-ca-setup-ask-for-resource-groups)
     - [How can I find out if CA was previously setup in my subscription?](../04-Continous-Assurance/Readme.md#how-can-i-find-out-if-ca-was-previously-setup-in-my-subscription)
