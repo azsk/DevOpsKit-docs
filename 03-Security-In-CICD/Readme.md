@@ -290,6 +290,19 @@ This error typically occurs when AzSK scan identifies non-compatible AzureRm and
 > **Note:** For Non-Hosted agent, it is always recommended to check if latest AzSK module is present on your machine before marking 'Do not auto-update AzSK' CheckBox as checked, since scan should always use latest AzSK module.  
 > **Note:** You will need to keep the above checkbox unchecked if you are running the AzSK_SVTs task on any release agent for the first time OR you are running the task on Hosted VS2017 agent OR if non-hosted agent is already running on latest version.
 
+#### I have enabled AzSK_SVTs task in my release pipeline. I am getting an error 'Cannot bind argument to parameter 'String' because it is null.'
+
+This error is occurring because some of the configurations are missing/incorrect. Please ensure you have selected the correct subscription/service principal in the drop-down list.
+
+If your subscription is not listed or if you want to use an existing service principal, you can setup an Azure service connection using the 'Add' or 'Manage' button.  Managed Service Identity service connection scope is limited to access granted to the Azure virtual machine running the agent. Ensure that the VM has access to specified resources.
+
+#### I have enabled AzSK_SVTs task in my release pipeline. I am getting an error 'Could not perform AzSK SVTs scan. Please check if task configurations are correct.'
+
+This release fails with the below error message because one or more variables of the release pipeline is missing/incorrect. Make sure the value of AzSKServerURL and EnableServerAuth in the ‘Variables’ section of the pipeline is correctly set. 
+
+-Run the command Get-AzSKInfo -InfoType HostInfo 
+-The value of OnlinePolicyStoreURL and EnableAADAuthForOnlinePolicyStore should be used for the variable AzSKServerURL and EnableServerAuth. 
+
 #### Why AzSK_SVTs task in my release pipeline has suddenly started failing 'Verify'/'Manual'/'Remediate'/'Exception' controls?
  All the control statuses other than 'Passed' would be treated as 'Failed' in the AzSK_SVT Task(going forward from AzSK_SVTs version 3.0.3). To treat control statuses other than 'Failed' as 'Passed' you can use 'TreatAsPassed' variable. Refer this [link](Readme.md#advanced-cicd-scanning-capabilities)
  
