@@ -617,6 +617,9 @@ To keep personal access token(PAT) that will be used further by Notebook to scan
 You need to be 'Owner' on the subscription.
 This is required because, during CA setup, we add RBAC access to an Azure AD App (SPN) that's utilized for running the 'security scan' runbooks in Azure Automation. Only an'Owner' for a subscription has the right to change subscription RBAC.  
 
+#### SPN permission could not be set while renewing the CA certificate. What should I do?
+In order to fix missing permissions/ setup new runtime account, you need to be an ‘Owner’ on the subscription. This is required because we add RBAC access to an Azure AD App (SPN) that's utilized for running the 'security scan' runbooks in Azure Automation. Only an 'Owner' for a subscription has the right to change subscription RBAC. Please verify whether you have ‘Owner’ permission on the subscription.
+
 #### What are AzSKRG and AzSK_CA_SPN used for?
 
 The AzSK Continuous Assurance (CA) setup basically provisions your subscription with the ability to do daily scans and sends the scan results to your Log Analytics workspace.
