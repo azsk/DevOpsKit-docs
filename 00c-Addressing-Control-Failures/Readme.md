@@ -560,4 +560,10 @@ This same thinking applies to many of the other network-infra related controls. 
 
 To understand the concept of attestation and how it works, you can go through the other FAQs in the Addressing Control Failures section in our documentation.
 
+#### I am unable to evaluate/attest some Key Vault controls even with co-admin privilege. I am getting the error: Skipping attestation process for this control. You do not have required permissions to evaluate this control.(Please note that you must have access permissions to the keys & secrets in the key vault for successful attestation of this control) (If you are 'Owner' then please elevate to 'Co-Admin' in the portal and re-run in a *fresh* PS console.) 
+
+Some key vault controls require permission(‘Get and ’List’) on keys and secrets to check certain properties like expiry date etc. If the user account/application does not have access on the keys and secrets stored in the key vault resource, then the scan will result into ‘Manual’ state as the control will not get evaluated due to insufficient permission. In such cases where the user/application is not able to evaluate any control due to permission issues then it must not be attesting them without knowing the actual risk.
+Ensure the user account/application executing the scan commands has atleast ‘Get’ and ‘List’ (read permissions) Key and Secret Permissions. [Azure Portal -> Key Vault resource -> Access Policy -> User/Application -> Enable ‘get’ and ‘List’ in Key Permissions + Secret Permissions]
+
+
 [Back to top...](Readme.md#contents)
