@@ -298,9 +298,9 @@ If your subscription is not listed or if you want to use an existing service pri
 
 #### I have enabled AzSK_SVTs task in my release pipeline. I am getting an error 'Could not perform AzSK SVTs scan. Please check if task configurations are correct.'
 
-This release fails with the below error message because one or more variables of the release pipeline is missing/incorrect. Make sure the value of AzSKServerURL and EnableServerAuth in the ‘Variables’ section of the pipeline is correctly set. 
+The release fails with the below error message because one or more variables of the release pipeline is missing/incorrect. Make sure the value of AzSKServerURL and EnableServerAuth in the ‘Variables’ section of the pipeline is correctly set. 
 
--Run the command Get-AzSKInfo -InfoType HostInfo 
+-Run the command Get-AzSKInfo -InfoType HostInfo. 
 -The value of OnlinePolicyStoreURL and EnableAADAuthForOnlinePolicyStore should be used for the variable AzSKServerURL and EnableServerAuth. 
 
 #### Why AzSK_SVTs task in my release pipeline has suddenly started failing 'Verify'/'Manual'/'Remediate'/'Exception' controls?
