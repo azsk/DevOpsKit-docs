@@ -1,6 +1,6 @@
 # AzSK Subscription Security Package
 
-![Subscription_Security](../Images/Subscription_Security.JPG)
+![Subscription_Security](../Images/Subscription_Security.png)
 
 ### Contents:
 
@@ -323,7 +323,7 @@ Remove-AzSKSubscriptionRBAC -SubscriptionId <subscriptionId> [-Tags <TagName>]
 #### Subscription Activity Alerts (based on Azure Insights)
 
 > **Note**: The alerts setup covered on this page uses the native 'Insights-based' alerts mechanism 
-offered by the Azure PG. In the 'Alerting & Monitoring' section, we also cover support for OMS-based 
+offered by the Azure PG. In the 'Alerting & Monitoring' section, we also cover support for Log Analytics-based 
 alerts which enable similar scenarios (and more). We have found that both approaches are in use across 
 LoB application teams.
 
@@ -401,7 +401,7 @@ Get-AzureRmLog | where {$_.OperationName -eq "Microsoft.Insights/AlertRules/Acti
 |Error Description	|Comments|
 | --------------  | ------- |
 |Error: Please enter valid subscription id!|	Provided subscription id is incorrect|
-|Error Occurred! Try running the command with -Debug option for more details. |Failed to setup the policy. Share the details of the errors to AzSKSupExt@microsoft.com|
+|Error Occurred! Try running the command with -Debug option for more details. |Failed to setup the policy. Share the details of the errors to AzSKSup@microsoft.com|
 
 [Back to top…](Readme.md#contents)
 
@@ -509,9 +509,9 @@ We have covered for the below resource types so far:
 |Error Description	|Comments|
 | ----------------- |--------|
 |Error: Please enter valid subscription id! |Provided subscription id is incorrect|
-|Error Occurred! Try running the command with -Debug option for more details.	|Failed to setup the policy. Share the details of the errors to AzSDKSupExt@microsoft.com |
+|Error Occurred! Try running the command with -Debug option for more details.	|Failed to setup the policy. Share the details of the errors to AzSKSup@microsoft.com |
 
-Reach out to AzSDKSupExt@microsoft.com for any further help  
+Reach out to AzSKSup@microsoft.com for any further help  
 
 [Back to top…](Readme.md#contents)
 
@@ -577,8 +577,8 @@ Please refer [this](../04-Continous-Assurance/Readme.md#setting-up-continuous-as
 E.g., Install-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 		    -AutomationAccountLocation "USGov Virginia" `                    (for Azure Government)
 	        -ResourceGroupNames <ResourceGroupNames> `
-	        -OMSWorkspaceId <OMSWorkspaceId> `
-	        -OMSSharedKey <OMSSharedKey> 
+	        -OMSWorkspaceId <WorkspaceId> `
+	        -OMSSharedKey <SharedKey> 
 ```
 
 ### Customizing AzSK for your organization:

@@ -1,5 +1,5 @@
 # Security Telemetry
-![Security_Telemetry](../Images/Security_Telemetry.PNG)
+![Security_Telemetry](../Images/Security_Telemetry.png)
 
 
 

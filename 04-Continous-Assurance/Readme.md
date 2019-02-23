@@ -1,6 +1,6 @@
 # Continuous Assurance (CA)
 
-![Continous_Assurance](../Images/Continous_Assurance.PNG)
+![Continous_Assurance](../Images/Continous_Assurance.png)
 
 ## Baseline Continuous Assurance
 ### Contents
@@ -49,7 +49,7 @@ To get started, we need the following:
 1. The user setting up Continuous Assurance needs to have 'Owner' access to the subscription. (This is necessary because during setup, 
 AzSK adds the service principal runtime account as a 'Reader' to the subscription.) 
 
-2. Target OMS WorkspaceID* and SharedKey. (The OMS workspace can be in a different subscription, see note below)
+2. Target Log Analytics WorkspaceID* and SharedKey. (The Log Analytics workspace can be in a different subscription, see note below)
 
 **Prerequisite:**
 
@@ -58,11 +58,11 @@ AzSK adds the service principal runtime account as a 'Reader' to the subscriptio
 - Windows Server 2016
 
 
-> **\*Note** CA leverages an OMS repository for aggregating security scan results, you must determine which OMS workspace 
-you will use to view the security state of your subscription and applications (If you don't have an OMS repository please 
-follow the steps in [Setting up the AzSK OMS Solution](../05-Alerting-and-Monitoring/Readme.md) ). 
+> **\*Note** CA leverages Azure Monitor repository for aggregating security scan results, you must determine which Log Analytics workspace 
+you will use to view the security state of your subscription and applications (If you don't have a Log Analytics workspace please 
+follow the steps in [Setting up the AzSK Monitoring Solution](../05-Alerting-and-Monitoring/Readme.md#setting-up-the-azsk-monitoring-solution-step-by-step). 
 This can be a single workspace that is shared by multiple applications which may themselves be in different subscriptions. 
-Alternately, you can have an OMS workspace that is dedicated to monitoring a single application as well. 
+Alternately, you can have a Log Analytics workspace that is dedicated to monitoring a single application as well. 
 (Ideally, you should use the same workspace that is being used to monitor other aspects like availability, performance, etc. 
 for your application.)
 
@@ -78,10 +78,10 @@ for your application.)
 		[-AutomationAccountRGName <AutomationAccountRGName>] `
 		[-AutomationAccountName <AutomationAccountName>] `
 	        -ResourceGroupNames <ResourceGroupNames> `
-	        -OMSWorkspaceId <OMSWorkspaceId> `
-	        -OMSSharedKey <OMSSharedKey> `
-	        [-AltOMSWorkspaceId <AltOMSWorkspaceId>] `
-	        [-AltOMSSharedKey <AltOMSSharedKey>] `
+	        -OMSWorkspaceId <WorkspaceId> `
+	        -OMSSharedKey <SharedKey> `
+	        [-AltOMSWorkspaceId <AltWorkspaceId>] `
+	        [-AltOMSSharedKey <AltSharedKey>] `
 	        [-WebhookUrl <WebhookUrl>] `
 	        [-WebhookAuthZHeaderName <WebhookAuthZHeaderName>] `
 	        [-WebhookAuthZHeaderValue <WebhookAuthZHeaderValue>] `
@@ -100,10 +100,10 @@ For Azure environments other than Azure Cloud, don't forget to provide Automatio
 |AutomationAccountRGName|(Optional) Name of ResourceGroup where AutomationAccount will be installed|FALSE|AzSKRG|Don't pass default value explicitly for this param|
 |AutomationAccountName|(Optional) Name of AutomationAccount|FALSE|AzSKContinuousAssurance|Don't pass default value explicitly for this param|
 |ResourceGroupNames|Comma separated list of resource groups within which the application resources are contained.|TRUE|None||
-|OMSWorkspaceId|Workspace ID of OMS which is used to monitor security scan results|TRUE|None||
-|OMSSharedKey|Shared key of OMS which is used to monitor security scan results|TRUE|None||
-|AltOMSWorkspaceId|(Optional) Alternate Workspace ID of OMS to monitor security scan results|FALSE|None||
-|AltOMSSharedKey|(Optional) Shared key of Alternate OMS which is used to monitor security scan results|FALSE|None||
+|OMSWorkspaceId|Workspace ID of Log Analytics workspace which is used to monitor security scan results|TRUE|None||
+|OMSSharedKey|Shared key of Log Analytics workspace which is used to monitor security scan results|TRUE|None||
+|AltOMSWorkspaceId|(Optional) Alternate Workspace ID of Log Analytics workspace to monitor security scan results|FALSE|None||
+|AltOMSSharedKey|(Optional) Shared key of Alternate Log Analytics workspace which is used to monitor security scan results|FALSE|None||
 |WebhookUrl|(Optional) All the scan results shall be posted to this configured webhook |FALSE|None||
 |WebhookAuthZHeaderName|(Optional) Name of the AuthZ header (typically 'Authorization')|FALSE|None||
 |WebhookAuthZHeaderValue|(Optional) Value of the AuthZ header |FALSE|None||
@@ -160,12 +160,12 @@ It is important to verify that everything has worked without hiccups. Please rev
 
  ![04_CA_Downloaded_Modules](../Images/04_CA_Downloaded_Modules.PNG)
  
-**Step-4: Verifying CA Runbook execution and OMS connectivity**  
+**Step-4: Verifying CA Runbook execution and Log Analytics connectivity**  
 Once CA setup and modules download are completed successfully, the runbooks will automatically execute periodically (once a day) and scan the subscription and the specified resource groups for the application(s) for security issues. The outcomes of these scans will get stored in a storage account created by the installation (format : azsk\<YYYYMMDDHHMMSS> e.g. azsk20170505181008) and follows a similar structure as followed by standalone SVT execution (CSV file, LOG file, etc.).    
 
-The results of the control evaluation are also routed to the OMS repository for viewing via a security dashboard.  
+The results of the control evaluation are also routed to the Log Analytics for viewing via a security dashboard.  
   
-Let us verify that the runbook output is generated as expected and that the OMS connectivity is setup and working correctly.
+Let us verify that the runbook output is generated as expected and that the Log Analytics connectivity is setup and working correctly.
 
 **1:** Verify that CSV file and LOG file are getting generated as expected.  
  
@@ -177,17 +177,16 @@ Let us verify that the runbook output is generated as expected and that the OMS 
 	
  ![04_CA_Storage_Container](../Images/04_CA_Storage_Container.PNG)
 
-**2:** Verify that data is being sent to the target OMS workspace   
+**2:** Verify that data is being sent to the target Log Analytics workspace   
 
-1. Go to the OMS dashboard that we used to setup CA above.
-2. In the 'Search' window, enter Type=AzSK_CL Source_s=CA. (Source_s used to be 'CC' in the past.)
+1. Go to the Log Analytics workspace that we used to setup CA above.
+2. Navigate to 'Logs' window, and enter Type=AzSK_CL Source_s=CA. (Source_s used to be 'CC' in the past.)
 3. You should see results similar to the below:
 	
- ![04_CA_OMS](../Images/04_CA_OMS.PNG)
+ ![04_CA_Log_Analytics](../Images/04_CA_Log_Analytics.png)
 
-Once CA is setup in the subscription, an app team can start leveraging the OMS Solution from AzSK as a one-stop dashboard 
-for visibility of security state. Please follow the steps in the OMS solution setup (in Alerting & Monitoring sub-section of 
-this notebook) to enable that part.
+Once CA is setup in the subscription, an app team can start leveraging the Monitoring Solution from AzSK as a one-stop dashboard 
+for visibility of security state. Please follow the steps to setup the Monitoring solution [here](../05-Alerting-and-Monitoring#setting-up-the-azsk-monitoring-solution-step-by-step) to enable that part.
 
 [Back to top…](Readme.md#contents)
 ## Continuous Assurance - how it works (under the covers)
@@ -218,7 +217,7 @@ To host all the Continuous Assurance artifacts
    
 
 #### Next Steps
-Once CA is setup in the subscription, an app team can start leveraging the OMS Solution from AzSK as a one-stop dashboard for visibility of security state.
+Once CA is setup in the subscription, an app team can start leveraging the Monitoring Solution from AzSK as a one-stop dashboard for visibility of security state.
 Occasionally, you may also feel the need to tweak the configuration of CA. See the "Update" section below about how to do that.
 
 [Back to top…](Readme.md#contents)
@@ -228,9 +227,9 @@ Occasionally, you may also feel the need to tweak the configuration of CA. See t
 The '**Update-AzSKContinuousAssurance**' command can be used to make changes to a previously setup CA configuration.
 For instance, you may use it to:
 - update the target resource groups to include in the scanning
-- switch the OMS workspace information that CA should use to send control evaluation events to
+- switch the Log Analytics workspace information that CA should use to send control evaluation events to
 - use a different AAD SPN for the runbooks 
-- remove previously set OMS, AltOMS, Webhook settings or ScanOnDeployment mode for CA account.
+- remove previously set LogAnalytics, AltLogAnalytics, Webhook settings or ScanOnDeployment mode for CA account.
 - etc.
 
 To do any or all of these:
@@ -240,10 +239,10 @@ To do any or all of these:
 ```PowerShell
 Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
     [-ResourceGroupNames <ResourceGroupNames>] `
-    [-OMSWorkspaceId <OMSWorkspaceId>] `
-    [-OMSSharedKey <OMSSharedKey>] `
-    [-AltOMSWorkspaceId <AltOMSWorkspaceId>] `
-    [-AltOMSSharedKey <AltOMSSharedKey>] `
+    [-OMSWorkspaceId <WorkspaceId>] `
+    [-OMSSharedKey <SharedKey>] `
+    [-AltOMSWorkspaceId <AltWorkspaceId>] `
+    [-AltOMSSharedKey <AltSharedKey>] `
     [-WebhookUrl <WebhookUrl>] `
     [-WebhookAuthZHeaderName <WebhookAuthZHeaderName>] `
     [-WebhookAuthZHeaderValue <WebhookAuthZHeaderValue>] `
@@ -253,17 +252,17 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
     [-NewRuntimeAccount] `
     [-FixModules] `
     [-RenewCertificate]`
-    [-Remove <OMSSettings/AltOMSSettings/WebhookSettings/ScanOnDeployment"]
+    [-Remove <LogAnalyticsSettings/AltLogAnalyticsSettings/WebhookSettings/ScanOnDeployment"]
 ```
 
 |Param Name|Purpose|Required?|Default Value|Comments
 |----|----|----|----|----|
 |SubscriptionId|Subscription ID of the Azure subscription in which Automation Account exists |TRUE|None||
 |ResourceGroupNames|Use this parameter if you want to update the comma separated list of resource groups within which the application resources are contained. The previously configured list of RGs will be replaced with the one provided here.|FALSE|None||
-|OMSWorkspaceId|Use this parameter if you want to update the workspace ID of OMS which is used to monitor security scan results|FALSE|None||
-|OMSSharedKey|Use this parameter if you want to update the shared key of OMS which is used to monitor security scan results|FALSE|None||
-|AltOMSWorkspaceId|(Optional) Alternate Workspace ID of OMS to monitor security scan results|FALSE|None||
-|AltOMSSharedKey|(Optional) Shared key of Alternate OMS which is used to monitor security scan results|FALSE|None||
+|OMSWorkspaceId|Use this parameter if you want to update the workspace ID of Log Analytics workspace which is used to monitor security scan results|FALSE|None||
+|OMSSharedKey|Use this parameter if you want to update the shared key of Log Analytics workspace which is used to monitor security scan results|FALSE|None||
+|AltOMSWorkspaceId|(Optional) Alternate Workspace ID of Log Analytics workspace to monitor security scan results|FALSE|None||
+|AltOMSSharedKey|(Optional) Shared key of Alternate Log Analytics workspace which is used to monitor security scan results|FALSE|None||
 |WebhookUrl|(Optional) All the scan results shall be posted to this configured webhook |FALSE|None||
 |WebhookAuthZHeaderName|(Optional) Name of the AuthZ header (typically 'Authorization')|FALSE|None||
 |WebhookAuthZHeaderValue|(Optional) Value of the AuthZ header |FALSE|None||
@@ -274,7 +273,7 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 |FixModules|Use this switch in case AzureRm.Automation/AzureRm.Profile module(s) extraction fails in CA Automation Account.|FALSE|None||
 |RenewCertificate|Renews certificate credential of CA SPN if the caller is Owner of the AAD Application (SPN). If the caller is not Owner, a new application is created with a corresponding SPN and a certificate owned by the caller. CA uses the updated credential going forward.|FALSE|None||
 |ScanOnDeployment|CA scan can be auto-triggered upon resource deployment.Updating CA with this flag will make sure that the Resource Group in which resource is deployed will be scanned.|FALSE|None||
-|Remove|Use this switch to clear previously set OMS, AltOMS,Webhook settings from CA Automation Account or to unregister from scan on deployment mode|False|None||
+|Remove|Use this switch to clear previously set LogAnalytics, AltLogAnalytics,Webhook settings from CA Automation Account or to unregister from scan on deployment mode|False|None||
 
 [Back to top…](Readme.md#contents)
 ## Removing a Continuous Assurance setup
@@ -329,8 +328,8 @@ This can be achieved by adding extra params to the existing CA command as shown 
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
 $ResourceGroupNames = '*' #This should always be '*' for Central Scan mode CA
-$OMSWorkspaceId = '<omsWorkspaceId>'
-$OMSSharedKey = '<omsSharedKey>' 
+$OMSWorkspaceId = '<WorkspaceId>'
+$OMSSharedKey = '<SharedKey>' 
 $TargetSubscriptionIds = '<SubId1, SubId2, SubId3...>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
 
 Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds 
@@ -346,8 +345,8 @@ The table below lists only the parameters that are mandatory or have specific ne
 |SubscriptionId| Central subscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
 |TargetSubscriptionIds| Comma separated list of subscriptionIds that needs to be scanned by the central subscription. Host subscription is always appended by default. No need to pass that value in this param| True | The user executing this command should be owner on these subscriptions. |
 |ResourceGroupNames| Comma separated list of ResourceGroupNames| True | Since you are planning to run in the central mode, you should use * as its value. This is because you need not have the same RG across all the subscriptions|
-|OMSWorkspaceId| All the scanning events will be send to this OMSWorkspace. This will act as central monitoring dashboard | True | |
-|OMSSharedKey| OMSSharedKey for the central monitoring dashboard| True | |
+|OMSWorkspaceId| All the scanning events will be send to this Log Analytics workspace. This will act as central monitoring dashboard | True | |
+|OMSSharedKey| SharedKey for the central monitoring dashboard| True | |
 |LoggingOption| "IndividualSubs/CentralSub". This provides the capability to users to store the CA scan logs on central subscription or on individual subscriptions| False |CentralSub |
 |SkipTargetSubscriptionConfig| (Optional) Use this switch if you dont have the owner permission on the target sub. This option assumes you have already done all the required configuration on the target sub. Check the note below| False| |
 |CentralScanMode| Mandatory switch to specify in central scan mode| True | |
@@ -365,8 +364,8 @@ In case you want to add/edit subscriptions covered via central scanning mode you
 
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
-$OMSWorkspaceId = '<omsWorkspaceId>'
-$OMSSharedKey = '<omsSharedKey>' 
+$OMSWorkspaceId = '<WorkspaceId>'
+$OMSSharedKey = '<SharedKey>' 
 $TargetSubscriptionIds = '<SubId1, SubId2, SubId3...>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
 
 Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds -CentralScanMode -FixRuntimeAccount
@@ -443,8 +442,8 @@ When you have more than about 40-50 subscriptions to scan, it is better to use m
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
 $ResourceGroupNames = '*' #This should always be '*' for Central Scan mode CA
-$OMSWorkspaceId = '<omsWorkspaceId>'
-$OMSSharedKey = '<omsSharedKey>' 
+$OMSWorkspaceId = '<WorkspaceId>'
+$OMSSharedKey = '<SharedKey>' 
 $TargetSubscriptionIds = '<SubId1, SubId2, SubId3...>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
 
 #if you have text file containing subscription ids then run below script
@@ -472,8 +471,8 @@ Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscript
 |SubscriptionId| Central subscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
 |TargetSubscriptionIds| Comma separated list of subscriptionIds that needs to be scanned by the central subscription. Host subscription is always appended by default. No need to pass that value in this param| True | The user executing this command should be owner on these subscriptions. |
 |ResourceGroupNames| Comma separated list of ResourceGroupNames| True | Since you are planning to run in the central mode, you should use * as its value. This is because you need not have the same RG across all the subscriptions|
-|OMSWorkspaceId| All the scanning events will be send to this OMSWorkspace. This will act as central monitoring dashboard | True | |
-|OMSSharedKey| OMSSharedKey for the central monitoring dashboard| True | |
+|OMSWorkspaceId| All the scanning events will be send to this Log Analytics workspace. This will act as central monitoring dashboard | True | |
+|OMSSharedKey| SharedKey for the central monitoring dashboard| True | |
 |AutomationAccountLocation| (Optional) Location where the AutomationAccount to be created | False | |
 |AutomationAccountRGName| Name of ResourceGroup which will hold the scanning automation account. Should be different than "AzSKRG". | True | e.g. AzSK-Category-ScanRG01 |
 |AutomationAccountName| Name of the automation account which will scan the target subscriptions. (This should be different than "AzSKContinuousAssurance".) | True | e.g. AzSKScanningAccount01|
@@ -618,12 +617,15 @@ To keep personal access token(PAT) that will be used further by Notebook to scan
 You need to be 'Owner' on the subscription.
 This is required because, during CA setup, we add RBAC access to an Azure AD App (SPN) that's utilized for running the 'security scan' runbooks in Azure Automation. Only an'Owner' for a subscription has the right to change subscription RBAC.  
 
+#### SPN permission could not be set while renewing the CA certificate. What should I do?
+In order to fix missing permissions/ setup new runtime account, you need to be an ‘Owner’ on the subscription. This is required because we add RBAC access to an Azure AD App (SPN) that's utilized for running the 'security scan' runbooks in Azure Automation. Only an 'Owner' for a subscription has the right to change subscription RBAC. Please verify whether you have ‘Owner’ permission on the subscription.
+
 #### What are AzSKRG and AzSK_CA_SPN used for?
 
-The AzSK Continuous Assurance (CA) setup basically provisions your subscription with the ability to do daily scans and sends the scan results to your OMS workspace.
+The AzSK Continuous Assurance (CA) setup basically provisions your subscription with the ability to do daily scans and sends the scan results to your Log Analytics workspace.
 To do the scanning, the CA setup process creates a runtime account (owned by you) and grants that account 'Reader' access to your subscription. This is the AzSK_CA_SPN_xxxx that you will notice in a 'Reader' role if you look at the Access Control (IAM) list for your subscription.
  
-The CA setup also creates an automation account that holds the runbook (scanning code), the schedules (that trigger the daily scan) and other configuration parameters (e.g., your OMS info, target resource groups list, etc.) This, and other artifacts related to AzSK and functioning of AzSK commands, are held in a resource group called 'AzSKRG' in your subscription. 
+The CA setup also creates an automation account that holds the runbook (scanning code), the schedules (that trigger the daily scan) and other configuration parameters (e.g., your Log Analytics workspace info, target resource groups list, etc.) This, and other artifacts related to AzSK and functioning of AzSK commands, are held in a resource group called 'AzSKRG' in your subscription. 
 
 Each day, the runbook executes under the identity of the AzSK_CA_SPN_xxxx runtime account and performs a scan of the subscription and contained resources (per the currently applicable baseline controls list). 
 
@@ -640,26 +642,26 @@ Update-AzSKContinuousAssurance -SubscriptionId <sub_id> -FixRuntimeAccount
 ``` 
 See the above question for more info about the SPN and AzSKRG.
 
-#### Is it possible to setup CA if there is no OMS workspace?
-No. The intent of CA is to scan regularly and be able to monitor the outcomes for security drift. Out of the box, AzSK CA uses OMS for the monitoring capabilities. (Basically, AzSK sends control evaluation results to a connected OMS workspace.)  
+#### Is it possible to setup CA if there is no Log Analytics workspace?
+No. The intent of CA is to scan regularly and be able to monitor the outcomes for security drift. Out of the box, AzSK CA uses Log Analytics for the monitoring capabilities. (Basically, AzSK sends control evaluation results to a connected Log Analytics workspace.)  
 
-#### Which OMS workspace should I use for my team when setting up CA?
+#### Which Log Analytics workspace should I use for my team when setting up CA?
 Check with your service offering leader/org's cloud lead.
 You would typically use one of the following options:
 - Utilize a workspace is shared across a related set of services from your SO
-- Create a new OMS workspace and use that exclusively for your service ('free' tier is OK for just AzSK use cases)
+- Create a new Log Analytics workspace and use that exclusively for your service ('free' tier is OK for just AzSK use cases)
 - Utilize an IT-wide shared workspace  
 
 #### Why does CA setup ask for resource groups?
 CA supports scanning a subscription and a set of cloud resources that make up an application. These cloud resources are assumed to be hosted within one or more resource groups. A typical CA installation takes both the subscription info and resource groups info.
 
 #### How can I find out if CA was previously setup in my subscription?
-You can check using the "Get-AzSKContinuousAssurance" cmdlet. If CA is correctly setup, it will show a list of artifacts that are deployed during CA setup (e.g., Automation account, Connections, Schedules, OMS workspace info, etc.). If CA has not been setup, you will see a message indicating so.
+You can check using the "Get-AzSKContinuousAssurance" cmdlet. If CA is correctly setup, it will show a list of artifacts that are deployed during CA setup (e.g., Automation account, Connections, Schedules, Log Analytics workspace info, etc.). If CA has not been setup, you will see a message indicating so.
 
 #### How can I tell that my CA setup has worked correctly?
 There are 2 important things you should do to verify this:
 Run the Get-AzSKContinuousAssurance and confirm that the output tells you as in the previous question.
-Verify that the runbooks have actually started scanning your subscription and resource groups. You can check for this in OMS.
+Verify that the runbooks have actually started scanning your subscription and resource groups. You can check for this in Log Analytics.
   
 #### Is providing resource groups mandatory?
 We would like teams to, at a minimum, provide the list of resource groups that cover the most critical components of their application. It is unlikely that you will just have a subscription but no important resources inside it. Still, if you absolutely can't provide a resource group, then specify the "*"* as the resource group when setting up CA. 
@@ -668,9 +670,9 @@ If you do provide **"*"** as an option, CA will automatically grow/shrink the re
 #### What if I need to change the resource groups after a few weeks?
 That is easy! Just run the Update-AzSKContinuousAssurance cmdlet with the new list of resource groups you would like monitored.
   
-#### Do I need to also setup AzSK OMS solution?
+#### Do I need to also setup AzSK Monitoring solution?
 This part is not mandatory for CA itself to work.
-However, setting up the AzSK OMS solution is recommended as it will help you get a richer view of continuous assurance for your subscription and resources as scanned by CA. Secondly, it will give you several out-of-box artefacts to assist with security monitoring for your service. For instance, you will start getting email alerts if any of the high or critical severity controls from AzSK fail in your service.  
+However, setting up the AzSK Monitoring solution is recommended as it will help you get a richer view of continuous assurance for your subscription and resources as scanned by CA. Secondly, it will give you several out-of-box artefacts to assist with security monitoring for your service. For instance, you will start getting email alerts if any of the high or critical severity controls from AzSK fail in your service.  
 
 #### How to renew the certificate used for Continuous Assurance? 
 
@@ -741,7 +743,7 @@ Step-2: Run a subscription controls scan (as Co-Admin) with "-UseBaselineControl
 
 Step-3: Run a complete scan of resources (as Co-Admin if you have classic resources or as Owner if you don't)
 
-Step-4: Lastly, if you fix or attest any controls which CA cannot scan, you may need to rerun (b) or (c) above at least once so that the final status of those non-CA controls gets sent to the OMS.
+Step-4: Lastly, if you fix or attest any controls which CA cannot scan, you may need to rerun (b) or (c) above at least once so that the final status of those non-CA controls gets sent to the Azure Monitor.
 
 #### Should I manually update modules in the AzSK CA automation account?
 
@@ -765,15 +767,15 @@ Such controls will be counted as 'failing' by default until you run the scans ma
 
 Also, when running scans manually, make sure you are on the latest version of the kit. That may also cause a discrepancy between a CA scan and a local scan. (CA always runs using the latest version of the kit.)
 
-#### How much does it cost to setup Continuous Assurance along with OMS monitoring solution?
+#### How much does it cost to setup Continuous Assurance along with the Monitoring solution?
 Using the following ballpark calculations (and service costs as of Q1-FY18), we estimate that a Continuous Assurance
-setup along with an OMS workspace for monitoring will cost a little about $80/year for a typical
+setup along with a Log Analytics workspace for monitoring will cost a little about $80/year for a typical
 subscription with about 30-40 resources of various types. 
  
-The average cost of AzSK CA and AzSK OMS solution per Azure resources comes to about $2.7 per year. (So, assuming
+The average cost of AzSK CA and AzSK Monitoring solution per Azure resources comes to about $2.7 per year. (So, assuming
 that a typical app has about 30 resources, we get about $81/year for an application.) 
 
-The main/dominant component of the cost is automation runtime (storage/OMS costs are negligible in comparison). 
+The main/dominant component of the cost is automation runtime (storage/Azure Monitor costs are negligible in comparison). 
  
 
 ###### Assumptions:
@@ -807,9 +809,9 @@ The main/dominant component of the cost is automation runtime (storage/OMS costs
 - Total Blob Storage Cost (retention + listing + access)
 	- 0.00 + 0.12 + 0.02 = $0.14/year
  
-###### (c) OMS storage cost: ($0.34/year)
+###### (c) Log Analytics storage cost: ($0.34/year)
 
-- Assumes that the team is using OMS for monitoring in general, otherwise, just for AzSK, free tier is sufficient.
+- Assumes that the team is using Log Analytics for monitoring in general, otherwise, just for AzSK, free tier is sufficient.
 - Data Upload
     - Rate = $2.3 / GB / month
 	- Our usage = 10KB / resource scan => 300KB added per day = ~10MB data written for the month  = (2.3*10*12/1000) = $0.27/year
@@ -818,7 +820,7 @@ The main/dominant component of the cost is automation runtime (storage/OMS costs
 	- Rate - $0.10 / GB / month
 	- Our usage = 60MB avg/month (at mid-year)  = $0.10 * 0.06 *12 = $0.07/year
 
-- Total OMS Cost (Upload + Retention)  
+- Total Log Analytics Cost (Upload + Retention)  
      - 0.27+0.07 = $0.34/year
 
 
@@ -836,8 +838,8 @@ This can be achieved by adding extra param to the existing CA command as shown i
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
 $ResourceGroupNames = '*' #This should always be '*'
-$OMSWorkspaceId = '<omsWorkspaceId>'
-$OMSSharedKey = '<omsSharedKey>' 
+$OMSWorkspaceId = '<WorkspaceId>'
+$OMSSharedKey = '<SharedKey>' 
 
 Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId  
         -ResourceGroupNames $ResourceGroupNames -OMSWorkspaceId $OMSWorkspaceId -OMSSharedKey $OMSSharedKey -ScanOnDeployment
