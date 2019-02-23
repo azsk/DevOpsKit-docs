@@ -29,6 +29,7 @@ above if you have a different version of same modules installed on your machine.
 
 Run the command below after replacing `<OrganizationName>` with your Azure DevOps Org Name 
 and `<PRJ1, PRJ2, ..`> with a comma-separated list of project names where your Azure DevOps resources are hosted.
+You will get Organization name from vsts url e.g. http://samplevstsorg.visualstudio.com. In this 'samplevstsorg' is Org name.
 
 ```PowerShell
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1, PRJ2,...etc.>"
@@ -38,8 +39,26 @@ Command also supports other parameters of filtering resources.
 For instance, you can also make use of the 'BuildNames','ReleaseNames' to filter specific resource
 
 ```PowerShell
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1, PRJ2,...etc.>" -BuildNames "<B1, B2,...etc.>" -ReleaseNames "<R1, R2,...etc.>"
+
+#Scan Organization
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>"
+
+#San Organization and Project
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" 
+
+#Scan Org, project and Builds
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "<BLD1, BLD2,...etc.>" 
+
+#Scan Org, project and releases
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -ReleaseNames "<RLS1, RLS2,...etc.>" 
+
+#Scan Org, project, all builds and releases
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "*" -ReleaseNames "*" 
+
+#Scan all supported artifacts
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ScanAllArtifacts
 ```
+
 
 Similar to Azure AzSK SVT scan, outcome of the analysis is printed on the console during SVT execution and a CSV and LOG files are 
 also generated for subsequent use.
