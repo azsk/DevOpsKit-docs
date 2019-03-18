@@ -1,0 +1,24 @@
+{
+    "FeatureName": "AppInsights",
+    "Reference": "aka.ms/azsktcp/appinsights", 
+    "IsMaintenanceMode": false,
+    "Controls": [
+        {
+            "ControlID": "Azure_AppInsights_No_Limited_Basic_Plan", 
+            "Description": "Do not use ‘Limited Basic' tier plan for enterprise apps.", 
+            "Id": "AppInsights1001", 
+            "ControlSeverity": "Medium", 
+            "Automated": "Yes",  
+            "MethodName": "CheckAIPricingPlan", 
+            "Recommendation": "Use an enterprise grade pricing plan other than ‘Limited Basic’.",
+            "Tags": [
+                "SDL",
+                "Best Practice",
+                "Automated",
+                "AppInsights"
+            ],
+            "Enabled": true,
+            "Rationale": "Logical intention for the extended control"
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+{
+    "FeatureName": "AppInsights",
+    "Reference": "aka.ms/azsktcp/appinsights",
+    "IsMaintenanceMode": false,
+    "Controls": []
+}
