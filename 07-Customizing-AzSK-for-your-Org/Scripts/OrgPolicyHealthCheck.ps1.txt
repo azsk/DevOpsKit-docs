@@ -44,11 +44,11 @@ $PolicyResourceGroupName
 
 			    if($this.SubscriptionContext.SubscriptionId -ne $BlankSubId)
 			    {
-				    $rmLogin = Add-AzureRmAccount -SubscriptionId $SubscriptionId
+				    $rmLogin = Connect-AzAccount -SubscriptionId $SubscriptionId
 			    }
 			    else
 			    {
-				    $rmLogin = Add-AzureRmAccount
+				    $rmLogin = Connect-AzAccount
 			    }
             
 			    if($rmLogin)
@@ -159,7 +159,7 @@ $PolicyScanOutput.Resources.ResourceGroup = $true
 }
 
 #b. Validate presense of policy resources storage, app insight and monitoring dashboard
-$policyResources= Find-AzureRmResource -ResourceGroupName $policyResourceGroupName
+$policyResources= Get-AzResource -ResourceGroupName $policyResourceGroupName
 #Check if poliy store  is present 
 $policyStore = $policyResources  | Where-Object {$_.ResourceType -eq "Microsoft.Storage/storageAccounts" }
 if(($policyStore | Measure-Object).Count -eq 0)

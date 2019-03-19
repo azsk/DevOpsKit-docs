@@ -187,17 +187,17 @@ PS C:\> Get-Command -Module AzSK
 
 CommandType     Name                                              Version    Source 
 -----------     ----                                              -------    ------ 
-Function        Get-AzSKAccessToken                               3.0.0      AzSK  
-Function        Get-AzSKAzureServicesSecurityStatus               3.0.0      AzSK  
-Function        Get-AzSKContinuousAssurance                       3.0.0      AzSK  
-Function        Get-AzSKControlsStatus                            3.0.0      AzSK  
-Function        Get-AzSKExpressRouteNetworkSecurityStatus         3.0.0      AzSK  
-Function        Get-AzSKSubscriptionSecurityStatus                3.0.0      AzSK  
-Function        Get-AzSKSupportedResourceTypes                    3.0.0      AzSK  
-Function        Install-AzSKContinuousAssurance                   3.0.0      AzSK  
-Function        Install-AzSKOMSSolution                           3.0.0      AzSK  
-Function        Remove-AzSKAlerts                                 3.0.0      AzSK  
-Function        Remove-AzSKARMPolicies                            3.0.0      AzSK  
+Function        Get-AzSKAccessToken                               3.11.0     AzSK  
+Function        Get-AzSKAzureServicesSecurityStatus               3.11.0     AzSK  
+Function        Get-AzSKContinuousAssurance                       3.11.0     AzSK  
+Function        Get-AzSKControlsStatus                            3.11.0     AzSK  
+Function        Get-AzSKExpressRouteNetworkSecurityStatus         3.11.0     AzSK  
+Function        Get-AzSKSubscriptionSecurityStatus                3.11.0     AzSK  
+Function        Get-AzSKSupportedResourceTypes                    3.11.0     AzSK  
+Function        Install-AzSKContinuousAssurance                   3.11.0     AzSK  
+Function        Install-AzSKMonitoringSolution                    3.11.0     AzSK  
+Function        Remove-AzSKAlerts                                 3.11.0     AzSK  
+Function        Remove-AzSKARMPolicies                            3.11.0     AzSK  
 ... 
 (truncated)
 ```
@@ -207,28 +207,32 @@ PS C:\> Get-Command -Name Get* -Module AzSK
 
 CommandType     Name                                              Version    Source 
 -----------     ----                                              -------    ------ 
-Function        Get-AzSKAccessToken                               3.0.0      AzSK  
-Function        Get-AzSKAzureServicesSecurityStatus               3.0.0      AzSK  
-Function        Get-AzSKContinuousAssurance                       3.0.0      AzSK  
-Function        Get-AzSKControlsStatus                            3.0.0      AzSK  
-Function        Get-AzSKExpressRouteNetworkSecurityStatus         3.0.0      AzSK  
-Function        Get-AzSKSubscriptionSecurityStatus                3.0.0      AzSK  
-Function        Get-AzSKSupportedResourceTypes                    3.0.0      AzSK  
+Function        Get-AzSKAccessToken                               3.11.0     AzSK
+Function        Get-AzSKARMTemplateSecurityStatus                 3.11.0     AzSK
+Function        Get-AzSKAzureServicesSecurityStatus               3.11.0     AzSK
+Function        Get-AzSKContinuousAssurance                       3.11.0     AzSK
+Function        Get-AzSKControlsStatus                            3.11.0     AzSK
+Function        Get-AzSKExpressRouteNetworkSecurityStatus         3.11.0     AzSK
+Function        Get-AzSKInfo                                      3.11.0     AzSK
+Function        Get-AzSKOrganizationPolicyStatus                  3.11.0     AzSK
+Function        Get-AzSKSecurityRecommendationReport              3.11.0     AzSK
+Function        Get-AzSKSubscriptionSecurityStatus                3.11.0     AzSK
+Function        Get-AzSKSupportedResourceTypes                    3.11.0     AzSK
 ```
 
 ###### Get all AzSK commands have 'Subscription' anywhere in the name
 ```PowerShell
 PS C:\> Get-Command -Name *Subscription* -Module AzSK
 
-CommandType     Name                                               Version    Source 
------------     ----                                               -------    ------ 
-Function        Get-AzSKSubscriptionSecurityStatus                3.0.0      AzSK  
-Function        Remove-AzSKSubscriptionRBAC                       3.0.0      AzSK  
-Function        Remove-AzSKSubscriptionSecurity                   3.0.0      AzSK  
-Function        Repair-AzSKSubscriptionSecurity                   3.0.0      AzSK  
-Function        Set-AzSKSubscriptionRBAC                          3.0.0      AzSK  
-Function        Set-AzSKSubscriptionSecurity                      3.0.0      AzSK  
-Function        Update-AzSKSubscriptionSecurity                   3.0.0      AzSK  
+CommandType     Name                                               Version    Source
+-----------     ----                                               -------    ------
+Function        Get-AzSKSubscriptionSecurityStatus                 3.11.0     AzSK
+Function        Remove-AzSKSubscriptionRBAC                        3.11.0     AzSK
+Function        Remove-AzSKSubscriptionSecurity                    3.11.0     AzSK
+Function        Repair-AzSKSubscriptionSecurity                    3.11.0     AzSK
+Function        Set-AzSKSubscriptionRBAC                           3.11.0     AzSK
+Function        Set-AzSKSubscriptionSecurity                       3.11.0     AzSK
+Function        Update-AzSKSubscriptionSecurity                    3.11.0     AzSK  
 ```
 
 ###### Get all commands from *any* available module (not just AzSK) that start with 'Backup'
@@ -345,11 +349,11 @@ Manifest   2.0.0.0    PSWorkflow                          {New-PSWorkflowExecuti
 
 You can also check for a specific module using "Get-Module 'module-name'"
 ```PowerShell
-PS C:\> get-module azsk
+PS C:\> Get-Module AzSK
 
 ModuleType Version    Name                                ExportedCommands                       
 ---------- -------    ----                                ----------------                       
-Script     3.0.0      AzSK                                {Get-AzSKAccessToken, Get-AzSKAzur...
+Script     3.11.0     AzSK                                {Get-AzSKAccessToken, Get-AzSKAzur...
 ```
 Version conflicts happen if, due to some action, multiple versions of the same module get loaded within a single session.
 For example, you may notice that a new version of AzSK is available (based on a warning from a scan command)

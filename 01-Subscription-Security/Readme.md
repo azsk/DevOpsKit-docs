@@ -225,7 +225,7 @@ Set-AzSKSubscriptionSecurity -SubscriptionId <subscriptionId> -SecurityContactEm
 ```
 |Config Param Name	|Purpose	|
 | --------------- | -------- |
-|SecurityContactEmails 	|Comma-separated list of emails (e.g., 'abc@microsoft.com, def.microsoft.com')	for contact preference|
+|SecurityContactEmails 	|Comma-separated list of emails (e.g., 'abc@microsoft.com, def@microsoft.com')	for contact preference|
 |SecurityPhoneNumber 	|Single phone number (e.g., '425-882-8080' or '+91-98765-43210' or '+1-425-882-8080')	for contact preference|
 
 > **Note**: 
@@ -434,7 +434,7 @@ Set-AzSKAzureSecurityCenterPolicies -SubscriptionId <SubscriptionId> `
 |Config Param Name	|Purpose	|
 | --------------- | -------- |
 |SubscriptionId 	|Subscription ID against which ASC would be setup	|
-|SecurityContactEmails 	|Comma-separated list of emails (e.g., 'abc@microsoft.com, def.microsoft.com')	for contact preference|
+|SecurityContactEmails 	|Comma-separated list of emails (e.g., 'abc@microsoft.com, def@microsoft.com')	for contact preference|
 |SecurityPhoneNumber 	|Single phone number (e.g., '425-882-8080' or '+91-98765-43210' or '+1-425-882-8080')	for contact preference|
 
 This command will *overwrite* the contact emails and contact phone previously set in Azure Security Center.
