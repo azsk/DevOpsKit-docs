@@ -1,3 +1,7 @@
+
+> <b>NOTE:</b>
+> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+
 # Alerting & Monitoring
 
 ![Alerting_and_Monitoring](../Images/Alerting_and_Monitoring.png)
@@ -78,12 +82,12 @@ involved. Indeed, most dev ops teams will have Dev rotating to support Ops and v
 ### Step-1 (Ops Team): Deploy the AzSK Monitoring Solution
 
 ### [1-a]
-Use Set-AzureRmContext to choose the subscription corresponding to the Log Analytics workspace and run the command below 
+Use Set-AzContext to choose the subscription corresponding to the Log Analytics workspace and run the command below 
 to get the details about your Log Analytics workspace:
 
 ```PowerShell
- Set-AzureRmContext -SubscriptionId '<subscriptionId here>'   #switch to the Log Analytics subscription
- Get-AzureRmOperationalInsightsWorkspace #get info about the Log Analytics workspace (we'll need that below)
+ Set-AzContext -SubscriptionId '<subscriptionId here>'   #switch to the Log Analytics subscription
+ Get-AzOperationalInsightsWorkspace #get info about the Log Analytics workspace (we'll need that below)
 ```
 
 This outputs the Log Analytics workspaces from the Log Analytics subscription as shown below:
@@ -130,7 +134,7 @@ The table below explains the different parameters used by Install-AzSKOMSSolutio
 be 'eus' or 'sea' etc. based on the region). If you specified a custom resource group name when creating 
 the Log Analytics workspace, then remember to use *that* name in the install command above. 
 If you forgot the custom resource group name you used, you can always use 
-<code>Get-AzureRmOperationalInsightsWorkspace</code> to see the correct value to use for 
+<code>Get-AzOperationalInsightsWorkspace</code> to see the correct value to use for 
 the respective Log Analytics workspace.
 
 The installation command will display output like the below:

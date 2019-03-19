@@ -1,3 +1,7 @@
+
+> <b>NOTE:</b>
+> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+
 # Getting started with the Secure DevOps Kit for Azure!
 
 If you have just installed the Secure DevOps Kit for Azure (a.k.a. AzSK) and are not familiar with 

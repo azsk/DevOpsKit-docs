@@ -1,3 +1,7 @@
+
+> <b>NOTE:</b>
+> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+
 # Secure Development
 
 ![Secure_Development](../Images/Secure_Development.png)
@@ -43,8 +47,8 @@
 ## Security Verification Tests (SVT)
 >  **Prerequisites:**
 > For all commands in this feature it is assumed that you have:
-> 1. Logged in to your Azure account using Login-AzureRmAccount from a PowerShell ISE.
-> 2. Selected a subscription using Set-AzureRmContext.
+> 1. Logged in to your Azure account using Connect-AzAccount from a PowerShell ISE.
+> 2. Selected a subscription using Set-AzContext.
 
 
 ### Overview

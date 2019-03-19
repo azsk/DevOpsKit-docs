@@ -1,4 +1,7 @@
 
+> <b>NOTE:</b>
+> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+
 # Org Policy Updates
 
 This page will notify updates for Org Policy with different AzSK versions. You need to follow specific instruction/notes before updating Org policy with respective AzSK version. For all updates related to AzSK version, you can refer to [release page](https://azsk.azurewebsites.net/ReleaseNotes/RN180927.html)
@@ -61,7 +64,7 @@ No specific updates for Org policy features
 
 # AzSK v.3.5.0
 
->**Note:** AzSK 3.5.0 has upgraded its dependancy on AzureRM and now requires AzureRM version 6.x. It has breaking changes for RunbookCoreSetup and RunbookScanAgent present on Custom Org Policy. If you are upgrading Org Policy with AzSK version 3.5.0 using configurations(AzSK.Pre.Json), you will need to take latest runbook files with update Org policy command (*Update-AzSKOrganizationPolicy -SubscriptionId `<SubId>` -OrgName `<OrgName>` -DepartmentName `<DeptName>` -OverrideBaseConfig CARunbooks*). If you have customized these files for your Org(like adding -UseBaselineControls inside RunbookScanAgent etc.), You will need to re-do changes after running update command.
+>**Note:** AzSK 3.5.0 has upgraded its dependancy on Az and now requires Az version 6.x. It has breaking changes for RunbookCoreSetup and RunbookScanAgent present on Custom Org Policy. If you are upgrading Org Policy with AzSK version 3.5.0 using configurations(AzSK.Pre.Json), you will need to take latest runbook files with update Org policy command (*Update-AzSKOrganizationPolicy -SubscriptionId `<SubId>` -OrgName `<OrgName>` -DepartmentName `<DeptName>` -OverrideBaseConfig CARunbooks*). If you have customized these files for your Org(like adding -UseBaselineControls inside RunbookScanAgent etc.), You will need to re-do changes after running update command.
 
 * Policy owner can now use a local folder to ‘deploy’ policy to significantly improve debugging/troubleshooting experience. (Policy changes can be pre-tested locally and there’s no need to maintain a separate dev-test policy server endpoint.)
 * Support for handling expiry of SAS token in the policy URL in an automated manner in local setup and CA. (Only CICD extension scenarios will need explicit updates. We will display warnings when expiry is coming up in the next 30 days.) 

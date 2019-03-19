@@ -1,16 +1,20 @@
+
+> <b>NOTE:</b>
+> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+
 ## Scan your cloud application (Azure resources) for security vulnerabilities
 ###### :clock10: 30 minutes to complete
-The AzSK contains cmdlets that DevOps teams can use to regularly keep their cloud applications
+The AzSK contains cmdlets that devops teams can use to regularly keep their cloud applications
 secure during the multiple sprints involving prototyping, core solution development, integration
 and deployment.
-These scripts are called Security Verification Tests (SVT) and cover all prominent features in 
+These scripts are called Security Verification Tests (SVTs) and cover all prominent features in 
 Azure (e.g., Web Apps, Storage, SQL DB, Key Vault, etc.). Each SVT corresponds to a particular
 Azure feature or service and automates checks for secure configuration and security best practices 
 for that Azure service.
 
 
 > Note: Ensure that you already have the latest version of AzSK installed on your machine. 
-> If not, please follow instruction [here.](../00a-Setup/Readme.md)  
+> If not, please follow instructions [here](../00a-Setup/Readme.md).  
 
 **Step 1**: Run the command below after replacing `<Subscriptionid>` with your Azure SubscriptionId 
 and `<RG1, RG2, ..`> with a comma-separated list of resource groups where your resources are hosted.
@@ -23,7 +27,7 @@ cloud resources that constitute the application.
  
 The AzSK also supports other ways of representing an application.
 For instance, you can also make use of the 'tags' parameter to scan only resources with 
-a specific tag value. More details can be found [here.](../02-Secure-Development/Readme.md#execute-svts-for-specific-resource-groups-or-tagged-resources) 
+a specific tag value. More details can be found [here](../02-Secure-Development/Readme.md#execute-svts-for-specific-resource-groups-or-tagged-resources). 
 
 When the command runs, you will start seeing output such as the following in the PowerShell console. 
 Time required for execution will depend on the number of resources that are being scanned.    
@@ -74,4 +78,4 @@ Congratulations! You have completed this section of the Getting Started guide su
 
 **Next steps** 
 To get more details and understand SVTs and other secure development features of the AzSK further, 
-please refer [here.](../02-Secure-Development/Readme.md)
+please refer [here](../02-Secure-Development/Readme.md).

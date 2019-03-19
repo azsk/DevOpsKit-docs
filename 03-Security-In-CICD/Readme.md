@@ -1,3 +1,7 @@
+
+> <b>NOTE:</b>
+> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+
 # Security Verification Tests (SVTs)
 
 ![Security_In_CICD](../Images/Security_In_CICD.png)
@@ -111,7 +115,7 @@ When the pipeline executes, SVTs will scan the specified set of resources.
 Along with input parameter, you can check for below options
 <br/>**Enable OMS Logging:** Switch to enable this task to publish SVT evaluation results to a Log Analytics workspace. Steps to configure workspace credentials are explained in Step-4
 <br/>**Aggregate Control Status:** Switch to aggregate the SVTs control output. When this is turned off it would show all the failed individual controls in the task summary output.
-<br/>**Do not auto-update AzSK:** Switch to toggle auto update of AzSK and required AzureRM modules on the build server. Keep this un-checked for Hosted agent and Hosted VS2017 and while using SVT task fot the first time and if you want to update AZSK the version of AzSK. 
+<br/>**Do not auto-update AzSK:** Switch to toggle auto update of AzSK and required Az modules on the build server. Keep this un-checked for Hosted agent and Hosted VS2017 and while using SVT task fot the first time and if you want to update AZSK the version of AzSK. 
 ![03_IP_Parameter_for_Task](../Images/03_IP_Parameter_for_Task.PNG)
 
 **Step-4:** (Optional) Setup connectivity from CICD to Log Analytics.  
@@ -125,7 +129,7 @@ the Azure Monitor repository and become available for subsequent queries, action
 for one or more applications across multiple dev ops stages.)  
   
 We have added config info of a trial Log Analytics workspace used by the AzSK team below. You should choose your 
-own target Log Analytics workspace and the corresponding resource group instead. (You can use Get-AzureRmOperationalInsightsWorkspace 
+own target Log Analytics workspace and the corresponding resource group instead. (You can use Get-AzOperationalInsightsWorkspace 
 cmdlet to quickly find out the resource group corresponding to your Log Analytics workspace. If you do not know your
 app's Log Analytics workspace, you should check with your monitoring lead. Else you can create a trial workspace with
 the 'Free' tier option.)   
@@ -281,7 +285,7 @@ that are supported by the VSTS task:
 - Go to ‘AzSK_SVTs’ task in your release definition.
 - Make sure that the check box  ‘Do not auto-update AzSK’ is unchecked. This will ensure to run the AzSK scan using the latest module from PS Gallery.
 
-This error typically occurs when AzSK scan identifies non-compatible AzureRm and AzSK modules present on the machine and tries to install the latest ones. 
+This error typically occurs when AzSK scan identifies non-compatible Az and AzSK modules present on the machine and tries to install the latest ones. 
  
 #### I have enabled AzSK_SVTs task in my release pipeline. It is taking too much time every time I queue a release, how can I reduce that time?
 - Go to ‘AzSK_SVTs’ task in your release definition.
@@ -508,7 +512,7 @@ The "AzSK ARM Template Checker" task starts showing in the "Run on Agent" list a
 
 Along with input parameter, you can check for below options
 <br/>**Recurse:** Switch this if you want to scan ARM Templates in the specified location and in all child folders of the location.
-<br/>**Do not auto-update AzSK:** Switch to toggle auto update of AzSK and required AzureRM modules on the build server. Keep this un-checked for Hosted agent and Hosted VS2017 and while using SVT task fot the first time and if you want to update AZSK the version of AzSK. 
+<br/>**Do not auto-update AzSK:** Switch to toggle auto update of AzSK and required Az modules on the build server. Keep this un-checked for Hosted agent and Hosted VS2017 and while using SVT task fot the first time and if you want to update AZSK the version of AzSK. 
 
 ![03_IP_Parameter_for_Task](../Images/03_IP_Parameter_for_Task_ARM.JPG)
 

@@ -1,3 +1,7 @@
+
+> <b>NOTE:</b>
+> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+
 # Advanced features
 ### Contents
 ### [Fetch information about various AzSK components](Readme.md#fetch-information-about-various-azsk-components)
@@ -12,7 +16,7 @@
 
 ### Overview
 
-This command provides overall information about the AzSK which includes subscription information (alert/policies/ASC/CA version etc.), security controls information (severity, description, rationale etc.), attestation information (statistics, attestation justification, expiry etc.), host information (AzSK settings/configuration, AzureRM Context etc.). 'Get-AzSKInfo' command can be used with 'InfoType' parameter to fetch information.
+This command provides overall information about the AzSK which includes subscription information (alert/policies/ASC/CA version etc.), security controls information (severity, description, rationale etc.), attestation information (statistics, attestation justification, expiry etc.), host information (AzSK settings/configuration, Az Context etc.). 'Get-AzSKInfo' command can be used with 'InfoType' parameter to fetch information.
 
 ### Subscription information
 
@@ -150,7 +154,7 @@ Run below command to get information about,
 * Logged in user's details
 * AzSK settings
 * AzSK configurations
-* AzureRM context
+* Az context
 
 ```PowerShell
 	Get-AzSKInfo -InfoType 'HostInfo'

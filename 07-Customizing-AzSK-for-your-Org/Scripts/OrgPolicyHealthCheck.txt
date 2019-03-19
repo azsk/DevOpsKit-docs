@@ -36,7 +36,7 @@ $PolicyResourceGroupName
   #Login and Set context to policy subscription
     function Login
     {
-        $currentContext = Get-AzureRMContext 
+        $currentContext = Get-AzContext 
         if((-not $currentContext) -or ($currentContext -and ((-not $currentContext.Subscription -and ($this.SubscriptionContext.SubscriptionId -ne $BlankSubId)) `
 				    -or -not $currentContext.Account)))
             {
@@ -61,7 +61,7 @@ $PolicyResourceGroupName
 	    {
 		    if(($currentContext.Subscription.Id -ne $SubscriptionId) -and ($this.SubscriptionContext.SubscriptionId -ne $BlankSubId))
 		    {
-			    $currentContext = Set-AzureRmContext -SubscriptionId $SubscriptionId -ErrorAction Stop   
+			    $currentContext = Set-AzContext -SubscriptionId $SubscriptionId -ErrorAction Stop   
         
 				    
 			    # $currentContext will contain the desired subscription (or $null if id is wrong or no permission)
@@ -146,7 +146,7 @@ $PolicyScanOutput.Resources = @{}
 WriteMessage "Check 01: Presence of Org policy resources(Policy StorageAccount/ Telemetry AppInsights/Monitoring Dashboard)." $([MessageType]::Info)
 
 #a. Validate presense of policy resource group
-$policyResourceGroup= Get-AzureRmResourceGroup -Name $PolicyResourceGroupName -ErrorAction SilentlyContinue  
+$policyResourceGroup= Get-AzResourceGroup -Name $PolicyResourceGroupName -ErrorAction SilentlyContinue  
 if(-not $policyResourceGroup)
 {
 WriteMessage "`t Missing: Policy resource group" $([MessageType]::Error)
@@ -214,9 +214,9 @@ WriteMessage "Check 02: Presence of mandatory policies(Installer/Runbooks/Config
 $PolicyScanOutput.Policies = @{}
 if($PolicyScanOutput.Resources.PolicyStore)
 {
-$PolicyStoragekey = Get-AzureRmStorageAccountKey -ResourceGroupName $policyStore.ResourceGroupName  -Name $policyStore.Name 
-$currentContext = New-AzureStorageContext -StorageAccountName $policyStore.Name  -StorageAccountKey $PolicyStoragekey[0].Value -Protocol Https    
-$containerList = Get-AzureStorageContainer -Context $currentContext
+$PolicyStoragekey = Get-AzStorageAccountKey -ResourceGroupName $policyStore.ResourceGroupName  -Name $policyStore.Name 
+$currentContext = New-AzStorageContext -StorageAccountName $policyStore.Name  -StorageAccountKey $PolicyStoragekey[0].Value -Protocol Https    
+$containerList = Get-AzStorageContainer -Context $currentContext
   
 $policyTempFolder = $env:TEMP + "\" + $ModuleName + "\Policies\";				
 if(-not (Test-Path "$policyTempFolder"))
@@ -229,7 +229,7 @@ else
 }
     
 #Validate presense of installer
-$Installer = Get-AzureStorageBlobContent -Container "installer" -Blob "$($ModuleName)-EasyInstaller.ps1" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
+$Installer = Get-AzStorageBlobContent -Container "installer" -Blob "$($ModuleName)-EasyInstaller.ps1" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
 $InstallerPath = $policyTempFolder + "$($ModuleName)-EasyInstaller.ps1"
 if(($Installer | Measure-Object).Count -eq 0)
 {
@@ -242,7 +242,7 @@ else
 }    
 
 #Validate presense of AzSK.Pre.json
-$AzSKPre = Get-AzureStorageBlobContent -Container "policies" -Blob "1.0.0/AzSK.Pre.json" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
+$AzSKPre = Get-AzStorageBlobContent -Container "policies" -Blob "1.0.0/AzSK.Pre.json" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
 if(($AzSKPre | Measure-Object).Count -eq 0)
 {
     WriteMessage "`t Missing: AzSKPre Config" $([MessageType]::Error)
@@ -253,7 +253,7 @@ else
     $PolicyScanOutput.Policies.AzSKPre = $true
 }
 
-$RunbookCoreSetup = Get-AzureStorageBlobContent -Container "policies" -Blob "1.0.0/RunbookCoreSetup.ps1" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
+$RunbookCoreSetup = Get-AzStorageBlobContent -Container "policies" -Blob "1.0.0/RunbookCoreSetup.ps1" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
 if(($RunbookCoreSetup | Measure-Object).Count -eq 0)
 {
     WriteMessage "`t Missing: RunbookCoreSetup" $([MessageType]::Error)
@@ -264,7 +264,7 @@ else
     $PolicyScanOutput.Policies.RunbookCoreSetup = $true
 }
 
-$RunbookScanAgent = Get-AzureStorageBlobContent -Container "policies" -Blob "1.0.0/RunbookScanAgent.ps1" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
+$RunbookScanAgent = Get-AzStorageBlobContent -Container "policies" -Blob "1.0.0/RunbookScanAgent.ps1" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
 if(($RunbookScanAgent | Measure-Object).Count -eq 0)
 {
     WriteMessage "`t Missing: RunbookScanAgent" $([MessageType]::Error)
@@ -276,7 +276,7 @@ else
 }
 
 
-$AzSKConfig = Get-AzureStorageBlobContent -Container "policies" -Blob "3.1803.0/AzSK.json" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
+$AzSKConfig = Get-AzStorageBlobContent -Container "policies" -Blob "3.1803.0/AzSK.json" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
 if(($AzSKConfig | Measure-Object).Count -eq 0)
 {
     WriteMessage "`t Missing: RunbookScanAgent" $([MessageType]::Error)
@@ -287,7 +287,7 @@ else
     $PolicyScanOutput.Policies.AzSKConfig = $true
 }
 
-$ServerConfigMetadata = Get-AzureStorageBlobContent -Container "policies" -Blob "3.1803.0/ServerConfigMetadata.json" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
+$ServerConfigMetadata = Get-AzStorageBlobContent -Container "policies" -Blob "3.1803.0/ServerConfigMetadata.json" -Context $currentContext -Destination $policyTempFolder -Force -ErrorAction SilentlyContinue
 if(($ServerConfigMetadata | Measure-Object).Count -eq 0)
 {
     WriteMessage "`t Missing: ServerConfigMetadata" $([MessageType]::Error)
@@ -498,7 +498,7 @@ if($PolicyScanOutput.Policies.AzSKConfig)
     } 
     
     #Validate ControlTelemetryKey 
-    $appInsightResource= Get-AzureRMApplicationInsights -ResourceGroupName $appInsight.ResourceGroupName -Name $appInsight.Name
+    $appInsightResource= Get-AzApplicationInsights -ResourceGroupName $appInsight.ResourceGroupName -Name $appInsight.Name
     $InstrumentationKey =  $appInsightResource.InstrumentationKey
 
     if($AzSKConfigContent.ControlTelemetryKey -and $AzSKConfigContent.ControlTelemetryKey -eq $InstrumentationKey)
@@ -573,8 +573,8 @@ $PolicyScanOutput.Configurations.CARunbook = @{}
 $CARunbookOutput= $PolicyScanOutput.Configurations.CARunbook
 WriteMessage "Check 07: Check CA runbook referring to Org Policy URL" $([MessageType]::Info)
 
-  $azskRG = Get-AzureRmResourceGroup -Name $caResourceGroupName -ErrorAction SilentlyContinue
-  $automationAccount = Get-AzureRmAutomationAccount -ResourceGroupName $caResourceGroupName -Name $automationAccountName
+  $azskRG = Get-AzResourceGroup -Name $caResourceGroupName -ErrorAction SilentlyContinue
+  $automationAccount = Get-AzAutomationAccount -ResourceGroupName $caResourceGroupName -Name $automationAccountName
 
   if($azskRG -and $automationAccount)
   {
