@@ -176,7 +176,7 @@ This is typically caused by a version mis-match for underlying Az PowerShell mod
 PowerShell works with the concept of 'sessions'. Each PowerShell ISE or command prompt window is its own independent session. By default, when any cmdlet is run, PS will load the corresponding module (code) in the memory for that session. After that, subsequent references to cmdlets in that module will use the loaded module. Usually, the module loading follows a particular heuristic (based on version number, PS module path order, admin v. non-admin PS launch mode, etc.)  
 
 The above error message is an indication that an AzSK cmdlet is being run in a PowerShell session that already had an older version of Az loaded in memory (which may be due to something as simple as doing a Connect-AzAccount and *then* installing AzSK in that session). In most circumstances, one of the following remedies should work:
-- Close the PS session and open a new one. In the new session, do an "*Import-Module Az -RequiredVersion 1.5.0*" before running anything else (e.g., Connect-AzAccount)
+- Close the PS session and open a new one. In the new session, do an "*Import-Module Az -RequiredVersion 1.1.0*" before running anything else (e.g., Connect-AzAccount)
 - Close the PS session and open a new one. In the new session, do an "*Import-Module AzSK*" before running anything else. (This will force-load the correct version of Az that AzSK needs.). 
   - If you suspect that you may have multiple versions of AzSK itself installed, then use "*Import-Module AzSK -RequiredVersion 3.11.0*" (March 2019 release).  
 
