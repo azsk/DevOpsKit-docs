@@ -92,7 +92,7 @@ to get the details about your Log Analytics workspace:
 
 This outputs the Log Analytics workspaces from the Log Analytics subscription as shown below:
 
-![05_Get_AzureRmOperationalInsightsWorkspace](../Images/05_Get_AzureRmOperationalInsightsWorkspace.png)
+![05_Get_AzOperationalInsightsWorkspace](../Images/05_Get_AzOperationalInsightsWorkspace.png)
 
 ### [1-b]
 Obtain the workspaceId and sharedKey for the Log Analytics workspace you'd like to use for monitoring.
