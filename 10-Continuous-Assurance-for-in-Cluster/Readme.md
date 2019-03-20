@@ -50,15 +50,17 @@
 
     ![ADB-Step1](../Images/ADB-Step1.png)
 
-2.	Head on to your Databricks Workspace to open up the notebook.
+2.  Go to your cluster settings in workspace and make sure it's running. In the Libraries tab, select intsall new. Then select library source as "PyPi". Leave the Repository blank and enter "azskpy" in the Package text field and click install. This will install the AzSKPy library in the cluster. 
+
+3.	Head on to your Databricks Workspace to open up the notebook.
 
     ![ADB-Step2](../Images/ADB-Step2.png)
 
-3.	Similarly, press *Shift+Enter* to run the cells, or *Run All* to show the output.
+4.	Similarly, press *Shift+Enter* to run the cells, or *Run All* to show the output.
 
     ![ADB-Step3](../Images/ADB-Step3.png)
 
-4. The next cell will show the recommendations to fix the controls.
+5. The next cell will show the recommendations to fix the controls.
 
     ![ADB-Step4](../Images/ADB-Step4.png)
 
