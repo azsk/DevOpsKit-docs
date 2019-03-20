@@ -23,6 +23,10 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
    -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
 ```
 
+# AzSK v.3.11.0
+
+>**Note:** AzSK 3.11.0 has changed its dependancy from AzureRM to Az and now requires Az version 1.x. It has breaking changes for RunbookCoreSetup and RunbookScanAgent present on Custom Org Policy. If you are upgrading Org Policy with AzSK version 3.11.0 using configurations(AzSK.Pre.Json), you will need to take latest runbook files with update Org policy command (*Update-AzSKOrganizationPolicy -SubscriptionId `<SubId>` -OrgName `<OrgName>` -DepartmentName `<DeptName>` -OverrideBaseConfig CARunbooks*). If you have customized these files for your Org(like adding -UseBaselineControls inside RunbookScanAgent etc.), You will need to re-do changes after running update command.
+
 # AzSK v.3.9.0
 
 *	The ARM Checker task in AzSK CICD Extension now respects org policy ' this will let org policy owners customize behavior of the task. (Note that this was possible for the SVT task earlier'only the ARM Checker task was missing the capability.)
@@ -64,7 +68,7 @@ No specific updates for Org policy features
 
 # AzSK v.3.5.0
 
->**Note:** AzSK 3.5.0 has upgraded its dependancy on Az and now requires Az version 6.x. It has breaking changes for RunbookCoreSetup and RunbookScanAgent present on Custom Org Policy. If you are upgrading Org Policy with AzSK version 3.5.0 using configurations(AzSK.Pre.Json), you will need to take latest runbook files with update Org policy command (*Update-AzSKOrganizationPolicy -SubscriptionId `<SubId>` -OrgName `<OrgName>` -DepartmentName `<DeptName>` -OverrideBaseConfig CARunbooks*). If you have customized these files for your Org(like adding -UseBaselineControls inside RunbookScanAgent etc.), You will need to re-do changes after running update command.
+>**Note:** AzSK 3.5.0 has upgraded its dependancy on AzureRM and now requires AzureRM version 6.x. It has breaking changes for RunbookCoreSetup and RunbookScanAgent present on Custom Org Policy. If you are upgrading Org Policy with AzSK version 3.5.0 using configurations(AzSK.Pre.Json), you will need to take latest runbook files with update Org policy command (*Update-AzSKOrganizationPolicy -SubscriptionId `<SubId>` -OrgName `<OrgName>` -DepartmentName `<DeptName>` -OverrideBaseConfig CARunbooks*). If you have customized these files for your Org(like adding -UseBaselineControls inside RunbookScanAgent etc.), You will need to re-do changes after running update command.
 
 * Policy owner can now use a local folder to ‘deploy’ policy to significantly improve debugging/troubleshooting experience. (Policy changes can be pre-tested locally and there’s no need to maintain a separate dev-test policy server endpoint.)
 * Support for handling expiry of SAS token in the policy URL in an automated manner in local setup and CA. (Only CICD extension scenarios will need explicit updates. We will display warnings when expiry is coming up in the next 30 days.) 

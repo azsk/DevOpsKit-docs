@@ -144,7 +144,7 @@ The execution policy setting will be remembered and all future PS consoles opene
 
 If you have installed Az PowerShell using Azure SDK in your machine, it typically gets installed in Program Files. You could run the below command to confirm
 ```PowerShell
- Get-Module -Name Az* -ListAvailable 
+ Get-Module -Name Az.* -ListAvailable 
 ```
 If this is the case, then you need to remove the Azure PowerShell modules installed through Azure SDK completely from the Program Files. You could also take back up in case if you need. 
 AzSK also needs Az modules. But it would download from PSGallery instead of from Azure SDK. This downloading of Az modules from PS Gallery would conflict with Az modules installed through Azure SDK. 
