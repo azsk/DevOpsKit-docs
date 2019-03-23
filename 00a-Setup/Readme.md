@@ -209,8 +209,9 @@ Note that, the first time you installed AzSK, it perhaps took a few extra minute
 
 This warning pops up because both Az and AzureRM modules are loaded in the same PowerShell session. This must be occurring because you might have tried executing an Az-based command with AzureRM module already loaded (or vice versa). 
 
->>> **Note:** The big change in the latest AzSK release (v3.11.0) is the migration of the DevOps Kit from AzureRM to the new Az-* PowerShell libraries. 
+> **Note:** The big change in the latest AzSK release (v3.11.0) is the migration of the DevOps Kit from AzureRM to the new Az-* PowerShell libraries. 
 
 Steps to remediate:
-	1. Run 'Import-Module' AzSK in a fresh PowerShell session as the first command.
-	2. Use 'Connect-AzAccount' to login to your subscription (if using AzSK v3.11.0). 
+
+- Run 'Import-Module' AzSK in a fresh PowerShell session as the first command.
+- Use 'Connect-AzAccount' to login to your subscription (if using AzSK v3.11.0). 
