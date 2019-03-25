@@ -205,10 +205,10 @@ Just note that this assumes that both AzSK and Az were installed with '-Scope Cu
 #### How often should I upgrade my installation of AzSK? How long will it take?
 The AzSK team releases a new version of AzSK at the end of each monthly sprint. You should aim to use the latest release always. So, as a regular user, you should upgrade AzSK each month. 
 
-Being on the latest release ensures that you have the latest features, most up to date control evaluation code, coverage for latest Security Verification Tests (SVTs), etc. 
-Note that, when you run any AzSK command, if there is a newer version of AzSK available, the command will tell you about it (at the very top). 
+Being on the latest release ensures that you have the latest features, most up to date control evaluation code, coverage for latest Security Verification Tests (SVTs), etc. Note that, when you run any AzSK command, if there is a newer version of AzSK available, the command will tell you about it (at the very top). 
 
 Note that, the first time you installed AzSK, it perhaps took a few extra minutes because of the dependencies that had to be installed (especially Az). In most subsequent installations, it will just need to fetch the latest AzSK modules. This will hardly take a couple of minutes.
+
 
 ### Message: "WARNING: AzureRM.Profile already loaded. Az and AzureRM modules cannot be imported in the same session or used in the same script or runbook."
 
@@ -219,4 +219,5 @@ This warning pops up because both Az and AzureRM modules are loaded in the same 
 Steps to remediate:
 
 - Run 'Import-Module' AzSK in a fresh PowerShell session as the first command.
+
 - Use 'Connect-AzAccount' to login to your subscription (if using AzSK v3.11.0). 
