@@ -1,3 +1,7 @@
+
+> <b>NOTE:</b>
+> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+
 # PowerShell tips for new AzSK Users
 
 <!--	
@@ -40,7 +44,7 @@ using AzSK or any other Azure PowerShell modules will become a breeze.
 - [Strings - single or double quote?](GettingStarted_PowerShellTipsAzSK.md#strings---single-or-double-quote)  
 - [Listing your subscriptions](GettingStarted_PowerShellTipsAzSK.md#listing-your-subscriptions)  
 - [Switching to another subscription](GettingStarted_PowerShellTipsAzSK.md#switching-to-another-subscription) 
-- [Comparison operators are different!](GettingStarted_PowerShellTipsAzSK.md#comparison-operators-are-different) 
+- [Comparison operators are different!](GettingStarted_PowerShellTipsAzSK.md#comparison-operators-are-different)
 - [A few handy loops](GettingStarted_PowerShellTipsAzSK.md#a-few-handy-loops)  
 - [To match or to like?](GettingStarted_PowerShellTipsAzSK.md#to--match-or-to--like) 
 
@@ -65,6 +69,7 @@ from a functionality standpoint, there are some distinct advantages of using the
  > Note: When using the ISE, you can choose how you want the 'Script Pane' to appear. Usually a side-by-side view is handy because it lets
  you run commands from the script pane and see the outcomes in the PS console on the left. 
  See the image below:
+
 ![00_PS_ISEScriptPane](../Images/00_PS_ISE_Script_Pane.png)  
 
 
@@ -121,7 +126,7 @@ Also, over each working session you can add a few more useful/valuable lines to 
 before you know, you will be sitting on a mini treasure of *your own* PowerShell nuggets.
 
 This is why, when you use the ISE, always  use the script pane for most of your work. Each time you make net progress, hit 'Save'. Make sure
-you organize scripts in an easy to find folder (e.g., \Desktop\PSScripts) and name script files aptly (e.g., AzSKCmds.ps1, MyAzureRmCmds.ps1, etc.).
+you organize scripts in an easy to find folder (e.g., \Desktop\PSScripts) and name script files aptly (e.g., AzSKCmds.ps1, MyAzCmds.ps1, etc.).
 
 [Back to top...](GettingStarted_PowerShellTipsAzSK.md#list-of-tips)
 <!-------------------------------------------------------------------------------------------------->
@@ -182,17 +187,17 @@ PS C:\> Get-Command -Module AzSK
 
 CommandType     Name                                              Version    Source 
 -----------     ----                                              -------    ------ 
-Function        Get-AzSKAccessToken                               3.0.0      AzSK  
-Function        Get-AzSKAzureServicesSecurityStatus               3.0.0      AzSK  
-Function        Get-AzSKContinuousAssurance                       3.0.0      AzSK  
-Function        Get-AzSKControlsStatus                            3.0.0      AzSK  
-Function        Get-AzSKExpressRouteNetworkSecurityStatus         3.0.0      AzSK  
-Function        Get-AzSKSubscriptionSecurityStatus                3.0.0      AzSK  
-Function        Get-AzSKSupportedResourceTypes                    3.0.0      AzSK  
-Function        Install-AzSKContinuousAssurance                   3.0.0      AzSK  
-Function        Install-AzSKOMSSolution                           3.0.0      AzSK  
-Function        Remove-AzSKAlerts                                 3.0.0      AzSK  
-Function        Remove-AzSKARMPolicies                            3.0.0      AzSK  
+Function        Get-AzSKAccessToken                               3.11.0     AzSK  
+Function        Get-AzSKAzureServicesSecurityStatus               3.11.0     AzSK  
+Function        Get-AzSKContinuousAssurance                       3.11.0     AzSK  
+Function        Get-AzSKControlsStatus                            3.11.0     AzSK  
+Function        Get-AzSKExpressRouteNetworkSecurityStatus         3.11.0     AzSK  
+Function        Get-AzSKSubscriptionSecurityStatus                3.11.0     AzSK  
+Function        Get-AzSKSupportedResourceTypes                    3.11.0     AzSK  
+Function        Install-AzSKContinuousAssurance                   3.11.0     AzSK  
+Function        Install-AzSKMonitoringSolution                    3.11.0     AzSK  
+Function        Remove-AzSKAlerts                                 3.11.0     AzSK  
+Function        Remove-AzSKARMPolicies                            3.11.0     AzSK  
 ... 
 (truncated)
 ```
@@ -202,28 +207,32 @@ PS C:\> Get-Command -Name Get* -Module AzSK
 
 CommandType     Name                                              Version    Source 
 -----------     ----                                              -------    ------ 
-Function        Get-AzSKAccessToken                               3.0.0      AzSK  
-Function        Get-AzSKAzureServicesSecurityStatus               3.0.0      AzSK  
-Function        Get-AzSKContinuousAssurance                       3.0.0      AzSK  
-Function        Get-AzSKControlsStatus                            3.0.0      AzSK  
-Function        Get-AzSKExpressRouteNetworkSecurityStatus         3.0.0      AzSK  
-Function        Get-AzSKSubscriptionSecurityStatus                3.0.0      AzSK  
-Function        Get-AzSKSupportedResourceTypes                    3.0.0      AzSK  
+Function        Get-AzSKAccessToken                               3.11.0     AzSK
+Function        Get-AzSKARMTemplateSecurityStatus                 3.11.0     AzSK
+Function        Get-AzSKAzureServicesSecurityStatus               3.11.0     AzSK
+Function        Get-AzSKContinuousAssurance                       3.11.0     AzSK
+Function        Get-AzSKControlsStatus                            3.11.0     AzSK
+Function        Get-AzSKExpressRouteNetworkSecurityStatus         3.11.0     AzSK
+Function        Get-AzSKInfo                                      3.11.0     AzSK
+Function        Get-AzSKOrganizationPolicyStatus                  3.11.0     AzSK
+Function        Get-AzSKSecurityRecommendationReport              3.11.0     AzSK
+Function        Get-AzSKSubscriptionSecurityStatus                3.11.0     AzSK
+Function        Get-AzSKSupportedResourceTypes                    3.11.0     AzSK
 ```
 
 ###### Get all AzSK commands have 'Subscription' anywhere in the name
 ```PowerShell
 PS C:\> Get-Command -Name *Subscription* -Module AzSK
 
-CommandType     Name                                               Version    Source 
------------     ----                                               -------    ------ 
-Function        Get-AzSKSubscriptionSecurityStatus                3.0.0      AzSK  
-Function        Remove-AzSKSubscriptionRBAC                       3.0.0      AzSK  
-Function        Remove-AzSKSubscriptionSecurity                   3.0.0      AzSK  
-Function        Repair-AzSKSubscriptionSecurity                   3.0.0      AzSK  
-Function        Set-AzSKSubscriptionRBAC                          3.0.0      AzSK  
-Function        Set-AzSKSubscriptionSecurity                      3.0.0      AzSK  
-Function        Update-AzSKSubscriptionSecurity                   3.0.0      AzSK  
+CommandType     Name                                               Version    Source
+-----------     ----                                               -------    ------
+Function        Get-AzSKSubscriptionSecurityStatus                 3.11.0     AzSK
+Function        Remove-AzSKSubscriptionRBAC                        3.11.0     AzSK
+Function        Remove-AzSKSubscriptionSecurity                    3.11.0     AzSK
+Function        Repair-AzSKSubscriptionSecurity                    3.11.0     AzSK
+Function        Set-AzSKSubscriptionRBAC                           3.11.0     AzSK
+Function        Set-AzSKSubscriptionSecurity                       3.11.0     AzSK
+Function        Update-AzSKSubscriptionSecurity                    3.11.0     AzSK  
 ```
 
 ###### Get all commands from *any* available module (not just AzSK) that start with 'Backup'
@@ -232,18 +241,13 @@ PS C:\> Get-Command -name Backup*
 
 CommandType     Name                                               Version    Source               
 -----------     ----                                               -------    ------               
-Function        Backup-BitLockerKeyProtector                       1.0.0.0    BitLocker            
-Cmdlet          Backup-AzureKeyVaultKey                            4.1.0      AzureRM              
-Cmdlet          Backup-AzureKeyVaultKey                            3.1.0      AzureRM.KeyVault     
-Cmdlet          Backup-AzureKeyVaultSecret                         4.1.0      AzureRM              
-Cmdlet          Backup-AzureKeyVaultSecret                         3.1.0      AzureRM.KeyVault     
-Cmdlet          Backup-AzureRmApiManagement                        4.1.0      AzureRM              
-Cmdlet          Backup-AzureRmApiManagement                        4.1.0      AzureRM.ApiManagement
-Cmdlet          Backup-AzureRmBackupItem                           4.1.0      AzureRM              
-Cmdlet          Backup-AzureRmBackupItem                           3.1.0      AzureRM.Backup       
-Cmdlet          Backup-AzureRmRecoveryServicesBackupItem           4.1.0      AzureRM              
-Cmdlet          Backup-AzureRmRecoveryServicesBackupItem           3.1.0      AzureRM.RecoverySe...
-Cmdlet          Backup-WebConfiguration                            1.0.0.0    WebAdministration    
+Function        Backup-BitLockerKeyProtector                       1.0.0.0    BitLocker
+Function        BackupToAAD-BitLockerKeyProtector                  1.0.0.0    BitLocker             
+Cmdlet          Backup-AzApiManagement                             1.0.0      Az.ApiManagement     
+Cmdlet          Backup-AzKeyVaultCertificate                       1.0.0      Az.KeyVault              
+Cmdlet          Backup-AzKeyVaultKey                               3.1.0      Az.KeyVault     
+Cmdlet          Backup-AzKeyVaultManagedStorageAccount             4.1.0      Az.KeyVault              
+Cmdlet          Backup-AzKeyVaultSecret                            4.1.0      Az.KeyVault  
 ```
 
 [Back to top...](GettingStarted_PowerShellTipsAzSK.md#list-of-tips)
@@ -297,12 +301,42 @@ for the module that supports it and loads the newest version of the module avail
 
 You can see the modules that are loaded in the current session using "Get-Module"
 ```PowerShell
-PS C:\> get-module
+PS C:\> Get-Module
 
 ModuleType Version    Name                                ExportedCommands                       
 ---------- -------    ----                                ----------------                       
-Script     3.0.0      AzSK                                {Get-AzSKAccessToken, Get-AzSKAzur...
-Script     4.1.0      AzureRM                             {Add-AzureAnalysisServicesAccount, A...
+Script     3.11.0     AzSK                                {Clear-AzSKSessionState, Get-AzSKAcc...
+Script     1.2.1      Az.Accounts                         {Add-AzEnvironment, Clear-AzContext,...
+Script     1.0.0      Az.AnalysisServices                 {Add-AzAnalysisServicesAccount, Expo...
+Script     1.0.0      Az.ApiManagement                    {Add-AzApiManagementApiToProduct, Ad...
+Script     1.0.0      Az.ApplicationInsights              {Get-AzApplicationInsights, Get-AzAp...
+Script     1.0.0      Az.Automation                       {Export-AzAutomationDscConfiguration...
+Script     1.0.0      Az.Batch                            {Disable-AzBatchAutoScale, Disable-A...        
+Script     1.0.0      Az.Cdn                              {Confirm-AzCdnEndpointProbeURL, Disa...             
+Script     1.1.0      Az.Compute                          {Add-AzContainerServiceAgentPoolProf...             
+Script     1.0.0      Az.ContainerInstance                {Get-AzContainerGroup, Get-AzContain...                          
+Script     1.0.0      Az.ContainerRegistry                {Get-AzContainerRegistry, Get-AzCont...
+Script     1.0.0      Az.DataFactory                      {Get-AzDataFactory, Get-AzDataFactor...                
+Script     1.0.0      Az.DataLakeAnalytics                {Add-AzDataLakeAnalyticsDataSource, ...
+Script     1.0.1      Az.DataLakeStore                    {Add-AzDataLakeStoreFirewallRule, Ad...
+Script     1.0.0      Az.EventHub                         {Get-AzEventHub, Get-AzEventHubAutho...        
+Script     1.0.0      Az.HDInsight                        {Add-AzHDInsightClusterIdentity, Add...
+Script     1.0.0      Az.KeyVault                         {Add-AzKeyVaultCertificate, Add-AzKe...   
+Script     1.1.0      Az.LogicApp                         {Get-AzIntegrationAccount, Get-AzInt...
+Script     1.0.0      Az.Monitor                          {Add-AzAutoscaleSetting, Add-AzLogPr...                               
+Script     1.0.0      Az.Network                          {Add-AzApplicationGatewayAuthenticat...
+Script     1.0.0      Az.NotificationHubs                 {Get-AzNotificationHub, Get-AzNotifi...
+Script     1.0.0      Az.OperationalInsights              {Disable-AzOperationalInsightsIISLog...
+Script     1.0.0      Az.PolicyInsights                   {Get-AzPolicyEvent, Get-AzPolicyReme...                               
+Script     1.0.0      Az.RedisCache                       {Export-AzRedisCache, Get-AzRedisCac...                              
+Script     1.1.0      Az.Resources                        {Add-AzADGroupMember, Export-AzResou...                               
+Script     1.0.0      Az.ServiceBus                       {Complete-AzServiceBusMigration, Get...
+Script     1.0.0      Az.ServiceFabric                    {Add-AzServiceFabricApplicationCerti...
+Script     1.0.1      Az.Sql                              {Add-AzSqlDatabaseToFailoverGroup, A...
+Script     1.0.1      Az.Storage                          {Add-AzRmStorageContainerLegalHold, ...
+Script     1.0.0      Az.StreamAnalytics                  {Get-AzStreamAnalyticsDefaultFunctio...
+Script     1.0.0      Az.TrafficManager                   {Add-AzTrafficManagerCustomHeaderToE...
+Script     1.0.1      Az.Websites                         {Edit-AzWebAppBackupConfiguration, E... 
 Script     1.0.0.0    ISE                                 {Get-IseSnippet, Import-IseSnippet, ...
 Manifest   3.1.0.0    Microsoft.PowerShell.Management     {Add-Computer, Add-Content, Checkpoi...
 Manifest   3.0.0.0    Microsoft.PowerShell.Security       {ConvertFrom-SecureString, ConvertTo...
@@ -315,11 +349,11 @@ Manifest   2.0.0.0    PSWorkflow                          {New-PSWorkflowExecuti
 
 You can also check for a specific module using "Get-Module 'module-name'"
 ```PowerShell
-PS C:\> get-module azsk
+PS C:\> Get-Module AzSK
 
 ModuleType Version    Name                                ExportedCommands                       
 ---------- -------    ----                                ----------------                       
-Script     3.0.0      AzSK                                {Get-AzSKAccessToken, Get-AzSKAzur...
+Script     3.11.0     AzSK                                {Get-AzSKAccessToken, Get-AzSKAzur...
 ```
 Version conflicts happen if, due to some action, multiple versions of the same module get loaded within a single session.
 For example, you may notice that a new version of AzSK is available (based on a warning from a scan command)
@@ -336,20 +370,20 @@ Error: The property 'Xyz' cannot be found on this object. Verify that the proper
 
 The remedy for this is to run a fresh installation using the "iwr" command in a *fresh* PS session. 
 
-Another common version conflict happens if you have many (old) versions of AzureRm installed. AzureRm is 
-a core dependency for AzSK. If a different version of AzureRm is loaded in a session and an AzSK command is
+Another common version conflict happens if you have many (old) versions of Az installed. Az is 
+a core dependency for AzSK. If a different version of Az is loaded in a session and an AzSK command is
 run, it may struggle to find the type information it is counting on for one or more Azure resource types. (For e.g., 
-a Storage object from an old AzureRm version will not have the fileEncryption property exposed.) 
+a Storage object from an old Az version will not have the fileEncryption property exposed.) 
 An easy way you can get into this situation is if you are using the 'Command Add-on' pane. It often shows many
-options for basic commands like 'Login-AzureRmAccount'. You may choose any one of them thinking they are
+options for basic commands like 'Connect-AzAccount'. You may choose any one of them thinking they are
 the same thing. Even if that may be the case, choosing to run one of them will cause the corresponding version
-of AzureRm to get loaded into your session. If that's not the version AzSK needs, then the same type conflict
+of Az to get loaded into your session. If that's not the version AzSK needs, then the same type conflict
 issue will pop up as soon as you start using AzSK commands.
 
-An easy remedy for this is to ensure that the correct version of AzureRm gets loaded by using any of these options: 
-1) Do an "import-module AzSK" first thing after opening a new PS session. This will internally load the correct AzureRm.
-2) Else, run any AzSK command (e.g., Get-AzSKSubscriptionSecurityStatus). This will trigger the Azure login flow and cause the correct AzureRm to get loaded.
-3) Else, explicitly load the AzureRm version required for AzSK (currently it is 4.1.0) using 'import-module AzureRm -Version 4.1' first thing in a new session.
+An easy remedy for this is to ensure that the correct version of Az gets loaded by using any of these options: 
+1) Do an "Import-Module AzSK" first thing after opening a new PS session. This will internally load the correct Az.
+2) Else, run any AzSK command (e.g., Get-AzSKSubscriptionSecurityStatus). This will trigger the Azure login flow and cause the correct Az to get loaded.
+3) Else, explicitly load the Az version required for AzSK (currently it is 1.1.0) using 'Import-Module Az -Version 1.1' first thing in a new session.
 
 [Back to top...](GettingStarted_PowerShellTipsAzSK.md#list-of-tips)
 <!-------------------------------------------------------------------------------------------------->
@@ -358,7 +392,7 @@ A lot of AzSK commands need you to specify subscription ID. To get the subscript
 you needn't go to the portal. The following command can quickly list all subscriptions by their name and subscription ID.
 
 ```PowerShell
-PS C:\> Get-AzureRmSubscription | FT Name, Id
+PS C:\> Get-AzSubscription | FT Name, Id
 
 Name                                        Id                                  
 ----                                        --                                  
@@ -370,14 +404,14 @@ DSRE-DevTest-Subscription-01                cfeabcde-f012-3456-7890-abcdef01234d
 ...
 ...
 ```
-Note that the pipe character "|" is used to send the output of the Get-AzureRmSubscription command to a formatting helper "FT".
+Note that the pipe character "|" is used to send the output of the Get-AzSubscription command to a formatting helper "FT".
 Here FT is short for "Format-Table" which lets us pick specific fields to display in tabular form. So the overall command means
 "Get a list of subscriptions I have access to and show them in tabular form, only displaying the Name and Id fields for each."
 
 If you do not specify the "| FT Name, Id" part, you will get the output in a list format as below:
 
 ```PowerShell
-PS C:\> Get-AzureRmSubscription
+PS C:\> Get-AzSubscription
 
 Name     : MSFT-SRA-05
 Id       : 0feabcde-f012-3456-7890-abcdef01234f
@@ -395,7 +429,7 @@ TenantId : 7fedcba0-1234-8765-abcd-f01234567897
 State    : Enabled
 ```
 Note that because we did not specify any field selectors, all default fields of each subscription are displayed in the list.
-If we were interested only in the name and tenant id in *list* format, we would run "Get-AzureRmSubscription | FL Name, TenantId".
+If we were interested only in the name and tenant id in *list* format, we would run "Get-AzSubscription | FL Name, TenantId".
 
 The "| FT" and "| FL" options are very handy in many other situations. We will see some more examples below.
 
@@ -405,37 +439,27 @@ The "| FT" and "| FL" options are very handy in many other situations. We will s
 ### Switching to another subscription
 
 Normally, the AzSK command that you run will switch your context to the subscription ID you specified. If you explicitly want
-to switch to some subscription (e.g., to run AzureRm commands to examine resources in that subscription), you can do so using either of
-the Select-AzureRmSubscription or Set-AzureRmContext commands (both take either subscriptionName or subscriptionId as a parameter).
+to switch to some subscription (e.g., to run Az commands to examine resources in that subscription), you can do so using either of
+the Select-AzContext or Set-AzContext commands (both take either subscriptionName or subscriptionId as a parameter).
 
 ```PowerShell
-PS C:\> Select-AzureRmSubscription -SubscriptionName 'MSFT-SRA-04'
-Environment           : AzureCloud
-Account               : abc@contoso.com
-TenantId              : 7fedcba0-1234-8765-abcd-f01234567897
-SubscriptionId        : 2feabcde-f012-3456-7890-abcdef012349
-SubscriptionName      : MSFT-SRA-04
-CurrentStorageAccount : 
+PS C:\> Select-AzContext -Name 'MSFT-SRA-04'
+Name               Account            SubscriptionName        Environment             TenantId                          
+----               -------            ----------------        -----------             --------                          
+MSFT-SRA-04        abc@contoso.com    Subsctiption1           AzureCloud              72f988bf-86f1-41af-91ab-2d7cd01...
 
-
-PS C:\> Set-AzureRmContext -SubscriptionId '2feabcde-f012-3456-7890-abcdef012349'
-Environment           : AzureCloud
-Account               : abc@contoso.com
-TenantId              : 7fedcba0-1234-8765-abcd-f01234567897
-SubscriptionId        : 2feabcde-f012-3456-7890-abcdef012349
-SubscriptionName      : MSFT-SRA-04
-CurrentStorageAccount : 
+PS C:\> Set-AzContext -SubscriptionId '2feabcde-f012-3456-7890-abcdef012349'
+Name               Account            SubscriptionName        Environment             TenantId                          
+----               -------            ----------------        -----------             --------                          
+MSFT-SRA-04        abc@contoso.com    Subsctiption1           AzureCloud              72f988bf-86f1-41af-91ab-2d7cd01...
 ```
 
 ```PowerShell
-You can use the 'Get-AzureRmContext' command to find out which subscription is currently active (target) in the AzureRm context.
-PS C:\> Get-AzureRmContext
-Environment           : AzureCloud
-Account               : abc@contoso.com
-TenantId              : 7fedcba0-1234-8765-abcd-f01234567897
-SubscriptionId        : 2feabcde-f012-3456-7890-abcdef012349
-SubscriptionName      : MSFT-SRA-04
-CurrentStorageAccount : 
+You can use the 'Get-AzContext' command to find out which subscription is currently active (target) in the Az context.
+PS C:\> Get-AzContext
+Name               Account            SubscriptionName        Environment             TenantId                          
+----               -------            ----------------        -----------             --------                          
+MSFT-SRA-04        abc@contoso.com    Subsctiption1           AzureCloud              72f988bf-86f1-41af-91ab-2d7cd01...
 ```
 
 [Back to top...](GettingStarted_PowerShellTipsAzSK.md#list-of-tips)
@@ -449,7 +473,7 @@ As a simple example, because SubscriptionId is required in many places we can do
 ```PowerShell
 $subId = '2feabcde-f012-3456-7890-abcdef012349'
 
-Set-AzureRmContext -SubscriptionId $subId
+Set-AzContext -SubscriptionId $subId
 Get-AzSKSubscriptionSecurityStatus -SubscriptionId $subId
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subId
 ```
@@ -471,7 +495,7 @@ $s3 = '8feabcde-f012-3456-7890-abcdef012345'
 $subId = $s2  
 
 # Run one or more of the below lines as needed...
-Set-AzureRmContext -SubscriptionId $subId
+Set-AzContext -SubscriptionId $subId
 Get-AzSKSubscriptionSecurityStatus -SubscriptionId $subId
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subId
 ```
@@ -541,7 +565,7 @@ operation performed or some expression evaluated for every constituent object in
 
 For instance,  to print just the location of every resource group in the current subscription, you'd use:
 ```PowerShell
-PS C:\> Get-AzureRmResourceGroup | % {$_.Location}
+PS C:\> Get-AzResourceGroup | % {$_.Location}
 eastus
 eastus2
 eastus
@@ -560,7 +584,7 @@ The $\_ plays the same role as 'i' in a standard for loop or 'thisObject' in a '
 Here are a few more examples:
 ```PowerShell
 # List all resource group names
-PS C:\> Get-AzureRmResourceGroup | % {$_.ResourceGroupName}
+PS C:\> Get-AzResourceGroup | % {$_.ResourceGroupName}
 AzSKAPIDev
 AzSKDemoDataRG
 AzSKDemoKeyVaultRG
@@ -573,7 +597,7 @@ AzSKRG
 
 ```PowerShell
 # List all resource groups in the eastUS2 region
-PS C:\> Get-AzureRmResourceGroup | % {if ($_.Location -eq 'eastus2'){Write-Host $_.ResourceGroupName}}
+PS C:\> Get-AzResourceGroup | % {if ($_.Location -eq 'eastus2'){Write-Host $_.ResourceGroupName}}
 AzSKDemoDataRG
 AzSKDemoKeyVaultRG
 AzSKTestRG
@@ -584,7 +608,7 @@ Wave2RG
 
 ```PowerShell
 # Run a scan command across all subscriptions you have access to
-$subscriptions = (Get-AzureRmSubscription)
+$subscriptions = (Get-AzSubscription)
 
 $subscriptions | % { 
     $subId = $_.Id
@@ -599,9 +623,9 @@ use the 'where-object' or 'where' or simply the '?' operator to do so.
 
 For example, the below command filters for resource groups that have 'rg' anywhere in their name:
 ```PowerShell
-Get-AzureRmResourceGroup | ? ResourceGroupName -match 'rg'
+Get-AzResourceGroup | ? ResourceGroupName -match 'rg'
 # Can also be written like this:
-Get-AzureRmResourceGroup | ? {$_.ResourceGroupName -match 'rg'}
+Get-AzResourceGroup | ? {$_.ResourceGroupName -match 'rg'}
 ```
 [Back to top...](GettingStarted_PowerShellTipsAzSK.md#list-of-tips)
 <!-------------------------------------------------------------------------------------------------->

@@ -1,3 +1,7 @@
+
+> <b>NOTE:</b>
+> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+
 # Extending AzSK Modules
 
 ## Contents
@@ -93,7 +97,7 @@ Below is the typical schema for each control inside the feature json
     "ControlSeverity": "Medium", //Represents the severity of the Control. 
     "Automated": "Yes",   //Indicates whether the given control is Manual/Automated.
     "MethodName": "CheckSubscriptionAdminCount",  // Represents the Control method that is responsible to evaluate this control. It should be present inside the feature SVT associated with this control.
-    "Recommendation": "There are 2 steps involved. You need to clean up (1) unexpected 'Classic Administrators'and (2) unexpected 'Owners' on the subscription. (1) Steps to clean up classic administrators (a) Go to https://manage.windowsazure.com/ --> settings tab -> administrators --> select and remove unwanted administrators using remove icon on the bottom ribbon (2) To remove unwanted members from the Owners group simply run the command 'Remove-AzureRmRoleAssignment -SignInName '{signInName}' -Scope '/subscriptions/{subscriptionid}' -RoleDefinitionName Owner'.",	  //Recommendation typically provides the precise instructions on how to fix this control.
+    "Recommendation": "There are 2 steps involved. You need to clean up (1) unexpected 'Classic Administrators'and (2) unexpected 'Owners' on the subscription. (1) Steps to clean up classic administrators (a) Go to https://manage.windowsazure.com/ --> settings tab -> administrators --> select and remove unwanted administrators using remove icon on the bottom ribbon (2) To remove unwanted members from the Owners group simply run the command 'Remove-AzRoleAssignment -SignInName '{signInName}' -Scope '/subscriptions/{subscriptionid}' -RoleDefinitionName Owner'.",	  //Recommendation typically provides the precise instructions on how to fix this control.
     "Tags": [
         "SDL",
         "Best Practice",
@@ -204,7 +208,7 @@ class SubscriptionCore: SVTBase
 		{
 			#This is internal
 			$scope = $this.SubscriptionContext.Scope;
-			$RoleAssignments = Get-AzureRmRoleAssignment -Scope $scope -IncludeClassicAdministrators
+			$RoleAssignments = Get-AzRoleAssignment -Scope $scope -IncludeClassicAdministrators
 			#Excessive number of admins (> 2)
 			$SubAdmins = @();
 			$SubAdmins += $RoleAssignments | Where-Object { ($_.RoleDefinitionName -eq 'CoAdministrator' -or $_.RoleDefinitionName -like '*ServiceAdministrator*') -and $_.Scope -eq $scope}

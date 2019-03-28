@@ -1,3 +1,7 @@
+
+> <b>NOTE:</b>
+> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+
 # Getting started with the Secure DevOps Kit for Azure!
 
 If you have just installed the Secure DevOps Kit for Azure (a.k.a. AzSK) and are not familiar with 
@@ -41,7 +45,7 @@ in the table below:
 |Get-AzSKSupportedResourceTypes (GSRT)|Lists the currently supported Azure service types in AzSK. Basically, all resources in this list have SVTs available and these SVTs will be invoked whenever Get-AzSKAzureServicesSecurityStatus is run.|NA.|
 |Get-AzSKInfo (GAI)|This command would help users to get details of various components of AzSK. |Reader on subscription, Contributor on AzSKRG|
 |Install-AzSKContinuousAssurance (ICA)|Sets up continuous assurance for a subscription. This creates various artifacts such as resource group, storage account and automation account| Owner on subscription.|
-|Install-AzSKOMSSolution (IOM)|Creates and deploys a Log Analytics view in a subscription that has a Log Analytics workspace. The Log Analytics view provides visibility to application state across dev ops stages. It also creates alerts, common search queries, etc.	|Reader on subscription.|
+|Install-AzSKMonitoringSolution (IMS)|Creates and deploys a Log Analytics view in a subscription that has a Log Analytics workspace. The Log Analytics view provides visibility to application state across dev ops stages. It also creates alerts, common search queries, etc.	|Reader on subscription.|
 |Remove-AzSKAlerts (RAL)|Removes the alerts configured by AzSK.|Owner on subscription.|
 |Remove-AzSKARMPolicies (RAP)|Removes the ARM policy configured by AzSK.|Owner on subscription.|
 |Remove-AzSKContinuousAssurance (RCA)|Removes the AzSK CA setup (including, optionally, the container being used for storing reports).|Reader on subscription.|
@@ -53,7 +57,7 @@ in the table below:
 |Set-AzSKARMPolicies (SAP)|Sets up a core set of ARM policies in a subscription.<br>This is internally called by Set-AzSKSubscriptionSecurity.|Owner on subscription.|
 |Set-AzSKAzureSecurityCenterPolicies (SSC)|Sets up ASC policies and security points of contact. <br>This is internally called by Set-AzSKSubscriptionSecurity.|Reader on subscription.|
 |Set-AzSKEventHubSettings (SEHS)|Configures AzSK to send scan results to the provided EventHub. Currently available only in 'ad hoc' or 'SDL' mode.|NA|	
-|Set-AzSKOMSSettings (SOS)|Configures AzSK to send scan results to the provided Log Analytics workspace. Events can be sent to Log Analytics from 'ad hoc'/SDL mode (via this configuration) or from CICD by specifying Log Analytics settings in a variable or from CA by specifying Log Analytics settings in the CA installation command.|Reader on subscription.|
+|Set-AzSKMonitoringSettings (SMS)|Configures AzSK to send scan results to the provided Log Analytics workspace. Events can be sent to Log Analytics from 'ad hoc'/SDL mode (via this configuration) or from CICD by specifying Log Analytics settings in a variable or from CA by specifying Log Analytics settings in the CA installation command.|Reader on subscription.|
 |Set-AzSKPolicySettings (SPS)|Configures the server URL that is used by AzSK to download controls and config JSON. If this is not called, AzSK runs in an 'org-neutral' mode using a generic policy. Once this command is called, AzSK gets provisioned with the URL of a server/CDN where it can download control/config JSON from.|Reader on subscription.|
 |Set-AzSKSubscriptionRBAC (SRB)|Sets up RBAC for a subscription. Configures "mandatory" accounts by default and function/scenario specific accounts if additional "tags" are provided.|Owner on subscription.|
 |Set-AzSKSubscriptionSecurity (SSS)|Master command that takes combined inputs and invokes the individual setup commands for RBAC, ARM policy, Alerts and ASC.|Owner on subscription.|

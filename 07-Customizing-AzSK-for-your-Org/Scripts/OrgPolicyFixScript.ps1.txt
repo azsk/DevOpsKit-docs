@@ -27,7 +27,7 @@ $RepoName = "PSGallery"
 #Login and Set context to policy subscription
 function Login
 {
-        $currentContext = Get-AzureRMContext 
+        $currentContext = Get-AzContext 
         if((-not $currentContext) -or ($currentContext -and ((-not $currentContext.Subscription -and ($this.SubscriptionContext.SubscriptionId -ne $BlankSubId)) `
 				    -or -not $currentContext.Account)))
             {
@@ -35,11 +35,11 @@ function Login
 
 			    if($this.SubscriptionContext.SubscriptionId -ne $BlankSubId)
 			    {
-				    $rmLogin = Add-AzureRmAccount -SubscriptionId $SubscriptionId
+				    $rmLogin = Connect-AzAccount -SubscriptionId $SubscriptionId
 			    }
 			    else
 			    {
-				    $rmLogin = Add-AzureRmAccount
+				    $rmLogin = Connect-AzAccount
 			    }
             
 			    if($rmLogin)
@@ -52,7 +52,7 @@ function Login
 	    {
 		    if(($currentContext.Subscription.Id -ne $SubscriptionId) -and ($this.SubscriptionContext.SubscriptionId -ne $BlankSubId))
 		    {
-			    $currentContext = Set-AzureRmContext -SubscriptionId $SubscriptionId -ErrorAction Stop   
+			    $currentContext = Set-AzContext -SubscriptionId $SubscriptionId -ErrorAction Stop   
         
 				    
 			    # $currentContext will contain the desired subscription (or $null if id is wrong or no permission)
@@ -224,15 +224,15 @@ function UploadFilesToBlob([PSObject] $storageContext, [string] $containerName, 
 				try {
 					if($overwrite)
 					{
-						Set-AzureStorageBlobContent -Blob $blobName -Container $containerName -File $_.FullName -Context $storageContext -Force | Out-Null
+						Set-AzStorageBlobContent -Blob $blobName -Container $containerName -File $_.FullName -Context $storageContext -Force | Out-Null
 					}
 					else
 					{
-						$currentBlob = Get-AzureStorageBlob -Blob $blobName -Container $containerName -Context $storageContext -ErrorAction Ignore
+						$currentBlob = Get-AzStorageBlob -Blob $blobName -Container $containerName -Context $storageContext -ErrorAction Ignore
 						
 						if(-not $currentBlob)
 						{
-							Set-AzureStorageBlobContent -Blob $blobName -Container $containerName -File $_.FullName -Context $storageContext | Out-Null
+							Set-AzStorageBlobContent -Blob $blobName -Container $containerName -File $_.FullName -Context $storageContext | Out-Null
 						}
 					}
 					$loopValue = 0;
@@ -262,7 +262,7 @@ if(-not $RestoreFromBackup)
     try
     {    
         #a. Validate presense of policy resource group
-        $policyResourceGroup= Get-AzureRmResourceGroup -Name $PolicyResourceGroupName -ErrorAction SilentlyContinue  
+        $policyResourceGroup= Get-AzResourceGroup -Name $PolicyResourceGroupName -ErrorAction SilentlyContinue  
         if(-not $policyResourceGroup)
         {
         WriteMessage "`Policy resource group not found" $([MessageType]::Error)        
@@ -275,7 +275,7 @@ if(-not $RestoreFromBackup)
         }
 
         #b. Validate presense of policy resources storage, app insight and monitoring dashboard
-        $policyResources= Find-AzureRmResource -ResourceGroupName $policyResourceGroupName
+        $policyResources= Get-AzResource -ResourceGroupName $policyResourceGroupName
         #Check if poliy store  is present 
         $policyStore = $policyResources  | Where-Object {$_.ResourceType -eq "Microsoft.Storage/storageAccounts" }
         if(($policyStore | Measure-Object).Count -eq 0)
@@ -315,11 +315,11 @@ if(-not $RestoreFromBackup)
         #region Check 02: Download policies into local
 
         WriteMessage "Copying policies to local machine..." $([MessageType]::Info)
-        $PolicyStoragekey = Get-AzureRmStorageAccountKey -ResourceGroupName $policyStore.ResourceGroupName  -Name $policyStore.Name 
-        $currentContext = New-AzureStorageContext -StorageAccountName $policyStore.Name  -StorageAccountKey $PolicyStoragekey[0].Value -Protocol Https    
-        $containerList = Get-AzureStorageContainer -Context $currentContext
+        $PolicyStoragekey = Get-AzStorageAccountKey -ResourceGroupName $policyStore.ResourceGroupName  -Name $policyStore.Name 
+        $currentContext = New-AzStorageContext -StorageAccountName $policyStore.Name  -StorageAccountKey $PolicyStoragekey[0].Value -Protocol Https    
+        $containerList = Get-AzStorageContainer -Context $currentContext
         $PolicyContainerName = "policies"
-        $sasToken =  New-AzureStorageContainerSASToken -Name $PolicyContainerName  -Context $currentContext -ExpiryTime (Get-Date).AddMonths(6) -Permission rl -Protocol HttpsOnly -StartTime (Get-Date).AddDays(-1)
+        $sasToken =  New-AzStorageContainerSASToken -Name $PolicyContainerName  -Context $currentContext -ExpiryTime (Get-Date).AddMonths(6) -Permission rl -Protocol HttpsOnly -StartTime (Get-Date).AddDays(-1)
 		
         if(-not (Test-Path "$PolicyCopyFolderPath"))
         {
@@ -333,7 +333,7 @@ if(-not $RestoreFromBackup)
         $policyBlobslist = @()
         $containerList | ForEach-Object {
             $PolicyContainerName = $_.Name
-            $PolicyBlobs = Get-AzureStorageBlob -Container $PolicyContainerName -Context $currentContext
+            $PolicyBlobs = Get-AzStorageBlob -Container $PolicyContainerName -Context $currentContext
         
             $PolicyContainerPath = "$PolicyCopyFolderPath\$PolicyContainerName"
             if(-not (Test-Path $PolicyContainerPath))
@@ -348,7 +348,7 @@ if(-not $RestoreFromBackup)
             foreach ($blob in $PolicyBlobs)
             {         
                 $policyBlobslist +=$blob
-                Get-AzureStorageBlobContent `
+                Get-AzStorageBlobContent `
                 -Container $PolicyContainerName -Blob $blob.Name  `
 	            -Context $currentContext -Destination "$PolicyContainerPath" -Force  | Out-Null
             }
@@ -532,7 +532,7 @@ if(-not $RestoreFromBackup)
             }    
     
             #Validate ControlTelemetryKey 
-            $appInsightResource= Get-AzureRMApplicationInsights -ResourceGroupName $appInsight.ResourceGroupName -Name $appInsight.Name
+            $appInsightResource= Get-AzApplicationInsights -ResourceGroupName $appInsight.ResourceGroupName -Name $appInsight.Name
             $InstrumentationKey =  $appInsightResource.InstrumentationKey
             $IsPropertyModified = AddPropertyIfNotExists $AzSKConfigContent 'ControlTelemetryKey' $InstrumentationKey 
 
@@ -633,7 +633,7 @@ else
         else
         {
             WriteMessage "Uploading configurations from backup folder to policy store..." $([MessageType]::Info)
-            $policyResources= Find-AzureRmResource -ResourceGroupName $policyResourceGroupName
+            $policyResources= Get-AzResource -ResourceGroupName $policyResourceGroupName
             #Check if poliy store  is present 
             $policyStore = $policyResources  | Where-Object {$_.ResourceType -eq "Microsoft.Storage/storageAccounts" }
             if(($policyStore | Measure-Object).Count -eq 0)
@@ -641,8 +641,8 @@ else
                 WriteMessage "Policy storage account not found. Please re-run the Org policy setup or update cmdlet to fix this issue." $([MessageType]::Error)
                 return
             }
-            $PolicyStoragekey = Get-AzureRmStorageAccountKey -ResourceGroupName $policyStore.ResourceGroupName  -Name $policyStore.Name 
-            $currentContext = New-AzureStorageContext -StorageAccountName $policyStore.Name  -StorageAccountKey $PolicyStoragekey[0].Value -Protocol Https    
+            $PolicyStoragekey = Get-AzStorageAccountKey -ResourceGroupName $policyStore.ResourceGroupName  -Name $policyStore.Name 
+            $currentContext = New-AzStorageContext -StorageAccountName $policyStore.Name  -StorageAccountKey $PolicyStoragekey[0].Value -Protocol Https    
             Get-ChildItem -Path $PolicyBackupFolderPath| ForEach-Object {
                 $ContainerName= $_.Name 
                 $directoryList = Get-ChildItem -Path $_.FullName -Recurse -Directory

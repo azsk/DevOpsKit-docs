@@ -1,4 +1,7 @@
 
+> <b>NOTE:</b>
+> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+
 # Org Policy Updates
 
 This page will notify updates for Org Policy with different AzSK versions. You need to follow specific instruction/notes before updating Org policy with respective AzSK version. For all updates related to AzSK version, you can refer to [release page](https://azsk.azurewebsites.net/ReleaseNotes/RN180927.html)

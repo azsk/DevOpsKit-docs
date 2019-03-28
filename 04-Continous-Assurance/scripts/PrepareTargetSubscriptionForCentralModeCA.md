@@ -6,19 +6,19 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
  
     #region Step 1: Set context to target subscription
     Write-Host "Changing current subscription context to [$subscriptionId]..." -ForegroundColor Yellow
-    Set-AzureRmContext -Subscription $subscriptionId | Out-Null
+    Set-AzContext -Subscription $subscriptionId | Out-Null
     Write-Host "Completed changing subscription context to [$subscriptionId]." -ForegroundColor Green
     #endregion
  
     #region Step 2: Check if the AzSK resource group exists
-    $isRGPresent = (Get-AzureRmResourceGroup -Name $rgName -ErrorAction SilentlyContinue | Measure-Object).Count -eq 0
+    $isRGPresent = (Get-AzResourceGroup -Name $rgName -ErrorAction SilentlyContinue | Measure-Object).Count -eq 0
     #endregion
 
     #region Step 3: Check whether Storage Resource provider is registered
  
     $providerNamespace = "Microsoft.Storage";
     Write-Host "Checking if resource provider [$providerNamespace] is registered..." -ForegroundColor Yellow
-    $isRegistered = (Get-AzureRmResourceProvider -ProviderNamespace $providerNamespace | Where-Object { $_.RegistrationState -ne "Registered" } | Measure-Object).Count -eq 0
+    $isRegistered = (Get-AzResourceProvider -ProviderNamespace $providerNamespace | Where-Object { $_.RegistrationState -ne "Registered" } | Measure-Object).Count -eq 0
     #endregion
 
                  
@@ -26,14 +26,14 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
     $storageAccountPreName = 'azsk';
     $storageResourceType = "Microsoft.Storage/storageAccounts"
     $storageType = 'Standard_LRS';
-    $storageAccount = Get-AzureRmResource -ResourceGroupName $rgName `
+    $storageAccount = Get-AzResource -ResourceGroupName $rgName `
                       -ResourceType $storageResourceType `
                       -ErrorAction SilentlyContinue
     $isStoragePresent = (($storageAccount | Where-Object{$_.ResourceName -match '^azsk\d{14}$'} | Measure-Object).Count -ne 0)
     #endregion
 
     #region Step 5: Grant required permissions on target sub and AzSK RG
-    $ADApplication = Get-AzureRmADApplication -DisplayNameStartWith $AADAppName | Where-Object -Property DisplayName -eq $AADAppName
+    $ADApplication = Get-AzADApplication -DisplayNameStartWith $AADAppName | Where-Object -Property DisplayName -eq $AADAppName
     if(($ADApplication | Measure-Object).Count -le 0)
     {
        throw "AADApplication [$AADAppName] not found. You must specify an existing app name for which you are Owner."
@@ -41,7 +41,7 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
  
     $haveRGAccess = $false;
     $haveSubAccess = $false;
-    $spPermissions = Get-AzureRmRoleAssignment -serviceprincipalname $ADApplication.ApplicationId
+    $spPermissions = Get-AzRoleAssignment -ServicePrincipalName $ADApplication.ApplicationId
     #endregion
  
 
@@ -54,7 +54,7 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
         if(-not $isRGPresent)
         {
             Write-Host "Creating new resource group [$rgName]..." -ForegroundColor Yellow
-            $newRG = New-AzureRmResourceGroup -Name $rgName -Location $Location -ErrorAction Stop
+            $newRG = New-AzResourceGroup -Name $rgName -Location $Location -ErrorAction Stop
         }
         $azSKRG = $null;
  
@@ -63,7 +63,7 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
         $localTimeout = $baseTimeout;
         while($retryCount -gt 0 -and $null -eq $azSKRG)
         {
-            $azSKRG = Get-AzureRmResourceGroup -Name $rgName -ErrorAction SilentlyContinue;
+            $azSKRG = Get-AzResourceGroup -Name $rgName -ErrorAction SilentlyContinue;
             if($null -eq $azSKRG)
             {
                 Write-Host "Waiting...sleep interval: [$localTimeout] RetryCount: [$retryCount]"
@@ -85,12 +85,12 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
  
         else
         {
-            Register-AzureRmResourceProvider -ProviderNamespace $providerNamespace
+            Register-AzResourceProvider -ProviderNamespace $providerNamespace
             $retryCount = 10;
             $localTimeout = $baseTimeout;
             while($retryCount -ne 0 -and -not $isRegistered)
             {
-                $isRegistered = ((Get-AzureRmResourceProvider -ProviderNamespace $providerNamespace | Where-Object { $_.RegistrationState -ne "Registered" } | Measure-Object).Count -eq 0);
+                $isRegistered = ((Get-AzResourceProvider -ProviderNamespace $providerNamespace | Where-Object { $_.RegistrationState -ne "Registered" } | Measure-Object).Count -eq 0);
                 if(-not $isRegistered)
                 {
                     Write-Host "Waiting...Sleeping Interval: [$localTimeout] RetryCount: [$retryCount]"
@@ -107,9 +107,9 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
         if(-not $isStoragePresent)
         {
             $storageAccountName = ($storageAccountPreName + (Get-Date).ToUniversalTime().ToString("yyyyMMddHHmmss")); 
-            $newStorage = New-AzureRmStorageAccount -ResourceGroupName $rgName `
+            $newStorage = New-AzStorageAccount -ResourceGroupName $rgName `
                             -Name $storageAccountName `
-                            -Type $storageType `
+                            -SkuName $storageType `
                             -Location $Location `
                             -Kind BlobStorage `
                             -AccessTier Cool `
@@ -120,7 +120,7 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
             $localTimeout = $baseTimeout;
             while($null -eq $storageObject -and $retryAccount -gt 0)
             {
-                $storageObject = Get-AzureRmStorageAccount -ResourceGroupName 'AzSKRG' -Name $storageAccountName -ErrorAction SilentlyContinue
+                $storageObject = Get-AzStorageAccount -ResourceGroupName 'AzSKRG' -Name $storageAccountName -ErrorAction SilentlyContinue
                 if($null -eq $storageObject)
                 {
                     Write-Host "Waiting...sleep interval: [$localTimeout] RetryCount: [$retryCount]"
@@ -133,8 +133,8 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
             #the below settings are required to create compliant AzSK storage
             if ($storageObject) {
                 $currentContext = $storageObject.Context
-               $logging= Set-AzureStorageServiceLoggingProperty -ServiceType Blob -LoggingOperations All -Context $currentContext -RetentionDays 365 -PassThru -ErrorAction Stop
-               $metrics= Set-AzureStorageServiceMetricsProperty -MetricsType Hour -ServiceType Blob -Context $currentContext -MetricsLevel ServiceAndApi -RetentionDays 365 -PassThru -ErrorAction Stop
+               $logging= Set-AzStorageServiceLoggingProperty -ServiceType Blob -LoggingOperations All -Context $currentContext -RetentionDays 365 -PassThru -ErrorAction Stop
+               $metrics= Set-AzStorageServiceMetricsProperty -MetricsType Hour -ServiceType Blob -Context $currentContext -MetricsLevel ServiceAndApi -RetentionDays 365 -PassThru -ErrorAction Stop
             }
             Write-Host "Created a new AzSK storage account [$storageAccountName]" -ForegroundColor Green
         }
@@ -148,13 +148,13 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
         Write-Host "Setting up permissions for AzSK CA SPN [$AADAppName]..." -ForegroundColor Yellow
         if(($spPermissions|Measure-Object).count -gt 0)
         {
-               $haveRGAccess = ($spPermissions | Where-Object {$_.scope -eq (Get-AzureRmResourceGroup -Name $rgName).ResourceId -and $_.RoleDefinitionName -eq "Contributor" }|measure-object).count -gt 0
+               $haveRGAccess = ($spPermissions | Where-Object {$_.scope -eq (Get-AzResourceGroup -Name $rgName).ResourceId -and $_.RoleDefinitionName -eq "Contributor" }|measure-object).count -gt 0
                $haveSubAccess = ($spPermissions | Where-Object {$_.scope -eq "/subscriptions/$subscriptionId" -and $_.RoleDefinitionName -eq "Reader"}|Measure-Object).count -gt 0
         }
  
         if(-not $haveRGAccess)
         {
-            New-AzureRMRoleAssignment -Scope $azSKRG.ResourceId -RoleDefinitionName Contributor -ServicePrincipalName $ADApplication.ApplicationId -ErrorAction SilentlyContinue | Out-Null
+            New-AzRoleAssignment -Scope $azSKRG.ResourceId -RoleDefinitionName Contributor -ServicePrincipalName $ADApplication.ApplicationId -ErrorAction SilentlyContinue | Out-Null
             Write-Host "Completed granting access to AzSK CA SPN on ResourceGroup [$rgName]" -ForegroundColor Green
         }
         else
@@ -163,7 +163,7 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
         }
         if(-not $haveSubAccess)
         {
-            New-AzureRMRoleAssignment -RoleDefinitionName Reader -ServicePrincipalName $ADApplication.ApplicationId -ErrorAction SilentlyContinue | Out-Null
+            New-AzRoleAssignment -RoleDefinitionName Reader -ServicePrincipalName $ADApplication.ApplicationId -ErrorAction SilentlyContinue | Out-Null
             Write-Host "Completed granting access to AzSK CA SPN on Subscription" -ForegroundColor Green
         }
         else
@@ -209,10 +209,10 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
         {
             if($isRGPresent -and $isRegistered -and $isStoragePresent)
             {
-               $haveRGAccess = ($spPermissions | Where-Object {$_.scope -eq (Get-AzureRmResourceGroup -Name $rgName).ResourceId -and $_.RoleDefinitionName -eq "Contributor" }|measure-object).count -gt 0 
+               $haveRGAccess = ($spPermissions | Where-Object {$_.scope -eq (Get-AzResourceGroup -Name $rgName).ResourceId -and $_.RoleDefinitionName -eq "Contributor" }|measure-object).count -gt 0 
                if(-not $haveRGAccess)
                {
-                    New-AzureRMRoleAssignment -Scope $azSKRG.ResourceId -RoleDefinitionName Contributor -ServicePrincipalName $ADApplication.ApplicationId -ErrorAction SilentlyContinue | Out-Null
+                    New-AzRoleAssignment -Scope $azSKRG.ResourceId -RoleDefinitionName Contributor -ServicePrincipalName $ADApplication.ApplicationId -ErrorAction SilentlyContinue | Out-Null
                     Write-Host "Completed granting access to AzSK CA SPN on ResourceGroup [$rgName]" -ForegroundColor Green
                }
                else
@@ -225,7 +225,7 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
          
         if(-not $haveSubAccess)
         {
-            New-AzureRMRoleAssignment -RoleDefinitionName Reader -ServicePrincipalName $ADApplication.ApplicationId -ErrorAction SilentlyContinue | Out-Null
+            New-AzRoleAssignment -RoleDefinitionName Reader -ServicePrincipalName $ADApplication.ApplicationId -ErrorAction SilentlyContinue | Out-Null
             Write-Host "Completed granting access to AzSK CA SPN on Subscription" -ForegroundColor Green
         }
         else

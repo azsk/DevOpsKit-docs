@@ -1,3 +1,7 @@
+
+> <b>NOTE:</b>
+> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+
 # Continuous Assurance (CA)
 
 ![Continous_Assurance](../Images/Continous_Assurance.png)
@@ -69,7 +73,7 @@ for your application.)
 
 **Step-1: Setup**  
 0. Setup the latest version of the AzSK following the installation instructions for your organization. (For CSE use https://aka.ms/devopskit/onboarding).
-1. Open the PowerShell ISE and login to your Azure account (using **Login-AzureRmAccount**).  
+1. Open the PowerShell ISE and login to your Azure account (using **Connect-AzAccount**).  
 2. Run the '**Install-AzSKContinuousAssurance**' command with required parameters given in below table. 
 
 ```PowerShell
@@ -96,7 +100,7 @@ For Azure environments other than Azure Cloud, don't forget to provide Automatio
 |Param Name|Purpose|Required?|Default value|Comments|
 |----|----|----|----|----|
 |SubscriptionId|Subscription ID of the Azure subscription in which an Automation Account for Continuous Assurance will be created |TRUE|None||
-|AutomationAccountLocation|(Optional) The location in which this cmdlet creates the Automation Account|FALSE|EastUS2|To obtain valid locations, use the Get-AzureRMLocation cmdlet|
+|AutomationAccountLocation|(Optional) The location in which this cmdlet creates the Automation Account|FALSE|EastUS2|To obtain valid locations, use the Get-AzLocation cmdlet|
 |AutomationAccountRGName|(Optional) Name of ResourceGroup where AutomationAccount will be installed|FALSE|AzSKRG|Don't pass default value explicitly for this param|
 |AutomationAccountName|(Optional) Name of AutomationAccount|FALSE|AzSKContinuousAssurance|Don't pass default value explicitly for this param|
 |ResourceGroupNames|Comma separated list of resource groups within which the application resources are contained.|TRUE|None||
@@ -233,7 +237,7 @@ For instance, you may use it to:
 - etc.
 
 To do any or all of these:
-1. Open the PowerShell ISE and login to your Azure account (using **Login-AzureRmAccount**).  
+1. Open the PowerShell ISE and login to your Azure account (using **Connect-AzAccount**).  
 2. Run the '**Update-AzSKContinuousAssurance**' command with required parameters given in below table. 
 
 ```PowerShell
@@ -270,14 +274,14 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 |AzureADAppName|Use this parameter if you want to update the connection (used for running the runbook) with new AD App and Service principal|FALSE|None|This is useful if existing connection is changed/removed by mistake|
 |FixRuntimeAccount|Use this switch to fix CA runtime account in case of below issues.<ol><li>Runtime account deleted<br>(Permissions required: Subscription owner)</li><li>Runtime account permissions missing<br>(Permissions required: Subscription owner and AD App owner)</li><li>Certificate deleted/expired<br>(Permissions required: Subscription owner and AD App owner)</li></ol>|FALSE|None||
 |NewRuntimeAccount|Use this switch to setup new runtime account and the person running the command will become new SPN owner.This feature is helpful in case when CA certificate is expired but the SPN owner who had setup CA is not available and certificate can't be renewed. |FALSE|None||
-|FixModules|Use this switch in case AzureRm.Automation/AzureRm.Profile module(s) extraction fails in CA Automation Account.|FALSE|None||
+|FixModules|Use this switch in case Az.Automation/Az.Accounts module(s) extraction fails in CA Automation Account.|FALSE|None||
 |RenewCertificate|Renews certificate credential of CA SPN if the caller is Owner of the AAD Application (SPN). If the caller is not Owner, a new application is created with a corresponding SPN and a certificate owned by the caller. CA uses the updated credential going forward.|FALSE|None||
 |ScanOnDeployment|CA scan can be auto-triggered upon resource deployment.Updating CA with this flag will make sure that the Resource Group in which resource is deployed will be scanned.|FALSE|None||
 |Remove|Use this switch to clear previously set LogAnalytics, AltLogAnalytics,Webhook settings from CA Automation Account or to unregister from scan on deployment mode|False|None||
 
 [Back to top…](Readme.md#contents)
 ## Removing a Continuous Assurance setup
-1. Open the PowerShell ISE and login to your Azure account (using **Login-AzureRmAccount**).  
+1. Open the PowerShell ISE and login to your Azure account (using **Connect-AzAccount**).  
 2. Run the '**Remove-AzSKContinuousAssurance**' command as below. 
 
 ```PowerShell
@@ -290,7 +294,7 @@ Remove-AzSKContinuousAssurance -SubscriptionId <SubscriptionId>  [-DeleteStorage
 
 [Back to top…](Readme.md#contents)
 ## Getting details about a Continuous Assurance setup
-1. Open the PowerShell ISE and login to your Azure account (using **Login-AzureRmAccount**).  
+1. Open the PowerShell ISE and login to your Azure account (using **Connect-AzAccount**).  
 2. Run the '**Get-AzSKContinuousAssurance**' command as below. 
 3. Result will display the current status of CA in your subscription. If CA is not working as expected, it will display remediation steps else it will display a message indicating CA is in healthy state.  
 4. Once you follow the remediation steps, run the command again to check if anything is still missing in CA setup. Follow the remediation steps accordingly until the CA state becomes healthy. 
@@ -749,9 +753,9 @@ Step-4: Lastly, if you fix or attest any controls which CA cannot scan, you may 
 
 No! Manually updating Azure modules like that will break AzSK CA.
 
-AzSK is reliant on a specific version of AzureRm PowerShell modules. It is extensively tested against that version (and that version only). The Continuous Assurance setup process ensures that the correct version of AzureRm modules is installed and imported into the CA automation account. If you attempt to update Azure modules (see pic below), it may bring in incompatible versions of AzureRm modules and cause CA scanning to break. 
+AzSK is reliant on a specific version of Az PowerShell modules. It is extensively tested against that version (and that version only). The Continuous Assurance setup process ensures that the correct version of Az modules is installed and imported into the CA automation account. If you attempt to update Azure modules (see pic below), it may bring in incompatible versions of Az modules and cause CA scanning to break. 
 
-Note that once in a few months, the AzSK team reviews new releases of AzureRm modules and updates the dependencies after extensive testing. At that point, the CA automation account will be automatically updated to import the newer modules. (No action is needed from your side.)
+Note that once in a few months, the AzSK team reviews new releases of Az modules and updates the dependencies after extensive testing. At that point, the CA automation account will be automatically updated to import the newer modules. (No action is needed from your side.)
 
 If Azure modules happens to be updated other than AzSK dependancy version(One option is using "Update Azure Module" in Portal), you can recover module dependency by deleting AzSK module from automation account and triggering Runbook job. Runbook will install AzSK with all dependencies. 
 

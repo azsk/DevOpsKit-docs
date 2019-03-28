@@ -1,3 +1,7 @@
+
+> <b>NOTE:</b>
+> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+
 # AzSK Subscription Security Package
 
 ![Subscription_Security](../Images/Subscription_Security.png)
@@ -221,7 +225,7 @@ Set-AzSKSubscriptionSecurity -SubscriptionId <subscriptionId> -SecurityContactEm
 ```
 |Config Param Name	|Purpose	|
 | --------------- | -------- |
-|SecurityContactEmails 	|Comma-separated list of emails (e.g., 'abc@microsoft.com, def.microsoft.com')	for contact preference|
+|SecurityContactEmails 	|Comma-separated list of emails (e.g., 'abc@microsoft.com, def@microsoft.com')	for contact preference|
 |SecurityPhoneNumber 	|Single phone number (e.g., '425-882-8080' or '+91-98765-43210' or '+1-425-882-8080')	for contact preference|
 
 > **Note**: 
@@ -395,7 +399,7 @@ These alerts template and the generation is completely controlled through Azure 
 #### Is there a record maintained of the alerts that have fired?
 You could run the below command to check the alerts raised on the subscription.
 ```PowerShell
-Get-AzureRmLog | where {$_.OperationName -eq "Microsoft.Insights/AlertRules/Activated/Action"}
+Get-AzLog | where {$_.OperationName -eq "Microsoft.Insights/AlertRules/Activated/Action"}
 ```  
 #### Troubleshooting
 |Error Description	|Comments|
@@ -420,7 +424,7 @@ The Set-AzSKAzureSecurityCenterPolicies provisions the following for Azure Secur
 
 **Steps to onboard onto ASC:**
 1. Open PowerShell under non admin mode.
-2. Login into your Azure Account using Login-AzureRmAccount.
+2. Login into your Azure Account using Connect-AzAccount.
 3. Run the below command with the subscriptionId on which you want to configure Azure Security Center.
 ```PowerShell
 Set-AzSKAzureSecurityCenterPolicies -SubscriptionId <SubscriptionId> `
@@ -430,7 +434,7 @@ Set-AzSKAzureSecurityCenterPolicies -SubscriptionId <SubscriptionId> `
 |Config Param Name	|Purpose	|
 | --------------- | -------- |
 |SubscriptionId 	|Subscription ID against which ASC would be setup	|
-|SecurityContactEmails 	|Comma-separated list of emails (e.g., 'abc@microsoft.com, def.microsoft.com')	for contact preference|
+|SecurityContactEmails 	|Comma-separated list of emails (e.g., 'abc@microsoft.com, def@microsoft.com')	for contact preference|
 |SecurityPhoneNumber 	|Single phone number (e.g., '425-882-8080' or '+91-98765-43210' or '+1-425-882-8080')	for contact preference|
 
 This command will *overwrite* the contact emails and contact phone previously set in Azure Security Center.
@@ -455,7 +459,7 @@ You can install the ARM policies via the Set-AzSKARMPolicies cmdlet as below:
 1. Login to your Azure Subscription using below command
 	
 ```PowerShell
-Login-AzureRmAccount
+Connect-AzAccount
 ```
 	
 2. Once you have installed the AzSK, you should be able to run the below command
@@ -491,7 +495,7 @@ The ARM policy configuration script currently enables the policies (Refer the li
 #### How can I check for policy violations? 
 You could run the below command to check for the policy violations on the subscription. By default this shows the violations for the last one hour. Other intervals can be specified.
 ```PowerShell
-Get-AzureRmLog | where {$_.OperationName -eq "Microsoft.Authorization/policies/audit/action"} 
+Get-AzLog | where {$_.OperationName -eq "Microsoft.Authorization/policies/audit/action"} 
 ```
 
 Refer to this [MSDN article](https://azure.microsoft.com/en-in/documentation/articles/resource-manager-policy/#policy-audit-events) for more details
@@ -546,7 +550,7 @@ From release 3.8.0, AzSK has started supporting a few core scenarios for Azure G
 
 Follow the steps below to successfully run the local AzSK scans (GRS, GSS and other commands):
 
-1. Follow instructions in our [installation guide](00a-Setup/Readme.md#installation-guide) to download the latest version of AzSK (3.8.0 or above).
+1. Follow instructions in our [installation guide](00a-Setup/Readme.md#installation-guide) to download the latest version of AzSK (3.9.0 or above).
 
 2. Configure AzSK for your Azure environment using the following command:
 ```PowerShell

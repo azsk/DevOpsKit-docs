@@ -1,9 +1,13 @@
+
+> <b>NOTE:</b>
+> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+
 ## Scan your Azure Subscription for security vulnerabilities
 ###### :clock10: 30 minutes to complete
 The Subscription Security health check features in AzSK contains a set of scripts that examines a subscription and flags off security issues, misconfigurations or obsolete artifacts/settings which can put your subscription at higher risk.
 This package adds-on to the exiting Azure capabilities like Security Center, IAM, etc. and extends it further to check for the presence for non-tenant accounts, SPN with higher privileges, alerting configuration, etc.
 
-> Note: Ensure that you already have the latest version of AzSK installed on your machine. If not, please follow instruction [here.](../00a-Setup/Readme.md)
+> Note: Ensure that you already have the latest version of AzSK installed on your machine. If not, please follow instruction [here](../00a-Setup/Readme.md).
 
 **Step 1**: In the PowerShell ISE, run the below command after replacing `<SubscriptionId`> with your Azure SubscriptionId
 ```PowerShell  

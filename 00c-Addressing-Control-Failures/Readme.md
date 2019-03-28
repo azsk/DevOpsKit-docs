@@ -1,3 +1,7 @@
+
+> <b>NOTE:</b>
+> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+
 # Addressing Control Failures
 ### Contents
 
@@ -516,12 +520,12 @@ It can happen due to below reasons
    Sol. => Run the below script on your subscription after replacing the storage account name. You can find the AzSK storage account under AzSKRG resource group in your subscription
    ```PowerShell
    $StorageAccountName = "<AzSKStorageAccountName e.g. AzSK20170731999999>"
-   $keys = Get-AzureRmStorageAccountKey -ResourceGroupName "AzSKRG"  -Name $StorageAccountName
-   $currentContext = New-AzureStorageContext -StorageAccountName $StorageAccountName -StorageAccountKey $keys[0].Value -Protocol Https
-   $Container = Get-AzureStorageContainer -Name "AzSK-controls-state" -Context $currentContext -ErrorAction SilentlyContinue
+   $keys = Get-AzStorageAccountKey -ResourceGroupName "AzSKRG"  -Name $StorageAccountName
+   $currentContext = New-AzStorageContext -StorageAccountName $StorageAccountName -StorageAccountKey $keys[0].Value -Protocol Https
+   $Container = Get-AzStorageContainer -Name "AzSK-controls-state" -Context $currentContext -ErrorAction SilentlyContinue
    if($null -eq $Container)
    {       
-     New-AzureStorageContainer -Name "AzSK-controls-state" -Permission Off -Context $currentContext
+     New-AzStorageContainer -Name "AzSK-controls-state" -Permission Off -Context $currentContext
    }
    ```
 
@@ -546,9 +550,9 @@ f- Configuration baselines may change. What is considered a mandatory account to
 Phew...We hope we covered the main reasons. One last thought is that in the current "agile + dev ops + cloud" era, with all rapid iterations and changes happening at all layers, security has also become a much more 'continuous' effort compared to the past.
 
 
-#### I am trying to enable diagnostic logs using the recommendation command 'Set-AzureRmDiagnosticSetting' given in the AzSK control. But the command fails with error 'The diagnostic setting 'service' doesn't exist'. How do I resolve this error?
+#### I am trying to enable diagnostic logs using the recommendation command 'Set-AzDiagnosticSetting' given in the AzSK control. But the command fails with error 'The diagnostic setting 'service' doesn't exist'. How do I resolve this error?
 
-There is an [open issue](https://github.com/Azure/azure-powershell/issues/6833) with Set-AzureRmDiagnosticSetting command provided by AzureRm. You can enable the diagnostic logs using Azure portal until that issue is resolved. Steps are available [here](https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-archive-diagnostic-logs#archive-diagnostic-logs-using-the-portal).
+There is an [open issue](https://github.com/Azure/azure-powershell/issues/6833) with Set-AzDiagnosticSetting command provided by Az. You can enable the diagnostic logs using Azure portal until that issue is resolved. Steps are available [here](https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-archive-diagnostic-logs#archive-diagnostic-logs-using-the-portal).
 Just make sure that logs are retained for a minimum of 365 days.
 
 
