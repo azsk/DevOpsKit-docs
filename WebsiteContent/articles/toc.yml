@@ -118,12 +118,38 @@
       href: ../../07-Customizing-AzSK-for-your-Org/OrgPolicyHealthCheck.md
     - name: Org Policy Updates
       href: ../../07-Customizing-AzSK-for-your-Org/OrgPolicyUpdate.md
+    - name: Scripts
+      - name: OrgPolicyFixScript.ps1.txt 
+        href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyFixScript.ps1.txt
+      - name: OrgPolicyFixScript.txt 
+        href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyFixScript.txt
+      - name: OrgPolicyHealthCheck.ps1.txt
+        href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyHealthCheck.ps1.txt
+      - name: OrgPolicyHealthCheck.txt
+        href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyHealthCheck.txt
+      - name: OrgPolicyPushOrgMappingEvents.txt 
+        href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyPushOrgMappingEvents.txt
+    - name: TemplateFiles
+      - name: AzSKComplianceReport.pbit 
+        href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/TemplateFiles/AzSKComplianceReport.pbit
+      - name: OrgMapping.csv
+        href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/TemplateFiles/OrgMapping.csv
+      - name: OrgMappingDataSourceSchema.json
+        href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/TemplateFiles/OrgMappingDataSourceSchema.json
 - name: Advanced features
   href: ../../08-Advanced-Features/Readme.md
   items: 
     - name: Extending AzSK Module
       href: ../../08-Advanced-Features/Extending%20AzSK%20Module/Readme.md
       items:
+        - name: AppInsights.ext.json
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/08-Advanced-Features/Extending%20AzSK%20Module/AppInsights.ext.json
+        - name: AppInsights.ext.ps1
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/08-Advanced-Features/Extending%20AzSK%20Module/AppInsights.ext.ps1
+        - name: AppInsights.json
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/08-Advanced-Features/Extending%20AzSK%20Module/AppInsights.json
+        - name: AppInsights.ps1
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/08-Advanced-Features/Extending%20AzSK%20Module/AppInsights.ps1
         - name: Feature.ext.json
           href: https://github.com/azsk/DevOpsKit-docs/blob/master/08-Advanced-Features/Extending%20AzSK%20Module/Feature.ext.json
         - name: Feature.ext.ps1
@@ -152,3 +178,29 @@
           href: ../../09-AzureDevOps(VSTS)-Security/ControlCoverage/Feature/ServiceConnection.md
         - name: User
           href: ../../09-AzureDevOps(VSTS)-Security/ControlCoverage/Feature/User.md   
+- name: Continuous-Assurance-for-in-Cluster
+  href: ../../10-Continuous-Assurance-for-in-Cluster/Readme.md
+- name: ARM Templates
+  href: ../../ARMTemplates/Readme.md
+  items:
+        - name: AppService.json
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/ARMTemplates/AppService.json
+        - name: EventHub.json
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/ARMTemplates/EventHub.json
+        - name: KeyVault.json
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/ARMTemplates/KeyVault.json
+        - name: NotificationHub.json
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/ARMTemplates/NotificationHub.json
+        - name: ServiceBus.json
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/ARMTemplates/ServiceBus.json
+        - name: SQLDatabase.json
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/ARMTemplates/SQLDatabase.json
+        - name: StorageTemplate.json
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/ARMTemplates/StorageTemplate.json
+        - name: TrafficManager.json
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/ARMTemplates/TrafficManager.json
+        - name: VirtualMachine.json
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/ARMTemplates/VirtualMachine.json
+        - name: VirtualNetwork.json
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/ARMTemplates/VirtualNetwork.json
+        
