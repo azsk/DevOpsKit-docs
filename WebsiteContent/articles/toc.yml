@@ -119,23 +119,27 @@
     - name: Org Policy Updates
       href: ../../07-Customizing-AzSK-for-your-Org/OrgPolicyUpdate.md
     - name: Scripts
-      - name: OrgPolicyFixScript.ps1.txt 
-        href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyFixScript.ps1.txt
-      - name: OrgPolicyFixScript.txt 
-        href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyFixScript.txt
-      - name: OrgPolicyHealthCheck.ps1.txt
-        href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyHealthCheck.ps1.txt
-      - name: OrgPolicyHealthCheck.txt
-        href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyHealthCheck.txt
-      - name: OrgPolicyPushOrgMappingEvents.txt 
-        href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyPushOrgMappingEvents.txt
-    - name: TemplateFiles
-      - name: AzSKComplianceReport.pbit 
-        href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/TemplateFiles/AzSKComplianceReport.pbit
-      - name: OrgMapping.csv
-        href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/TemplateFiles/OrgMapping.csv
-      - name: OrgMappingDataSourceSchema.json
-        href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/TemplateFiles/OrgMappingDataSourceSchema.json
+      href: ../../07-Customizing-AzSK-for-your-Org/Readme.md
+      items:
+        - name: OrgPolicyFixScript.ps1.txt 
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyFixScript.ps1.txt
+        - name: OrgPolicyFixScript.txt 
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyFixScript.txt
+        - name: OrgPolicyHealthCheck.ps1.txt
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyHealthCheck.ps1.txt
+        - name: OrgPolicyHealthCheck.txt
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyHealthCheck.txt
+        - name: OrgPolicyPushOrgMappingEvents.txt 
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Scripts/OrgPolicyPushOrgMappingEvents.txt
+    - name: Templates
+      href: ../../07-Customizing-AzSK-for-your-Org/Readme.md
+      items:
+        - name: AzSKComplianceReport.pbit 
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/TemplateFiles/AzSKComplianceReport.pbit
+        - name: OrgMapping.csv
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/TemplateFiles/OrgMapping.csv
+        - name: OrgMappingDataSourceSchema.json
+          href: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/TemplateFiles/OrgMappingDataSourceSchema.json
 - name: Advanced features
   href: ../../08-Advanced-Features/Readme.md
   items: 
