@@ -736,7 +736,7 @@ In this section we shall create a PowerBI report locally within PowerBI Desktop 
 
 ![capture applicationInsights AppId](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_10.PNG)
 
-**(b)** Download and copy the PowerBI template file from [here](../TemplateFiles/AzSKComplianceReport.pbit) to your local machine.
+**(b)** Download and copy the PowerBI template file from [here](https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/TemplateFiles/AzSKComplianceReport.pbit) to your local machine.
 
 **(c)** Open the template (.pbit) file using PowerBI Desktop, provide the AI ApplicationId and click on 'Load' as shown below:
 
