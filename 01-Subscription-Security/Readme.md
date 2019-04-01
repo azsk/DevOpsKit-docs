@@ -550,7 +550,7 @@ From release 3.8.0, AzSK has started supporting a few core scenarios for Azure G
 
 Follow the steps below to successfully run the local AzSK scans (GRS, GSS and other commands):
 
-1. Follow instructions in our [installation guide](00a-Setup/Readme.md#installation-guide) to download the latest version of AzSK (3.9.0 or above).
+1. Follow instructions in our [installation guide](../00a-Setup#installation-guide) to download the latest version of AzSK (3.9.0 or above).
 
 2. Configure AzSK for your Azure environment using the following command:
 ```PowerShell
@@ -568,7 +568,7 @@ Notes:
 
 ### CICD:
 
-To use the CICD extension, no special steps are required beyond those outlined in the AzSK CICD extensions [doc](03-Security-In-CICD#contents).
+To use the CICD extension, no special steps are required beyond those outlined in the AzSK CICD extensions [doc](../03-Security-In-CICD#contents).
 
 
 ### CA:
