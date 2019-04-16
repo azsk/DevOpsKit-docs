@@ -449,6 +449,12 @@ ARM Template checker covers Baseline controls for following services:
 | SQLDatabase |Microsoft.Sql/servers|
 | Storage |Microsoft.Storage/storageAccounts|
 | TrafficManager |Microsoft.Network/trafficmanagerprofiles|
+| ServiceFabric |Microsoft.ServiceFabric/clusters|
+| Kubernetes |Microsoft.ContainerService/ManagedClusters|
+| LogicApps |Microsoft.Logic/workflows|
+| ContainerRegistry |Microsoft.ContainerRegistry/registries|
+| KeyVault |Microsoft.KeyVault/vaults|
+| VirtualNetwork |Microsoft.Network/virtualNetworks|
 
 ARM Templates for reference are available [here](../ARMTemplates).
 
