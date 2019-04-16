@@ -616,7 +616,7 @@ To pass external paramter file, give path of this file in "Parameter file path o
 
 ![03_Use_ParamFiles_ARMCheckerJPG](../Images/03_Use_ParamFiles_ARMCheckerJPG.jpg)
 
-> **Note:** If you are passing folder path instead of single paramter file path, then parameter file must follow specific naming convention, [Template file name].parameters.json </br>
+> **Note:** If you are passing folder path instead of single parameter file path, then parameter file must follow specific naming convention, [Template file name].parameters.json </br>
 > for e.g. </br>
 > ARM template file name - storage.json </br>
 > Related parameter file name- storage.parameters.json
