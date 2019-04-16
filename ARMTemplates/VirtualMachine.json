@@ -109,7 +109,8 @@
       "apiVersion": "2015-06-15",
       "location": "[resourceGroup().location]",
       "properties": {
-        "accountType": "[variables('storageAccountType')]"
+        "accountType": "[variables('storageAccountType')]",
+        "supportsHttpsTrafficOnly": true //[Azure_Storage_DP_Encrypt_In_Transit]
       }
     },
     {
