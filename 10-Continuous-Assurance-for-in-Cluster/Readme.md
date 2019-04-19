@@ -97,7 +97,7 @@
     a. List all the pods created by AzSK CA job using below command
 
     ```PowerShell
-        kubectl get cronjob azsk-ca-job --namespace azsk-scanner
+     kubectl get pods  --namespace azsk-scanner
      ```
 
     ![AKS-Step4a](../Images/AKS-Step4a.png)
@@ -108,4 +108,4 @@
         Kubectl logs <podname>--namespace azsk-scanner
      ```
 
-    ![AKS-Step4b](../Images/AKS-Step4b.png)
+    ![AKS-Step4b](../Images/AKS-Step4b.PNG)
