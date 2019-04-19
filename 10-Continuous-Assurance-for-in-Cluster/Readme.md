@@ -105,7 +105,7 @@
     b. Pick up the pod name for which you want to see the logs, and run the below after replacing the podname
 
     ```PowerShell
-        Kubectl logs <podname>--namespace azsk-scanner
+        Kubectl logs <podname> --namespace azsk-scanner
      ```
 
     ![AKS-Step4b](../Images/AKS-Step4b.PNG)
