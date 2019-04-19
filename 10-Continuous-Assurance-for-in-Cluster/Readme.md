@@ -95,17 +95,17 @@
 4. To view logs of any specific job
 
     a. List all the pods created by AzSK CA job using below command
-    
-        ```PowerShell
+
+    ```PowerShell
         kubectl get cronjob azsk-ca-job --namespace azsk-scanner
-        ```
+     ```
 
     ![AKS-Step4a](../Images/AKS-Step4a.png)
 
     b. Pick up the pod name for which you want to see the logs, and run the below after replacing the podname
 
-        ```PowerShell
+    ```PowerShell
         Kubectl logs <podname>--namespace azsk-scanner
-        ```
+     ```
 
     ![AKS-Step4b](../Images/AKS-Step4b.png)
