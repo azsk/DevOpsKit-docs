@@ -66,22 +66,46 @@
 
 ## Setting up AKS
 
-1.	As before, run the following command to install AzSK on Kubernetes.
+1. To install AzSK CA on Kubernetes cluster run the below command 
 
-    ![AKS-Step1](../Images/AKS-Step1.png)
+    ```PowerShell
+    Install-AzSKContinuousAssuraceForCluster -ResourceType Kubernetes
+    ```
 
-    You may additionally install instrumentation key to send logs to AppInsights. Furthermore, you may not see the text in green if you’re running the command for the first time. 
+   ![AKS-Step1](../Images/AKS-Step1.png)
 
-2.	Check if the job was completed successfully.
+   During insatallation you can choose to send you control evaluation results to App Insight. If you want to send events to App Insight, please provide instrumention key during setup.
 
+2.	To view the logs of the last CA job, run the below command
+
+    ```PowerShell
+    $lastJobPod = kubectl get pods --namespace azsk-scanner -o jsonpath='{.items[-1:].metadata.name}' 
+    Kubectl logs $lastJobPod --namespace azsk-scanner
+    ```
     ![AKS-Step2](../Images/AKS-Step2.png)
-    
-    The schedule variable might be different for you. Most likely it would be ‘24’ instead of ‘1’ in the screenshot.
 
-3.	View the pods.
+3.	To view details like CA job schedule, last schedule run the below command
 
+
+    ```PowerShell
+    kubectl get cronjob azsk-ca-job --namespace azsk-scanner
+    ```
     ![AKS-Step3](../Images/AKS-Step3.png)
 
-4.	View the output of the last scan.
+4. To view logs of any specific job
 
-    ![AKS-Step4](../Images/AKS-Step4.png)
+    a. List all the pods created by AzSK CA job using below command
+    
+        ```PowerShell
+        kubectl get cronjob azsk-ca-job --namespace azsk-scanner
+        ```
+
+    ![AKS-Step4a](../Images/AKS-Step4a.png)
+
+    b. Pick up the pod name for which you want to see the logs, and run the below after replacing the podname
+
+        ```PowerShell
+        Kubectl logs <podname>--namespace azsk-scanner
+        ```
+
+    ![AKS-Step4b](../Images/AKS-Step4b.png)
