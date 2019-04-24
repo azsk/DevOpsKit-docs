@@ -184,7 +184,7 @@ Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -UseBaselin
 The parameters required are:
 - SubscriptionId – Subscription ID is the identifier of your Azure subscription. 
 - UseBaselineControls – UseBaselineControls is the flag used to enable scanning of resources in Baseline mode.
-- UsePreviewBaselineControls – UsePreviewBaselineControls is the flag used to enable scanning of resources in Previwe Baseline mode.
+- UsePreviewBaselineControls – UsePreviewBaselineControls is the flag used to enable scanning of resources in Preview Baseline mode.
 
 [Back to top…](Readme.md#contents)
 
