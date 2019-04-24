@@ -176,29 +176,30 @@ Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubscriptionId> -ControlIds 
 |Audit|Audit activities|
 |AuthN|Authentication activities|
 |AuthZ|Authorization activities|
-|Automated|Controls which are autometed by AzSK|
+|Automated|Controls which are automated by AzSK|
 |Availability|Availability|
 |BCDR|Backup and disaster recovery|
-|Best Practice|Controls which should be implemeted to ensure your application security|
+|Best Practice|Controls which should be implemented to ensure your application security|
 |Classic|Classic services|
 |Config|Configurations|
 |Deploy|Deployment activities|
-|Diagnostics|Diagnotstics activities|
+|Diagnostics|Diagnostics activities|
 |DP|Data protection|
 |FunctionApp|Azure FunctionApp|
 |Information|Controls which are default behaviour by Azure but additional check for notification|
 |KeyRotation|Key rotation|
+|KeySecretPermissions|Controls which can be attested only when the user has access permissions on the concerned keys and secrets|
 |Linux|Linux virtual machine|
 |Manual|Controls which are not automated and user need to verify it manually|
 |NetSec|Network security|
-|OwnerAccess|Controls which requires owner/co-admin permission to get required output|
+|OwnerAccess|Controls which require owner/co-admin permission to get required output|
 |RBAC|Role based access controls|
 |SDL|Software development lifecycle |
 |SecIntell|Security intellisense |
 |SI|System integrity |
 |SOX|Controls which are enforced by SOX|
 |SqlDatabase|Azure SQL Database|
-|TCP|Controls which must be implemeted to ensure your application security|
+|TCP|Controls which must be implemented to ensure your application security|
 |Windows|Windows virtual machine|
 
 
