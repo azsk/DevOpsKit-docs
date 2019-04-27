@@ -25,7 +25,7 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
 
 # AzSK v.3.12.0
 
-*	The big change in this release is the migration of the DevOps Kit from AzureRM to the new Az-* PowerShell libraries
+*	There is big change from release(3.11.0) related to migration of the DevOps Kit from AzureRM to the new Az-* PowerShell libraries
 > **Note:** If you are upgrading from version 3.10.0 or below, you need to follow the below steps
 > 1. Org-policy owner should download the latest AzSK module using the command: *"Install-Module AzSK -Scope CurrentUser -AllowClobber -Force
 "*.
@@ -36,7 +36,7 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
 
 # AzSK v.3.11.0
 
-*	There is big change from release(3.11.0) related to migration of the DevOps Kit from AzureRM to the new Az-* PowerShell libraries
+*	The big change in this release is the migration of the DevOps Kit from AzureRM to the new Az-* PowerShell libraries
 > **Note:** If you are upgrading from version 3.10.0 or below, you need to follow the below steps
 > 1. Org-policy owner should download the latest AzSK module using the command: *"Install-Module AzSK -Scope CurrentUser -AllowClobber -Force
 "*.
