@@ -23,9 +23,20 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
    -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
 ```
 
-# AzSK v.3.11.0
+# AzSK v.3.12.0
 
 *	The big change in this release is the migration of the DevOps Kit from AzureRM to the new Az-* PowerShell libraries
+> **Note:** If you are upgrading from version 3.10.0 or below, you need to follow the below steps
+> 1. Org-policy owner should download the latest AzSK module using the command: *"Install-Module AzSK -Scope CurrentUser -AllowClobber -Force
+"*.
+> 2. Import the latest AzSK module in a fresh PowerShell session and update your org-policy using the command: *"Update-AzSKOrganizationPolicy -SubscriptionId `<SubId>` -OrgName `<OrgName>` -DepartmentName `<DepartmentName>` -PolicyFolderPath `<PolicyFolderPath>` -OverrideBaseConfig All"*
+> 3. Run the iwr and update the CA by running the *"Update-AzSKContinuousAssurance"* command with the *"-FixModules"* switch.
+
+* Update all the AzureRM and Azure commands in your SVT extensions to its equivalent in the Az-* module.
+
+# AzSK v.3.11.0
+
+*	There is big change from release(3.11.0) related to migration of the DevOps Kit from AzureRM to the new Az-* PowerShell libraries
 > **Note:** If you are upgrading from version 3.10.0 or below, you need to follow the below steps
 > 1. Org-policy owner should download the latest AzSK module using the command: *"Install-Module AzSK -Scope CurrentUser -AllowClobber -Force
 "*.
