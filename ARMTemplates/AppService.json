@@ -45,6 +45,9 @@
         "type": "Microsoft.Web/sites",
         "apiVersion": "2016-08-01",
         "location": "[parameters('location')]",
+        "identity": {
+          "type": "SystemAssigned"
+        },
         "properties": {
            "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serviceplanname'))]",
            "httpsOnly": true, //[Azure_AppService_DP_Dont_Allow_HTTP_Access]
@@ -57,7 +60,7 @@
              "remoteDebuggingEnabled": false, //[Azure_AppService_Config_Disable_Remote_Debugging]
              "webSocketsEnabled": false, //[Azure_AppService_Config_Disable_Web_Sockets]
              "siteAuthEnabled":true, //[Azure_AppService_AuthN_Use_AAD_for_Client_AuthN]
-             "netFrameworkVersion":"v4.6",// [Azure_AppService_Deploy_Use_Latest_Version]
+             "netFrameworkVersion":"v4.7",// [Azure_AppService_Deploy_Use_Latest_Version]
            "siteAuthSettings":{
               "clientId":"***********ClientId*********" //[Azure_AppService_AuthN_Use_AAD_for_Client_AuthN]
             }

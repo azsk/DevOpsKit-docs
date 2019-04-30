@@ -32,7 +32,8 @@
   - [Verifying that ARM Template Checker have been added and configured correctly](Readme.md#verifying-that-the-arm-template-checker-have-been-added-and-configured-correctly)
   - [Exclude files from scan](Readme.md#exclude-files-from-scan)
   - [Skip certain controls during scan](Readme.md#skip-certain-controls-during-scan)
-  
+  - [Use external parameter file](Readme.md#use-external-parameter-file)
+
 ------------------------------------------------------------------
 ### Overview 
 The AzSK contains Security Verification Tests (SVTs) for multiple PaaS and IaaS services of the Azure platform. 
@@ -448,6 +449,12 @@ ARM Template checker covers Baseline controls for following services:
 | SQLDatabase |Microsoft.Sql/servers|
 | Storage |Microsoft.Storage/storageAccounts|
 | TrafficManager |Microsoft.Network/trafficmanagerprofiles|
+| ServiceFabric |Microsoft.ServiceFabric/clusters|
+| Kubernetes |Microsoft.ContainerService/ManagedClusters|
+| LogicApps |Microsoft.Logic/workflows|
+| ContainerRegistry |Microsoft.ContainerRegistry/registries|
+| KeyVault |Microsoft.KeyVault/vaults|
+| VirtualNetwork |Microsoft.Network/virtualNetworks|
 
 ARM Templates for reference are available [here](../ARMTemplates).
 
@@ -606,4 +613,18 @@ After editing CSV should look like this,
 
 ![03_Skip_Controls_Param_ARMCheckerJPG](../Images/03_Skip_Controls_Param_ARMCheckerJPG.JPG)
 
+[Back to top...](Readme.md#contents)
+
+### Use external parameter file
+
+To pass parameter values while scanning your ARM Template by ARM Checker, you can use external parameter file. The parameter file contains a value for the parameter. This value is automatically passed to the template during scanning. 
+To pass external paramter file, give path of this file in "Parameter file path or folder path" input as shown in below image:
+
+![03_Use_ParamFiles_ARMCheckerJPG](../Images/03_Use_ParamFiles_ARMCheckerJPG.jpg)
+
+> **Note:** If you are passing folder path instead of single parameter file path, then parameter file must follow specific naming convention, [Template file name].parameters.json </br>
+> for e.g. </br>
+> ARM template file name - storage.json </br>
+> Related parameter file name- storage.parameters.json
+  
 [Back to top...](Readme.md#contents)

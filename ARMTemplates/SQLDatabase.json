@@ -68,6 +68,7 @@
     },
 	"emailAddresses": {
       "type": "string",
+      "defaultValue": "user@contoso.com",
       "metadata": {
         "description": "Email address for alerts."
       }
