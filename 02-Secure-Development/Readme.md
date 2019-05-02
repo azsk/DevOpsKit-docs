@@ -197,21 +197,21 @@ Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -UsePartial
 [Back to top…](Readme.md#contents)
 
 ### Execute SVTs excluding some resource groups
-The Get-AzSKAzureServicesSecurityStatus command now supports switch 'ExcludeResourceGroupNames' to exclude some of the resource groups from getting scanned. The cmdlet below will not scan the resource groups 'azsktestRg' and 'azsktestRg1'.
+The Get-AzSKAzureServicesSecurityStatus command now supports a switch 'ExcludeResourceGroupNames' to exclude some of the resource groups from getting scanned. The cmdlet below will not scan the resource groups 'azsktestRg' and 'azsktestRg1'.
 ```PowerShell
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeResourceGroupNames "azsktestRg,azsktestRg2"
 ```
 [Back to top…](Readme.md#contents)
 
 ### Execute SVTs excluding some resources
-The Get-AzSKAzureServicesSecurityStatus command now supports switch 'ExcludeResourceNames' to exclude some of the resources from getting scanned. The cmdlet below will not scan the resource groups 'azsktestApp' and 'azsktestApp2'.
+The Get-AzSKAzureServicesSecurityStatus command now supports a switch 'ExcludeResourceNames' to exclude some of the resources from getting scanned. The cmdlet below will not scan the resource groups 'azsktestApp' and 'azsktestApp2'.
 ```PowerShell
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeResourceNames "azsktestApp,azsktestApp2"
 ```
 [Back to top…](Readme.md#contents)
 
 ### Execute SVTs excluding a resource type
-The Get-AzSKAzureServicesSecurityStatus command now supports switch 'ExcludeResourceTypeName' to exclude resources of a particular type supported by AzSK from getting scanned. The cmdlet below will not scan any Databricks resources.
+The Get-AzSKAzureServicesSecurityStatus command now supports a switch 'ExcludeResourceTypeName' to exclude resources of a particular type supported by AzSK from getting scanned. The cmdlet below will not scan any Databricks resources.
 ```PowerShell
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeResourceTypeName Databricks
 ```
@@ -220,6 +220,12 @@ Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeRes
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeResourceTypeName Databricks -ExcludeTags 'AppService'
 ```
 [Back to top…](Readme.md#contents)
+
+### Execute SVTs excluding controls from scan
+The Get-AzSKAzureServicesSecurityStatus command now supports a switch 'ExcludeControlId' to exclude AzSK security controls from getting scanned. The cmdlet below will not scan 'Azure_Storage_DP_Rotate_Keys' control for any Storage type resource.
+```PowerShell
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeControlId 'Azure_Storage_DP_Rotate_Keys'
+```
 
 ### Understand the scan reports
 Each AzSK cmdlet writes output to a folder whose location is determined as below:
