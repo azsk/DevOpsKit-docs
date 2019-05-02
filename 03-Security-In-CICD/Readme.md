@@ -630,7 +630,9 @@ To pass external paramter file, give path of this file in "Parameter file path o
 [Back to top...](Readme.md#contents)
 
 ### Extending ARM Template Checker for your organization
-You can extend ARM template checker for your organization like, adding support to scan new services (which currently not supported by ARM Checker) or adding new controls to existing services in ARM Checker. But before extending ARM Template Checker, we need to understand how ARM Template Checker works.
+> **Note:** This is a draft, we are currently working on couple of areas to make the experience more seamless.
+
+If you are using org-policy feature, you can extend ARM template checker for your organization like, adding support to scan new services (which currently not supported by ARM Checker) or adding new controls to existing services in ARM Checker. But before extending ARM Template Checker, we need to understand how ARM Template Checker works.
 
 ### How ARM Checker scans a control
 
@@ -666,7 +668,7 @@ Once you pass ARM Template file to ARM Checker for scanning, while scanning ARM 
 	* If the property is found and it's value matches with the value(s) specified in the "data" field (e.g., "True" above), ARM Checker will pass the control. 
 	* If the property is not found, or its value doesn't match with expected value ARM Checker will fail the control. 
 
-#### Adding a new control to an existing service
+### Adding a new control to an existing service
 
 1. Edit ARMControls.json 
 2. Go to the service in which you want to add new controls 
@@ -707,7 +709,7 @@ Once you pass ARM Template file to ARM Checker for scanning, while scanning ARM 
 | StringSingleToken   | Allow/NotAllow       | < Any string value >         | false/true          |  Property should be present at "JsonPath", Property value should be string and Property value should be "equal to (Allow)" or "not to equal(Not Allow)" (as mentioned in "data.type" )        | NA      |
 | VerifiableSingleToken   | NA       | NA           | NA           |  Property should be present at "JsonPath" and Property value should be string      | NA      |
 
-#### Adding new service
+### Adding new service
 
 1. Edit ARMControls.json
 2. Add new Service object in  "resourceControlSets" array like,
