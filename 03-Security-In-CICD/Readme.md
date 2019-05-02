@@ -712,7 +712,7 @@ Once you pass ARM Template file to ARM Checker for scanning, while scanning ARM 
   </tr>
   <tr>
     <td>Boolean</td>
-    <td>Boolean</td>
+    <td>NA</td>
     <td>true/false</td>
     <td>NA</td>
     <td>Property should be present at "JsonPath", Property value should be a boolean and matches the value as mentioned in "data.value"</td>
