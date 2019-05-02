@@ -669,7 +669,7 @@ Once you pass ARM Template file to ARM Checker for scanning, while scanning ARM 
 	* If the property is found and it's value matches with the value(s) specified in the "data" field (e.g., "True" above), ARM Checker will pass the control. 
 	* If the property is not found, or its value doesn't match with expected value ARM Checker will fail the control. 
 
-### Adding a new control to an existing service
+### How to add new controls to an existing service
 
 1. Edit ARMControls.json 
 2. Go to the service in which you want to add new controls 
@@ -766,7 +766,7 @@ Once you pass ARM Template file to ARM Checker for scanning, while scanning ARM 
   </tr>
 </table>
 
-### Adding new service
+### How to add a new service
 
 1. Edit ARMControls.json
 2. Add new Service object in  "resourceControlSets" array like,
