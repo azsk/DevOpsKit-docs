@@ -628,3 +628,106 @@ To pass external paramter file, give path of this file in "Parameter file path o
 > Related parameter file name- storage.parameters.json
   
 [Back to top...](Readme.md#contents)
+
+### Extending ARM Template Checker for your organisation
+Before you can extend ARM Template Checker, You need to understand how ARM Template Checker works.
+
+### How ARM Checker scans a control
+
+To understand this, let's look at a single control for any service (e.g., Storage -> encrypt-in-transit control), 
+```json
+{ 
+"featureName": "Storage", 
+"supportedResourceTypes": ["Microsoft.Storage/storageAccounts"], 
+"controls": [ 
+	{ 
+	"id": "AzureStorage160", 
+	"controlId": "Azure_Storage_DP_Encrypt_In_Transit_Test", 
+	"isEnabled": true, 
+	"description": "HTTPS protocol must be used for accessing Storage Account resources", 
+	"rationale": "Use of HTTPS ensures server/service authentication and protects data in transit from network layer man-in-the-middle, eavesdropping, session-hijacking attacks. When enabling HTTPS one must remember to simultaneously disable access over plain HTTP else data can still be subject to compromise over clear text connections.", 
+	"recommendation": "Run command 'Set-AzStorageAccount -ResourceGroupName <RGName> -Name <StorageAccountName> -EnableHttpsTrafficOnly `$true'. Run 'Get-Help Set-AzStorageAccount -full' for more help.", 
+	"severity": "Medium", 
+	"jsonPath":  ["$.properties.supportsHttpsTrafficOnly"], 
+	"matchType": "Boolean", 
+	"data": {"value": true} 
+	} 
+	] 
+} 
+```
+
+Once you pass ARM Template file to ARM Checker for scanning, it scans ARM Template as mentioned below:
+
+1. First of all, ARM Checker checks if the services used in the ARM template being scanned are supported by looking at the "SupportedResourceType" field in a file called “ARMControls.json” that is a global list of all services and corresponding controls covered by the ARM Checker. (It will look for this file in the folder “%userprofile%\Documents\WindowsPowerShell\Modules\AzSK\<version>\Framework\Configurations\ARMChecker\ARMControls.json”. For instance, for the above example, it will look for: "Microsoft.Storage/storageAccounts".)
+2. For each service type that is covered, it will look under the “controls” list for that service type to identify the properties it needs to check for in the ARM template as mentioned by the “jsonPath” for each control (in our example,  Microsoft.Storage/storageAccounts -> properties -> supportsHttpsTrafficOnly) 
+3. If the corresponding property is found on the object in the ARM template, it will compare with the expectation by using the “MatchType” and “Data” fields in the control. 
+	* If the property is found and it's value matches with the value(s) specified in the "data" field (e.g., "True" above), ARM Checker will pass the control. 
+	* If the property is not found, or its value doesn't match with expected value ARM Checker will fail the control. 
+
+#### Adding a new control to an existing service
+
+1. Edit ARMControls.json 
+2. Go to the service in which you want to add new controls 
+3. Add new control object in the "controls" array.  
+	``` json
+	{ 
+		"id": "TBD910", 
+		"controlId": "TBD", 
+		"isEnabled": true, 
+		"description": "TBD", 
+		"rationale": "TBD", 
+		"recommendation": "TBD", 
+		"severity": "High", 
+		"jsonPath": [ "$.properties.properties1" ], 
+		"matchType": "Boolean", 
+		"data": { 
+			"value": false 
+			}  
+	}
+	```
+
+> **Note:** For control id, please use format like featureName  + Integer (should be greater than 900) e.g. "id" : TrafficManager910 .
+
+#### Important properties in control object:  
+* "isEnabled" :  To enable/disable control during scan. If set to 'false' control will not be scanned. 
+* "jsonPath":  Path of the property/object in ARM Template which will be evaluated by ARM Checker. 
+* "matchType":  This field defines the type of property/object, expected at the path provided as "jsonPath"
+* "data": This field determines control evaluation, different properties and values of those properties depends on the "matchType" defined above.
+
+#### Supported Match type and their respective Data type:
+
+| MatchType | Data.Type  | Data.Value | Data.IsCaseSenisitive | Description | Example |
+|-----------|---------------|--------------|--------------|-------------|---------|
+| Boolean   | NA      | true/false     | NA           |Property should be present at "JsonPath", property value should be a boolean and matches the value as mentioned in "data.value"   |             |
+| IntegerValue   | GreaterThan/LesserThan/Equals      | < Any integer value >      | NA           | Property should be present at "JsonPath", Property value should be a integer and Property value should be "GreaterThan/LesserThan/Equals" ( as mentioned in "data.type" ) to value (as mentioned in "data.value")         | NA      |
+| ItemCount   | GreaterThan/LesserThan/Equals      | < Any integer value >          | NA           | Property should be present at "JsonPath", Property value should be an Array and Count of object in Array should be "GreaterThan/LesserThan/Equals" ( as mentioned in "data.type" ) to value (as mentioned in "data.value")       | NA      |
+| StringWhitespace   | NA       | NA           | false/true          | Property should be present at "JsonPath" and Property value should be "Empty string " or "Non empty String" (as mentioned in "data.value" )     | NA      |
+| StringSingleToken   | Allow/NotAllow       | < Any string value >         | false/true          |  Property should be present at "JsonPath", Property value should be string and Property value should be "equal to (Allow)" or "not to equal(Not Allow)" (as mentioned in "data.type" )        | NA      |
+| VerifiableSingleToken   | NA       | NA           | NA           |  Property should be present at "JsonPath" and Property value should be string      | NA      |
+
+#### Adding new service
+
+1. Edit ARMControls.json
+2. Add new Service object in  "resourceControlSets" array like,
+	```json
+	{
+	"featureName": "NewServiceName",
+	"supportedResourceTypes": [ "Microsoft.XYZ/abc" ],
+	"controls": [ ]			
+	}
+	```
+	E.g.
+	```json
+	{
+     "featureName": "ContainerRegistry",
+     "supportedResourceTypes": [ "Microsoft.ContainerRegistry/registries" ],
+     "controls": []
+    }
+
+	```
+> **Note:** Resource type defined in "supportedResourceTypes" must be exactly same as resource type present in ARM template of the service.
+
+If a service contains multiple resource type, you can add multiple types in "supportedResourceTypes" array.
+ E.g. 
+			
+"supportedResourceTypes": [ "Microsoft.Web/sites", "Microsoft.Web/serverfarms", "Microsoft.Web/sites/config" ]
