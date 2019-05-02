@@ -629,8 +629,8 @@ To pass external paramter file, give path of this file in "Parameter file path o
   
 [Back to top...](Readme.md#contents)
 
-### Extending ARM Template Checker for your organisation
-Before you can extend ARM Template Checker, You need to understand how ARM Template Checker works.
+### Extending ARM Template Checker for your organization
+You can extend ARM template checker for your organization like, adding support to scan new services (which currently not supported by ARM Checker) or adding new controls to existing services in ARM Checker. But before extending ARM Template Checker, we need to understand how ARM Template Checker works.
 
 ### How ARM Checker scans a control
 
@@ -656,9 +656,11 @@ To understand this, let's look at a single control for any service (e.g., Storag
 } 
 ```
 
-Once you pass ARM Template file to ARM Checker for scanning, it scans ARM Template as mentioned below:
+Once you pass ARM Template file to ARM Checker for scanning, while scanning ARM Template it follows steps mentioned below:
 
 1. First of all, ARM Checker checks if the services used in the ARM template being scanned are supported by looking at the "SupportedResourceType" field in a file called “ARMControls.json” that is a global list of all services and corresponding controls covered by the ARM Checker. (It will look for this file in the folder “%userprofile%\Documents\WindowsPowerShell\Modules\AzSK\<version>\Framework\Configurations\ARMChecker\ARMControls.json”. For instance, for the above example, it will look for: "Microsoft.Storage/storageAccounts".)
+> **Note:** If "ARMControls.json" file is present on your org-server, server file will override the file present in your local machine.
+
 2. For each service type that is covered, it will look under the “controls” list for that service type to identify the properties it needs to check for in the ARM template as mentioned by the “jsonPath” for each control (in our example,  Microsoft.Storage/storageAccounts -> properties -> supportsHttpsTrafficOnly) 
 3. If the corresponding property is found on the object in the ARM template, it will compare with the expectation by using the “MatchType” and “Data” fields in the control. 
 	* If the property is found and it's value matches with the value(s) specified in the "data" field (e.g., "True" above), ARM Checker will pass the control. 
