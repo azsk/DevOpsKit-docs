@@ -33,6 +33,7 @@
   - [Exclude files from scan](Readme.md#exclude-files-from-scan)
   - [Skip certain controls during scan](Readme.md#skip-certain-controls-during-scan)
   - [Use external parameter file](Readme.md#use-external-parameter-file)
+  - [Extending ARM Template Checker for your organization](Readme.md#extending-arm-template-checker-for-your-organization)
 
 ------------------------------------------------------------------
 ### Overview 
