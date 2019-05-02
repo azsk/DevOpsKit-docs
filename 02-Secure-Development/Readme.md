@@ -19,6 +19,7 @@
 - [Execute SVT excluding some resource groups](Readme.md#execute-svts-excluding-some-resource-groups)
 - [Execute SVT excluding some resources](Readme.md#execute-svts-excluding-some-resources)
 - [Execute SVT excluding a resource type](Readme.md#execute-svts-excluding-a-resource-type)
+- [Execute SVT excluding some controls from scan](Readme.md#execute-svts-excluding-some-controls-from-scan)
 - [Understand the scan reports](Readme.md#understand-the-scan-reports)
 - [Generate output report in PDF format](Readme.md#generate-output-report-in-pdf-format)
 - [FAQs](Readme.md#faqs)
@@ -222,9 +223,14 @@ Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeRes
 [Back to top…](Readme.md#contents)
 
 ### Execute SVTs excluding controls from scan
-The Get-AzSKAzureServicesSecurityStatus command now supports a switch 'ExcludeControlIds' to exclude AzSK security controls from getting scanned. The cmdlet below will not scan 'Azure_Storage_DP_Rotate_Keys' control for any Storage type resource.
+The Get-AzSKAzureServicesSecurityStatus command now supports a switch 'ExcludeControlIds' to exclude AzSK security controls from getting scanned. 
+The cmdlet below will not scan 'Azure_Storage_DP_Rotate_Keys' control for any Storage type resource.
 ```PowerShell
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeControlIds 'Azure_Storage_DP_Rotate_Keys'
+```
+The cmdlet below will not scan 'Azure_Storage_DP_Rotate_Keys' and 'Azure_Storage_AuthZ_Allow_Limited_Access_to_Services' control for any Storage type resource.
+```PowerShell
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeControlIds "Azure_Storage_DP_Rotate_Keys, Azure_Storage_AuthZ_Allow_Limited_Access_to_Services"
 ```
 
 ### Understand the scan reports
