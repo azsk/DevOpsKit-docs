@@ -700,14 +700,64 @@ Once you pass ARM Template file to ARM Checker for scanning, while scanning ARM 
 
 #### Supported Match type and their respective Data type:
 
-| MatchType | Data.Type  | Data.Value | Data.IsCaseSenisitive | Description | Example |
-|-----------|---------------|--------------|--------------|-------------|---------|
-| Boolean   | NA      | true/false     | NA           |Property should be present at "JsonPath", property value should be a boolean and matches the value as mentioned in "data.value"   |             |
-| IntegerValue   | GreaterThan/LesserThan/Equals      | < Any integer value >      | NA           | Property should be present at "JsonPath", Property value should be a integer and Property value should be "GreaterThan/LesserThan/Equals" ( as mentioned in "data.type" ) to value (as mentioned in "data.value")         | NA      |
-| ItemCount   | GreaterThan/LesserThan/Equals      | < Any integer value >          | NA           | Property should be present at "JsonPath", Property value should be an Array and Count of object in Array should be "GreaterThan/LesserThan/Equals" ( as mentioned in "data.type" ) to value (as mentioned in "data.value")       | NA      |
-| StringWhitespace   | NA       | NA           | false/true          | Property should be present at "JsonPath" and Property value should be "Empty string " or "Non empty String" (as mentioned in "data.value" )     | NA      |
-| StringSingleToken   | Allow/NotAllow       | < Any string value >         | false/true          |  Property should be present at "JsonPath", Property value should be string and Property value should be "equal to (Allow)" or "not to equal(Not Allow)" (as mentioned in "data.type" )        | NA      |
-| VerifiableSingleToken   | NA       | NA           | NA           |  Property should be present at "JsonPath" and Property value should be string      | NA      |
+<table>
+  <tr>
+    <th>MatchType</th>
+    <th>Data.Type</th>
+    <th>Data.Value</th>
+    <th>Data.IsCaseSensitive</th>
+    <th>Description</th>
+    <th>Example</th>
+  </tr>
+  <tr>
+    <td>Boolean</td>
+    <td>Boolean</td>
+    <td>true/false</td>
+    <td>NA</td>
+    <td>Property should be present at "JsonPath", Property value should be a boolean and matches the value as mentioned in "data.value"</td>
+    <td>If we want to ensure, in App Service "remote debugging" should be turned off, <br>"jsonPath": [ "$.properties.siteConfig.remoteDebuggingEnabled"]<br> "matchType": "Boolean",<br> "data": { <br>     "value": false<br> }</td>
+  </tr>
+  <tr>
+    <td>IntegerValue</td>
+    <td>GreaterThan/LesserThan/Equals</td>
+    <td>&lt; Any integer value &gt;<br></td>
+    <td>NA</td>
+    <td>Property should be present at "JsonPath", Property value should be a integer and Property value should be "GreaterThan/LesserThan/Equals" ( as mentioned in "data.type" ) to value (as mentioned in "data.value")<br></td>
+    <td>If we want to ensure, App Service must be deployed on a minimum of two instances, <br>    <br>    "jsonPath": [ "$.sku.capacity" ],<br>    "matchType": "IntegerValue",<br>    "data": {<br>    "type": "GreaterThan",<br>    "value": 1<br>}<br></td>
+  </tr>
+  <tr>
+    <td>ItemCount</td>
+    <td>GreaterThan/LesserThan/Equals</td>
+    <td>&lt; Any integer value &gt;<br></td>
+    <td>NA</td>
+    <td>Property should be present at "JsonPath", Property value should be an Array and Count of object in Array should be "GreaterThan/LesserThan/Equals" ( as mentioned in "data.type" ) to value (as mentioned in "data.value")<br></td>
+    <td>If we want to ensure, CosmosDB uses replication, <br>    <br>    "jsonPath": [ "$.properties.locations" ],<br>    "matchType": "ItemCount",<br>    "data": {<br>    "type": "GreaterThan",<br>    "value": 1<br>}<br></td>
+  </tr>
+  <tr>
+    <td>StringWhitespace</td>
+    <td>NA</td>
+    <td>false/true<br></td>
+    <td>NA</td>
+    <td>Property should be present at "JsonPath" and Property value should be "Empty string " or "Non empty String" (as mentioned in "data.value" )<br></td>
+    <td>NA</td>
+  </tr>
+  <tr>
+    <td>StringSingleToken</td>
+    <td>Allow/NotAllow</td>
+    <td>&lt; Any string value &gt;<br></td>
+    <td>false/true<br></td>
+    <td>Property should be present at "JsonPath", Property value should be string and Property value should be "equal to (Allow)" or "not to equal(Not Allow)" (as mentioned in "data.type" )<br></td>
+    <td>NA</td>
+  </tr>
+  <tr>
+    <td>VerifiableSingleToken</td>
+    <td>NA</td>
+    <td>NA</td>
+    <td>NA</td>
+    <td>Property should be present at "JsonPath" and Property value should be string<br></td>
+    <td>NA</td>
+  </tr>
+</table>
 
 ### Adding new service
 
