@@ -633,7 +633,7 @@ To pass external paramter file, give path of this file in "Parameter file path o
 ### Extending ARM Template Checker for your organization
 > **Note:** This is a draft, we are currently working on couple of areas to make the experience more seamless.
 
-If you are using org-policy feature, you can extend ARM template checker for your organization like, adding support to scan new services (which currently not supported by ARM Checker) or adding new controls to existing services in ARM Checker. But before extending ARM Template Checker, we need to understand how ARM Template Checker works.
+If you are using [ org-policy ](../07-Customizing-AzSK-for-your-Org) feature, you can extend/customize the ARM Template Checker for your organization such as (a) by adding new controls to existing services or (b) by adding support to scan altogether new services (currently not supported by ARM Checker). In this section, let us walk through the steps required to do so. However, before learning about extending ARM Template Checker, let us first understand how it works.
 
 ### How ARM Checker scans a control
 
