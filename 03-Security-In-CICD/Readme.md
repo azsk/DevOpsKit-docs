@@ -724,7 +724,7 @@ Once you pass ARM Template file to ARM Checker for scanning, while scanning ARM 
     <td>&lt; Any integer value &gt;<br></td>
     <td>NA</td>
     <td>Property should be present at "JsonPath", Property value should be a integer and Property value should be "GreaterThan/LesserThan/Equals" ( as mentioned in "data.type" ) to value (as mentioned in "data.value")<br></td>
-    <td>If we want to ensure, App Service must be deployed on a minimum of two instances, <br>    <br>    "jsonPath": [ "$.sku.capacity" ],<br>    "matchType": "IntegerValue",<br>    "data": {<br>    "type": "GreaterThan",<br>    "value": 1<br>}<br></td>
+    <td>If we want to ensure, App Service must be deployed on a minimum of two instances, <br>     "jsonPath": [ "$.sku.capacity" ],<br>    "matchType": "IntegerValue",<br>    "data": {<br>    "type": "GreaterThan",<br>    "value": 1<br>}<br></td>
   </tr>
   <tr>
     <td>ItemCount</td>
@@ -732,7 +732,7 @@ Once you pass ARM Template file to ARM Checker for scanning, while scanning ARM 
     <td>&lt; Any integer value &gt;<br></td>
     <td>NA</td>
     <td>Property should be present at "JsonPath", Property value should be an Array and Count of object in Array should be "GreaterThan/LesserThan/Equals" ( as mentioned in "data.type" ) to value (as mentioned in "data.value")<br></td>
-    <td>If we want to ensure, CosmosDB uses replication, <br>    <br>    "jsonPath": [ "$.properties.locations" ],<br>    "matchType": "ItemCount",<br>    "data": {<br>    "type": "GreaterThan",<br>    "value": 1<br>}<br></td>
+    <td>If we want to ensure, CosmosDB uses replication, <br>  "jsonPath": [ "$.properties.locations" ],<br>    "matchType": "ItemCount",<br>    "data": {<br>    "type": "GreaterThan",<br>    "value": 1<br>}<br></td>
   </tr>
   <tr>
     <td>StringWhitespace</td>
@@ -740,7 +740,9 @@ Once you pass ARM Template file to ARM Checker for scanning, while scanning ARM 
     <td>false/true<br></td>
     <td>NA</td>
     <td>Property should be present at "JsonPath" and Property value should be "Empty string " or "Non empty String" (as mentioned in "data.value" )<br></td>
-    <td>NA</td>
+    <td>If we want to ensure, App Service must authenticate users using AAD backed credentials <br>  "jsonPath": [ "$.properties.siteConfig.siteAuthSettings.clientId"],<br>    "matchType": "StringWhitespace",<br>      "data": {
+            <br>"value": false
+          }<br></td>
   </tr>
   <tr>
     <td>StringSingleToken</td>
@@ -748,7 +750,11 @@ Once you pass ARM Template file to ARM Checker for scanning, while scanning ARM 
     <td>&lt; Any string value &gt;<br></td>
     <td>false/true<br></td>
     <td>Property should be present at "JsonPath", Property value should be string and Property value should be "equal to (Allow)" or "not to equal(Not Allow)" (as mentioned in "data.type" )<br></td>
-    <td>NA</td>
+    <td>If we want to ensure, latest version of .NET framework version must be used for App Service    <br>    "jsonPath": [ "$.properties.siteConfig.netFrameworkVersion"],<br>    "matchType": "StringSingleToken",<br>      "data": {
+            <br>"type": "Allow",
+            <br>"value": "v4.7",
+            <br>"isCaseSensitive": false
+          }<br></td>
   </tr>
   <tr>
     <td>VerifiableSingleToken</td>
@@ -756,7 +762,7 @@ Once you pass ARM Template file to ARM Checker for scanning, while scanning ARM 
     <td>NA</td>
     <td>NA</td>
     <td>Property should be present at "JsonPath" and Property value should be string<br></td>
-    <td>NA</td>
+     <td>If we want to ensure, only the required IP addresses are configured on Cosmos DB firewall <br> "jsonPath": [ "$.properties.ipRangeFilter" ],<br>    "matchType": "VerifiableSingleToken",",<br>  "data": {}<br></td>
   </tr>
 </table>
 
