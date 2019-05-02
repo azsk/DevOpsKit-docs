@@ -222,7 +222,7 @@ Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeRes
 ```
 [Back to top…](Readme.md#contents)
 
-### Execute SVTs excluding controls from scan
+### Execute SVTs excluding some controls from scan
 The Get-AzSKAzureServicesSecurityStatus command now supports a switch 'ExcludeControlIds' to exclude AzSK security controls from getting scanned. 
 The cmdlet below will not scan 'Azure_Storage_DP_Rotate_Keys' control for any Storage type resource.
 ```PowerShell
