@@ -97,6 +97,7 @@ This outputs the Log Analytics workspaces from the Log Analytics subscription as
 ### [1-b]
 Obtain the workspaceId and sharedKey for the Log Analytics workspace you'd like to use for monitoring.
 Go to the Log Analytics workspace and navigate to "Advanced Settings -> Connected Sources -> Windows Servers" as shown in the image below:
+> **Note**: The "Advanced Settings" option will be visible only if you have 'Owners' access (and have elevated to Owner if using PIM). It will not be visible if you are 'Reader'.
 
 
 ![05_Log_Analytics_Workspace_WsId_ShrKey](../Images/05_Log_Analytics_Workspace_WsId_ShrKey.png)
