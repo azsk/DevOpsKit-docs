@@ -456,6 +456,9 @@ ARM Template checker covers Baseline controls for following services:
 | ContainerRegistry |Microsoft.ContainerRegistry/registries|
 | KeyVault |Microsoft.KeyVault/vaults|
 | VirtualNetwork |Microsoft.Network/virtualNetworks|
+| Search |Microsoft.Search/searchServices|
+| EventHub |Microsoft.EventHub/namespaces|
+| ContainerInstances |Microsoft.ContainerInstance/containerGroups|
 
 ARM Templates for reference are available [here](../ARMTemplates).
 
