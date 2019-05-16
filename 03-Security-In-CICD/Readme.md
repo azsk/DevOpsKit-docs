@@ -792,7 +792,7 @@ If a service contains multiple resource type, you can add multiple types in "sup
 			
 "supportedResourceTypes": [ "Microsoft.Web/sites", "Microsoft.Web/serverfarms", "Microsoft.Web/sites/config" ]
 
-### Uploading extended ARM Controls to server
+### Uploading extended ARM controls to server
 
 Once you have tested your new ARM Checker controls on your machine.You need to upload these new controls to org policy server so that these new controls will be available for all users in your organization.
 
