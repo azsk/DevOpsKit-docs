@@ -608,138 +608,138 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
 Use Set-AzSKPIMConfiguration for configuring/changing PIM settings:
 
-•	Assigning users to roles (-AssignRole)
+  1. Assigning users to roles (-AssignRole)
+     
+     Use this command to assign PIM role to a user on a subscription/resource group/resource.
+      > <b>NOTE:</b>
+      > You must have owner access to run this command.
 
-Use this command to assign PIM role to a user on a subscription/resource group/resource.
-> <b>NOTE:</b>
-> You must have owner access to run this command.
+      ```PowerShell
+      Set-AzSKPIMConfiguration -AssignRole `
+                              -SubscriptionId <SubscriptionId> `
+                              -DurationInDays <Int> `
+                              -RoleName <RoleName> `
+                              -PrincipalName  <PrincipalName> `
+                              [-ResourceGroupName <ResourceGroupName>] `
+                              [-ResourceName <ResourceName>] `
+                              [-DoNotOpenOutputFolder]
+      ```
 
-```PowerShell
-Set-AzSKPIMConfiguration -AssignRole `
-                         -SubscriptionId <SubscriptionId> `
-                         -DurationInDays <Int> `
-                         -RoleName <RoleName> `
-                         -PrincipalName  <PrincipalName> `
-                         [-ResourceGroupName <ResourceGroupName>] `
-                         [-ResourceName <ResourceName>] `
-                         [-DoNotOpenOutputFolder]
-```
+  2. Activating your roles (-ActivateMyRole)
 
-•	Activating your roles (-ActivateMyRole)
+      Use this command to activate your PIM access.
 
-Use this command to activate your PIM access.
+      ```PowerShell
+      Set-AzSKPIMConfiguration -ActivateMyRole `
+                              -SubscriptionId <SubscriptionId> `
+                              -RoleName <RoleName> `
+                              -DurationInHours <Int> `
+                              -Justification <String> `
+                              [-ResourceGroupName <ResourceGroupName>] `
+                              [-ResourceName <ResourceName>] `
+                              [-DoNotOpenOutputFolder]
+      ```
 
-```PowerShell
-Set-AzSKPIMConfiguration -ActivateMyRole `
-                         -SubscriptionId <SubscriptionId> `
-                         -RoleName <RoleName> `
-                         -DurationInHours <Int> `
-                         -Justification <String> `
-                         [-ResourceGroupName <ResourceGroupName>] `
-                         [-ResourceName <ResourceName>] `
-                         [-DoNotOpenOutputFolder]
-```
+  3. Deactivating your roles (-DeacctivateMyRole)
 
-•	Deactivating your roles (-DeacctivateMyRole)
+      Use this command to deactivate your PIM access.
 
-Use this command to deactivate your PIM access.
+      ```PowerShell
+      Set-AzSKPIMConfiguration -DeactivateMyRole `
+                              -SubscriptionId <SubscriptionId> `
+                              -RoleName <RoleName> `
+                              [-ResourceGroupName <ResourceGroupName>] `
+                              [-ResourceName <ResourceName>] `
+                              [-DoNotOpenOutputFolder]
+      ```
 
-```PowerShell
-Set-AzSKPIMConfiguration -DeactivateMyRole `
-                         -SubscriptionId <SubscriptionId> `
-                         -RoleName <RoleName> `
-                         [-ResourceGroupName <ResourceGroupName>] `
-                         [-ResourceName <ResourceName>] `
-                         [-DoNotOpenOutputFolder]
-```
+  4. Converting permanent assignments at subscription/RG scope to PIM (-ConvertPermanentAssignmentsToPIM)
 
-•	Converting permanent assignments at subscription/RG scope to PIM (-ConvertPermanentAssignmentsToPIM)
-
-Use this command to change all permanent access to PIM on a subscription/resource group/resource. 
-> <b>NOTE:</b>
-> In a case where both PIM and permanent access are active for any user, then the permanent access of that user does not change.
-
-
-```PowerShell
-E.g., Set-AzSKPIMConfiguration -ConvertPermanentAssignmentsToPIM `
-                         -SubscriptionId <SubscriptionId> `
-                         -RoleNames <Comma separated list of roles> `
-                         -DurationInDays <Int> `
-                         [-ResourceGroupName <ResourceGroupName>] `
-                         [-ResourceName <ResourceName>] `
-                         [-DoNotOpenOutputFolder]
-                         [-Force]
-```
-
-•	Removing permanent assignments altogether (-RemovePermanentAssignments)
-
-Use this command to remove all permanent access from a subscription/resource group/resource.
-
-There are two options with this command:
-
-  a. -RemoveAssignmentFor MatchingEligibleAssignments (Default): Remove only those permanent access which has a corresponding eligible PIM access.
-
-  b. -RemoveAssignmentFor AllExceptMe: Remove all permanent access except your access.
-
-> <b>NOTE:</b>
-> This command will *not* remove your permanent assignment if one exists.
+      Use this command to change all permanent access to PIM on a subscription/resource group/resource. 
+      > <b>NOTE:</b>
+      > In a case where both PIM and permanent access are active for any user, then the permanent access of that user does not change.
 
 
-```PowerShell
-Set-AzSKPIMConfiguration -RemovePermanentAssignments `
-                         -SubscriptionId <SubscriptionId> `
-                         -RoleNames <Comma separated list of roles> `
-                         [-RemoveAssignmentFor MatchingEligibleAssignments] `
-                         [-ResourceGroupName <ResourceGroupName>] `
-                         [-ResourceName <ResourceName>] `
-                         [-DoNotOpenOutputFolder]
-                         [-Force]
-```
+      ```PowerShell
+      E.g., Set-AzSKPIMConfiguration -ConvertPermanentAssignmentsToPIM `
+                              -SubscriptionId <SubscriptionId> `
+                              -RoleNames <Comma separated list of roles> `
+                              -DurationInDays <Int> `
+                              [-ResourceGroupName <ResourceGroupName>] `
+                              [-ResourceName <ResourceName>] `
+                              [-DoNotOpenOutputFolder]
+                              [-Force]
+      ```
 
-```PowerShell
-Set-AzSKPIMConfiguration -RemovePermanentAssignments `
-                         -SubscriptionId <SubscriptionId> `
-                         -RoleNames <Comma separated list of roles> `
-                         [-RemoveAssignmentFor AllExceptMe] `
-                         [-ResourceGroupName <ResourceGroupName>] `
-                         [-ResourceName <ResourceName>] `
-                         [-DoNotOpenOutputFolder]
-                         [-Force]
+  5. Removing permanent assignments altogether (-RemovePermanentAssignments)
 
-```
+      Use this command to remove all permanent access from a subscription/resource group/resource.
+
+      There are two options with this command:
+
+        a. -RemoveAssignmentFor MatchingEligibleAssignments (Default): Remove only those permanent access which has a corresponding eligible PIM access.
+
+        b. -RemoveAssignmentFor AllExceptMe: Remove all permanent access except your access.
+
+      > <b>NOTE:</b>
+      > This command will *not* remove your permanent assignment if one exists.
+
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -RemovePermanentAssignments `
+                              -SubscriptionId <SubscriptionId> `
+                              -RoleNames <Comma separated list of roles> `
+                              [-RemoveAssignmentFor MatchingEligibleAssignments] `
+                              [-ResourceGroupName <ResourceGroupName>] `
+                              [-ResourceName <ResourceName>] `
+                              [-DoNotOpenOutputFolder]
+                              [-Force]
+      ```
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -RemovePermanentAssignments `
+                              -SubscriptionId <SubscriptionId> `
+                              -RoleNames <Comma separated list of roles> `
+                              [-RemoveAssignmentFor AllExceptMe] `
+                              [-ResourceGroupName <ResourceGroupName>] `
+                              [-ResourceName <ResourceName>] `
+                              [-DoNotOpenOutputFolder]
+                              [-Force]
+
+      ```
 
 Use Get-AzSKPIMConfiguration for querying various PIM settings/status:
 
-•	List your PIM-eligible roles (-ListMyEligibleRoles)
+  1. List your PIM-eligible roles (-ListMyEligibleRoles)
 
-Use this command to list eligible PIM roles.
+      Use this command to list eligible PIM roles.
 
-```PowerShell
-Get-AzSKPIMConfiguration -ListMyEligibleRoles
-```
+      ```PowerShell
+      Get-AzSKPIMConfiguration -ListMyEligibleRoles
+      ```
 
-•	List permanent assignments (-ListPermanentAssignments) 
+  2. List permanent assignments (-ListPermanentAssignments) 
 
-Use this command to list users/spn/groups who have permanent access on a subscription/resource group/resource.
+      Use this command to list users/spn/groups who have permanent access on a subscription/resource group/resource.
 
-```PowerShell
-Get-AzSKPIMConfiguration -ListPermanentAssignments`
-                         -SubscriptionId <SubscriptionId> `
-                         [-RoleNames <Comma separated list of roles>] `
-                         [-ResourceGroupName <ResourceGroupName>] `
-                         [-ResourceName <ResourceName>] `
-                         [-DoNotOpenOutputFolder]
-```
+      ```PowerShell
+      Get-AzSKPIMConfiguration -ListPermanentAssignments`
+                              -SubscriptionId <SubscriptionId> `
+                              [-RoleNames <Comma separated list of roles>] `
+                              [-ResourceGroupName <ResourceGroupName>] `
+                              [-ResourceName <ResourceName>] `
+                              [-DoNotOpenOutputFolder]
+      ```
 
-•	List PIM assignments (-ListPIMAssignments)
+  3. List PIM assignments (-ListPIMAssignments)
 
-Use this command to list users/spn/groups who have PIM access on a subscription/resource group/resource.
+      Use this command to list users/spn/groups who have PIM access on a subscription/resource group/resource.
 
-```PowerShell
-Get-AzSKPIMConfiguration -ListPIMAssignments `
-                         -SubscriptionId <SubscriptionId> `
-                         [-RoleNames <Comma separated list of roles>] `
-                         [-ResourceGroupName <ResourceGroupName>] `
-                         [-ResourceName <ResourceName>] `
-                         [-DoNotOpenOutputFolder]
-```
+      ```PowerShell
+      Get-AzSKPIMConfiguration -ListPIMAssignments `
+                              -SubscriptionId <SubscriptionId> `
+                              [-RoleNames <Comma separated list of roles>] `
+                              [-ResourceGroupName <ResourceGroupName>] `
+                              [-ResourceName <ResourceName>] `
+                              [-DoNotOpenOutputFolder]
+      ```
