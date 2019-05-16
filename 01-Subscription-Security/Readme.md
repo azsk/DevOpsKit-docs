@@ -757,7 +757,8 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
       Use this command to activate your PIM access.
 
       > <b>NOTE:</b>
-      > Activation duration can range between 1 to 8 hours.
+      > Activation duration should range between 1 to 8 hours.
+      > Make sure that the PIM role you are activating is eligible. If your PIM role has expired, contact subscription administrator to renew/re-assign your PIM role.
 
       ```PowerShell
       Set-AzSKPIMConfiguration -ActivateMyRole `
@@ -848,9 +849,9 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
       There are two options with this command:
 
-        a. -RemoveAssignmentFor MatchingEligibleAssignments (Default): Remove only those permanent roles which has a corresponding eligible PIM role.
+        a. *-RemoveAssignmentFor MatchingEligibleAssignments (Default)*: Remove only those permanent roles which have a corresponding eligible PIM role.
 
-        b. -RemoveAssignmentFor AllExceptMe: Remove all permanent role except your access.
+        b. *-RemoveAssignmentFor AllExceptMe*: Remove all permanent role except your access.
 
       > <b>NOTE:</b>
       > This command will *not* remove your permanent assignment if one exists.
@@ -879,7 +880,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
       ```
 
-      <b>Example 1: </b> Verify the list of IDs before removing permanent Contributor and Owner roles from a subscription. This command deletes Contributor and Owner roles with permanent access except your access.
+      <b>Example 1: </b> Verify the list of IDs before removing permanent Contributor and Owner roles from a subscription. This command deletes permanent access for the specified role except your access.
 
       ```PowerShell
       Set-AzSKPIMConfiguration -RemovePermanentAssignments `
@@ -889,12 +890,12 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               -DoNotOpenOutputFolder
       ```
 
-      <b>Example 2: </b> Directly remove Contributor and Owner roles with permanent access on a resource without giving a prompt for user's confirmation. This command deletes the specified role with permanent access only if there is PIM role for the same.
+      <b>Example 2: </b> Remove permanent access on a resource without giving a prompt for user's confirmation. Use *-RoleNames* to filter the roles to be deleted.This command deletes the specified role with permanent access only if there is a corresponding PIM role for the same.
 
       ```PowerShell
       Set-AzSKPIMConfiguration -RemovePermanentAssignments `
                               -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
-                              -RoleNames "Contributor,Owner" `
+                              -RoleNames "Owner" `
                               -RemoveAssignmentFor MatchingEligibleAssignments
                               -ResourceGroupName "DemoRG" `
                               -ResourceName "AppServiceDemo"`
