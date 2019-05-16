@@ -792,9 +792,9 @@ If a service contains multiple resource type, you can add multiple types in "sup
 			
 "supportedResourceTypes": [ "Microsoft.Web/sites", "Microsoft.Web/serverfarms", "Microsoft.Web/sites/config" ]
 
-### Uploading extended ARM controls to server
+### Uploading extended ARM controls to policy store
 
-Once you have tested your new ARM Checker controls on your machine.You need to upload these new controls to org policy server so that these new controls will be available for all users in your organization.
+Once you have tested your new ARM Checker controls on your machine.You need to upload these new controls to org policy store so that these new controls will be available for all users in your organization.
 
 1. Go to org policy folder(in your local machine)
 2. Create ARMControls.ext.json file with content given below.(if not present already)
@@ -807,4 +807,4 @@ Once you have tested your new ARM Checker controls on your machine.You need to u
 
 3. If you have added new service in ARM Checker, copy the whole service object (with all controls) from ARMControls.json and add it to "resourceControlSets" in ARMControls.ext.json file.
 4. If you have extended controls in any existing service in ARM Checker, copy the service object (with only new controls) from ARMControls.json and add it to "resourceControlSets" in ARMControls.ext.json file.
-5. Run Update-AzSKOrganizationPolicy command to upload ARMControls.ext.json file to server.
+5. Run Update-AzSKOrganizationPolicy command to upload ARMControls.ext.json file to policy store.
