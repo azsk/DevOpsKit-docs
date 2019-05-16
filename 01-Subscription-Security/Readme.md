@@ -417,8 +417,9 @@ Get-AzLog | where {$_.OperationName -eq "Microsoft.Insights/AlertRules/Activated
 ### Setup Azure Security Center (ASC) on your subscription
 
 The Set-AzSKAzureSecurityCenterPolicies provisions the following for Azure Security Center (ASC) configuration:
-1. Configure Azure Security Center by enabling all policies and rules.
+1. Configure Azure Security Center by enabling all the required policies and rules.
 2. Configure email address and phone number for contact preferences.
+3. Enable automatic provisioning for the subscription.
 
 **Prerequisites:**
 1. You need to be owner on the subscription which you want to onboard on to ASC.
@@ -431,15 +432,17 @@ The Set-AzSKAzureSecurityCenterPolicies provisions the following for Azure Secur
 ```PowerShell
 Set-AzSKAzureSecurityCenterPolicies -SubscriptionId <SubscriptionId> `
         -SecurityContactEmails <ContactEmails> `
-        -SecurityPhoneNumber <ContactPhone>
+        -SecurityPhoneNumber <ContactPhone> `
+        [-OptionalPolicies]
 ```
 |Config Param Name	|Purpose	|
 | --------------- | -------- |
 |SubscriptionId 	|Subscription ID against which ASC would be setup	|
 |SecurityContactEmails 	|Comma-separated list of emails (e.g., 'abc@microsoft.com, def@microsoft.com')	for contact preference|
 |SecurityPhoneNumber 	|Single phone number (e.g., '425-882-8080' or '+91-98765-43210' or '+1-425-882-8080')	for contact preference|
+|OptionalPolicies       |Switch to enable policies which are marked as optional|
 
-This command will *overwrite* the contact emails and contact phone previously set in Azure Security Center.
+This command will *overwrite* the contact emails and contact phone previously set in Azure Security Center. Here is the [list](../01-Subscription-Security/ASCPoliciesCoverage.md) of all the policies (both mandatory & optional) that are enabled via this command.
 
 >**Note:** The Get-AzSKSubscriptionSecurityStatus cmdlet can be used to check Azure Security Center settings (amongst other things). That script checks for the following w.r.t. Azure Security Center: 
 >1.  All ASC policies are configured per expectation.
