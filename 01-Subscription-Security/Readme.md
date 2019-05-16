@@ -642,7 +642,7 @@ Set-AzSKPIMConfiguration -ActivateMyRole `
 
 •	Deactivating your roles (-DeacctivateMyRole)
 
-Use this command to disable your PIM access.
+Use this command to deactivate your PIM access.
 
 ```PowerShell
 Set-AzSKPIMConfiguration -DeactivateMyRole `
@@ -674,8 +674,11 @@ E.g., Set-AzSKPIMConfiguration -ConvertPermanentAssignmentsToPIM `
 •	Removing permanent assignments altogether (-RemovePermanentAssignments)
 
 Use this command to remove all permanent access from a subscription/resource group/resource.
+
 There are two options with this command:
-	a. -RemoveAssignmentFor MatchingEligibleAssignments (Default): Remove only those permanent access which has a corresponding eligible PIM access.
+
+  a. -RemoveAssignmentFor MatchingEligibleAssignments (Default): Remove only those permanent access which has a corresponding eligible PIM access.
+
   b. -RemoveAssignmentFor AllExceptMe: Remove all permanent access except your access.
 
 > <b>NOTE:</b>
