@@ -631,7 +631,6 @@ To pass external paramter file, give path of this file in "Parameter file path o
 [Back to top...](Readme.md#contents)
 
 ### Extending ARM Template Checker for your organization
-> **Note:** This is a draft, we are currently working on couple of areas to make the experience more seamless.
 
 If you are using [ org-policy ](../07-Customizing-AzSK-for-your-Org) feature, you can extend/customize the ARM Template Checker for your organization such as (a) by adding new controls to existing services or (b) by adding support to scan altogether new services (currently not supported by ARM Checker). In this section, let us walk through the steps required to do so. However, before learning about extending ARM Template Checker, let us first understand how it works.
 
@@ -792,3 +791,20 @@ If a service contains multiple resource type, you can add multiple types in "sup
  E.g. 
 			
 "supportedResourceTypes": [ "Microsoft.Web/sites", "Microsoft.Web/serverfarms", "Microsoft.Web/sites/config" ]
+
+### Uploading extended ARM Controls to server
+
+Once you have tested your new ARM Checker controls on your machine.You need to upload these new controls to org policy server so that these new controls will be available for all users in your organization.
+
+1. Go to org policy folder(in your local machine)
+2. Create ARMControls.ext.json file with content given below.(if not present already)
+
+   	```json
+	{
+	  "resourceControlSets": [ ]			
+	}
+	```
+
+3. If you have added new service in ARM Checker, copy the whole service object (with all controls) from ARMControls.json and add it to "resourceControlSets" in ARMControls.ext.json file.
+4. If you have extended controls in any existing service in ARM Checker, copy the service object (with only new controls) from ARMControls.json and add it to "resourceControlSets" in ARMControls.ext.json file.
+5. Run Update-AzSKOrganizationPolicy command to upload ARMControls.ext.json file to server.
