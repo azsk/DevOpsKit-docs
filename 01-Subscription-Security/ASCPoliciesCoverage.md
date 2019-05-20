@@ -11,7 +11,7 @@
 
 <tr><td><b>Audit remote debugging state for an API App</b></td><td>Remote debugging requires inbound ports to be opened on an API app. Remote debugging should be turned off.</td></tr>
 
-<tr><td><b>Audit remote debugging state for a Function App</b></td><td>Remote debugging requires inbound ports to be opened on an function app. Remote debugging should be turned off.</td></tr>
+<tr><td><b>Audit remote debugging state for a Function App</b></td><td>Remote debugging requires inbound ports to be opened on a function app. Remote debugging should be turned off.</td></tr>
 
 <tr><td><b>Audit remote debugging state for a Web Application</b></td><td>Remote debugging requires inbound ports to be opened on a web application. Remote debugging should be turned off.</td></tr>
 
