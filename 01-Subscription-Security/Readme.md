@@ -59,7 +59,7 @@
 
 - [Customizing AzSK for your organization](Readme.md#customizing-azsk-for-your-organization)
 
-### [AzSK: Privileged Identity Management (PIM) helper cmdlets](Readme.md#azsk-privileged-identity-management-pim-helper-cmdlets)
+### [AzSK: Privileged Identity Management (PIM) helper cmdlets](Readme.md#azsk-privileged-identity-management-pim-helper-cmdlets-1)
 
 ----------------------------------------------------------
 ## AzSK: Subscription Health Scan
