@@ -717,7 +717,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               [-ResourceName <ResourceName>] `
                               [-DoNotOpenOutputFolder]
       ```
-      <b>Example 1: </b> Grant PIM access with Contributor role to a user for 30 days on a subscription.
+      <b>Example 1: </b> Grant PIM access with 'Contributor' role to a user for 30 days on a subscription.
 
       ```PowerShell
       Set-AzSKPIMConfiguration -AssignRole `
@@ -756,11 +756,9 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
       Use this command to activate your PIM access.
 
-      > <b>NOTE:</b>
-
-      > a. Activation duration should range between 1 to 8 hours.
-
-      > b. Make sure that the PIM role you are activating is eligible. If your PIM role has expired, contact subscription administrator to renew/re-assign your PIM role.
+      > <b>NOTE:</b>  
+      > a. Activation duration should range between 1 to 8 hours.  
+      > b. Make sure that the PIM role you are activating is eligible. If your PIM role has expired, contact subscription administrator to renew/re-assign your PIM role.  
 
       ```PowerShell
       Set-AzSKPIMConfiguration -ActivateMyRole `
