@@ -59,7 +59,7 @@
 
 - [Customizing AzSK for your organization](Readme.md#customizing-azsk-for-your-organization)
 
-### [AzSK: Privileged Identity Management (PIM) helper cmdlets](Readme.md#azsk-privileged-identity-management-pim-helper-cmdlets)
+### [AzSK: Privileged Identity Management (PIM) helper cmdlets](Readme.md#azsk-privileged-identity-management-pim-helper-cmdlets-1)
 
 ----------------------------------------------------------
 ## AzSK: Subscription Health Scan
@@ -611,7 +611,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
 ### Use Get-AzSKPIMConfiguration for querying various PIM settings/status
 
-  1. #### List your PIM-eligible roles (-ListMyEligibleRoles)
+  1. <h4> List your PIM-eligible roles (-ListMyEligibleRoles) </h4>
 
       Use this command to list eligible PIM roles in the selected Azure subscription.
 
@@ -619,7 +619,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
       Get-AzSKPIMConfiguration -ListMyEligibleRoles
       ```
 
-  2. #### List permanent assignments (-ListPermanentAssignments)  
+  2. <h4> List permanent assignments (-ListPermanentAssignments) </h4>  
 
       Use this command to list Azure role with permanent assignments at the specified scope. By default, it lists all role assignments in the selected Azure subscription. Use respective parameters to list assignments for a specific role, or to list assignments on a specific resource group or resource.
       
@@ -661,7 +661,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                -DoNotOpenOutputFolder
       ```
 
-  3. #### List PIM assignments (-ListPIMAssignments)
+  3. <h4> List PIM assignments (-ListPIMAssignments) </h4>
 
       Use this command to list Azure role with PIM assignments at the specified scope. By default, it lists all role assignments in the selected Azure subscription. Use respective parameters to list assignments for a specific role, or to list assignments on a specific resource group or resource.
 
@@ -704,7 +704,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
 ### Use Set-AzSKPIMConfiguration for configuring/changing PIM settings:
 
-  1. #### Assigning users to roles (-AssignRole)
+  1. <h4> Assigning users to roles (-AssignRole) </h4>
      
      Use this command to assign PIM role to the specified principal, at the specified scope.
       > <b>NOTE:</b>
@@ -720,7 +720,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               [-ResourceName <ResourceName>] `
                               [-DoNotOpenOutputFolder]
       ```
-      <b>Example 1: </b> Grant PIM access with Contributor role to a user for 30 days on a subscription.
+      <b>Example 1: </b> Grant PIM access with 'Contributor' role to a user for 30 days on a subscription.
 
       ```PowerShell
       Set-AzSKPIMConfiguration -AssignRole `
@@ -755,15 +755,13 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                -DoNotOpenOutputFolder
       ```
 
-  2. #### Activating your roles (-ActivateMyRole)
+  2. <h4> Activating your roles (-ActivateMyRole) </h4>
 
       Use this command to activate your PIM access.
 
-      > <b>NOTE:</b>
-
-      > a. Activation duration should range between 1 to 8 hours.
-
-      > b. Make sure that the PIM role you are activating is eligible. If your PIM role has expired, contact subscription administrator to renew/re-assign your PIM role.
+      > <b>NOTE:</b>  
+      > a. Activation duration should range between 1 to 8 hours.  
+      > b. Make sure that the PIM role you are activating is eligible. If your PIM role has expired, contact subscription administrator to renew/re-assign your PIM role.  
 
       ```PowerShell
       Set-AzSKPIMConfiguration -ActivateMyRole `
@@ -788,7 +786,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               -DoNotOpenOutputFolder
       ```
 
-  3. #### Deactivating your roles (-DeactivateMyRole)
+  3. <h4> Deactivating your roles (-DeactivateMyRole) </h4>
 
       Use this command to deactivate your PIM access.
 
@@ -809,7 +807,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               -DoNotOpenOutputFolder
       ```
 
-  4. #### Converting permanent assignments at subscription/RG scope to PIM (-ConvertPermanentAssignmentsToPIM)
+  4. <h4> Converting permanent assignments at subscription/RG scope to PIM (-ConvertPermanentAssignmentsToPIM) </h4>
 
       Use this command to change permanent assignments to PIM for specified roles, at the specified scope. 
 
@@ -850,7 +848,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               -Force
       ```
 
-  5. #### Removing permanent assignments altogether (-RemovePermanentAssignments)
+  5. <h4> Removing permanent assignments altogether (-RemovePermanentAssignments) </h4>
 
       Use this command to remove permanent assignments of specified roles, at the specified scope.
 
