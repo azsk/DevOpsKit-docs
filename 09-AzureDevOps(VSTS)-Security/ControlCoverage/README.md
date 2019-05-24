@@ -8,7 +8,7 @@ Below resource types can be checked for validating the security controls.
 
 |FeatureName|
 |---|
-|[Organizaiton](Feature/Organizaiton.md)|
+|[Organizatoon](Feature/Organizaiton.md)|
 |[Project](Feature/Project.md)|
 |[ServiceConnection](Feature/ServiceConnection.md)|
 |[User](Feature/User.md)|
