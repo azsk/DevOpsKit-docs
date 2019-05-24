@@ -11,7 +11,7 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
     #endregion
  
     #region Step 2: Check if the AzSK resource group exists
-    $isRGPresent = (Get-AzResourceGroup -Name $rgName -ErrorAction SilentlyContinue | Measure-Object).Count -eq 0
+    $isRGPresent = (Get-AzResourceGroup -Name $rgName -ErrorAction SilentlyContinue | Measure-Object).Count -ne 0
     #endregion
 
     #region Step 3: Check whether Storage Resource provider is registered
@@ -26,10 +26,8 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
     $storageAccountPreName = 'azsk';
     $storageResourceType = "Microsoft.Storage/storageAccounts"
     $storageType = 'Standard_LRS';
-    $storageAccount = Get-AzResource -ResourceGroupName $rgName `
-                      -ResourceType $storageResourceType `
-                      -ErrorAction SilentlyContinue
-    $isStoragePresent = (($storageAccount | Where-Object{$_.ResourceName -match '^azsk\d{14}$'} | Measure-Object).Count -ne 0)
+    $storageAccount = Get-AzResource -ResourceGroupName $rgName -Name "*$storageAccountPreName*" -ResourceType $storageResourceType -ErrorAction SilentlyContinue
+    $isStoragePresent = (($storageAccount | Where-Object{$_.Name -match '^azsk\d{14}$'} | Measure-Object).Count -ne 0)
     #endregion
 
     #region Step 5: Grant required permissions on target sub and AzSK RG
@@ -236,7 +234,6 @@ function PrepareTargetSubscriptionForCentralModeCA($SubscriptionId, $Location, $
     }
  
 }
-
 
 #This is the SPN that got created when you setup CA in the central (host) 
 #subscription in central scan mode. You can get it by calling 'Get-AzSKContinuousAssurance'
