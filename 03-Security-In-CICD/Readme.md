@@ -7,7 +7,8 @@
 ![Security_In_CICD](../Images/Security_In_CICD.png)
  
 ## Contents
-- [Overview](Readme.md#overview) 
+- [Overview](Readme.md#overview)
+
 ## [Security Verification Tests (SVTs) in VSTS pipeline](Readme.md#security-verification-tests-svts-in-VSTS-pipeline) 
 - [Enable AzSK extension for your VSTS](Readme.md#enable-azsk-extension-for-your-vsts)
 - [Walkthrough](Readme.md#walkthrough)
