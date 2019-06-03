@@ -33,6 +33,7 @@
   - [Exclude files from scan](Readme.md#exclude-files-from-scan)
   - [Skip certain controls during scan](Readme.md#skip-certain-controls-during-scan)
   - [Use external parameter file](Readme.md#use-external-parameter-file)
+  - [Extending ARM Template Checker for your organization](Readme.md#extending-arm-template-checker-for-your-organization)
 
 ------------------------------------------------------------------
 ### Overview 
@@ -455,6 +456,9 @@ ARM Template checker covers Baseline controls for following services:
 | ContainerRegistry |Microsoft.ContainerRegistry/registries|
 | KeyVault |Microsoft.KeyVault/vaults|
 | VirtualNetwork |Microsoft.Network/virtualNetworks|
+| Search |Microsoft.Search/searchServices|
+| EventHub |Microsoft.EventHub/namespaces|
+| ContainerInstances |Microsoft.ContainerInstance/containerGroups|
 
 ARM Templates for reference are available [here](../ARMTemplates).
 
@@ -628,3 +632,182 @@ To pass external paramter file, give path of this file in "Parameter file path o
 > Related parameter file name- storage.parameters.json
   
 [Back to top...](Readme.md#contents)
+
+### Extending ARM Template Checker for your organization
+
+If you are using [ org-policy ](../07-Customizing-AzSK-for-your-Org) feature, you can extend/customize the ARM Template Checker for your organization such as (a) by adding new controls to existing services or (b) by adding support to scan altogether new services (currently not supported by ARM Checker). In this section, let us walk through the steps required to do so. However, before learning about extending ARM Template Checker, let us first understand how it works.
+
+### How ARM Checker scans a control
+
+To understand this, let's look at a single control for any service (e.g., Storage -> encrypt-in-transit control), 
+```json
+{ 
+"featureName": "Storage", 
+"supportedResourceTypes": ["Microsoft.Storage/storageAccounts"], 
+"controls": [ 
+	{ 
+	"id": "AzureStorage160", 
+	"controlId": "Azure_Storage_DP_Encrypt_In_Transit_Test", 
+	"isEnabled": true, 
+	"description": "HTTPS protocol must be used for accessing Storage Account resources", 
+	"rationale": "Use of HTTPS ensures server/service authentication and protects data in transit from network layer man-in-the-middle, eavesdropping, session-hijacking attacks. When enabling HTTPS one must remember to simultaneously disable access over plain HTTP else data can still be subject to compromise over clear text connections.", 
+	"recommendation": "Run command 'Set-AzStorageAccount -ResourceGroupName <RGName> -Name <StorageAccountName> -EnableHttpsTrafficOnly `$true'. Run 'Get-Help Set-AzStorageAccount -full' for more help.", 
+	"severity": "Medium", 
+	"jsonPath":  ["$.properties.supportsHttpsTrafficOnly"], 
+	"matchType": "Boolean", 
+	"data": {"value": true} 
+	} 
+	] 
+} 
+```
+
+Once you pass ARM Template file to ARM Checker for scanning, while scanning ARM Template it follows steps mentioned below:
+
+1. First of all, ARM Checker checks if the services used in the ARM template being scanned are supported by looking at the "SupportedResourceType" field in a file called “ARMControls.json” that is a global list of all services and corresponding controls covered by the ARM Checker. (It will look for this file in the folder “%userprofile%\Documents\WindowsPowerShell\Modules\AzSK\<version>\Framework\Configurations\ARMChecker\ARMControls.json”. For instance, for the above example, it will look for: "Microsoft.Storage/storageAccounts".)
+> **Note:** If "ARMControls.json" file is present on your org-server, server file will override the file present in your local machine.
+
+2. For each service type that is covered, it will look under the “controls” list for that service type to identify the properties it needs to check for in the ARM template as mentioned by the “jsonPath” for each control (in our example,  Microsoft.Storage/storageAccounts -> properties -> supportsHttpsTrafficOnly) 
+3. If the corresponding property is found on the object in the ARM template, it will compare with the expectation by using the “MatchType” and “Data” fields in the control. 
+	* If the property is found and it's value matches with the value(s) specified in the "data" field (e.g., "True" above), ARM Checker will pass the control. 
+	* If the property is not found, or its value doesn't match with expected value ARM Checker will fail the control. 
+
+### How to add new controls to an existing service
+
+1. Edit ARMControls.json 
+2. Go to the service in which you want to add new controls 
+3. Add new control object in the "controls" array.  
+	``` json
+	{ 
+		"id": "TBD910", 
+		"controlId": "TBD", 
+		"isEnabled": true, 
+		"description": "TBD", 
+		"rationale": "TBD", 
+		"recommendation": "TBD", 
+		"severity": "High", 
+		"jsonPath": [ "$.properties.properties1" ], 
+		"matchType": "Boolean", 
+		"data": { 
+			"value": false 
+			}  
+	}
+	```
+
+> **Note:** For control id, please use format like featureName  + Integer (should be greater than 900) e.g. "id" : TrafficManager910 .
+
+#### Important properties in control object:  
+* "isEnabled" :  To enable/disable control during scan. If set to 'false' control will not be scanned. 
+* "jsonPath":  Path of the property/object in ARM Template which will be evaluated by ARM Checker. 
+* "matchType":  This field defines the type of property/object, expected at the path provided as "jsonPath"
+* "data": This field determines control evaluation, different properties and values of those properties depends on the "matchType" defined above.
+
+#### Supported Match type and their respective Data type:
+
+<table>
+  <tr>
+    <th>MatchType</th>
+    <th>Data.Type</th>
+    <th>Data.Value</th>
+    <th>Data.IsCaseSensitive</th>
+    <th>Description</th>
+    <th>Example</th>
+  </tr>
+  <tr>
+    <td>Boolean</td>
+    <td>NA</td>
+    <td>true/false</td>
+    <td>NA</td>
+    <td>Property should be present at "JsonPath", Property value should be a boolean and matches the value as mentioned in "data.value"</td>
+    <td>If we want to ensure, in App Service "remote debugging" should be turned off, <br>"jsonPath": [ "$.properties.siteConfig.remoteDebuggingEnabled"]<br> "matchType": "Boolean",<br> "data": { <br>     "value": false<br> }</td>
+  </tr>
+  <tr>
+    <td>IntegerValue</td>
+    <td>GreaterThan/LesserThan/Equals</td>
+    <td>&lt; Any integer value &gt;<br></td>
+    <td>NA</td>
+    <td>Property should be present at "JsonPath", Property value should be a integer and Property value should be "GreaterThan/LesserThan/Equals" ( as mentioned in "data.type" ) to value (as mentioned in "data.value")<br></td>
+    <td>If we want to ensure, App Service must be deployed on a minimum of two instances, <br>     "jsonPath": [ "$.sku.capacity" ],<br>    "matchType": "IntegerValue",<br>    "data": {<br>    "type": "GreaterThan",<br>    "value": 1<br>}<br></td>
+  </tr>
+  <tr>
+    <td>ItemCount</td>
+    <td>GreaterThan/LesserThan/Equals</td>
+    <td>&lt; Any integer value &gt;<br></td>
+    <td>NA</td>
+    <td>Property should be present at "JsonPath", Property value should be an Array and Count of object in Array should be "GreaterThan/LesserThan/Equals" ( as mentioned in "data.type" ) to value (as mentioned in "data.value")<br></td>
+    <td>If we want to ensure, CosmosDB uses replication, <br>  "jsonPath": [ "$.properties.locations" ],<br>    "matchType": "ItemCount",<br>    "data": {<br>    "type": "GreaterThan",<br>    "value": 1<br>}<br></td>
+  </tr>
+  <tr>
+    <td>StringWhitespace</td>
+    <td>NA</td>
+    <td>false/true<br></td>
+    <td>NA</td>
+    <td>Property should be present at "JsonPath" and Property value should be "Empty string " or "Non empty String" (as mentioned in "data.value" )<br></td>
+    <td>If we want to ensure, App Service must authenticate users using AAD backed credentials <br>  "jsonPath": [ "$.properties.siteConfig.siteAuthSettings.clientId"],<br>    "matchType": "StringWhitespace",<br>      "data": {
+            <br>"value": false
+          }<br></td>
+  </tr>
+  <tr>
+    <td>StringSingleToken</td>
+    <td>Allow/NotAllow</td>
+    <td>&lt; Any string value &gt;<br></td>
+    <td>false/true<br></td>
+    <td>Property should be present at "JsonPath", Property value should be string and Property value should be "equal to (Allow)" or "not to equal(Not Allow)" (as mentioned in "data.type" )<br></td>
+    <td>If we want to ensure, latest version of .NET framework version must be used for App Service    <br>    "jsonPath": [ "$.properties.siteConfig.netFrameworkVersion"],<br>    "matchType": "StringSingleToken",<br>      "data": {
+            <br>"type": "Allow",
+            <br>"value": "v4.7",
+            <br>"isCaseSensitive": false
+          }<br></td>
+  </tr>
+  <tr>
+    <td>VerifiableSingleToken</td>
+    <td>NA</td>
+    <td>NA</td>
+    <td>NA</td>
+    <td>Property should be present at "JsonPath" and Property value should be string<br></td>
+     <td>If we want to ensure, only the required IP addresses are configured on Cosmos DB firewall <br> "jsonPath": [ "$.properties.ipRangeFilter" ],<br>    "matchType": "VerifiableSingleToken",",<br>  "data": {}<br></td>
+  </tr>
+</table>
+
+### How to add a new service
+
+1. Edit ARMControls.json
+2. Add new Service object in  "resourceControlSets" array like,
+	```json
+	{
+	"featureName": "NewServiceName",
+	"supportedResourceTypes": [ "Microsoft.XYZ/abc" ],
+	"controls": [ ]			
+	}
+	```
+	E.g.
+	```json
+	{
+     "featureName": "ContainerRegistry",
+     "supportedResourceTypes": [ "Microsoft.ContainerRegistry/registries" ],
+     "controls": []
+    }
+
+	```
+> **Note:** Resource type defined in "supportedResourceTypes" must be exactly same as resource type present in ARM template of the service.
+
+If a service contains multiple resource type, you can add multiple types in "supportedResourceTypes" array.
+ E.g. 
+			
+"supportedResourceTypes": [ "Microsoft.Web/sites", "Microsoft.Web/serverfarms", "Microsoft.Web/sites/config" ]
+
+### Uploading extended ARM controls to policy store
+
+Once you have tested your new ARM Checker controls on your machine.You need to upload these new controls to org policy store so that these new controls will be available for all users in your organization.
+
+1. Go to org policy folder(in your local machine)
+2. Create ARMControls.ext.json file with content given below.(if not present already)
+
+   	```json
+	{
+	  "resourceControlSets": [ ]			
+	}
+	```
+
+3. If you have added new service in ARM Checker, copy the whole service object (with all controls) from ARMControls.json and add it to "resourceControlSets" in ARMControls.ext.json file.
+4. If you have extended controls in any existing service in ARM Checker, copy the service object (with only new controls) from ARMControls.json and add it to "resourceControlSets" in ARMControls.ext.json file.
+5. Run Update-AzSKOrganizationPolicy command to upload ARMControls.ext.json file to policy store.
