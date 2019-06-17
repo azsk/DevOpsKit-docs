@@ -14,7 +14,7 @@
 - [Host information](Readme.md#host-information)
 - [User comments](Readme.md#user-comments)
 
-### [Try AzSK on Power Shell Core](Readme.md#try-azsk-on-power-shell-core)
+### [Try AzSK on Power Shell Core](Readme.md#try-azsk-on-power-shell-core-1)
 
 ### Overview
 
@@ -200,12 +200,12 @@ To read user comments on any controls you just need to run GCS/GSS/GRS cmd  with
 
 Follow these steps to try out AzSK in Power Shell Core
 
-	1. Install power shell core in your machine using the this link.
+	1. Install power shell core in your machine using the this [link](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-6).
 	2. Open power shell console (e.g. In Linux, run pwsh to open).
 	3. Install AzSK module using the below command 
 	    "Install-Module AzSK-RequiredVersion 3.13.0"
 	Note: This will download all the dependencies of AzSK along with the    AzSK module.  However, we will overwrite with the PSCore-ready AzSK module in the next step
-	4. Download the zip from here and extract the AzSK module folder.
+	4. Download the zip from [here](https://github.com/azsk/DevOpsKit-docs/blob/master/00a-Setup/AzSK.zip) and extract the AzSK module folder.
 	5. Delete the AzSK module folder in power shell modules (e.g. In Linux, "~/.local/share/powershell/Modules") folder and replace with the folder from the previous step.
 	6. [Optional]: Open a fresh power shell console.
 	7. Import the module to your power shell session by running: 
