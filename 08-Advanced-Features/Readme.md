@@ -196,7 +196,7 @@ To read user comments on any controls you just need to run GCS/GSS/GRS cmd  with
 ![08_Info_UserComments_PS](../Images/08_Info_UserComments_PS.JPG)  
 [Back to top…](Readme.md#contents)
 
-### [Try AzSK on Power Shell Core]
+### Try AzSK on Power Shell Core
 
 Follow these steps to try out AzSK in Power Shell Core
 
