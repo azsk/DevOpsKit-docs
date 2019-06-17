@@ -84,7 +84,7 @@ Azure subscription and resources is seamlessly integrated into CICD.
 
 **Step-1:** Create a release definition or open an existing one.  
 <!-- #TODO# make this end-to-end with AzSKDemoApp in GitHub etc -->
-(Note: Here we will edit "AzSKDemoApp_SVTs_Rel3" which is part of our test instance of VSTS.
+(Note: Here we will edit "AzSK_SVT" which is part of our test instance of VSTS.
 We also have a default build definition upstream to this which is not shown here as that is a pretty 
 standard web app build flow using an MSBuild task.)  
 
@@ -94,7 +94,7 @@ pipeline that builds and deploys a web app (or App Service) from VSTS to an Azur
 
 Let us take a look at the steps needed to add the AzSK-SVT task to the release definition.
 
-![03_Create_Release_Definition](../Images/03_Create_Release_Defination.PNG)
+![03_Create_Release_Definition](../Images/03_Create_Release_Definition.PNG)
 
 **Step-2:** Add the AzSK-SVT release task to the pipeline.  
 Click on "Add Tasks", and select "AzSK Security Verification Test".  
@@ -115,10 +115,10 @@ a {tagname, tagvalue} pair based on how your application's resources are organiz
 When the pipeline executes, SVTs will scan the specified set of resources.
 
 Along with input parameter, you can check for below options
-<br/>**Enable OMS Logging:** Switch to enable this task to publish SVT evaluation results to a Log Analytics workspace. Steps to configure workspace credentials are explained in Step-4
+<br/>**Enable LAWS Logging:** Switch to enable this task to publish SVT evaluation results to a Log Analytics workspace. Steps to configure workspace credentials are explained in Step-4
 <br/>**Aggregate Control Status:** Switch to aggregate the SVTs control output. When this is turned off it would show all the failed individual controls in the task summary output.
 <br/>**Do not auto-update AzSK:** Switch to toggle auto update of AzSK and required Az modules on the build server. Keep this un-checked for Hosted agent and Hosted VS2017 and while using SVT task fot the first time and if you want to update AZSK the version of AzSK. 
-![03_IP_Parameter_for_Task](../Images/03_IP_Parameter_for_Task.PNG)
+![03_IP_Parameter_for_Task](../Images/03_IP_Parameters_for_Task.PNG)
 
 **Step-4:** (Optional) Setup connectivity from CICD to Log Analytics.  
 > **Note:** You can skip this step in a first pass exploration of CICD integration of SVTs. 
@@ -199,7 +199,7 @@ Linking to the release definition:
 > Note: Variable groups can only be modified or added from the Library under VSO instance.
 
 **Option-2**: Directly use variables in individual build definitions.  
-![03_Online_Policy_Directly_Use_Variable](../Images/03_Online_Policy_Directly_Use_Variable.PNG)    
+![03_Online_Policy_Directly_Use_Variable](../Images/03_Online_Policy_Directly_Use_Variables.PNG)    
 
 **Step-6**: Save the Release Definition.
   
@@ -270,8 +270,8 @@ that are supported by the VSTS task:
 
 |Variable Name| Usage| Examples|
 |-------------|------|---------|
-|OMSWorkspaceID| Log Analytics workspace to continuously monitor progressive release/deployment health| e.g. c18xxxxx-xxxx-abcd-efgh-12345613489c Refer to step-4 in the above section|
-|OMSSharedKey| Log Analytics workspace shared key for extension to push the scan results from CICD| Refer step-4 from the above section for detail steps|
+|LAWSId| Log Analytics workspace to continuously monitor progressive release/deployment health| e.g. c18xxxxx-xxxx-abcd-efgh-12345613489c Refer to step-4 in the above section|
+|LAWSSharedKey| Log Analytics workspace shared key for extension to push the scan results from CICD| Refer step-4 from the above section for detail steps|
 |AzSKServerURL| Org policy url for hosting the central policy configuration| Refer step-5 from the above section for detail steps |
 |EnableServerAuth| Specifies whether Org policy URL (AzSKServerURL) is protected by AAD authentication.| e.g. true - protected by AAD authentication, false - not protected by AAD authentication|
 |AzSKVersion| You could specify which version of toolkit you want to use in your CICD scan. And version specified should be >= N-2 where N is latest prod version. If variable is not provided, it uses the latest version available| e.g. 2.8.1|
@@ -508,7 +508,7 @@ As shown below, currently the release definition is configured to simply deploy 
 
 Let us take a look at the steps needed to add the AzSK-ARM Template Checker task to the release definition.
 
-![03_Create_Release_Definition](../Images/03_Create_Release_Defination_ARM.JPG)
+![03_Create_Release_Definition](../Images/03_Create_Release_Definition_ARM.JPG)
 
 **Step-2:** Add the AzSK-ARM Template Checker release task to the pipeline.
 Click on "Add Tasks", and select "AzSK ARM Template Checker".

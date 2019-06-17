@@ -82,10 +82,10 @@ for your application.)
 		[-AutomationAccountRGName <AutomationAccountRGName>] `
 		[-AutomationAccountName <AutomationAccountName>] `
 	        -ResourceGroupNames <ResourceGroupNames> `
-	        -OMSWorkspaceId <WorkspaceId> `
-	        -OMSSharedKey <SharedKey> `
-	        [-AltOMSWorkspaceId <AltWorkspaceId>] `
-	        [-AltOMSSharedKey <AltSharedKey>] `
+	        -LAWSId <WorkspaceId> `
+	        -LAWSSharedKey <SharedKey> `
+	        [-AltLAWSId <AltWorkspaceId>] `
+	        [-AltLAWSSharedKey <AltSharedKey>] `
 	        [-WebhookUrl <WebhookUrl>] `
 	        [-WebhookAuthZHeaderName <WebhookAuthZHeaderName>] `
 	        [-WebhookAuthZHeaderValue <WebhookAuthZHeaderValue>] `
@@ -104,10 +104,10 @@ For Azure environments other than Azure Cloud, don't forget to provide Automatio
 |AutomationAccountRGName|(Optional) Name of ResourceGroup where AutomationAccount will be installed|FALSE|AzSKRG|Don't pass default value explicitly for this param|
 |AutomationAccountName|(Optional) Name of AutomationAccount|FALSE|AzSKContinuousAssurance|Don't pass default value explicitly for this param|
 |ResourceGroupNames|Comma separated list of resource groups within which the application resources are contained.|TRUE|None||
-|OMSWorkspaceId|Workspace ID of Log Analytics workspace which is used to monitor security scan results|TRUE|None||
-|OMSSharedKey|Shared key of Log Analytics workspace which is used to monitor security scan results|TRUE|None||
-|AltOMSWorkspaceId|(Optional) Alternate Workspace ID of Log Analytics workspace to monitor security scan results|FALSE|None||
-|AltOMSSharedKey|(Optional) Shared key of Alternate Log Analytics workspace which is used to monitor security scan results|FALSE|None||
+|LAWSId|Workspace ID of Log Analytics workspace which is used to monitor security scan results|TRUE|None||
+|LAWSSharedKey|Shared key of Log Analytics workspace which is used to monitor security scan results|TRUE|None||
+|AltLAWSId|(Optional) Workspace ID of alternate Log Analytics workspace to monitor security scan results|FALSE|None||
+|AltLAWSSharedKey|(Optional) Shared key of alternate Log Analytics workspace which is used to monitor security scan results|FALSE|None||
 |WebhookUrl|(Optional) All the scan results shall be posted to this configured webhook |FALSE|None||
 |WebhookAuthZHeaderName|(Optional) Name of the AuthZ header (typically 'Authorization')|FALSE|None||
 |WebhookAuthZHeaderValue|(Optional) Value of the AuthZ header |FALSE|None||
@@ -207,8 +207,8 @@ To host all the Continuous Assurance artifacts
    - Runbook (Name : Continuous_Assurance_Runbook) - To download/update Azure/AzSK modules and scan subscription/app resource groups  
    - Variables 
       - AppResourceGroupNames 
-      - OMSWorkspaceId 
-      - OMSSharedKey 
+      - LAWSId 
+      - LAWSSharedKey 
       - ReportLogsStorageAccountName
    - Azure Run As Account - To authenticate runbook at runtime  
       This account uses below certificate and connection.  
@@ -243,10 +243,10 @@ To do any or all of these:
 ```PowerShell
 Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
     [-ResourceGroupNames <ResourceGroupNames>] `
-    [-OMSWorkspaceId <WorkspaceId>] `
-    [-OMSSharedKey <SharedKey>] `
-    [-AltOMSWorkspaceId <AltWorkspaceId>] `
-    [-AltOMSSharedKey <AltSharedKey>] `
+    [-LAWSId <WorkspaceId>] `
+    [-LAWSSharedKey <SharedKey>] `
+    [-AltLAWSId <AltWorkspaceId>] `
+    [-AltLAWSSharedKey <AltSharedKey>] `
     [-WebhookUrl <WebhookUrl>] `
     [-WebhookAuthZHeaderName <WebhookAuthZHeaderName>] `
     [-WebhookAuthZHeaderValue <WebhookAuthZHeaderValue>] `
@@ -263,10 +263,10 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 |----|----|----|----|----|
 |SubscriptionId|Subscription ID of the Azure subscription in which Automation Account exists |TRUE|None||
 |ResourceGroupNames|Use this parameter if you want to update the comma separated list of resource groups within which the application resources are contained. The previously configured list of RGs will be replaced with the one provided here.|FALSE|None||
-|OMSWorkspaceId|Use this parameter if you want to update the workspace ID of Log Analytics workspace which is used to monitor security scan results|FALSE|None||
-|OMSSharedKey|Use this parameter if you want to update the shared key of Log Analytics workspace which is used to monitor security scan results|FALSE|None||
-|AltOMSWorkspaceId|(Optional) Alternate Workspace ID of Log Analytics workspace to monitor security scan results|FALSE|None||
-|AltOMSSharedKey|(Optional) Shared key of Alternate Log Analytics workspace which is used to monitor security scan results|FALSE|None||
+|LAWSId|Use this parameter if you want to update the workspace ID of Log Analytics workspace which is used to monitor security scan results|FALSE|None||
+|LAWSSharedKey|Use this parameter if you want to update the shared key of Log Analytics workspace which is used to monitor security scan results|FALSE|None||
+|AltLAWSId|(Optional) Workspace ID of alternate Log Analytics workspace to monitor security scan results|FALSE|None||
+|AltLAWSSharedKey|(Optional) Shared key of alternate Log Analytics workspace which is used to monitor security scan results|FALSE|None||
 |WebhookUrl|(Optional) All the scan results shall be posted to this configured webhook |FALSE|None||
 |WebhookAuthZHeaderName|(Optional) Name of the AuthZ header (typically 'Authorization')|FALSE|None||
 |WebhookAuthZHeaderValue|(Optional) Value of the AuthZ header |FALSE|None||
@@ -332,12 +332,12 @@ This can be achieved by adding extra params to the existing CA command as shown 
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
 $ResourceGroupNames = '*' #This should always be '*' for Central Scan mode CA
-$OMSWorkspaceId = '<WorkspaceId>'
-$OMSSharedKey = '<SharedKey>' 
+$LAWSId = '<WorkspaceId>'
+$LAWSSharedKey = '<SharedKey>' 
 $TargetSubscriptionIds = '<SubId1, SubId2, SubId3...>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
 
 Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds 
-        -ResourceGroupNames $ResourceGroupNames -OMSWorkspaceId $OMSWorkspaceId -OMSSharedKey $OMSSharedKey -CentralScanMode 
+        -ResourceGroupNames $ResourceGroupNames -LAWSId $LAWSId -LAWSSharedKey $LAWSSharedKey -CentralScanMode 
         [-LoggingOption '<CentralSub|IndividualSubs>'] [-SkipTargetSubscriptionConfig]
 ```
 </br>
@@ -349,8 +349,8 @@ The table below lists only the parameters that are mandatory or have specific ne
 |SubscriptionId| Central subscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
 |TargetSubscriptionIds| Comma separated list of subscriptionIds that needs to be scanned by the central subscription. Host subscription is always appended by default. No need to pass that value in this param| True | The user executing this command should be owner on these subscriptions. |
 |ResourceGroupNames| Comma separated list of ResourceGroupNames| True | Since you are planning to run in the central mode, you should use * as its value. This is because you need not have the same RG across all the subscriptions|
-|OMSWorkspaceId| All the scanning events will be send to this Log Analytics workspace. This will act as central monitoring dashboard | True | |
-|OMSSharedKey| SharedKey for the central monitoring dashboard| True | |
+|LAWSId| All the scanning events will be send to this Log Analytics workspace. This will act as central monitoring dashboard | True | |
+|LAWSSharedKey| SharedKey for the central monitoring dashboard| True | |
 |LoggingOption| "IndividualSubs/CentralSub". This provides the capability to users to store the CA scan logs on central subscription or on individual subscriptions| False |CentralSub |
 |SkipTargetSubscriptionConfig| (Optional) Use this switch if you dont have the owner permission on the target sub. This option assumes you have already done all the required configuration on the target sub. Check the note below| False| |
 |CentralScanMode| Mandatory switch to specify in central scan mode| True | |
@@ -368,8 +368,8 @@ In case you want to add/edit subscriptions covered via central scanning mode you
 
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
-$OMSWorkspaceId = '<WorkspaceId>'
-$OMSSharedKey = '<SharedKey>' 
+$LAWSId = '<WorkspaceId>'
+$LAWSSharedKey = '<SharedKey>' 
 $TargetSubscriptionIds = '<SubId1, SubId2, SubId3...>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
 
 Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds -CentralScanMode -FixRuntimeAccount
@@ -446,8 +446,8 @@ When you have more than about 40-50 subscriptions to scan, it is better to use m
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
 $ResourceGroupNames = '*' #This should always be '*' for Central Scan mode CA
-$OMSWorkspaceId = '<WorkspaceId>'
-$OMSSharedKey = '<SharedKey>' 
+$LAWSId = '<WorkspaceId>'
+$LAWSSharedKey = '<SharedKey>' 
 $TargetSubscriptionIds = '<SubId1, SubId2, SubId3...>' #Need to provide comma separated list of all subscriptionId that needs to be scanned.
 
 #if you have text file containing subscription ids then run below script
@@ -464,7 +464,7 @@ $AutomationAccountName = '<accountName>' # e.g. AzSKScanningAccount01
 # **Note** You should use the unique names for AutomationAccountRG and AutomationAccountName to avoid any conflicts while setup
 
 Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscriptionIds $TargetSubscriptionIds 
-        -ResourceGroupNames $ResourceGroupNames -OMSWorkspaceId $OMSWorkspaceId -OMSSharedKey $OMSSharedKey 
+        -ResourceGroupNames $ResourceGroupNames -LAWSId $LAWSId -LAWSSharedKey $LAWSSharedKey 
         -AutomationAccountRGName $AutomationAccountRGName -AutomationAccountName $AutomationAccountName -AutomationAccountLocation $AutomationAccountLocation -CentralScanMode 
         [-LoggingOption '<CentralSub|IndividualSubs>'] [-SkipTargetSubscriptionConfig]
 ```
@@ -475,8 +475,8 @@ Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId -TargetSubscript
 |SubscriptionId| Central subscriptionId which is responsible for scanning all the other subscriptions| True | This subscription would host the Automation account which is responsible for scanning all the other subscriptions|
 |TargetSubscriptionIds| Comma separated list of subscriptionIds that needs to be scanned by the central subscription. Host subscription is always appended by default. No need to pass that value in this param| True | The user executing this command should be owner on these subscriptions. |
 |ResourceGroupNames| Comma separated list of ResourceGroupNames| True | Since you are planning to run in the central mode, you should use * as its value. This is because you need not have the same RG across all the subscriptions|
-|OMSWorkspaceId| All the scanning events will be send to this Log Analytics workspace. This will act as central monitoring dashboard | True | |
-|OMSSharedKey| SharedKey for the central monitoring dashboard| True | |
+|LAWSId| All the scanning events will be send to this Log Analytics workspace. This will act as central monitoring dashboard | True | |
+|LAWSSharedKey| SharedKey for the central monitoring dashboard| True | |
 |AutomationAccountLocation| (Optional) Location where the AutomationAccount to be created | False | |
 |AutomationAccountRGName| Name of ResourceGroup which will hold the scanning automation account. Should be different than "AzSKRG". | True | e.g. AzSK-Category-ScanRG01 |
 |AutomationAccountName| Name of the automation account which will scan the target subscriptions. (This should be different than "AzSKContinuousAssurance".) | True | e.g. AzSKScanningAccount01|
@@ -842,11 +842,11 @@ This can be achieved by adding extra param to the existing CA command as shown i
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
 $ResourceGroupNames = '*' #This should always be '*'
-$OMSWorkspaceId = '<WorkspaceId>'
-$OMSSharedKey = '<SharedKey>' 
+$LAWSId = '<WorkspaceId>'
+$LAWSSharedKey = '<SharedKey>' 
 
 Install-AzSKContinuousAssurance -SubscriptionId $SubscriptionId  
-        -ResourceGroupNames $ResourceGroupNames -OMSWorkspaceId $OMSWorkspaceId -OMSSharedKey $OMSSharedKey -ScanOnDeployment
+        -ResourceGroupNames $ResourceGroupNames -LAWSId $LAWSId -LAWSSharedKey $LAWSSharedKey -ScanOnDeployment
 ```
 
 #### 2. Update CA with flag -ScanOnDeployment
