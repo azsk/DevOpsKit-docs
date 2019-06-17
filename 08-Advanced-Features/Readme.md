@@ -200,7 +200,7 @@ To read user comments on any controls you just need to run GCS/GSS/GRS cmd  with
 
 Follow these steps to try out AzSK in Power Shell Core
 
-	1. Install power shell core in your machine using the this [link] (https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-6).
+	1. Install power shell core in your machine using the this [link](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-6).
 	2. Open power shell console (e.g. In Linux, run pwsh to open).
 	3. Install AzSK module using the below command 
 	    "Install-Module AzSK-RequiredVersion 3.13.0"
