@@ -94,7 +94,7 @@ pipeline that builds and deploys a web app (or App Service) from VSTS to an Azur
 
 Let us take a look at the steps needed to add the AzSK-SVT task to the release definition.
 
-![03_Create_Release_Definition](../Images/03_Create_Release_Definition.PNG)
+![03_Create_Release_Definition](../Images/03_Create_Release_Definition.png)
 
 **Step-2:** Add the AzSK-SVT release task to the pipeline.  
 Click on "Add Tasks", and select "AzSK Security Verification Test".  
@@ -118,7 +118,7 @@ Along with input parameter, you can check for below options
 <br/>**Enable LAWS Logging:** Switch to enable this task to publish SVT evaluation results to a Log Analytics workspace. Steps to configure workspace credentials are explained in Step-4
 <br/>**Aggregate Control Status:** Switch to aggregate the SVTs control output. When this is turned off it would show all the failed individual controls in the task summary output.
 <br/>**Do not auto-update AzSK:** Switch to toggle auto update of AzSK and required Az modules on the build server. Keep this un-checked for Hosted agent and Hosted VS2017 and while using SVT task fot the first time and if you want to update AZSK the version of AzSK. 
-![03_IP_Parameter_for_Task](../Images/03_IP_Parameters_for_Task.PNG)
+![03_IP_Parameter_for_Task](../Images/03_IP_Parameters_for_Task.png)
 
 **Step-4:** (Optional) Setup connectivity from CICD to Log Analytics.  
 > **Note:** You can skip this step in a first pass exploration of CICD integration of SVTs. 
@@ -163,7 +163,7 @@ Linking to the release definition:
 
 **Option-2:** Directly use variables in individual build definitions.
  
-![03_Directly_Use_Variable](../Images/03_Directly_Use_Variable.PNG)
+![03_Directly_Use_Variables](../Images/03_Directly_Use_Variables.png)
 
 Important: Ensure that the variable names used are exactly as above and the values correspond 
 to *your* Log Analytics workspace. Moreover, when you specify the Log Analytics shared key, click on the 'lock' icon 
@@ -199,7 +199,7 @@ Linking to the release definition:
 > Note: Variable groups can only be modified or added from the Library under VSO instance.
 
 **Option-2**: Directly use variables in individual build definitions.  
-![03_Online_Policy_Directly_Use_Variable](../Images/03_Online_Policy_Directly_Use_Variables.PNG)    
+![03_Online_Policy_Directly_Use_Variables](../Images/03_Online_Policy_Directly_Use_Variables.png)    
 
 **Step-6**: Save the Release Definition.
   
