@@ -679,6 +679,8 @@ that are supported by the ARM Checker task:
 |ExtendedCommand| Enables you to provide other switches supported by the Get-AzSKARMTemplateSecurityStatus command to perform focused scanning in the CICD pipeline | e.g. -ControlIds "Azure_AppService_Deploy_Use_Latest_Version,</br>Azure_AppService_AuthN_Use_Managed_Service_Identity" or -UseBaselineControls.|
 |TreatAsPassed| This variable is to provide users with more control over behavior of the SVT extension in case of various control statuses other than ‘Passed’ or ‘Failed’. For e.g., using this, one may choose to have the extension treat statuses such as 'Verify','Manual' as 'Passed'.|e.g. The value of the variable TreatAsPassed can be passed as Verify,Manual to skip Verify and Manual controls|
 
+> **Note:** If you are using custom org policy features such as baseline controls scan etc., please make sure that CheckBox 'Use Org Baseline(s)' is checked and also provide an active azure service connection.
+
 ### Extending ARM Template Checker for your organization
 
 If you are using [ org-policy ](../07-Customizing-AzSK-for-your-Org) feature, you can extend/customize the ARM Template Checker for your organization such as (a) by adding new controls to existing services or (b) by adding support to scan altogether new services (currently not supported by ARM Checker). In this section, let us walk through the steps required to do so. However, before learning about extending ARM Template Checker, let us first understand how it works.
