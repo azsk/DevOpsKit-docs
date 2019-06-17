@@ -140,7 +140,7 @@ the respective Log Analytics workspace.
 
 The installation command will display output like the below:
 
-![05_Install-AzSKOMSSecurityPack](../Images/05_Install-AzSKOMSSecurityPack.png)
+![05_Install-AzSKMonitoringSolution](../Images/05_Install-AzSKMonitoringSolution.png)
       
 At this point, assuming that AzSK events were already being sent to the Log Analytics workspace, you should start
 seeing a tile such as the one below:
