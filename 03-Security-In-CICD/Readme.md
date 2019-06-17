@@ -25,6 +25,9 @@
 
 ## [AzSK ARM Template Checker](Readme.md#azsk-arm-template-checker)
 - [Overview](Readme.md#overview-1) 
+  - [Execute ARM Template Checker in Baseline mode](Readme.md#execute-arm-template-checker-in-baseline-mode) 
+  - [Execute ARM Template Checker for specific controls](Readme.md#execute-arm-template-checker-for-specific-controls) 
+  - [Execute ARM Template Checker excluding some controls from scan](Readme.md#execute-arm-template-excluding-some-controls-from-scan) 
   - [ARM Template Checker - Control coverage](Readme.md#arm-template-checker---control-coverage)
 - [Enable AzSK extension for your VSTS](Readme.md#enable-azsk-extension-for-your-vsts-1)
 - [Walkthrough](Readme.md#walkthrough-2)
@@ -33,7 +36,9 @@
   - [Exclude files from scan](Readme.md#exclude-files-from-scan)
   - [Skip certain controls during scan](Readme.md#skip-certain-controls-during-scan)
   - [Use external parameter file](Readme.md#use-external-parameter-file)
+  - [Advanced CICD scanning capabilities](Readme.md#advanced-cicd-scanning-capabilities-1) 
   - [Extending ARM Template Checker for your organization](Readme.md#extending-arm-template-checker-for-your-organization)
+
 
 ------------------------------------------------------------------
 ### Overview 
@@ -436,6 +441,31 @@ The parameters used are:
 
 [Back to top…](Readme.md#contents)
 
+### Execute ARM Template Checker in Baseline mode
+In 'baseline mode' a centrally defined 'control baseline' is used as the target control set for scanning.
+The cmdlet below scans ARM Template in Baseline mode and generates a status report:
+```PowerShell
+Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template>  -UseBaselineControls
+
+Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -UsePreviewBaselineControls
+
+Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template>  -UseBaselineControls -UsePreviewBaselineControls
+```
+
+### Execute ARM Template Checker for specific controls
+The Get-AzSKARMTemplateSecurityStatus command now supports a switch 'ControlIds' to scan only specific controls in ARM Template. 
+The cmdlet below will only scan 'Azure_AppService_Deploy_Use_Latest_Version' and 'Azure_AppService_AuthN_Use_Managed_Service_Identity' controls for the provided ARM Template.
+```PowerShell
+Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -ControlIds 'Azure_AppService_Deploy_Use_Latest_Version,Azure_AppService_AuthN_Use_Managed_Service_Identity'
+```
+
+### Execute ARM Template Checker excluding some controls from scan
+The Get-AzSKARMTemplateSecurityStatus command now supports a switch 'ExcludeControlIds' to exclude ARM Template controls from getting scanned. 
+The cmdlet below will not scan 'Azure_AppService_Deploy_Use_Latest_Version' control for the provided ARM Template.
+```PowerShell
+Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -ExcludeControlIds 'Azure_AppService_Deploy_Use_Latest_Version'
+```
+
 ### ARM Template Checker - Control coverage
  
 ARM Template checker covers Baseline controls for following services:
@@ -633,6 +663,22 @@ To pass external paramter file, give path of this file in "Parameter file path o
   
 [Back to top...](Readme.md#contents)
 
+### Advanced CICD scanning capabilities
+DevOps kit CICD extension enables you to leverage all the advance capabilities of toolkit while running in adhoc mode.
+You could scan for specific controlIds in your build pipeline, or you could exclude some controls from scan,
+or you could also run a specific version of kit etc.
+These advance features are available to customers through VSTS variables. Table below provide the different variables 
+that are supported by the ARM Checker task:
+
+|Variable Name| Usage| Examples|
+|-------------|------|---------|
+|AzSKServerURL| Org policy url for hosting the central policy configuration| Refer step-5 from the [above section](Readme.md#adding-svts-in-the-release-pipeline) for detail steps |
+|EnableServerAuth| Specifies whether Org policy URL (AzSKServerURL) is protected by AAD authentication.| e.g. true - protected by AAD authentication, false - not protected by AAD authentication|
+|AzSKVersion| You could specify which version of toolkit you want to use in your CICD scan. And version specified should be >= N-2 where N is latest prod version. If variable is not provided, it uses the latest version available| e.g. 3.12.0|
+|AzSKModuleName| This variable enable use to participate in the Preview testing. If you want to participate in preview, Provide the module name as "AzSKPreview". If not used, it would by default uses AzSK as module name| e.g. AzSKPreview|
+|ExtendedCommand| Enables you to provide other switches supported by the Get-AzSKARMTemplateSecurityStatus command to perform focused scanning in the CICD pipeline | e.g. -ControlIds "Azure_AppService_Deploy_Use_Latest_Version,</br>Azure_AppService_AuthN_Use_Managed_Service_Identity" or -UseBaselineControls.|
+|TreatAsPassed| This variable is to provide users with more control over behavior of the SVT extension in case of various control statuses other than ‘Passed’ or ‘Failed’. For e.g., using this, one may choose to have the extension treat statuses such as 'Verify','Manual' as 'Passed'.|e.g. The value of the variable TreatAsPassed can be passed as Verify,Manual to skip Verify and Manual controls|
+
 ### Extending ARM Template Checker for your organization
 
 If you are using [ org-policy ](../07-Customizing-AzSK-for-your-Org) feature, you can extend/customize the ARM Template Checker for your organization such as (a) by adding new controls to existing services or (b) by adding support to scan altogether new services (currently not supported by ARM Checker). In this section, let us walk through the steps required to do so. However, before learning about extending ARM Template Checker, let us first understand how it works.
@@ -811,3 +857,4 @@ Once you have tested your new ARM Checker controls on your machine.You need to u
 3. If you have added new service in ARM Checker, copy the whole service object (with all controls) from ARMControls.json and add it to "resourceControlSets" in ARMControls.ext.json file.
 4. If you have extended controls in any existing service in ARM Checker, copy the service object (with only new controls) from ARMControls.json and add it to "resourceControlSets" in ARMControls.ext.json file.
 5. Run Update-AzSKOrganizationPolicy command to upload ARMControls.ext.json file to policy store.
+
