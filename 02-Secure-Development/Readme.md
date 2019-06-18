@@ -433,7 +433,7 @@ Additionally the following other 'protective' checks are also done:
 
 # Security IntelliSense (Dev-SecIntel)
 --------------------------------------------------------------
-> Note: Security IntelliSense extension works on Visual Studio 2015 Update 3 or later and Visual Studio 2017
+> Note: Security IntelliSense extension works on Visual Studio 2015 Update 3 or later,  Visual Studio 2017 and Visual Studio 2019.
 
 
  
@@ -463,15 +463,25 @@ The screenshots below show the core functionality at work:
 [Back to top…](Readme.md#contents)  
 
 ### How do I enable Security IntelliSense on my dev box?
-- Open Visual Studio 2015/2017.
 
-- Go to **Tools** -> **Extensions and Updates** -> In the left sidebar select **Online** -> **Visual Studio Gallery** and search for **Security IntelliSense** in the right sidebar
+* For Visual Studio 2015/2017  
+   - Open Visual Studio 
+
+   - Go to **Tools** -> **Extensions and Updates** -> In the left sidebar select **Online** -> **Visual Studio Gallery** and search for **Security IntelliSense** in the right sidebar
+
+* For Visual Studio 2019
+   - Open Visual Studio. 
+   
+      (Note: If you are using a Preview release of VS2019 then you would need to start Visual Studio in admin mode.)
+
+   - Go to **Extensions** -> **Manage Extensions** -> In the left sidebar select **Online** -> **Visual Studio Marketplace** and search for **Security IntelliSense** in the right sidebar
 
 ![02_SecIntel_VSGallery_Download](../Images/02_SecIntel_VSGallery_Download.PNG)
 
-- Select Security IntelliSense item and click **Download**
-- After download completes, in the pop-up click **Install**
-- After installation completes, **restart Visual Studio**
+- Select Security IntelliSense item and click **Download** or **Install**
+- After download completes, close the Visual Studio
+- It will open **VSIX Installer**, click on **Modify**.
+- After installation completes, **Start Visual Studio**
 
 [Back to top…](Readme.md#contents)
 ### Is there a sample I can use to see how it works?
@@ -555,7 +565,7 @@ the supported rule templates.
    - If you have the extension installed, you will see a screen such as below with options to 
    "Disable" or "Uninstall" the extension.
 - Click "Uninstall" and restart Visual Studio.
-![02_SecIntel_VSGallery](../Images/02_SecIntel_VSGallery.PNG)  
+![02_SecIntel_VSGallery](../Images/02_SecIntel_VSGallery_Uninstall.PNG)  
 
 [Back to top…](Readme.md#contents)
 ### What default compiler actions are configured?
