@@ -20,6 +20,8 @@
 - [Execute SVT excluding some resources](Readme.md#execute-svts-excluding-some-resources)
 - [Execute SVT excluding a resource type](Readme.md#execute-svts-excluding-a-resource-type)
 - [Execute SVT excluding some controls from scan](Readme.md#execute-svts-excluding-some-controls-from-scan)
+- [Generate FixScripts for controls that support AutoFix while executing SVTs](Readme.md#generate-fixscripts-for-controls-that-support-autofix-while-executing-svts)
+- [Prevent the output folder from opening automatically at the end of SVTs](Readme.md#prevent-the-output-folder-from-opening-automatically-at-the-end-of-svts)
 - [Understand the scan reports](Readme.md#understand-the-scan-reports)
 - [Generate output report in PDF format](Readme.md#generate-output-report-in-pdf-format)
 - [FAQs](Readme.md#faqs)
@@ -232,6 +234,24 @@ The cmdlet below will not scan 'Azure_Storage_DP_Rotate_Keys' and 'Azure_Storage
 ```PowerShell
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeControlIds "Azure_Storage_DP_Rotate_Keys, Azure_Storage_AuthZ_Allow_Limited_Access_to_Services"
 ```
+[Back to top…](Readme.md#contents)
+
+### Generate FixScripts for controls that support AutoFix while executing SVTs
+The command below will not only scan the controls for all the resources in the subscription but also produce scripts to fix the controls that support AutoFix. To know if a control supports AutoFix or not, look at the value for the corresponding control under the column *SupportsAutoFix* in the SecurityReport.
+```PowerShell
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -GenerateFixScript"
+```
+Note that this switch can be used with any variant of the Get-AzSKAzureServicesSecurityStatus command. You can read more about FixScripts [here](https://github.com/azsk/DevOpsKit-docs/tree/master/00c-Addressing-Control-Failures#automatically-generating-fixes-1).
+
+[Back to top…](Readme.md#contents)
+
+### Prevent the output folder from opening automatically at the end of SVTs
+When you run an AzSK scan, the output folder containing all the necessary components opens up automatically for you at the end of the scan. If you wish to prevent this, you just need to add the flag *-DoNotOpenOutputFolder* to any variant of the Get-AzSKAzureServicesSecurityStatus command, as shown in the example below.
+```PowerShell
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -DoNotOpenOutputFolder"
+```
+
+[Back to top…](Readme.md#contents)
 
 ### Understand the scan reports
 Each AzSK cmdlet writes output to a folder whose location is determined as below:
@@ -364,10 +384,10 @@ Note that not all security checks are automatable. The 'non-automated' checks (t
 - 	Recommendation - Recommended steps to implement a fix for a failed control.  
 
 #### How can I find out what to do for controls that are marked as 'manual'?
-Refer the recommendations provided in the output CSV file for the security controls defined by AzSK. You can also email to AzSDKSupExt@microsoft.com or reach out to your security point of contact for any queries.  
+Refer the recommendations provided in the output CSV file for the security controls defined by AzSK. You can also email to AzSKSup@microsoft.com or reach out to your security point of contact for any queries.  
 
 #### How can I implement fixes for the failed ones which have no auto-fix available?
-Refer the recommendations provided in the output CSV file for the security controls defined by AzSK. You can also email to AzSDKSupExt@microsoft.com or reach out to your security point of contact for any queries.  
+Refer the recommendations provided in the output CSV file for the security controls defined by AzSK. You can also email to AzSKSup@microsoft.com or reach out to your security point of contact for any queries.  
 
 #### Troubleshooting
 |Error	|Comments|
