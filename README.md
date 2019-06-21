@@ -49,7 +49,7 @@ These use cases will tell you which commands you will need to run, what would ha
 
 By leveraging the extensive degree of automation that AzSK has to offer, ability to centrally deploy and manage policies/rules and the uniform behavior of scripts across the kit, you can save several hours of what would otherwise be manual security checks and examination.  
 
-As you get familiar with and begin to use the 'downstream' capabilities (CICD, Continuous Compliance, OMS support, etc.), the power of security automation and the seamless end-to-end experience that the AzSK unleashes will become more evident.  
+As you get familiar with and begin to use the 'downstream' capabilities (CICD, Continuous Compliance, Log Analytics support, etc.), the power of security automation and the seamless end-to-end experience that the AzSK unleashes will become more evident.  
 
 [Back to top...](README.md#content) 
 
@@ -61,7 +61,7 @@ As you get familiar with and begin to use the 'downstream' capabilities (CICD, C
 [Enable secure development](02-Secure-Development/Readme.md) | <ul><li>Security Verification Tests (SVT) </li><li>Security IntelliSense- VS Extension </li></ul>
 [Integrate security into CICD](03-Security-In-CICD/Readme.md) | <ul><li>AzSK VS Extension-executes SVTs in a CICD pipeline </li></ul>
 [Continuous Assurance](04-Continous-Assurance/Readme.md) | <ul><li>Security scanning via Azure Automation Runbooks</li></ul>
-[Alerting & Monitoring](05-Alerting-and-Monitoring/Readme.md) | <ul><li>OMS Solution for AzSK containing:<ul><li>Security dashboard views covering security state/actions</li><li>Alerts with pertinent search queries</li></ul></li></ul>
+[Alerting & Monitoring](05-Alerting-and-Monitoring/Readme.md) | <ul><li>Monitoring Solution for AzSK containing:<ul><li>Security dashboard views covering security state/actions</li><li>Alerts with pertinent search queries</li></ul></li></ul>
 [Cloud Risk Governance](06-Security-Telemetry/Readme.md) | <ul><li>Control/usage telemetry through Insights</li></ul>
 
 [Back to top...](README.md#content) 

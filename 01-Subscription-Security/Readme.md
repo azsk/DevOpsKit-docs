@@ -586,8 +586,8 @@ Please refer [this](../04-Continous-Assurance/Readme.md#setting-up-continuous-as
 E.g., Install-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 		    -AutomationAccountLocation "USGov Virginia" `                    (for Azure Government)
 	        -ResourceGroupNames <ResourceGroupNames> `
-	        -OMSWorkspaceId <WorkspaceId> `
-	        -OMSSharedKey <SharedKey> 
+	        -LAWSId <WorkspaceId> `
+	        -LAWSSharedKey <SharedKey> 
 ```
 
 ### Customizing AzSK for your organization:
