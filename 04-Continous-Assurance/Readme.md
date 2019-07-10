@@ -109,7 +109,7 @@ For Azure environments other than Azure Cloud, don't forget to provide Automatio
 |AutomationAccountLocation|(Optional) The location in which this cmdlet creates the Automation Account|FALSE|EastUS2|To obtain valid locations, use the Get-AzLocation cmdlet|
 |AutomationAccountRGName|(Optional) Name of ResourceGroup where AutomationAccount will be installed|FALSE|AzSKRG|Don't pass default value explicitly for this param|
 |AutomationAccountName|(Optional) Name of AutomationAccount|FALSE|AzSKContinuousAssurance|Don't pass default value explicitly for this param|
-|ResourceGroupNames|Comma separated list of resource groups within which the application resources are contained.|TRUE|None||
+|ResourceGroupNames|Comma-separated list of resource group names which cover the application resources that need to be scanned. |TRUE|None||
 |LAWSId|Workspace ID of Log Analytics workspace which is used to monitor security scan results|TRUE|None||
 |LAWSSharedKey|Shared key of Log Analytics workspace which is used to monitor security scan results|TRUE|None||
 |AltLAWSId|(Optional) Workspace ID of alternate Log Analytics workspace to monitor security scan results|FALSE|None||
