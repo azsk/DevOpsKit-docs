@@ -122,7 +122,7 @@ For Azure environments other than Azure Cloud, don't forget to provide Automatio
 |ScanOnDeployment|(Optional) CA scan can be auto-triggered upon resource deployment.Installing CA with this flag will make sure that the Resource Group in which resource is deployed will be scanned. |FALSE|None||
 
 > <b>NOTE:</b>  
-> You can use "*" to cover all resource groups in the subscription. If "*" is specified, CA will automatically cover new resource groups that are added. Thus "*" might be a preferred option in enterprise-wide compliance/visibility initiatives based on CA.
+> You can use * to cover all resource groups in the subscription. If * is specified, CA will automatically cover new resource groups that are added. Thus * might be a preferred option in enterprise-wide compliance/visibility initiatives based on CA.
 
 **More about the 'AzureADAppName' parameter:**
 
