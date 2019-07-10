@@ -109,7 +109,7 @@ For Azure environments other than Azure Cloud, don't forget to provide Automatio
 |AutomationAccountLocation|(Optional) The location in which this cmdlet creates the Automation Account|FALSE|EastUS2|To obtain valid locations, use the Get-AzLocation cmdlet|
 |AutomationAccountRGName|(Optional) Name of ResourceGroup where AutomationAccount will be installed|FALSE|AzSKRG|Don't pass default value explicitly for this param|
 |AutomationAccountName|(Optional) Name of AutomationAccount|FALSE|AzSKContinuousAssurance|Don't pass default value explicitly for this param|
-|ResourceGroupNames|Comma-separated list of resource group names which cover the application resources that need to be scanned. |TRUE|None|You can use "*" to cover all resource groups in the subscription.|
+|ResourceGroupNames|Comma-separated list of resource group names which cover the application resources that need to be scanned. |TRUE|None|Use "*" to cover all resource groups in the subscription.|
 |LAWSId|Workspace ID of Log Analytics workspace which is used to monitor security scan results|TRUE|None||
 |LAWSSharedKey|Shared key of Log Analytics workspace which is used to monitor security scan results|TRUE|None||
 |AltLAWSId|(Optional) Workspace ID of alternate Log Analytics workspace to monitor security scan results|FALSE|None||
@@ -120,6 +120,7 @@ For Azure environments other than Azure Cloud, don't forget to provide Automatio
 |ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value |FALSE|None||
 |AzureADAppName|(Optional) Name for the Azure Active Directory(AD) Application that will be created in the subscription for running the runbooks. |FALSE|None||
 |ScanOnDeployment|(Optional) CA scan can be auto-triggered upon resource deployment.Installing CA with this flag will make sure that the Resource Group in which resource is deployed will be scanned. |FALSE|None||
+
 
 **More about the 'AzureADAppName' parameter:**
 
