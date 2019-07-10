@@ -99,6 +99,15 @@ for your application.)
 	        [-AzureADAppName <AzureADAppName>]
 ```
 
+Here is one basic example of continuous assurnace setup command:
+
+```PowerShell
+	Install-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
+	        -ResourceGroupNames ‘rgName1, rgName2,…etc.’ ` # You can also use “*” to specify all RGs
+	        -LAWSId <WorkspaceId> `
+	        -LAWSSharedKey <SharedKey> 
+```
+
 Note:
 
 For Azure environments other than Azure Cloud, don't forget to provide AutomationAccountLocation as the default value won't work in those environments.
