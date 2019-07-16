@@ -207,6 +207,7 @@ Follow these steps to try out AzSK in Power Shell Core
 	Install-Module AzSK
 ```
 Note: This will download all the dependencies of AzSK along with the    AzSK module.  However, we will overwrite with the PSCore-ready AzSK module in the next step.
+
 4. Import the module to your power shell session by running: 
 ```PowerShell
 	Import-Module AzSK
