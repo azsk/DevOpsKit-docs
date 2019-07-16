@@ -179,8 +179,8 @@ The parameters required are:
 	
 The above command execution will result in scanning of 'High' and 'Medium' controls for Azure resources in your subscription
 
-> **Note**: If you have mapped the AzSK control severity in your custom org policy settings
-> refer [Control severity mapping for your org](https://github.com/azsk/DevOpsKit-docs/tree/master/07-Customizing-AzSK-for-your-Org#testing-3) to know about mapping, then the final severities mapped should be passed as parameter values to -Severity parameter.  
+> **Note**: If you have mapped the AzSK control severity in your custom org policy settings 
+> (refer: [Control severity mapping for your org](https://github.com/azsk/DevOpsKit-docs/tree/master/07-Customizing-AzSK-for-your-Org#testing-3) to know about mapping), then the final severities mapped should be passed as parameter values to -Severity parameter.  
 
 [Back to top…](Readme.md#contents)
 ### Execute SVTs in Baseline mode 
