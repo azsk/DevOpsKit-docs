@@ -480,8 +480,6 @@ The cmdlet below will not scan 'Azure_AppService_Deploy_Use_Latest_Version' cont
 Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -Severity "High , Medium"
 ```
 
-> **Note**: If you have mapped the AzSK control severity in your custom org policy settings 
-> (refer: [Control severity mapping for your org](https://github.com/azsk/DevOpsKit-docs/tree/master/07-Customizing-AzSK-for-your-Org#testing-3) to know about mapping), then the final severities mapped should be passed as parameter values to -Severity parameter.  
 
 ### ARM Template Checker - Control coverage
  
