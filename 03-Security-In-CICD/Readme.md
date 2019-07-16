@@ -468,7 +468,7 @@ Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -Con
 ### Execute ARM Template Checker excluding some controls from scan
 The Get-AzSKARMTemplateSecurityStatus command now supports a switch 'ExcludeControlIds' to exclude ARM Template controls from getting scanned. 
 The cmdlet below will not scan 'Azure_AppService_Deploy_Use_Latest_Version' control for the provided ARM Template.
-```PowerShellh
+```PowerShell
 Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -ExcludeControlIds 'Azure_AppService_Deploy_Use_Latest_Version'
 ```
 
@@ -476,7 +476,7 @@ Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -Exc
 ### Execute ARM Template Checker for specific control severity
 The Get-AzSKARMTemplateSecurityStatus command now supports a parameter 'Severity' to scan controls of specified severities. 
 The cmdlet below will not scan 'Azure_AppService_Deploy_Use_Latest_Version' control for the provided ARM Template.
-```PowerShellh
+```PowerShell
 Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -Severity "High , Medium"
 ```
 
