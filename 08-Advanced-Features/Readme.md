@@ -14,7 +14,7 @@
 - [Host information](Readme.md#host-information)
 - [User comments](Readme.md#user-comments)
 
-### [Try AzSK on Power Shell Core](Readme.md#try-azsk-on-power-shell-core-1)
+### [Try AzSK on Power Shell Core](Readme.md#try-azsk-on-powershell-core-1)
 
 ### Overview
 
