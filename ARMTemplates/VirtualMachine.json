@@ -162,6 +162,7 @@
         "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]"
       ],
       "properties": {
+        "enableIPForwarding": false, 
         "ipConfigurations": [
           {
             "name": "ipconfig1",
