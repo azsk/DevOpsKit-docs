@@ -468,9 +468,20 @@ Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -Con
 ### Execute ARM Template Checker excluding some controls from scan
 The Get-AzSKARMTemplateSecurityStatus command now supports a switch 'ExcludeControlIds' to exclude ARM Template controls from getting scanned. 
 The cmdlet below will not scan 'Azure_AppService_Deploy_Use_Latest_Version' control for the provided ARM Template.
-```PowerShell
+```PowerShellh
 Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -ExcludeControlIds 'Azure_AppService_Deploy_Use_Latest_Version'
 ```
+
+
+### Execute ARM Template Checker for specific control severity
+The Get-AzSKARMTemplateSecurityStatus command now supports a parameter 'Severity' to scan controls of specified severities. 
+The cmdlet below will not scan 'Azure_AppService_Deploy_Use_Latest_Version' control for the provided ARM Template.
+```PowerShellh
+Get-AzSKARMTemplateSecurityStatus –ARMTemplatePath <Path to ARM Template> -Severity "High , Medium"
+```
+
+> **Note**: If you have mapped the AzSK control severity in your custom org policy settings 
+> (refer: [Control severity mapping for your org](https://github.com/azsk/DevOpsKit-docs/tree/master/07-Customizing-AzSK-for-your-Org#testing-3) to know about mapping), then the final severities mapped should be passed as parameter values to -Severity parameter.  
 
 ### ARM Template Checker - Control coverage
  
@@ -682,7 +693,7 @@ that are supported by the ARM Checker task:
 |EnableServerAuth| Specifies whether Org policy URL (AzSKServerURL) is protected by AAD authentication.| e.g. true - protected by AAD authentication, false - not protected by AAD authentication|
 |AzSKVersion| You could specify which version of toolkit you want to use in your CICD scan. And version specified should be >= N-2 where N is latest prod version. If variable is not provided, it uses the latest version available| e.g. 3.12.0|
 |AzSKModuleName| This variable enable users to participate in the Preview testing. If you want to participate in preview, Provide the module name as "AzSKPreview". If not used, it would by default uses AzSK as module name| e.g. AzSKPreview|
-|ExtendedCommand| Enables you to provide other switches supported by the Get-AzSKARMTemplateSecurityStatus command to perform focused scanning in the CICD pipeline | e.g. -ControlIds "Azure_AppService_Deploy_Use_Latest_Version,</br>Azure_AppService_AuthN_Use_Managed_Service_Identity" or -UseBaselineControls.|
+|ExtendedCommand| Enables you to provide other switches supported by the Get-AzSKARMTemplateSecurityStatus command to perform focused scanning in the CICD pipeline | e.g. -ControlIds "Azure_AppService_Deploy_Use_Latest_Version,</br>Azure_AppService_AuthN_Use_Managed_Service_Identity" or -UseBaselineControls or -Severity "High, Medium"
 |TreatAsPassed| This variable is to provide users with more control over behavior of the SVT extension in case of various control statuses other than ‘Passed’ or ‘Failed’. For e.g., using this, one may choose to have the extension treat statuses such as 'Verify','Manual' as 'Passed'.|e.g. The value of the variable TreatAsPassed can be passed as Verify,Manual to skip Verify and Manual controls|
 
 > **Note:** If you are using custom org policy features such as baseline controls scan etc., please make sure that CheckBox 'Use Org Baseline(s)' is checked and also provide an active azure service connection.
