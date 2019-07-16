@@ -169,16 +169,20 @@ The parameters required are:
 - ResourceTypeName – Friendly name of resource type. E.g.: KeyVault. Run command 'Get-AzSKSupportedResourceTypes' to get the list of supported values.  
 
 [Back to top…](Readme.md#contents)
+
 ### Execute SVTs for specific control severity
+
 
 ```PowerShell
  Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -Severity "High, Medium"
-``
+```
+	
 The above command execution will result in scanning of 'High' and 'Medium' controls for Azure resources in your subscription
-> **Note:** If you have mapped the AzSK control severity in your custom org policy settings, refer [Control severity mapping for your org](https://github.com/azsk/DevOpsKit-docs/tree/master/07-Customizing-AzSK-for-your-Org#testing-3) to know about mapping, then the final severities mapped should be passed as parameter values to -Severity parameter.
-You can generally use the severities that you see in SecurityReport.csv
 
+> **Note**: If you have mapped the AzSK control severity in your custom org policy settings
+> refer ![Control severity mapping for your org](https://github.com/azsk/DevOpsKit-docs/tree/master/07-Customizing-AzSK-for-your-Org#testing-3) to know about mapping, then the final severities mapped should be passed as parameter values to -Severity parameter.  
 
+[Back to top…](Readme.md#contents)
 ### Execute SVTs in Baseline mode 
 In 'baseline mode' a centrally defined 'control baseline' is used as the target control set for scanning.
 The cmdlet below scans azure resources in a subscription in Baseline mode and generates a status report:
