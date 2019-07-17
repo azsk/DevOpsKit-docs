@@ -934,10 +934,10 @@ To help avoid availability disruptions due to credential expiry, AzSK has introd
 |Comment|Comment to capture more information about the credential for the user for futire tracking purposes.|TRUE|None|
 
 > <b>NOTE 1:</b>
-      > For credential location type 'AppService', you will have to provide app service name, resource group, app config type (app setting/connection string) & app config name.
+      > For credential location type 'AppService', you will have to provide app service name, resource group, app config type (app setting/connection string) & app config name. Make sure you have the required access on the resource.
 
 > <b>NOTE 2:</b>
-      > For credential location type 'KeyVault', you will have to provide key vault name, credential type (Key/Secret) & credential name.
+      > For credential location type 'KeyVault', you will have to provide key vault name, credential type (Key/Secret) & credential name. Make sure you have the required access on the resource.
 
 > <b>NOTE 3:</b>
       > Use credential location type 'Other', if the credential doesn't belong to an appservice or key vault.
@@ -963,7 +963,7 @@ To help avoid availability disruptions due to credential expiry, AzSK has introd
 ```
 
 > <b>NOTE:</b>
-      > Use '-ResetLastUpdate' switch only when you want to reset the timer to current time on the last update on the credential. 
+      > Use '-ResetLastUpdate' switch only when you want to reset the timer on the last update on the credential to current time. 
 
 ### Use Remove-AzSKTrackedCredential to deboard a credential from AzSK tracking 
 
