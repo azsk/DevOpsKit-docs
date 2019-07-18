@@ -59,6 +59,9 @@ To get started, we need the following:
 1. The user setting up Continuous Assurance needs to have 'Owner' access to the subscription. (This is necessary because during setup, 
 AzSK adds the service principal runtime account as a 'Reader' to the subscription.) 
 
+>**Note:** With AzSK version 3.15.0, users having 'Contributor' permissions on a resource group can now set up the automation account for AzSK Continuous Assurance to run. The user then needs to explicitly get the SPN( created during setup) 'Contributor' permission on the resource group where automation account is created and 'Reader' on the subscription so that the subscription could be scanned via Continuous Assurance
+
+
 2. Target Log Analytics WorkspaceID* and SharedKey. (The Log Analytics workspace can be in a different subscription, see note below)
 
 **Prerequisite:**
@@ -116,7 +119,7 @@ For Azure environments other than Azure Cloud, don't forget to provide Automatio
 |----|----|----|----|----|
 |SubscriptionId|Subscription ID of the Azure subscription in which an Automation Account for Continuous Assurance will be created |TRUE|None||
 |AutomationAccountLocation|(Optional) The location in which this cmdlet creates the Automation Account|FALSE|EastUS2|To obtain valid locations, use the Get-AzLocation cmdlet|
-|AutomationAccountRGName|(Optional) Name of ResourceGroup where AutomationAccount will be installed|FALSE|AzSKRG|Don't pass default value explicitly for this param|
+|AutomationAccountRGName|(Optional) Name of ResourceGroup where Automation Account will be installed|FALSE|AzSKRG|Don't pass default value explicitly for this param|
 |AutomationAccountName|(Optional) Name of AutomationAccount|FALSE|AzSKContinuousAssurance|Don't pass default value explicitly for this param|
 |ResourceGroupNames|Comma-separated list of resource group names which cover the application resources that need to be scanned. |TRUE|None|Use **"*"** to cover all resource groups in the subscription.|
 |LAWSId|Workspace ID of Log Analytics workspace which is used to monitor security scan results|TRUE|None||
