@@ -368,9 +368,14 @@ Remove-AzSKAlerts -SubscriptionId <SubscriptionID> -Tags <TagNames>
 |Config Param Name	|Purpose	|
 | ----------------  | --------- | 
 |SubscriptionID	|Subscription ID against which these alerts would be setup|
-|Tags |Comma-separated alert tag names which needs to be removed|
+|Tags |Comma-separated alert tag names which needs to be removed, supported tag names "Optional","Mandatory","SMS"|
 
-**Note**: This command cleans up all alerts in the resource group 'AzSKRG'. This resource group is used internally as a container for AzSK objects. As a result, it is advisable to not add other alerts (or other types of resources) to this RG.
+For e.g., to remove only optional alerts, run following command:
+```PowerShell
+Remove-AzSKAlerts -SubscriptionId <SubscriptionID> -Tags "Optional"
+```
+
+**Note**: This command cleans up all alerts in the resource group 'AzSKRG' with matched tag. This resource group is used internally as a container for AzSK objects. As a result, it is advisable to not add other alerts (or other types of resources) to this RG.
 
 [Back to top…](Readme.md#contents)
 ### Configure alerts scoped to specific resource groups
