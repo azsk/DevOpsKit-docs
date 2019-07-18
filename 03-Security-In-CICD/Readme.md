@@ -504,6 +504,8 @@ ARM Template checker covers Baseline controls for following services:
 | Search |Microsoft.Search/searchServices|
 | EventHub |Microsoft.EventHub/namespaces|
 | ContainerInstances |Microsoft.ContainerInstance/containerGroups|
+| HDInsight |Microsoft.HDInsight/clusters|
+| APIManagement |Microsoft.ApiManagement/service|
 
 ARM Templates for reference are available [here](../ARMTemplates).
 
