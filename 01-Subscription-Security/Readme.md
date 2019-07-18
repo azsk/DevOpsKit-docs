@@ -907,3 +907,66 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               -DoNotOpenOutputFolder
                               -Force
       ```
+
+## AzSK: Credential hygiene helper cmdlets
+
+To help avoid availability disruptions due to credential expiry, AzSK has introduced cmdlets that will help you track and get notified about important credentials across your subscription. AzSK now offers a register-and-track solution to help monitor the last update of your credentials. This will help you periodically track the health of your credentials which are nearing expiry/need rotation.
+
+### Use New-AzSKTrackedCredential to onboard a credential for tracking 
+
+```PowerShell
+   New-AzSKTrackedCredential -SubscriptionId '<Subscription Id>' `
+                             -CredentialName '<Friendly name of the credential>' ` 
+                             -CredentialLocation '<Other|AppService|KeyVault>' ` 
+                             -RotationIntervalInDays <Int> `
+                             -AlertEmail '<Alert email>' ` 
+                             [-AlertSMS '<Alert contact number>'] `
+                             -Comment '<Comment to capture the credential info>'    
+```
+|Param Name|Purpose|Required?|Allowed Values|
+|----|----|----|----|
+|SubscriptionId|Subscription ID of the Azure subscription in which the to-be-tracked credential resides.|TRUE|None|
+|CredentialName|Friendly name for the credential.|TRUE|None|
+|CredentialLocation|Host location of the credential.|TRUE|Other/AppService/KeyVault|
+|RotationIntervalInDays|Time in days before which the credential needs an update.|TRUE|Integer|
+|AlertEmail|Email Id for which the tracking notification is to be configured.|TRUE|Valid email address|
+|AlertSMS|(Optional) Contact number for which the tracking notification is to be configured.|FALSE|Valid contact number|
+|Comment|Comment to capture more information about the credential for the user for futire tracking purposes.|TRUE|None|
+
+> <b>NOTE 1:</b>
+      > For credential location type 'AppService', you will have to provide app service name, resource group, app config type (app setting/connection string) & app config name. Make sure you have the required access on the resource.
+
+> <b>NOTE 2:</b>
+      > For credential location type 'KeyVault', you will have to provide key vault name, credential type (Key/Secret) & credential name. Make sure you have the required access on the resource.
+
+> <b>NOTE 3:</b>
+      > Use credential location type 'Other', if the credential doesn't belong to an appservice or key vault.
+
+### Use Get-AzSKTrackedCredential to list the onboarded credential(s) 
+
+```PowerShell
+   Get-AzSKTrackedCredential -SubscriptionId '<Subscription Id>' [-CredentialName '<Friendly name of the credential>']
+```
+> <b>NOTE:</b>
+      > Not providing credential name wil list all the AzSK-tracked credentials in the subscription.
+
+### Use Update-AzSKTrackedCredential to update the credential settings and reset the last updated timestamp
+
+```PowerShell
+   Update-AzSKTrackedCredential -SubscriptionId '<Subscription Id>' `
+                                -CredentialName '<Friendly name of the credential>' `  
+                                [-RotationIntervalInDays <Int>] `
+                                [-AlertEmail '<Alert email>'] ` 
+                                [-AlertSMS '<Alert contact number>'] `
+                                [-ResetLastUpdate]
+                                -Comment '<Comment to capture the credential info>'    
+```
+
+> <b>NOTE:</b>
+      > Use '-ResetLastUpdate' switch only when you want to reset the timer on the last update on the credential to current time. 
+
+### Use Remove-AzSKTrackedCredential to deboard a credential from AzSK tracking 
+
+```PowerShell
+   Remove-AzSKTrackedCredential -SubscriptionId '<Subscription Id>' [-CredentialName '<Friendly name of the credential>'] [-Force]
+```
