@@ -1,14 +1,14 @@
 # AzSK Continuous Assurance for Cluster Installation Steps
 
 ### Contents
-- [Downloading Script](Readme.md#downloading-script)
+- [Downloading Script for AKS](Readme.md#downloading-script-for-AKS)
 - [Prerequisites](Readme.md#prerequisites)
 - [Setting up HDInsight](Readme.md#Setting-up-HDInsight)
 - [Setting up Azure Databricks](Readme.md#Setting-up-Azure-Databricks)
 - [Setting up AKS](Readme.md#Setting-up-AKS)
 -----------------------------------------------------------------
-## Downloading Script
-1.	Please download the PowerShell script from https://azsdkdataoss.blob.core.windows.net/azsdk-configurations/recmnds/Install-CAForCluster.ps1.
+## Downloading Script for AKS
+1.	If your choice of cluster is Kubernetes, please download the PowerShell script from [here](https://azsdkdataoss.blob.core.windows.net/azsdk-configurations/recmnds/Install-CAForCluster.ps1). 
 2.	Open and run the downloaded script in PowerShell ISE.
 
 ## Prerequisites
@@ -44,6 +44,28 @@
 
     ![HDI-Step6](../Images/HDI-Step6.png)
 
+## Get Status for HDInsight
+
+1. You can check the health of the CA using the following command:
+   ```
+   Get-AzSKContinuousAssuranceForCluster -ResourceType HDInsight
+   ```
+
+2. This command will give you the information about on CA health like last scan run, and other metadata. 
+
+## Update CA for HDInsight
+
+1. Updating CA for HDInsight will update the content for notebook. You can also update the Application Insights key using the command. 
+   ```
+   Update-AzSKContinuousAssuranceForCluster -ResourceType HDInsight
+   ```
+## Removing CA for HDInsight
+
+1. To uninstall CA, use the following command. This will *preserve* the scan logs of previous scans. You can access them by going into the /AzSK_Logs/ directory on the storage account. 
+   ```
+   Remove-AzSKContinuousAssuranceForCluster -ResourceType HDInsight
+   ```
+
 ## Setting up Azure Databricks
 
 1.	Use the following command to setup AzSK job for Databricks and input the cluster location and PAT.
@@ -64,6 +86,28 @@
 
     ![ADB-Step4](../Images/ADB-Step4.png)
 
+## Get Status for Databricks
+
+1. You can check the health of the CA for Databricks using the following command:
+   ```
+   Get-AzSKContinuousAssuranceForCluster -ResourceType Databricks
+   ```
+
+2. This command will give you the information about on CA health like whether all the required scan permission are present. 
+
+## Update CA for Databricks
+
+1. Updating CA for Databricks will update the content for notebook. You can also update other data like PAT, Application Insights key using the command. 
+   ```
+   Update-AzSKContinuousAssuranceForCluster -ResourceType Databricks
+   ```
+## Removing CA for Databricks
+
+1. To uninstall CA, use the following command. This will *preserve* the scan logs of previous scans. You can access them by going into the /AzSK_Logs/ directory in the workspace storage. 
+   ```
+   Remove-AzSKContinuousAssuranceForCluster -ResourceType Databricks
+   ```
+   
 ## Setting up AKS
 
 1. To install AzSK CA on Kubernetes cluster run the below command 

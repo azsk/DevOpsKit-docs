@@ -59,6 +59,8 @@ To get started, we need the following:
 1. The user setting up Continuous Assurance needs to have 'Owner' access to the subscription. (This is necessary because during setup, 
 AzSK adds the service principal runtime account as a 'Reader' to the subscription.) 
 
+>**Note:**  Starting AzSK v3.15.0, users having 'Contributor' permissions can set up AzSK Continuous Assurance (CA) for the subscription. The part of the setup where 'Owner' access is required will not abort if the user does not have that permission any more... instead, it will print a warning and ask the user to ensure that the required permissions are granted by someone (else) with 'Owner' access for the CA SPN (that does is used for the runtime scanning). Note that the CA SPN requires 'Reader' permission on the subscription and 'Contributor' permission on the DevOps Kit resource group in the subscription. CA will work seamlessly so long as these permissions are assigned (soon after the install cmdlet) by the owner.
+
 2. Target Log Analytics WorkspaceID* and SharedKey. (The Log Analytics workspace can be in a different subscription, see note below)
 
 **Prerequisite:**
@@ -116,7 +118,7 @@ For Azure environments other than Azure Cloud, don't forget to provide Automatio
 |----|----|----|----|----|
 |SubscriptionId|Subscription ID of the Azure subscription in which an Automation Account for Continuous Assurance will be created |TRUE|None||
 |AutomationAccountLocation|(Optional) The location in which this cmdlet creates the Automation Account|FALSE|EastUS2|To obtain valid locations, use the Get-AzLocation cmdlet|
-|AutomationAccountRGName|(Optional) Name of ResourceGroup where AutomationAccount will be installed|FALSE|AzSKRG|Don't pass default value explicitly for this param|
+|AutomationAccountRGName|(Optional) Name of ResourceGroup where Automation Account will be installed|FALSE|AzSKRG|Don't pass default value explicitly for this param|
 |AutomationAccountName|(Optional) Name of AutomationAccount|FALSE|AzSKContinuousAssurance|Don't pass default value explicitly for this param|
 |ResourceGroupNames|Comma-separated list of resource group names which cover the application resources that need to be scanned. |TRUE|None|Use **"*"** to cover all resource groups in the subscription.|
 |LAWSId|Workspace ID of Log Analytics workspace which is used to monitor security scan results|TRUE|None||
