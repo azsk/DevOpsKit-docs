@@ -20,6 +20,8 @@
 - [Execute SVT excluding some resources](Readme.md#execute-svts-excluding-some-resources)
 - [Execute SVT excluding a resource type](Readme.md#execute-svts-excluding-a-resource-type)
 - [Execute SVT excluding some controls from scan](Readme.md#execute-svts-excluding-some-controls-from-scan)
+- [Generate FixScripts for controls that support AutoFix while executing SVTs](Readme.md#generate-fixscripts-for-controls-that-support-autofix-while-executing-svts)
+- [Prevent the output folder from opening automatically at the end of SVTs](Readme.md#prevent-the-output-folder-from-opening-automatically-at-the-end-of-svts)
 - [Understand the scan reports](Readme.md#understand-the-scan-reports)
 - [Generate output report in PDF format](Readme.md#generate-output-report-in-pdf-format)
 - [FAQs](Readme.md#faqs)
@@ -232,6 +234,24 @@ The cmdlet below will not scan 'Azure_Storage_DP_Rotate_Keys' and 'Azure_Storage
 ```PowerShell
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ExcludeControlIds "Azure_Storage_DP_Rotate_Keys, Azure_Storage_AuthZ_Allow_Limited_Access_to_Services"
 ```
+[Back to top…](Readme.md#contents)
+
+### Generate FixScripts for controls that support AutoFix while executing SVTs
+The command below will not only scan the controls for all the resources in the subscription but also produce scripts to fix the controls that support AutoFix. To know if a control supports AutoFix or not, look at the value for the corresponding control under the column *SupportsAutoFix* in the SecurityReport.
+```PowerShell
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -GenerateFixScript"
+```
+Note that this switch can be used with any variant of the Get-AzSKAzureServicesSecurityStatus command. You can read more about FixScripts [here](https://github.com/azsk/DevOpsKit-docs/tree/master/00c-Addressing-Control-Failures#automatically-generating-fixes-1).
+
+[Back to top…](Readme.md#contents)
+
+### Prevent the output folder from opening automatically at the end of SVTs
+When you run an AzSK scan, the output folder containing all the necessary components opens up automatically for you at the end of the scan. If you wish to prevent this, you just need to add the flag *-DoNotOpenOutputFolder* to any variant of the Get-AzSKAzureServicesSecurityStatus command, as shown in the example below.
+```PowerShell
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -DoNotOpenOutputFolder"
+```
+
+[Back to top…](Readme.md#contents)
 
 ### Understand the scan reports
 Each AzSK cmdlet writes output to a folder whose location is determined as below:
@@ -364,10 +384,10 @@ Note that not all security checks are automatable. The 'non-automated' checks (t
 - 	Recommendation - Recommended steps to implement a fix for a failed control.  
 
 #### How can I find out what to do for controls that are marked as 'manual'?
-Refer the recommendations provided in the output CSV file for the security controls defined by AzSK. You can also email to AzSDKSupExt@microsoft.com or reach out to your security point of contact for any queries.  
+Refer the recommendations provided in the output CSV file for the security controls defined by AzSK. You can also email to AzSKSup@microsoft.com or reach out to your security point of contact for any queries.  
 
 #### How can I implement fixes for the failed ones which have no auto-fix available?
-Refer the recommendations provided in the output CSV file for the security controls defined by AzSK. You can also email to AzSDKSupExt@microsoft.com or reach out to your security point of contact for any queries.  
+Refer the recommendations provided in the output CSV file for the security controls defined by AzSK. You can also email to AzSKSup@microsoft.com or reach out to your security point of contact for any queries.  
 
 #### Troubleshooting
 |Error	|Comments|
@@ -413,7 +433,7 @@ Additionally the following other 'protective' checks are also done:
 
 # Security IntelliSense (Dev-SecIntel)
 --------------------------------------------------------------
-> Note: Security IntelliSense extension works on Visual Studio 2015 Update 3 or later and Visual Studio 2017
+> Note: Security IntelliSense extension works on Visual Studio 2015 Update 3 or later,  Visual Studio 2017 and Visual Studio 2019.
 
 
  
@@ -443,15 +463,25 @@ The screenshots below show the core functionality at work:
 [Back to top…](Readme.md#contents)  
 
 ### How do I enable Security IntelliSense on my dev box?
-- Open Visual Studio 2015/2017.
 
-- Go to **Tools** -> **Extensions and Updates** -> In the left sidebar select **Online** -> **Visual Studio Gallery** and search for **Security IntelliSense** in the right sidebar
+* For Visual Studio 2015/2017  
+   - Open Visual Studio 
+
+   - Go to **Tools** -> **Extensions and Updates** -> In the left sidebar select **Online** -> **Visual Studio Gallery** and search for **Security IntelliSense** in the right sidebar
+
+* For Visual Studio 2019
+   - Open Visual Studio. 
+   
+      (Note: If you are using a Preview release of VS2019 then you would need to start Visual Studio in admin mode.)
+
+   - Go to **Extensions** -> **Manage Extensions** -> In the left sidebar select **Online** -> **Visual Studio Marketplace** and search for **Security IntelliSense** in the right sidebar
 
 ![02_SecIntel_VSGallery_Download](../Images/02_SecIntel_VSGallery_Download.PNG)
 
-- Select Security IntelliSense item and click **Download**
-- After download completes, in the pop-up click **Install**
-- After installation completes, **restart Visual Studio**
+- Select Security IntelliSense item and click **Download** or **Install**
+- After download completes, close the Visual Studio
+- It will open **VSIX Installer**, click on **Modify**.
+- After installation completes, **Start Visual Studio**
 
 [Back to top…](Readme.md#contents)
 ### Is there a sample I can use to see how it works?
@@ -535,7 +565,7 @@ the supported rule templates.
    - If you have the extension installed, you will see a screen such as below with options to 
    "Disable" or "Uninstall" the extension.
 - Click "Uninstall" and restart Visual Studio.
-![02_SecIntel_VSGallery](../Images/02_SecIntel_VSGallery.PNG)  
+![02_SecIntel_VSGallery](../Images/02_SecIntel_VSGallery_Uninstall.PNG)  
 
 [Back to top…](Readme.md#contents)
 ### What default compiler actions are configured?

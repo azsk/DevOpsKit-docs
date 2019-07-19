@@ -64,7 +64,7 @@ Before we get started with extending the toolkit, it is important to understand 
       │   │   ├───FixControl  
       │   │   │   └───FixControlScripts
       │   │   ├───GenericListener
-      │   │   ├───OMS  
+      │   │   ├───LogAnalytics  
       │   │   ├───RemoteReports  
       │   │   ├───UserReports  
       │   │   └───Webhook  

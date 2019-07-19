@@ -163,7 +163,7 @@ you have to type a long command with many parameters. Here's an example:
 
 ###### Without backtick: single long line
 ```PowerShell
-Install-AzSKContinuousAssurance -SubscriptionId '2fedc012-3456-7890-abcd-ef0123456479' -ResourceGroupNames 'RG1, RG2, RG3' -OMSWorkspaceId $omswsId '1fedcba0-1234-5678-9abc-fedcba012345' -OMSSharedKey 'O1qaz2wsx3edc4rfv5tgb.........9olp0plofA=='
+Install-AzSKContinuousAssurance -SubscriptionId '2fedc012-3456-7890-abcd-ef0123456479' -ResourceGroupNames 'RG1, RG2, RG3' -LAWSId $lawsId '1fedcba0-1234-5678-9abc-fedcba012345' -LAWSSharedKey 'O1qaz2wsx3edc4rfv5tgb.........9olp0plofA=='
 ```
 
 ###### With backtick: for multi-line continuation
@@ -172,8 +172,8 @@ Install-AzSKContinuousAssurance -SubscriptionId '2fedc012-3456-7890-abcd-ef01234
 Install-AzSKContinuousAssurance `
                     -SubscriptionId '2fedc012-3456-7890-abcd-ef0123456479' `
                     -ResourceGroupNames 'RG1, RG2, RG3' `
-                    -OMSWorkspaceId $omswsId '1fedcba0-1234-5678-9abc-fedcba012345' `
-                    -OMSSharedKey 'O1qaz2wsx3edc4rfv5tgb.........9olp0plofA=='
+                    -LAWSId $lawsId '1fedcba0-1234-5678-9abc-fedcba012345' `
+                    -LAWSSharedKey 'O1qaz2wsx3edc4rfv5tgb.........9olp0plofA=='
 ```
 
 [Back to top...](GettingStarted_PowerShellTipsAzSK.md#list-of-tips)
@@ -267,18 +267,18 @@ SYNOPSIS
     
 SYNTAX
     Update-AzSKContinuousAssurance -SubscriptionId <String> -TargetSubscriptionIds <String> 
-    [-ResourceGroupNames <String>] [-OMSWorkspaceId <String>] [-OMSSharedKey <String>] 
+    [-ResourceGroupNames <String>] [-LAWSId <String>] [-LAWSSharedKey <String>] 
     [-AzureADAppName <Object>] [-FixRuntimeAccount] [-FixModules] [-DoNotOpenOutputFolder] 
     [-LoggingOption {Central | Self | Both}] -Preview [<CommonParameters>]
     
     Update-AzSKContinuousAssurance -SubscriptionId <String> [-ResourceGroupNames <String>] 
-    [-OMSWorkspaceId <String>] [-OMSSharedKey <String>] [-AzureADAppName <Object>] 
+    [-LAWSId <String>] [-LAWSSharedKey <String>] [-AzureADAppName <Object>] 
     [-FixRuntimeAccount] [-FixModules] [-DoNotOpenOutputFolder] [<CommonParameters>]
     
     
 DESCRIPTION
     This command is helpful if you want to update any of the following properties. 1. App Resource 
-    Groups 2. OMS Workspace ID 3. OMS Shared Key
+    Groups 2. Log Analytics Workspace ID 3. Log Analytics Workspace Shared Key
     4. Connection in Run as Account 5. Update/Renew Certificate in Run as Account
     
 
