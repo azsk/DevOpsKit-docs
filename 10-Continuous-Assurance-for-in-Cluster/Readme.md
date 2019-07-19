@@ -113,7 +113,7 @@
 1. To install AzSK CA on Kubernetes cluster run the below command 
 
     ```PowerShell
-    Install-AzSKContinuousAssuraceForCluster -ResourceType Kubernetes
+    Install-AzSKContinuousAssuraceForCluster -SubscriptionId <SubscriptionId> -ResourceGroupName <ResourceGroupName> -ResourceName <ResourceName> -ResourceType Kubernetes [ -AppInsightKey <AppInsightKey> ]
     ```
 
    ![AKS-Step1](../Images/AKS-Step1.png)
@@ -153,3 +153,27 @@
      ```
 
     ![AKS-Step4b](../Images/AKS-Step4b.PNG)
+
+## Get Status for AKS
+
+1. You can check the health of the CA for Kubernetes using the following command:
+
+```PowerShell
+  Get-AzSKContinuousAssuraceForCluster -SubscriptionId <SubscriptionId> -ResourceGroupName <ResourceGroupName> -ResourceName <ResourceName> -ResourceType Kubernetes 
+```
+
+2. This command will give you the information about on CA health like whether all the required scan permission are present. 
+
+## Update CA for AKS
+
+1. Updating CA for Kuberentes will update the image used for scanning cluster. You can also update other configuration like Scan Interval, Application Insights key or can fix runtime account permissions key using the command. 
+```PowerShell
+    Update-AzSKContinuousAssuraceForCluster -SubscriptionId <SubscriptionId> -ResourceGroupName <ResourceGroupName> -ResourceName <ResourceName> -ResourceType Kubernetes  [ -AppInsightKey <Application Insight Key>]  [ -FixRuntimeAccount ] [ -LogRetentionInDays <JobLogsRetentionInDays>] [ -SpecificImageVersion <DockerHubImageTag> ] [-ScanIntervalInHours <ScanIntervalInHours> ]
+```
+## Removing CA for AKS
+
+1. To uninstall CA, use the following command. This will download the scan logs of previous scans to your local machine. You can also choose not to download previous scan logs.
+
+```PowerShell
+  Remove-AzSKContinuousAssuraceForCluster SubscriptionId <SubscriptionId> -ResourceGroupName <ResourceGroupName> -ResourceName <ResourceName> -ResourceType Kubernetes  -DownloadJobLogs <Yes/No>
+```
