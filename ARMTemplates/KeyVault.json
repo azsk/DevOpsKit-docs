@@ -16,7 +16,7 @@
     },
     "accessPolicies": {
       "type": "array",
-      "defaultValue": [ ],
+      "defaultValue": [],
       "metadata": {
         "description": "Access policies object to define access policies"
       }
@@ -37,6 +37,13 @@
       "defaultValue": false,
       "metadata": {
         "description": "Specifies if the vault is enabled for VM or Service Fabric deployment"
+      }
+    },
+    "enabledForDiskEncryption": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "Specifies if the vault is enabled for Disk Encryption"
       }
     },
     "enabledForTemplateDeployment": {
@@ -67,53 +74,54 @@
       "apiVersion": "2015-06-01",
       "location": "[resourceGroup().location]",
       "resources": [
-           {
-      
-      "type": "providers/diagnosticSettings",//[Azure_KeyVault_Audit_Enable_Diagnostics_Log]
-      "name": "Microsoft.Insights/service",
-      "dependsOn": [
-        "[resourceId('Microsoft.KeyVault/vaults/', parameters('keyVaultName'))]"
+        {
+          "type": "providers/diagnosticSettings", //[Azure_KeyVault_Audit_Enable_Diagnostics_Log]
+          "name": "Microsoft.Insights/service",
+          "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults/', parameters('keyVaultName'))]"
+          ],
+          "apiVersion": "2015-07-01",
+          "properties": {
+            "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNameForDiagnostics'))]",
+            "logs": [
+              {
+                "category": "AuditEvent",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 365,
+                  "enabled": true
+                }
+              }
+            ],
+            "metrics": [
+              {
+                "timeGrain": "PT1M",
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": true,
+                  "days": 365
+                }
+              }
+            ]
+          }
+        }
       ],
-      "apiVersion": "2015-07-01",
-      "properties": {
-        "storageAccountId":"[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNameForDiagnostics'))]",
-        "logs": [
-          {
-            "category": "AuditEvent",
-            "enabled": true,
-            "retentionPolicy": {
-              "days": 365,
-              "enabled": true
-            }
-          }
-        ],
-        "metrics": [
-          {
-            "timeGrain": "PT1M",
-            "enabled": true,
-            "retentionPolicy": {
-              "enabled": true,
-              "days": 365
-            }
-          }
-        ]
-      }
-    }
-        ],
       "tags": {
         "displayName": "KeyVault"
       },
       "properties": {
+        "enableSoftDelete" : true,
+        "enabledForDiskEncryption" : "[parameters('enabledForDiskEncryption')]",
         "enabledForDeployment": "[parameters('enabledForDeployment')]",
-        "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",//[Azure_KeyVault_AuthZ_Configure_Advanced_Access_Policies]
-        "enabledForVolumeEncryption": "[parameters('enableVaultForVolumeEncryption')]",//[Azure_KeyVault_AuthZ_Configure_Advanced_Access_Policies]
+        "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]", //[Azure_KeyVault_AuthZ_Configure_Advanced_Access_Policies]
+        "enabledForVolumeEncryption": "[parameters('enableVaultForVolumeEncryption')]", //[Azure_KeyVault_AuthZ_Configure_Advanced_Access_Policies]
         "tenantId": "[parameters('tenantId')]",
-        "accessPolicies": "[parameters('accessPolicies')]",//[Azure_KeyVault_AuthZ_Grant_Min_Access_policies]
+        "accessPolicies": "[parameters('accessPolicies')]", //[Azure_KeyVault_AuthZ_Grant_Min_Access_policies]
         "sku": {
           "name": "[parameters('vaultSku')]",
           "family": "A"
-         }
-        } 
+        }
+      }
     }
   ]
 }
