@@ -1,0 +1,29 @@
+{
+  "FeatureName": "Storage",
+  "Reference": "aka.ms/azsktcp/storage",
+  "IsMaintenanceMode": false,
+  "Controls": [
+    {
+        "ControlID": "Azure_Storage_Create_In_Approved_Regions",
+        "Description": "Create storage accounts only in org-approved regions.",
+        "Id": "AzureStorage910",
+        "ControlSeverity": "High",
+        "Automated": "Yes",
+        "MethodName": "CheckStorageInApprovedRegions",
+        "Rationale":  "We need to create storage accounts in the same region as our customers due to some compliance requirements.",
+        "Recommendation": "Create a new storage account in the expected region and use Azure copy tools to move the content over. Delete the old storage account after that.",
+        "Tags": [
+          "SDL",
+          "TCP",
+          "Automated",
+          "StandardSku",
+          "PremiumSku",
+          "GeneralPurposeStorage",
+          "BlobStorage",
+          "HNSDisabled",
+          "ResourceLocked"
+        ],
+        "Enabled": true
+    }
+  ]
+}
