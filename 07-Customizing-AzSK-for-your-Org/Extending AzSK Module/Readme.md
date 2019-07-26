@@ -172,7 +172,7 @@ class SubscriptionCore: SVTBase
 
 	
 ### Steps to extend the control SVT:
-
+##### A. Extending a GSS SVT
 1. 	 Copy the SVT ps1 script that you want to extend and rename the file by replacing ".ps1" with ".ext.ps1".
 	For example, if you want to extend SubscriptionCore.ps1, copy the file and rename it to SubscriptionCore.ext.ps1.
   
@@ -273,6 +273,64 @@ class SubscriptionCore: SVTBase
   
 ```PowerShell
 	Get-AzSKSubscriptionSecurityStatus -SubscriptionId '<sid>' -ControlIds 'Azure_Subscription_AuthZ_Limit_Admin_Count_Ext'
+```
+
+##### B. Extending a GRS SVT
+
+We will add a mock control that 'storage accounts must be created in 'eastus2' region.
+
+1) Get preview policy downloaded to local folder:
+
+    ```Powershell
+    gop -SubscriptionId <subid> -OrgName <orgname> -DepartmentName <deptname> -PolicyFolderPath <policyfolderpath> -DownloadPolicy
+    ```
+
+2) Copy Storage.ps1 from module folder ->        <policyfolderpath>\Storage.ext.ps1
+
+    a)  Clean up all but constructor, change to StorageExt, base-class to Storage, remove any class members.
+
+    b) Add method that will implement the new control
+    (see example file attached)
+
+          
+3) Copy Storage.json from module folder -> <policyfolderpath>\Storage.ext.json
+       
+    a) Remove all, except one existing control (to edit into new control JSON)
+       
+    b) Edit the one control to reflect desired control-id, description, etc.
+       
+    
+    Few important things:
+        
+    i) ControlId and Id should not conflict with existing ones
+            
+    ii) MethodName should correctly reflect the new method you wrote in Storage.ext.ps1 above
+            
+    iii) Do not change 'Storage' to 'StorageExt' inside the JSON (at the root node) 
+
+4) Update org policy... (Important: you don't need to edit anything else or manually tweak policy in the blob)!
+
+    ```Powershell    
+    uop -SubscriptionId <subid> -OrgName <orgname> -DepartmentName <deptname> -PolicyFolderPath <policyfolderpath> 
+    ```
+
+
+Important: Also note that the "ext" in the file-names above is in all lower-case!
+
+===============================================================
+
+Verifying that the added control works:
+
+1) Put your local AzSK into the target policy mode... (run "iwr" that is echoed by Step-4 above).
+
+        
+2) Run grs for a storage accounts and verify that the control is getting scanned:
+        grs -s <subid> -rgns <resourcegroupname> -rtn Storage
+
+3) Run specific control-id, and across a couple of storage accounts in diff regions (the AzSKRG one will pass 'eastus2' check):
+        
+```Powershell
+    grs -s <subid> -ResourceGroupNames 'AzSKRG, <RG1>, <RG2>' -ResourceTypeName Storage -ControlIds 'Azure_Storage_Create_In_Approved_Regions'
 ```
 
 ### Steps to override the logic of existing SVT:
