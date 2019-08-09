@@ -795,6 +795,14 @@ Go to Workspace --> Datasets --> Click on "..." --> Click on "Schedule Refresh"
 
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_22.png)
 
+Click on "Edit credentials"
+
+![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_25.png)
+
+Sign in with account with which policy is created
+
+![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_26.png)
+
 Add refresh scheduling timings and click on "Apply"
 
 **Note:** You may not see "Schedule refresh" option if step [a3] and [a4] is not completed successfully.
