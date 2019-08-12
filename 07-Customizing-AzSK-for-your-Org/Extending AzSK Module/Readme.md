@@ -359,7 +359,7 @@ For illustration purpose, we will be developing SVT for Application Insights (as
 
 > However, while that process is under way, you can still make progress on this task and, in fact, have a completely functioning new SVT created and tested within your org. Only thing is that you may need to do some renaming/minor file updates after the base support is included by the DevOps Kit team in the AzSK code (after which you can deploy for all users in your org for SDL/CICD/usage).
 
->All steps will eventually be done by the DevOps Kit team and included in the core AzSK code below marked ###.
+>In the steps below, those marked '###' are the steps that you have to do when writing your own new SVT for the first time. However, after you communicate the requirement to the AzSK team, we will include changes corresponding to those steps in the official module for future sprints. Subsequently, you will only need to maintain the code corresponding to the remaining steps.
 
 The steps below follow roundabout the same model as in section [Extending AzSK Module](Readme.md#block-diagram-to-represent-the-extension-model). All controls you implement for the new SVT will be treated as ‘extended’ controls of a blank core SVT.
 
