@@ -975,3 +975,8 @@ To help avoid availability disruptions due to credential expiry, AzSK has introd
 ```PowerShell
    Remove-AzSKTrackedCredential -SubscriptionId '<Subscription Id>' [-CredentialName '<Friendly name of the credential>'] [-Force]
 ```
+### Use New-AzSKTrackedCredentialGroup to configure email alerts to notify users about AzSK-tracked credentials that are about to expire (<= 7 days) or have already expired. 
+
+```PowerShell
+   New-AzSKTrackedCredentialGroup -SubscriptionId '<Subscription Id>' -AlertEmail '<Alert email id>'
+```
