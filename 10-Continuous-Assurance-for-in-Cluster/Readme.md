@@ -166,7 +166,7 @@
 
 ## Update CA for AKS
 
-1. Updating CA for Kuberentes will update the image used for scanning cluster. You can also update other configuration like Scan Interval, Application Insights key or can fix runtime account permissions key using the command. 
+1. Updating CA for Kubernetes will update the image used for scanning cluster. You can also update other configuration like scan interval, Application Insights key or can fix runtime account permissions key using the command. 
 ```PowerShell
     Update-AzSKContinuousAssuranceForCluster -SubscriptionId <SubscriptionId> -ResourceGroupName <ResourceGroupName> -ResourceName <ResourceName> -ResourceType Kubernetes  [ -AppInsightKey <Application Insight Key>]  [ -FixRuntimeAccount ] [ -LogRetentionInDays <JobLogsRetentionInDays>] [ -SpecificImageVersion <DockerHubImageTag> ] [-ScanIntervalInHours <ScanIntervalInHours> ]
 ```
