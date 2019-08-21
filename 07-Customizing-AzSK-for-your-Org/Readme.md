@@ -35,7 +35,7 @@
 
  - [Running scan in local machine]()
  - [Setup Continuous Assurance]()
- - [Using CICD Extension with custom org-policy]()(Readme.md#using-cicd-extension-with-custom-org-policy)
+ - [Using CICD Extension with custom org-policy]()
 
 
 ### [Managing policy/advanced policy usage ]()
