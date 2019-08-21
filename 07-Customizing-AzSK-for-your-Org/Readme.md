@@ -14,17 +14,91 @@
  - [First-time policy setup - an example](Readme.md#first-time-policy-setup---an-example)
  
 ### [Modifying and customizing org policy](Readme.md#modifying-and-customizing-org-policy-1)
- - [Common scenarios for org policy customization](Readme.md#common-scenarios-for-org-policy-customization)  
- - [Using CICD Extension with custom org-policy](Readme.md#using-cicd-extension-with-custom-org-policy)
- - [Next Steps](Readme.md#next-steps)
+ - [Getting Started](Readme.md#common-scenarios-for-org-policy-customization)
 
 
-### [Testing and troubleshooting org Policy](Readme.md#testing-and-troubleshooting-org-policy-1)
- - [Testing the overall policy setup](Readme.md#testing-the-overall-policy-setup)
- - [Troubleshooting common issues](Readme.md#troubleshooting-common-issues)
+ - [Scenarios for org policy customization](Readme.md#common-scenarios-for-org-policy-customization) 
+
+   [Basic]()
+      - [Changing the default 'Running AzSK using…' message]()
+      - [Changing control setting]()
+      - [Customizing specific controls for a service SVT]()
+         - Turning controls On/Off
+         - Changing Recommendation Text
+         - Changing Severity
+         - Disable attestation e. Customizing Severity labels
+      - [Setting up and updating baselines]()
+      - [Use of preview baselines]()
+
+
+### [Consuming custom Org policy](Readme.md#modifying-and-customizing-org-policy-1)
+
+ - [Running scan in local machine]()
+ - [Setup Continuous Assurance]()
+ - [Using CICD Extension with custom org-policy]()(Readme.md#using-cicd-extension-with-custom-org-policy)
+
+
+### [Managing policy/advanced policy usage ]()
+
+- [Downloading, examining policy]()
+   - Configurations
+   - Runbooks
+
+- [Working with ‘local’ mode (policy dev-test-debug)]()
+   - [Testing locally]()
+
+- [How to upgrade Org version to latest AzSK version]()
+   
+   - [Testing CA ($updateToLatestVersion variable) before flipping AzSK.Pre]()
+   - [Use of AzSK.Pre.JSON]() 
+   - [Upgrade scenarios in different scan sources(SDL/CA/CICD)]()
+
+- [How to keep in sync with AzSK release updates]()
+
+- [Maintaining policy in source-control]()
+
+- [Policy deployment using CICD pipeline]()
+
+
+### [Create Monitoring Solutions]()
+
+- [Create Cloud Security Compliance Report for your org in PowerBI](Readme.md#create-cloud-security-compliance-report-for-your-org-in-powerbi-1)
+
+- [AzSK org health monitoring dashboard]()
+
+- [Detail resource inventory dashboard]()
+
+
+### [Compliance reporting]()
+
+- [Create compliance notification to Org users]()
+
+
+### [Advanced Scenarios for org policy customization/extending AzSK)]() 
+
+- [Subscription Security]()
+   - [Changing RBAC mandatory/deprecated lists]()
+   - [Changing ARM policy/Alerts set]()
+
+- [SVT customization]()
+   - [Update/extend existing control by augmenting logic]()
+   - [Add new control for existing GSS/GRS SVT]()
+   - [Add new SVT altogether (non-existing SVT)]()
+
+- [ARM Checker policy customization]()
+
+- [Scenario(s) for modifying ScanAgent]()
+   - [Scanning only baseline controls using continuous assurance setup]()
+   - [Scan on resource deployment]()
+   - [Reporting critical alerts]()
+
+- [Plugging in listeners]()
+   - [Sending events to EventHub for entire org]()
+   - [Sending events to Splunk (via WebHook) for entire org]()
+
+
+### [Troubleshooting common issues](Readme.md#testing-and-troubleshooting-org-policy-1)
  
-### [Create Cloud Security Compliance Report for your org in PowerBI](Readme.md#create-cloud-security-compliance-report-for-your-org-in-powerbi-1)
-
 ### [Frequently Asked Questions](Readme.md#frequently-asked-questions)
 
 ----------------------------------------------------------------
