@@ -960,6 +960,9 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
 To help avoid availability disruptions due to credential expiry, AzSK has introduced cmdlets that will help you track and get notified about important credentials across your subscription. AzSK now offers a register-and-track solution to help monitor the last update of your credentials. This will help you periodically track the health of your credentials which are nearing expiry/need rotation.
 
+<b>NOTE:</b>
+      Ensure you have atleast 'Contributor' access on the subscription before running the below helper commands.
+
 ### Use New-AzSKTrackedCredential to onboard a credential for tracking 
 
 ```PowerShell
@@ -1018,3 +1021,4 @@ To help avoid availability disruptions due to credential expiry, AzSK has introd
 ```PowerShell
    Remove-AzSKTrackedCredential -SubscriptionId '<Subscription Id>' [-CredentialName '<Friendly name of the credential>'] [-Force]
 ```
+
