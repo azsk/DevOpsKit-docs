@@ -979,34 +979,33 @@ Run clear session state command(Clear-AzSKSessionState) followed by services sca
 
 ### How to increase/decrease attestation expiry period for the control with Org policy
 
-There are two methods attestation expiry can be controled using Org policy. 
+There are two methods with which attestation expiry period can be controlled using Org policy. 
 
-1. Add attestation expiry period for control severity 
+1. Update attestation expiry period for control severity 
 
-2. Add attestation expiry period at perticular control in SVT  
+2. Update attestation expiry period for a particular control in SVT  
 
-Note: Expiry customization for control severity and perticular control is supported only for attestation status "WillNotFix", "WillFixLater" and "StateConfirmed". For status "NotAnIssue" and "NotApplicable", expiry can be customized using "Default" period present as part of ControlSettings configuration.
+**Note:** Expiry period can be customized only for statuses "WillNotFix", "WillFixLater" and "StateConfirmed". For status "NotAnIssue" and "NotApplicable", expiry period can be customized using "Default" period present as part of ControlSettings configuration.
 
-##### 1. Add attestation expiry period for control severity 
+##### 1. Update attestation expiry period for control severity 
    
-   In below steps we will update expiry period for critical severity controls 
 
    Steps:
 
-   1. Go to control settings configuration present in module folder.  
+   i) Go to control settings configuration present in module folder.  
 
       Source location: "%userprofile%\Documents\WindowsPowerShell\Modules\AzSK\<version>\Framework\Configurations\SVT\ControlSettings.json"
 
-   2. Copy "AttestationExpiryPeriodInDays" settings
+   ii) Copy "AttestationExpiryPeriodInDays" settings
 
-   3. Create/update "ControlSettings.json" in Org policy configuration folder in local (It is the same folder from where Org policy is installed) and paste AttestationExpiryPeriodInDays configurations to file
+   iii) Create/update "ControlSettings.json" in Org policy configuration folder (It is the same folder from where Org policy is installed) and paste AttestationExpiryPeriodInDays configurations to file
 
 
-   4. Update attestation against control severity. Here, we will make "Critical" severity control to expire after 15 days and others set to 90 days 
+   iv) Update attestation against control severity. Here, we will make "High" severity control to expire after 60 days, "Critical" to 15 days and others set to 90 days 
 
       ![Controls attestation expiry override](../Images/07_OrgPolicy_AttestationExpiryOverride.png)
 
-   5. Update org policy with the help of UOP cmdlet with required parameters. (If you have created policy custom resources, mention resource names as parameter for UOP cmdlet)
+   v) Update org policy with the help of UOP cmdlet. (If you have created policy custom resources, mention resource names as parameter for UOP cmdlet)
 
       ```
       Update-AzSKOrganizationPolicy -SubscriptionId $SubId -OrgName "Contoso" -DepartmentName "IT" -PolicyFolderPath "D:\ContosoPolicies"
@@ -1014,9 +1013,9 @@ Note: Expiry customization for control severity and perticular control is suppor
 
 ##### Testing:
 
-1. Run clear session state command(Clear-AzSKSessionState). This will just make sure cached control settings gets cleared
+1. Run clear session state command (Clear-AzSKSessionState).
 
-2. You can attest one of the critical control or if you have control already attested, you can go to step 3
+2. You can attest one of the "High" severity controls or if you have control already attested, you can go to step 3
 
    Example: In this example, We will attest storage control with "WillNotFix" status
 
@@ -1038,21 +1037,21 @@ Note: Expiry customization for control severity and perticular control is suppor
    GAI -InfoType AttestationInfo -SubscriptionId <SubscriptionId>
    ```
 
-4. Open csv generated at the end of command execution. It will show expiry period column for attestated column, you will find it to set to 60 days from  
+4. Open csv or detail log file generated  at the end of command execution. It will show expiry period column for attested column.
 
    ![Controls attestation expiry override](../Images/07_Custom_Policy_AttestationExpiryReport.png)
 
 
 
-#### 2. Add attestation expiry period at perticular control in SVT 
+#### 2. Update attestation expiry period for particular control in SVT 
 
-Steps for customizing perticular control attestation expiry is similar to 
+Steps for customizing particular control attestation expiry is similar to 
 
 i) Copy the Storage.json from the AzSK installation to your org-policy folder
 
    Source location: "%userprofile%\Documents\WindowsPowerShell\Modules\AzSK\<version>\Framework\Configurations\SVT\Services\Storage.json"
 
-   Destination location: Policy config folder in local
+   Destination location: Policy config folder in local (D:\ContosoPolicies\Config)
 
 ii) Remove everything except the ControlID, the Id and add property "AttestationExpiryPeriodInDays"  so that the final JSON looks like the below. 
 
@@ -1076,7 +1075,7 @@ iii) Update org policy with the help of UOP cmdlet with required parameters.
 
 ##### Testing:
 
-   For testing follow same steps mentioned above for [scenario 1](./07-Customizing-AzSK-for-your-Org#testing-7)
+   For testing follow same steps mentioned above for [scenario 1](./#testing-7)
 
 
 
