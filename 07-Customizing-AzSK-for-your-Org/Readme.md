@@ -979,7 +979,7 @@ Run clear session state command(Clear-AzSKSessionState) followed by services sca
 
 ### How to customize attestation expiry period for controls? 
 
-There are two methods with which attestation expiry period can be controlled using Org policy. 
+There are two methods with which attestation expiry period can be controlled using org policy. 
 
 1. Update attestation expiry period for control severity 
 
@@ -991,16 +991,16 @@ There are two methods with which attestation expiry period can be controlled usi
    
    Steps:
 
-   i) Go to control settings configuration present in module folder.  
+   i) Go to ControlSettings configuration present in module folder.  
 
       Source location: "%userprofile%\Documents\WindowsPowerShell\Modules\AzSK\<version>\Framework\Configurations\SVT\ControlSettings.json"
 
    ii) Copy "AttestationExpiryPeriodInDays" settings
 
-   iii) Create/update "ControlSettings.json" in Org policy configuration folder (It is the same folder from where Org policy is installed) and paste AttestationExpiryPeriodInDays configurations to file
+   iii) Create/update "ControlSettings.json" in org policy configuration folder (It is the same folder from where org policy is installed) and paste AttestationExpiryPeriodInDays configurations to file
 
 
-   iv) Update attestation against control severity. Here, we will make "High" severity control to expire after 60 days, "Critical" to 15 days and others set to 90 days 
+   iv) Update attestation expiry period against control severity. For e.g., here we will make "High" severity control to expire after 60 days, "Critical" to 15 days and others set to 90 days 
 
    ![Controls attestation expiry override](../Images/07_OrgPolicy_AttestationExpiryOverride.png)
 
@@ -1016,7 +1016,7 @@ There are two methods with which attestation expiry period can be controlled usi
 
 2. You can attest one of the "High" severity controls or if you have control already attested, you can go to step 3
 
-   Example: In this example, We will attest storage control with "WillNotFix" status
+   Example: In this example, we will attest storage control with "WillNotFix" status
 
    ```
    Get-AzSKAzureServicesSecurityStatus -SubscriptionId $SubId `
@@ -1030,35 +1030,34 @@ There are two methods with which attestation expiry period can be controlled usi
    
 3. Run Get-AzSKInfo (GAI) cmdlet to get all attested controls in Sub with expiry details. 
 
-   Note: Make sure cmdlet is running with Org policy. If not you will need to run "IWR" generated at the time of IOP or UOP cmdlet.
+   Note: Make sure cmdlet is running with org policy. If not you will need to run "IWR" generated at the time of IOP or UOP cmdlet.
 
    ```
-   GAI -InfoType AttestationInfo -SubscriptionId <SubscriptionId>
+   Get-AzSKInfo -InfoType AttestationInfo -SubscriptionId <SubscriptionId>
    ```
 
-4. Open csv or detail log file generated  at the end of command execution. It will show expiry period column for attested column.
+4. Open CSV or detailed log file generated at the end of command execution. It will show expiry period column for attested column.
 
    ![Controls attestation expiry override](../Images/07_Custom_Policy_AttestationExpiryReport.png)
 
 
 
 #### 2. Update attestation expiry period for particular control in SVT 
+ 
 
-Steps for customizing particular control attestation expiry is similar to 
-
-i) Copy the Storage.json from the AzSK installation to your org-policy folder
+i) Copy the Storage.json from the AzSK module to your org-policy folder
 
    Source location: "%userprofile%\Documents\WindowsPowerShell\Modules\AzSK\<version>\Framework\Configurations\SVT\Services\Storage.json"
 
    Destination location: Policy config folder in local (D:\ContosoPolicies\Config)
 
-ii) Remove everything except the ControlID, the Id and add property "AttestationExpiryPeriodInDays"  so that the final JSON looks like the below. 
+ii) Remove everything except the ControlId, the Id and add property "AttestationExpiryPeriodInDays" as shown below. 
 
    ```
    {
     "Controls": [
      {
-        "ControlID": "Azure_Storage_AuthN_Dont_Allow_Anonymous",
+        "ControlId": "Azure_Storage_AuthN_Dont_Allow_Anonymous",
         "Id": "AzureStorage110",
         "AttestationExpiryPeriodInDays": 45
      }
