@@ -614,7 +614,7 @@ E.g., Install-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
 
 AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This command provides a quicker way to perform Privileged Identity Management (PIM) operations and enables you to manage access to important Azure subscriptions, resource groups and resources.
 
-### Use Get-AzSKPIMConfiguration for querying various PIM settings/status
+### Use Get-AzSKPIMConfiguration (alias 'getpim') for querying various PIM settings/status
 
   1. <h4> List your PIM-eligible roles (-ListMyEligibleRoles) </h4>
 
@@ -706,8 +706,27 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                -ResourceName "AppServiceDemo" `
                                -DoNotOpenOutputFolder
       ```
+3. <h4> List expiring assignments (-ListSoonToExpireAssignments) </h4>
 
-### Use Set-AzSKPIMConfiguration for configuring/changing PIM settings:
+      Use this command to list Azure role with PIM assignments at the specified scope that are about to expire in given number of days. Use respective parameters to list expiring assignments for a specific role on a subscription or a resource group or a resource.
+
+      ```PowerShell
+	      Get-AzSKPIMConfiguration -ListSoonToExpireAssignment  `
+                              -SubscriptionId <SubscriptionId> `
+                              -RoleNames <Comma separated list of roles> `
+                              -ExpiringInDays ` # The number of days you want to query expiring assignments for
+                              [-DoNotOpenOutputFolder]
+      ```
+      <b>Example 1: </b> List 'Owner' PIM assignments at subscription level that will expire in 10 days.
+
+       ```PowerShell
+      Get-AzSKPIMConfiguration -ListSoonToExpireAssignment `
+                               -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
+                               -RoleNames 'Owner' `
+			       -ExpiringInDays 10`
+                               -DoNotOpenOutputFolder
+      ```
+### Use Set-AzSKPIMConfiguration (alias 'setpim') for configuring/changing PIM settings:
 
   1. <h4> Assigning users to roles (-AssignRole) </h4>
      
@@ -812,7 +831,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               -DoNotOpenOutputFolder
       ```
 
-  4. <h4> Converting permanent assignments at subscription/RG scope to PIM (-ConvertPermanentAssignmentsToPIM) </h4>
+  4. <h4> Assign PIM to permanent assignments at subscription/RG scope  (-AssignEligibleforPermanentAssignemnts) </h4>
 
       Use this command to change permanent assignments to PIM for specified roles, at the specified scope. 
 
@@ -821,7 +840,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
 
       ```PowerShell
-      Set-AzSKPIMConfiguration -ConvertPermanentAssignmentsToPIM `
+      Set-AzSKPIMConfiguration -AssignEligibleforPermanentAssignemnts `
                               -SubscriptionId <SubscriptionId> `
                               -RoleNames <Comma separated list of roles> `
                               -DurationInDays <Int> `
@@ -831,10 +850,10 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               [-Force]
       ```
 
-      <b>Example 1: </b> Convert permanent assignments to PIM for 'Contributor' and 'Owner' roles at subscription level . This command runs in an interactive fashion so that you get an opportunity to verify the accounts being converted.
+      <b>Example 1: </b> Convert permanent assignments to PIM for 'Contributor' and 'Owner' roles at subscription level . This command runs in an interactive manner so that you get an opportunity to verify the accounts being converted.
 
       ```PowerShell
-      Set-AzSKPIMConfiguration -ConvertPermanentAssignmentsToPIM `
+      Set-AzSKPIMConfiguration -AssignEligibleforPermanentAssignemnts `
                               -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
                               -RoleNames "Contributor,Owner" `
                               -DurationInDays 30 `
@@ -843,7 +862,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
       <b>Example 2: </b> Use *'-Force'* parameter to convert permanent assignments to PIM without giving runtime verification step.
 
       ```PowerShell
-      Set-AzSKPIMConfiguration -ConvertPermanentAssignmentsToPIM `
+      Set-AzSKPIMConfiguration -AssignEligibleforPermanentAssignemnts `
                               -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
                               -RoleNames "Contributor,Owner" `
                               -ResourceGroupName "DemoRG" `
@@ -890,7 +909,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
       ```
 
-      <b>Example 1: </b> Remove 'Contributor' and 'Owner' roles that have permanent assignment at subscription level. This command runs in an interactive fashion so that you get an opportunity to verify the accounts being removed. All the specified role with permanent access will get removed except your access.
+      <b>Example 1: </b> Remove 'Contributor' and 'Owner' roles that have permanent assignment at subscription level. This command runs in an interactive manner so that you get an opportunity to verify the accounts being removed. All the specified role with permanent access will get removed except your access.
 
       ```PowerShell
       Set-AzSKPIMConfiguration -RemovePermanentAssignments `
@@ -913,6 +932,30 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               -Force
       ```
 
+
+ 6. <h4> Extend PIM assignments for expiring assignments (-ExtendExpiringAssignments) </h4>
+	 Use this command to extend PIM eligible assignments that are about to expire in n days
+    <b>Example 1: </b>Extend Owner PIM roles that are to be expired in 10 days. This command runs in an interactive manner in order to verify the assignments being extended.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -ExtendExpiringAssignments `
+                              -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
+                              -RoleNames "Owner" `
+                              -ExpiringInDays 10
+			      -DurationInDays 30 # The duration in days for expiration to be extended by
+                              -DoNotOpenOutputFolder
+      ```
+      
+      <b>Example 1: </b> Use *'-Force'* parameter to run the command in non-interactive mode. This command will extend expiry of  'Owner' PIM roles that are about to be expired in 10 days by skipping the verification step.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -ExtendExpiringAssignments `
+                              -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
+                              -RoleNames "Owner" `
+                              -ExpiringInDays 10
+			      -DurationInDays 30 # The duration in days for expiration to be extended by
+                              -Force
+      ```
 ## AzSK: Credential hygiene helper cmdlets
 
 To help avoid availability disruptions due to credential expiry, AzSK has introduced cmdlets that will help you track and get notified about important credentials across your subscription. AzSK now offers a register-and-track solution to help monitor the last update of your credentials. This will help you periodically track the health of your credentials which are nearing expiry/need rotation.
