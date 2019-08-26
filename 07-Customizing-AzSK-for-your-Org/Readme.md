@@ -1038,6 +1038,10 @@ There are two methods with which attestation expiry period can be controlled usi
 
 4. Open CSV or detailed log file generated at the end of command execution. It will show expiry period column for attested column.
 
+   Detailed log:
+   ![Controls attestation expiry override](../Images/07_Custom_Policy_AttestationExpiryReportOutput.png)
+   
+   CSV report:
    ![Controls attestation expiry override](../Images/07_Custom_Policy_AttestationExpiryReport.png)
 
 
