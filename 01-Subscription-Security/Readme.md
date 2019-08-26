@@ -614,7 +614,7 @@ E.g., Install-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
 
 AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This command provides a quicker way to perform Privileged Identity Management (PIM) operations and enables you to manage access to important Azure subscriptions, resource groups and resources.
 
-### Use Get-AzSKPIMConfiguration( Alias 'getpim') for querying various PIM settings/status
+### Use Get-AzSKPIMConfiguration (alias 'getpim') for querying various PIM settings/status
 
   1. <h4> List your PIM-eligible roles (-ListMyEligibleRoles) </h4>
 
@@ -726,7 +726,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 			       -ExpiringInDays 10`
                                -DoNotOpenOutputFolder
       ```
-### Use Set-AzSKPIMConfiguration( Alias 'setpim') for configuring/changing PIM settings:
+### Use Set-AzSKPIMConfiguration (alias 'setpim') for configuring/changing PIM settings:
 
   1. <h4> Assigning users to roles (-AssignRole) </h4>
      
