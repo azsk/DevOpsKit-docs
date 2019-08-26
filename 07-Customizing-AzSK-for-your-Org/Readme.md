@@ -1001,13 +1001,12 @@ Note: Expiry customization for control severity and perticular control is suppor
 
    3. Create/update "ControlSettings.json" in Org policy configuration folder in local (It is the same folder from where Org policy is installed) and paste AttestationExpiryPeriodInDays configurations to file
 
-   4. Important: To override behaviour of expiry period, You will need to make default period set to "0". Setting this value, it will indicate, attestation need to reffer overridden values instead of default.
 
-   5. Update attestation against control severity. Here, we will make "Critical" severity control to expire after 15 days and others set to 90 days 
+   4. Update attestation against control severity. Here, we will make "Critical" severity control to expire after 15 days and others set to 90 days 
 
       ![Controls attestation expiry override](../Images/07_OrgPolicy_AttestationExpiryOverride.png)
 
-   6. Update org policy with the help of UOP cmdlet with required parameters. (If you have created policy custom resources, mention resource names as parameter for UOP cmdlet)
+   5. Update org policy with the help of UOP cmdlet with required parameters. (If you have created policy custom resources, mention resource names as parameter for UOP cmdlet)
 
       ```
       Update-AzSKOrganizationPolicy -SubscriptionId $SubId -OrgName "Contoso" -DepartmentName "IT" -PolicyFolderPath "D:\ContosoPolicies"
