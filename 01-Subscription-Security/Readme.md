@@ -706,9 +706,9 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                -ResourceName "AppServiceDemo" `
                                -DoNotOpenOutputFolder
       ```
-3. <h4> List Expiring assignments (-ListSoonToExpireAssignments) </h4>
+3. <h4> List expiring assignments (-ListSoonToExpireAssignments) </h4>
 
-      Use this command to list Azure role with PIM assignments at the specified scope that are about to expire in given number of days. Use respective parameters to list expiring assignments for a specific role, or to list assignments on a specific resource group or resource.
+      Use this command to list Azure role with PIM assignments at the specified scope that are about to expire in given number of days. Use respective parameters to list expiring assignments for a specific role on a subscription or a resource group or a resource.
 
       ```PowerShell
 	      Get-AzSKPIMConfiguration -ListSoonToExpireAssignment  `
@@ -850,7 +850,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               [-Force]
       ```
 
-      <b>Example 1: </b> Convert permanent assignments to PIM for 'Contributor' and 'Owner' roles at subscription level . This command runs in an interactive fashion so that you get an opportunity to verify the accounts being converted.
+      <b>Example 1: </b> Convert permanent assignments to PIM for 'Contributor' and 'Owner' roles at subscription level . This command runs in an interactive manner so that you get an opportunity to verify the accounts being converted.
 
       ```PowerShell
       Set-AzSKPIMConfiguration -AssignEligibleforPermanentAssignemnts `
@@ -909,7 +909,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
       ```
 
-      <b>Example 1: </b> Remove 'Contributor' and 'Owner' roles that have permanent assignment at subscription level. This command runs in an interactive fashion so that you get an opportunity to verify the accounts being removed. All the specified role with permanent access will get removed except your access.
+      <b>Example 1: </b> Remove 'Contributor' and 'Owner' roles that have permanent assignment at subscription level. This command runs in an interactive manner so that you get an opportunity to verify the accounts being removed. All the specified role with permanent access will get removed except your access.
 
       ```PowerShell
       Set-AzSKPIMConfiguration -RemovePermanentAssignments `
@@ -935,7 +935,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
  6. <h4> Extend PIM assignments for expiring assignments (-ExtendExpiringAssignments) </h4>
 	 Use this command to extend PIM eligible assignments that are about to expire in n days
-    <b>Example 1: </b>Extend Owner PIM roles that are to be expired in 10 days. This command runs in an interactive fashion so that you get an opportunity to verify the assignments being extended.
+    <b>Example 1: </b>Extend Owner PIM roles that are to be expired in 10 days. This command runs in an interactive manner in order to verify the assignments being extended.
 
       ```PowerShell
       Set-AzSKPIMConfiguration -ExtendExpiringAssignments `
@@ -946,7 +946,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               -DoNotOpenOutputFolder
       ```
       
-      <b>Example 1: </b> Use *'-Force'* parameter to run the command in non-interactive mode. This command will extend expiry of  'Owner' PIM roles that are about to be expired in 10 days without giving runtime verification step.
+      <b>Example 1: </b> Use *'-Force'* parameter to run the command in non-interactive mode. This command will extend expiry of  'Owner' PIM roles that are about to be expired in 10 days by skipping the verification step.
 
       ```PowerShell
       Set-AzSKPIMConfiguration -ExtendExpiringAssignments `
