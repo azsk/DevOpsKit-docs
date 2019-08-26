@@ -1004,7 +1004,7 @@ There are two methods with which attestation expiry period can be controlled usi
 
    ![Controls attestation expiry override](../Images/07_OrgPolicy_AttestationExpiryOverride.png)
 
-   v) Update org policy with the help of UOP cmdlet. (If you have created policy custom resources, mention resource names as parameter for UOP cmdlet)
+   v) Update org policy with the help of Update-AzSKOrganizationPolicy (UOP) cmdlet. (If you have created policy custom resources, mention resource names as parameter for UOP cmdlet)
 
    ```
       Update-AzSKOrganizationPolicy -SubscriptionId $SubId -OrgName "Contoso" -DepartmentName "IT" -PolicyFolderPath "D:\ContosoPolicies"
@@ -1028,7 +1028,7 @@ There are two methods with which attestation expiry period can be controlled usi
    Output:
    ![Controls attestation expiry override](../Images/07_OrgPolicy_AttestationFlow.png)
    
-3. Run Get-AzSKInfo aka GAI cmdlet to get all attested controls in Sub with expiry details. 
+3. Run Get-AzSKInfo (GAI) cmdlet to get all attested controls in Sub with expiry details. 
 
    Note: Make sure cmdlet is running with Org policy. If not you will need to run "IWR" generated at the time of IOP or UOP cmdlet.
 
