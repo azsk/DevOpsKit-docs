@@ -1077,7 +1077,7 @@ iii) Update org policy with the help of UOP cmdlet with required parameters.
 
 ##### Testing:
 
-   For testing follow same steps mentioned above for scenario 1
+   For testing follow same steps mentioned above for [scenario 1](./07-Customizing-AzSK-for-your-Org#testing-7)
 
 
 
