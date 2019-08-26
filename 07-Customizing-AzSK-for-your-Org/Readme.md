@@ -977,7 +977,7 @@ Run clear session state command(Clear-AzSKSessionState) followed by services sca
 
 
 
-### How to customize attestation expiry period of the controls 
+### How to customize attestation expiry period for controls? 
 
 There are two methods with which attestation expiry period can be controlled using Org policy. 
 
