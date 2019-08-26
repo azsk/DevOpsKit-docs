@@ -987,9 +987,8 @@ There are two methods with which attestation expiry period can be controlled usi
 
 **Note:** Expiry period can be customized only for statuses "WillNotFix", "WillFixLater" and "StateConfirmed". For status "NotAnIssue" and "NotApplicable", expiry period can be customized using "Default" period present as part of ControlSettings configuration.
 
-##### 1. Update attestation expiry period for control severity 
+#### 1. Update attestation expiry period for control severity 
    
-
    Steps:
 
    i) Go to control settings configuration present in module folder.  
@@ -1003,13 +1002,13 @@ There are two methods with which attestation expiry period can be controlled usi
 
    iv) Update attestation against control severity. Here, we will make "High" severity control to expire after 60 days, "Critical" to 15 days and others set to 90 days 
 
-      ![Controls attestation expiry override](../Images/07_OrgPolicy_AttestationExpiryOverride.png)
+   ![Controls attestation expiry override](../Images/07_OrgPolicy_AttestationExpiryOverride.png)
 
    v) Update org policy with the help of UOP cmdlet. (If you have created policy custom resources, mention resource names as parameter for UOP cmdlet)
 
-      ```
+   ```
       Update-AzSKOrganizationPolicy -SubscriptionId $SubId -OrgName "Contoso" -DepartmentName "IT" -PolicyFolderPath "D:\ContosoPolicies"
-      ```
+   ```
 
 ##### Testing:
 
@@ -1069,9 +1068,9 @@ ii) Remove everything except the ControlID, the Id and add property "Attestation
 
 iii) Update org policy with the help of UOP cmdlet with required parameters. 
 
-      ```
+   ```
       Update-AzSKOrganizationPolicy -SubscriptionId $SubId -OrgName "Contoso" -DepartmentName "IT" -PolicyFolderPath "D:\ContosoPolicies"
-      ```
+   ```
 
 ##### Testing:
 
