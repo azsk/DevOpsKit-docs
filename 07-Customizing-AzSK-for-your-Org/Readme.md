@@ -977,7 +977,7 @@ Run clear session state command(Clear-AzSKSessionState) followed by services sca
 
 
 
-### How to increase/decrease attestation expiry period for the control with Org policy
+### How to increase/decrease attestation expiry period for the control 
 
 There are two methods with which attestation expiry period can be controlled using Org policy. 
 
