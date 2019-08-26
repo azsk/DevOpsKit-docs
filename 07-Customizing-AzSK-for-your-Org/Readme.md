@@ -971,7 +971,118 @@ Example: If you want to scan only the ARMControls present in your org-policy, th
 
 ![ARM Controls override](../Images/07_Custom_Policy_ARMControls.png)
 
-
 ##### Testing:
 
 Run clear session state command(Clear-AzSKSessionState) followed by services scan (Get-AzSKAzureServicesSecurityStatus). Scan should reflect configuration changes done.
+
+
+
+### How to increase/decrease attestation expiry period for the control with Org policy
+
+There are two methods attestation expiry can be controled using Org policy. 
+
+1. Add attestation expiry period for control severity 
+
+2. Add attestation expiry period at perticular control in SVT  
+
+Note: Expiry customization for control severity and perticular control is supported only for attestation status "WillNotFix", "WillFixLater" and "StateConfirmed". For status "NotAnIssue" and "NotApplicable", expiry can be customized using "Default" period present as part of ControlSettings configuration.
+
+##### 1. Add attestation expiry period for control severity 
+   
+   In below steps we will update expiry period for critical severity controls 
+
+   Steps:
+
+   1. Go to control settings configuration present in module folder.  
+
+      Source location: "%userprofile%\Documents\WindowsPowerShell\Modules\AzSK\<version>\Framework\Configurations\SVT\ControlSettings.json"
+
+   2. Copy "AttestationExpiryPeriodInDays" settings
+
+   3. Create/update "ControlSettings.json" in Org policy configuration folder in local (It is the same folder from where Org policy is installed) and paste AttestationExpiryPeriodInDays configurations to file
+
+   4. Important: To override behaviour of expiry period, You will need to make default period set to "0". Setting this value, it will indicate, attestation need to reffer overridden values instead of default.
+
+   5. Update attestation against control severity. Here, we will make "Critical" severity control to expire after 15 days and others set to 90 days 
+
+      ![Controls attestation expiry override](../Images/07_OrgPolicy_AttestationExpiryOverride.png)
+
+   6. Update org policy with the help of UOP cmdlet with required parameters. (If you have created policy custom resources, mention resource names as parameter for UOP cmdlet)
+
+      ```
+      Update-AzSKOrganizationPolicy -SubscriptionId $SubId -OrgName "Contoso" -DepartmentName "IT" -PolicyFolderPath "D:\ContosoPolicies"
+      ```
+
+##### Testing:
+
+1. Run clear session state command(Clear-AzSKSessionState). This will just make sure cached control settings gets cleared
+
+2. You can attest one of the critical control or if you have control already attested, you can go to step 3
+
+   Example: In this example, We will attest storage control with "WillNotFix" status
+
+   ```
+   Get-AzSKAzureServicesSecurityStatus -SubscriptionId $SubId `
+                                    -ResourceNames azskpreviewcontosopr3sa `
+                                    -ControlIds "Azure_Storage_AuthN_Dont_Allow_Anonymous" `
+                                    -ControlsToAttest NotAttested 
+   ```
+
+   Output:
+   ![Controls attestation expiry override](../Images/07_OrgPolicy_AttestationFlow.png)
+   
+3. Run Get-AzSKInfo aka GAI cmdlet to get all attested controls in Sub with expiry details. 
+
+   Note: Make sure cmdlet is running with Org policy. If not you will need to run "IWR" generated at the time of IOP or UOP cmdlet.
+
+   ```
+   GAI -InfoType AttestationInfo -SubscriptionId <SubscriptionId>
+   ```
+
+4. Open csv generated at the end of command execution. It will show expiry period column for attestated column, you will find it to set to 60 days from  
+
+   ![Controls attestation expiry override](../Images/07_Custom_Policy_AttestationExpiryReport.png)
+
+
+
+#### 2. Add attestation expiry period at perticular control in SVT 
+
+Steps for customizing perticular control attestation expiry is similar to 
+
+i) Copy the Storage.json from the AzSK installation to your org-policy folder
+
+   Source location: "%userprofile%\Documents\WindowsPowerShell\Modules\AzSK\<version>\Framework\Configurations\SVT\Services\Storage.json"
+
+   Destination location: Policy config folder in local
+
+ii) Remove everything except the ControlID, the Id and add property "AttestationExpiryPeriodInDays"  so that the final JSON looks like the below. 
+
+   ```
+   {
+    "Controls": [
+     {
+        "ControlID": "Azure_Storage_AuthN_Dont_Allow_Anonymous",
+        "Id": "AzureStorage110",
+        "AttestationExpiryPeriodInDays": 45
+     }
+    ]
+   }
+   ```
+
+iii) Update org policy with the help of UOP cmdlet with required parameters. 
+
+      ```
+      Update-AzSKOrganizationPolicy -SubscriptionId $SubId -OrgName "Contoso" -DepartmentName "IT" -PolicyFolderPath "D:\ContosoPolicies"
+      ```
+
+##### Testing:
+
+   For testing follow same steps mentioned above for scenario 1
+
+
+
+
+
+
+
+
