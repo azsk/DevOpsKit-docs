@@ -15,6 +15,7 @@
     - [Org AzSK version vs latest available AzSK version](#Org-AzSK-version-vs-latest-available-AzSK-version)
     - [CA AzSK version Summary](#CA-AzSK-version-Summary)
     - [SpotCheck AzSK version summary](#SpotCheck-AzSK-version-summary)
+    - [CICD SVT Task AzSK version summary](#CICD-SVT-Task-AzSK-version-summary)
 
 - [Continuous Assurance Health Monitoring](#Continuous-Assurance-Health-Monitoring)
     - [CA reporting exceptions](#CA-reporting-exceptions)
