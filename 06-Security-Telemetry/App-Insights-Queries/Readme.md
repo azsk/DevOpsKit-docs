@@ -115,7 +115,6 @@ customEvents
 | where customDimensions.ScanSource =="SpotCheck"
 | summarize arg_max(timestamp, *)  by Version = tostring(customDimensions.ScannerVersion), SubId = tostring(customDimensions.SubscriptionId)
 | summarize SubscripitionScanned=count() by tostring(Version) 
-| summarize AzSKVersion=count() by Version
 | render piechart
 ```
 
@@ -130,7 +129,6 @@ customEvents
 | where customDimensions.ScanSource =="VSO"
 | summarize arg_max(timestamp, *)  by Version = tostring(customDimensions.ScannerVersion), SubId = tostring(customDimensions.SubscriptionId)
 | summarize SubscripitionScanned=count() by tostring(Version) 
-| summarize AzSKVersion=count() by Version
 | render piechart
 ```
 
