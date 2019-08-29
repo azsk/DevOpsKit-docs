@@ -36,7 +36,7 @@ The telemetry data can be leveraged by org policy owners to understand AzSK usag
 
 ## Usage statistics
 
-### Total number of Subscriptions evaluated per day
+#### _Total number of Subscriptions evaluated per day_
 Get an idea of overall AzSK usage in the org. Query displays unique number of subscriptions scanned by AzSK (through CA runbook/SpotCheck (Adhoc scan)/VSO task) per day over last 7 days period. 
 
 ``` AIQL
@@ -51,7 +51,7 @@ customEvents
 
 ![AIGraph_Usage.PNG](/Images/06_AIGraph_Usage.PNG)
 
-### Total number of resources evaluated per day
+#### _Total number of resources evaluated per day_
 Number of resources scanned (through CA runbook/SpotCheck (Adhoc scan)/VSO task) per day over last 7 days period.  
 
 ``` AIQL
@@ -63,7 +63,7 @@ customEvents
 | render barchart
 ```
 
-### Total number of controls evaluated per day
+#### _Total number of controls evaluated per day_
 Number of controls scanned (through CA runbook/SpotCheck (Adhoc scan)/VSO task) per day over last 7 days period.
 
 ``` AIQL
