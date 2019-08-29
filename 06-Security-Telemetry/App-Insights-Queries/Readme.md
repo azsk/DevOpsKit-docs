@@ -27,7 +27,7 @@
 
 - [Resource Inventory](#Resource-Inventory)
      - [Resource inventory all over the subscription](#Resource-inventory-all-over-the-subscription)
-     - [Resource inventory for particular  subscription](Resource-inventory-for-particular -subscription)
+     - [Resource inventory for particular  subscription](#Resource-inventory-for-particular -subscription)
      - [Virtual Machines OS Type Summary](Virtual-Machines-OS-Type-Summary)
 
 ## Overview
