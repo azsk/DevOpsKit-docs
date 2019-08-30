@@ -837,10 +837,13 @@ Check for message during start of command "Running AzSK cmdlet using ***** polic
 
 - To validate if pipeline AzSK task is running with Org policy. You can download release logs from pipeline. Expand "AzSK_Logs.zip" --> Open file under path "<YYYYMMDD_HHMMSS_GRS>/ETC/PowerShellOutput.LOG" --> Check for message at the start of command execution "Running AzSK cmdlet using ***** policy"
 
-
-If you want to run commands with Org-neutral policy only, you can delete tag (AzSKOrgName_{OrgName}) present on AzSKRG and run the commands.
-
-If you are maintaining multiple Org policies and you want to switch scan from one policy to other, you can run Set/Update commands with '-Force' flag using policy you wanted to switch. 
+>Note:
+>
+> 1. If you are using the CICD extension in the context of security compliance for your org make sure you have installed the kit using your org-specific ‘iwr’ command on your local machine. Refer **Local Machine** section above.
+>
+> 2. If you want to run commands with Org-neutral policy only, you can delete tag (AzSKOrgName_{OrgName}) present on AzSKRG and run the commands.
+>
+> 3. If you are maintaining multiple Org policies and you want to switch scan from one policy to other, you can run Set/Update commands with '-Force' flag using policy you wanted to switch. 
 
 #### Latest AzSK is available but our Org CA are running with older version?
 
