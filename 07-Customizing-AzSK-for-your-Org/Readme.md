@@ -210,10 +210,10 @@ host and maintain a custom set of policy files that override the default AzSK be
 | AppInsightName | Name for application insight resource where telemetry data will be pushed | No | AzSK-\<OrgName>-<DepName>-AppInsight |   |
 | AppInsightLocation | The location in which the AppInsightLocation resource will be created. | No | EastUS |  |
 #### First-time policy setup - an example
-The following example will set up policies for IT department of Contoso organization. 
+The following example will set up policies for IT department of Contoso organization.  
 
 You must be an 'Owner' or 'Contributor' for the subscription in which you want to host your org's policy artefacts.
-Also, make sure that that the org name and dept name are purely alphanumeric and their combined length is less than 19 characters.
+Also, make sure that that the org name and dept name are purely alphanumeric and their combined length is less than 19 characters. The policy setup command is fairly lightweight - both in terms of effort/time and in terms of costs incurred.
 
 ```PowerShell
 Install-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
@@ -640,7 +640,10 @@ Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubId>
 
 This step is pre-requistie for other two methods.
 
-### Using CICD Extension with custom org policy
+### 2. Setup Continuous Assurance
+
+
+### 3. Using CICD Extension with custom org policy
 
 To set up CICD when using custom org policy, please follow below steps:
 1. Add Security Verification Tests (SVTs) in VSTS pipeline by following the main steps [here](../03-Security-In-CICD#adding-svts-in-the-release-pipeline).
@@ -679,21 +682,30 @@ or more of the following using AzSK:
  - You will be able to do central governance for your org by leveraging telemetry events that will collect in the master subscription
  from all the AzSK activity across your org. 
 
-## Testing and troubleshooting org policy
+### Managing policy/advanced policy usage
 
-#### Testing the overall policy setup
-The policy setup command is fairly lightweight - both in terms of effort/time and in terms of costs incurred. You can test policy using below options
+#### Downloading, examining policy
 
-**Option 1:**
-    
-Validate configuration changes by running AzSK commands using local policy folder.
+   - Configurations
+   - Runbooks
+
+#### Working with ‘local’ mode (policy dev-test-debug)
+
+You will be able to run scan pointing to local policy present in machine and test it. It always recommended to test you policy customization using this method before updating it to server with the help of below steps 
 
 Step 1: Point AzSK settings to local Org policy folder("D:\ContosoPolicies\"). 
     
 ```PowerShell
 Set-AzSKPolicySettings -LocalOrgPolicyFolderPath "D:\ContosoPolicies\"
 ```
-Step 2: Clear session state and run scan commands (Get-AzSKAzureServicesSecurityStatus and Get-AzSKSubscriptionSecurityStatus) with respective parameters sets like UseBaselineControls,ResourceGroupNames etc.
+
+This will update "AzSKSettings.json" file present at location "%LocalAppData%\Microsoft\AzSK" to point to local folder instead of server storage.
+
+Step 2: Perform the customization to policy files as per scenarios. If you are adding any new files to policy folder, you must update configuration index (ServerConfigMetadata.json) with new policy file name.
+
+![Entry in ServerConfigMetadata.json](../Images/07_OrgPolicy_Chg_SCMD_Entry.PNG)
+
+Step 3: Now you run scan to see policy updates in effect. Clear session state and run scan commands (GRS or GSS) with parameters sets for which config changes are done like UseBaselineControls,ResourceGroupNames, controlIds etc.
 
 ```PowerShell
 Clear-AzSKSessionState
@@ -702,16 +714,15 @@ Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubscriptionId>
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -UseBaselineControls
 ```    
 
-Step 3: If scan commands are running fine, you can update policy based on parameter set used during installations. If you see some issue in scan commands, you can fix configurations and repeat step 2. 
+Step 3: If scan commands are running fine with respect to the changes done to the configuration, you can update policy based on parameter set used during installations. If you see some issue in scan commands, you can fix configurations and repeat step 2. 
 
 ```PowerShell
 Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
    -OrgName "Contoso" `
    -DepartmentName "IT" `
    -PolicyFolderPath "D:\ContosoPolicies"
-```
 
-```PowerShell
+#If custom resources names are used during setup, you can use below parameters to download policy
 Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
    -OrgName "Contoso-IT" `           
    -ResourceGroupName "Contoso-IT-RG" `
@@ -728,12 +739,10 @@ Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
    -DepartmentName "IT"
 ```
 
-Step 5: If all above steps works fine. You can point your AzSK setting to online policy server by running "IWR" command generated at the end of *Update-AzSKOrganizationPolicy*
+Step 5: If all above steps works fine. You can point back your AzSK setting to online policy server by running "IWR" command generated at the end of *Update-AzSKOrganizationPolicy*
 
 
-**Option 2:**
-
-you set up a 'Staging' environment where you can do all pre-testing of policy setup, policy changes, etc. A limited number of 
+You can also set up a 'Staging' environment where you can do all pre-testing of policy setup, policy changes, etc. A limited number of 
 people could be engaged for testing the actual end user effects of changes before deploying them broadly. 
 Also, you can choose to retain the staging setup or just re-create a fresh one for each major policy change.
 
@@ -745,9 +754,8 @@ It is always recommendated to validate health of Org policy for mandatory config
 Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
            -OrgName "Contoso" `
            -DepartmentName "IT"
-```
 
-If you have used customized resource names, you can use below parameter sets to run health check
+#If you have used customized resource names, you can use below parameter sets to run health check
 
 ```PowerShell
 Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
@@ -759,6 +767,7 @@ Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
 For your actual (production) policies, we recommend that you check them into source control and use the local close of *that* folder as the location
 for the AzSK org policy setup command when uploading to the policy server. In fact, setting things up so that any policy
 modifications are pushed to the policy server via a CICD pipeline would be ideal. (That is how we do it at CSE.)
+Refer [maintaining policy in source-control]() and [deployment using CICD pipeline]().
 
 	
 #### Troubleshooting common issues 
@@ -771,6 +780,65 @@ a few known cases, but we may have missed the odd one.)
 - Don't forget to make entries in ServerConfigMetadata.json for all files you have changed.
 - Note that the policy upload command always generates a fresh installer.ps1 file for upload. If you want to make changes to 
 that, you may have to keep a separate copy and upload it. (We will revisit this in future sprints.)
+
+
+### How to upgrade Org version to latest AzSK version
+
+Generally AzSK modules gets released on every mid of the month with latest features and control updates. It is recommended to go through release notes for the version and follow below steps to upgrade org AzSK version to latest available version.
+
+1. Go through latest version [release notes](https://azsk.azurewebsites.net/ReleaseNotes/LatestReleaseNotes.html) and breaking changes updates for Org policy 
+
+2. Install latest AzSK module in local machine with the help of common setup command
+
+   ```PowerShell
+   Install-Module AzSK -Scope CurrentUser -AllowClobber
+   # Use -Force switch as and when required 
+   ```
+
+3. Perform breaking changes with the help of Org policy updates page and run UOP AzSK version update flag
+
+```PowerShell
+# For Basic Setup
+Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+   -OrgName "Contoso" `
+   -DepartmentName "IT" `
+   -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
+
+#For custom Resource Group Setup
+Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+   -OrgName "Contoso-IT" `           
+   -ResourceGroupName "Contoso-IT-RG" `
+   -StorageAccountName "contosoitsa" `
+   -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
+```
+
+ Internally, this will update AzSK.Pre.json file present on Org policy with latest AzSK version. 
+ 
+#### Upgrade scenarios in different scan sources
+
+Once Org policy is updated with latest version, you will see it in effect in all environments
+
+ **Local scans:** If application teams are using older version(or any other version than mentioned in Org Policy), will start getting update warning with the help of IWR cmdlet.
+
+![Entry in ServerConfigMetadata.json](../Images/07_OrgPolicy_Old_Version_Warning.PNG)
+
+**Continuouse Assurance:** CA will auto-upgrade to latest org version in next scheduled job. 
+ CA will auto-upgrade to latest org version in next schedule. You can monitor upgrade status with the help of application insight events. Use below query in org AI 
+
+ ``` AI Query
+| customEvents
+| where timestamp >= ago(6d)
+| where name == "Control Scanned"
+| where customDimensions.ScanSource =="Runbook"
+| where customDimensions.ScannerModuleName == "AzSK"
+| summarize arg_max(timestamp, *) by SubId = tostring(customDimensions.SubscriptionId)
+| summarize CAModuleVersionSummary= count() by Version = tostring(customDimensions.ScannerVersion)
+| render piechart
+ ```
+
+ ![CAVersionSummary.json](../Images/07_OrgPolicy_CAVersionSummary.PNG)
+ 
+ **CICD:** As of now, CICD SVT task does not support version from org policy settings. It always installs latest AzSK version irrespective of version mentioned in policy. Although it refers other control policies from policy stores.
 
 ## Create Cloud Security Compliance Report for your org in PowerBI
 Once you have an org policy setup and running smoothly with multiple subscriptions across your org being scanned using your policy, you will need a solution that provides visibility to security compliance for all the subscriptions across your org. This will help you drive compliance/risk governance initiatives for your organization. 
