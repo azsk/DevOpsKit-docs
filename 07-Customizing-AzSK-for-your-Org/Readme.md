@@ -17,9 +17,8 @@
  - [Getting Started](Readme.md#common-scenarios-for-org-policy-customization)
 
 
- - [Scenarios for org policy customization](Readme.md#common-scenarios-for-org-policy-customization) 
+ - [Basic scenarios for org policy customization](Readme.md#common-scenarios-for-org-policy-customization) 
 
-   [Basic]()
       - [Changing the default 'Running AzSK using…' message]()
       - [Changing control setting]()
       - [Customizing specific controls for a service SVT]()
@@ -125,8 +124,8 @@ This includes things such as:
 Note that the policy files needed for security scans are downloaded into each PS session for **all** 
 AzSK scenarios. That is, apart from manually-run scans from your desktop, this same behavior happens 
 if you include the AzSK SVTs Release Task in your CICD pipeline or if you setup Continuous Assurance. 
-Also, the AzSK policy files on the CDN are based on what we use internally in Core Services Engineering 
-(CSE) at Microsoft. We also keep them up to date from one release to next.
+Also, the AzSK policy files on the CDN are based on what we use internally in Core Services Engineering and Operations
+(CSEO) at Microsoft. We also keep them up to date from one release to next.
 
 <!--![Org Policy - The big picture](../Images/07_OrgPolicy_Big_Picture.PNG)-->
 
@@ -152,8 +151,7 @@ Let us look at how policy files are leveraged in a little more detail.
 
 When you install AzSK, it downloads the latest AzSK module from the PS Gallery. Along with this module there
 is an *offline* set of policy files that go in a sub-folder under the %userprofile%\documents\WindowsPowerShell\Modules\AzSK\<version> folder. 
-It also places (or updates) an AzSKSettings.JSON file in your %LocalAppData%\AzSK folder. It is this latter 
-file that contains the policy endpoint (or policy server) URL that is used by all local commands. 
+It also places (or updates) an AzSKSettings.JSON file in your %LocalAppData%\Microsoft\AzSK file that contains the policy endpoint (or policy server) URL that is used by all local commands. 
 
 Whenever any command is run, AzSK uses the policy server URL to access the policy endpoint. It first downloads 
 a 'metadata' file that contains information about what other files are available on the policy server. After 
@@ -207,9 +205,9 @@ host and maintain a custom set of policy files that override the default AzSK be
 | DepartmentName | The name of a department in your organization. If provided, this value is concatenated to the org name parameter. This should be alphanumeric. | No | None |
 | PolicyFolderPath | The local folder in which the policy files capturing org-specific changes will be stored for reference. This location can be used to manage policy files. | No | User Desktop |
 | ResourceGroupLocation | The location in which the Azure resources for hosting the policy will be created. | No | EastUS2 | To obtain valid locations, use Get-AzLocation cmdlet |
-| ResourceGroupName | Resource Group name where policy resources will be created. | No | AzSK-\<OrgName>-\<DepName>-RG | Custom resource group name for storing policy resources. **Note:** ResourceGroupName, StorageAccountName and AppInsightName must be passed together to create custom resources |
+| ResourceGroupName | Resource Group name where policy resources will be created. | No | AzSK-\<OrgName>-\<DepName>-RG | Custom resource group name for storing policy resources. **Note:** ResourceGroupName, StorageAccountName and AppInsightName must be passed together to create custom resources. The same parameters must be used to update org policy. |
 | StorageAccountName | Name for policy storage account | No | azsk-\<OrgName>-\<DepName>-sa | |
-| AppInsightName | Name for application insight resource where telemetry data will be pushed | No | AzSK-\<OrgName>-<DepName>-AppInsight | Custom resource group name for storing policy resources.  |
+| AppInsightName | Name for application insight resource where telemetry data will be pushed | No | AzSK-\<OrgName>-<DepName>-AppInsight |   |
 | AppInsightLocation | The location in which the AppInsightLocation resource will be created. | No | EastUS |  |
 #### First-time policy setup - an example
 The following example will set up policies for IT department of Contoso organization. 
@@ -242,7 +240,7 @@ It will also create a very basic 'customized' policy involving below files uploa
  
 | File | Container | Description  
 | ---- | ---- | ---- |
-| AzSK-EasyInstaller.ps1 | installer | Org-specific installation script. This installer will ensure that anyone who installs AzSK using your 'iwr' command not only gets the core AzSK module but their local installation of AzSK is also configured to use org-specific policy settings (e.g., policy server URL, telemetry key, etc.) |
+| AzSK-EasyInstaller.ps1 | installer | Org-specific installation script. This installer will ensure that anyone who installs AzSK using your 'iwr' command not only gets the core AzSK module but their local installation of AzSK is also configured to use org-specific policy settings (e.g., policy server URL, telemetry key, etc.) **IMPORTANT:** Make sure anyone in your org who needs to scan according to your policies uses the above 'iwr' command to install AzSK. (They should not use 'install-module AzSK' directly. Anyone using an incorrect setup will not get your custom policy when they run any AzSK cmdlet. |
 | AzSK.Pre.json | policies  | This file contains a setting that controls/defines the AzSK version that is 'in effect' at an organization. An org can use this file to specify the specific version of AzSK that will get used in SDL/CICD/CA scenarios at the org for people who have used the org-specific 'iwr' to install and configure AzSK.<br/> <br/>  **Note:** During first time policy setup, this value is set with AzSK version available on the client machine that was used for policy creation. Whenever a new AzSK version is released, the org policy owner should update the AzSK version in this file with the latest released version after performing any compatibility tests in a test setup.<br/> You can get notified of new releases by following the AzSK module in PowerShell Gallery or release notes section [here](https://azsk.azurewebsites.net/ReleaseNotes/RN180814.html).  
 | RunbookCoreSetup.ps1 | policies  | Used in Continuous Assurance to setup AzSK module
 | RunbookScanAgent.ps1 | policies  | Used in Continuous Assurance to run daily scan 
@@ -250,13 +248,28 @@ It will also create a very basic 'customized' policy involving below files uploa
 | ServerConfigMetadata.json | policies | Index file with list of policy files.  
 
 
-At the end of execution, an 'iwr' command line will be printed to the console. This command leverages the org-specific
- installation script from the storage account for installing AzSK.
+Output of command looks like below 
+
+<img alt="Effective Org Policy Evaluation" src="../Images/07_OrgPolicy_Installation.PNG" />
+
+
+If you note the output, at the end of execution, an 'iwr' command line will be printed to the console. This command leverages the org-specific
+ installation script from the storage account for installing AzSK. You can run this IWR followed by some scan commands (GSS/GRS) to see org policy in effect in your local.
+
 
 ```PowerShell
-iwr 'https://azskcontosoitsa.blob.core.windows.net/installer/AzSK-EasyInstaller.ps1' -UseBasicParsing | iex 
-```
+#IWR to install org specific configurations
+iwr 'https://azskcontosoitsa.blob.core.windows.net/installer/AzSK-EasyInstaller.ps1' -UseBasicParsing | iex
 
+#Subscription Scan with org policy
+Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubId>
+```
+ Output:
+
+<img alt="Effective Org Policy Evaluation" src="../Images/07_Custom_Policy_IWROutput.png" />
+
+
+To run this policy in different environment other than local like AzSK CICD SVT Task or Continuous Assurance setup, refer section [Consuming custom Org policy]()
 
 Monitoring dashboard gets created along with policy deployment and it lets you monitor the operations for various DevOps Kit workflows at your org.(e.g., CA issues, anomalous control drifts, evaluation errors, etc.). 
 
@@ -270,46 +283,65 @@ Below is snapshot of the dashboard
 
 ## Modifying and customizing org policy 
 
-All subsequent runs of the (same) command above will pick up the JSON files from local PolicyFolderPath and upload 
-to policy store, provided the values for OrgName and DepartmentName remain unchanged. (This is required
-because the command internally evaluates the locations of various artifacts based on these values.) To modify policy
-or add more policy customizations, we shall be reusing the same command as used for first-time setup or update command (*Update-AzSKOrganizationPolicy*).
+#### Getting Started
+
+The general workflow for all policy changes will be similar and involve the following basic steps:
+
+ 1) Go to the folder you have used (or the org-setup command auto-generated) for your org-customized policies (location used in example: D:\ContosoPolicies). If you don't have policies, you can download it using cmdlet 
+
+      ```PowerShell
+      Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
+               -OrgName "Contoso" `
+               -DepartmentName "IT" `
+               -DownloadPolicy `
+               -PolicyFolderPath "D:\ContosoPolicies"
+            
+      #If custom resources names are used during setup, you can use below parameters to download policy
+
+      Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
+               -OrgName "Contoso-IT" `
+               -ResourceGroupName "ContosoResourceGoupName" `
+               -StorageAccountName "contosostorageaccountname" `
+               -DownloadPolicy `
+               -PolicyFolderPath "D:\ContosoPolicies"
+
+      ```
+
+
+ 2) Make any modifications to existing files (or add additional policy files as required)
+ 3) Run the policy update command to upload all artifacts to the policy server (*Update-AzSKOrganizationPolicy*). It is possible to test policies in local before uploading it to server. This we will covered in advance section.
+ 4) Test in a fresh PS console that the policy change is in effect. (Policy changes do not require re-installation of AzSK.)
+
+
+Note that you can upload policy files from any folder (e.g., a clone of the originally used/created one). It just needs to 
+have the same folder structure as the default one generated by the first-time policy setup and you must specify
+the folder path using the '-PolicyFolderPath' parameter.
+
+Because policy on the server works using the 'overlay' approach, **the corresponding file on the server
+only needs to have the specific changes that are required (plus some identifying elements in some cases).**
+
+Lastly, note that when making modifications we will **never** edit the files that came with the AzSK installation folder(%userprofile%\documents\WindowsPowerShell\Modules\AzSK). 
+We will create copies of the files we wish to edit, place them in our org-policy folder and make requisite
+modifications there.
 
 > **Note**: ServerConfigMetadata.json and AzSK-EasyInstaller.ps1 will always get overwritten on the subsequent run of the command. 
 
-If you don't have existing configured Org policy, you can download policy to your local machine with below command
-
-```PowerShell
-Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
-           -OrgName "Contoso" `
-           -DepartmentName "IT" `
-           -DownloadPolicy `
-           -PolicyFolderPath "D:\ContosoPolicies"
-	   
-#If custom resource group is used
-
-Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
-           -OrgName "Contoso-IT" `
-           -ResourceGroupName "ContosoResourceGoupName" `
-           -StorageAccountName "contosostorageaccountname" `
-           -DownloadPolicy `
-           -PolicyFolderPath "D:\ContosoPolicies"
-
-```
 	
-#### Common scenarios for org policy customization
+### Basic scenarios for org policy customization
+
 
 In this section let us look at typical use cases for org policy customization and how to accomplish them. 
 We will cover the following:
 
 a. Changing the default 'Running AzSK using…' message  
-b. Changing a global setting for some control
+b. Changing a global setting for some control 
 c. Changing/customizing a server baseline policy set
 d. Customizing specific controls for a service SVT (e.g., Storage.json)
    1. Turning controls On/Off
    2. Changing Recommendation Text
    3. Changing Severity, etc.
    4. Disable attestation
+
 e. Customizing Severity labels
 f. Changing ARM policy/Alerts set (coming soon…)
 g. Changing RBAC mandatory/deprecated lists (coming soon…)
@@ -320,31 +352,12 @@ g. Changing RBAC mandatory/deprecated lists (coming soon…)
 > is key because in a lot of policy customization tasks, you will be taking existing JSON objects and removing
 > large parts of them (to only keep the things you want to modify).
 
-The general workflow for all policy changes will be similar and involve the following steps:
-
- 1) Go to the folder you have used (or the org-setup command auto-generated) for your org-customized policies
- 2) Make any modifications to existing files (or add additional policy files as required)
- 3) Make sure that there's an entry in the ServerConfigMetadata.json file for all the files you have modified
- (Make sure that this entry matches the file names with correct case!)
- 4) Run the policy update command to upload all artifacts to the policy server
- 5) Test in a fresh PS console that the policy change is in effect. (Policy changes do not require re-installation of AzSK.)
-
-Note that you can upload policy files from any folder (e.g., a clone of the originally used/created one). It just needs to 
-have the same folder structure as the default one generated by the first-time policy setup and you must specify
-the folder path using the '-PolicyFolderPath' parameter.
-
-Because policy on the server works using the 'overlay' approach, the corresponding file on the server
-only needs to have the specific changes that are required (plus some identifying elements in some cases).
-
-Lastly, note that when making modifications we will **never** edit the files that came with the AzSK installation. 
-We will create copies of the files we wish to edit, place them in our org-policy folder and make requisite
-modifications there.
 
 ##### a) Changing the default `'Running AzSK using...'` message
-Whenever any user in your org runs an AzSK command after having installed AzSK using your org-specific installer, 
+Whenever any user in your org runs an AzSK command after having installed AzSK using your org-specific installer (IWR), 
 they should see a message such as the following (note the 'Contoso-IT') indicating that AzSK is running using an org-specific policy:
 
-    Running AzSK cmdlet using Contoso-IT policy
+    Running AzSK cmdlet using ***Contoso-IT*** policy
 
 Notice that here, the default (first-time) org policy setup injects the 'Contoso-IT' based on the OrgName and
 the DeptName that you provided when you setup your org policy server. (When users are running without your 
@@ -356,20 +369,38 @@ from the server version of this file.
 
 You may want to change this message to something more detailed. (Or even use this as a mechanism to notify all users
 within the org about something related to AzSK that they need to attend to immediately.) 
-In this example let us just make a simple change to this message. We will just add '*' characters on either side 
+In this example let us just make a simple change to this message. We will just more '*' characters on either side 
 of the 'Contoso-IT' so it stands out a bit.
 
 ###### Steps:
 
- i) Open the AzSk.json from your local org-policy folder
+ i) Open the AzSk.json from your local org-policy folder.
+     Path from example: D:\ContosoPolicies\Config\AzSK.json
 
- ii) Edit the value for "Policy Message" field by adding 3 '*' characters on each side of 'Contoso-IT' as under:
+ ii) Edit the value for "Policy Message" field by adding 5 '*' characters on each side of 'Contoso-IT' as under:
 ```
-    "PolicyMessage" : "Running AzSK cmdlet using *** Contoso-IT *** policy"
+    "PolicyMessage" : "Running AzSK cmdlet using ***** Contoso-IT ***** policy"
 ```
  iii) Save the file
  
- iv) Run the policy setup command (the same command you ran for the first-time setup)
+ iv) Run the policy update command 
+
+```PowerShell
+Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+   -OrgName "Contoso" `
+   -DepartmentName "IT" `
+   -PolicyFolderPath "D:\ContosoPolicies"
+
+ #If custom resource names are used during setup, you can use below parameters to download policy
+
+Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+   -OrgName "Contoso-IT" `           
+   -ResourceGroupName "Contoso-IT-RG" `
+   -StorageAccountName "contosoitsa" `
+   -AppInsightName "ContosoITAppInsight" `
+   -PolicyFolderPath "D:\ContosoPolicies"
+```
+
 
 ###### Testing:
 
@@ -410,30 +441,13 @@ Rather, **always** copy the file to your own org-policy folder and edit it there
 
  iii) Save the file
  
- iv) Edit the ServerConfigMetadata.json file in the org-policy folder and create an entry for this file (if not already there)
-
-![Entry in ServerConfigMetadata.json](../Images/07_OrgPolicy_Chg_SCMD_Entry.PNG) 
-
-```JSON
-{
-    "OnlinePolicyList" : [
-        {
-            "Name" : "AzSk.json"
-        }, 
-        {
-            "Name" : "ControlSettings.json"
-        }
-    ]
-}
-```
-
- v) Rerun the policy setup command (the same command you ran for the first-time setup)
+ iv) Rerun the policy update or setup command (the same command you ran for the first-time setup)
  
 ###### Testing: 
 
 Anyone in your org can now start a fresh PS console and the result of the evaluation of the number of owners/admins control in 
 the subscription security scan (Get-AzSKSubscriptionSecurityStatus) should reflect that the new setting is in 
-effect. (E.g., if you change the max count to 3 and they had 4 owners/admins in their subscription, then the control
+effect. (E.g., if you change the max count to 3 and they had 4 owners/admins in their subscription, then the control (Azure_Subscription_AuthZ_Limit_Admin_Owner_Count)
 result will change from 'Passed' to 'Failed'.)
 
 
@@ -564,26 +578,7 @@ in your org has developed. Let us do this for the Storage.json file. Specificall
 
  iii) Save the file
 
- iv) Edit the ServerConfigMetadata.json file in the org-policy folder and create an entry for this file (if not already there)
-
- It should look something like the below:
-```JSON
-{
-    "OnlinePolicyList" : [
-        {
-            "Name" : "AzSk.json"
-        }, 
-        {
-            "Name" : "ControlSettings.json"
-        }, 
-        {
-            "Name" : "Storage.json"
-        }
-    ]
-}
-```  
-
- v) Rerun the org policy setup command (the same command you ran for the first-time setup)
+ iv) Rerun the org policy update or setup command (the same command you ran for the first-time setup)
  
 ###### Testing: 
 Someone in your org can test this change using the `Get-AzSKAzureServicesSecurityStatus` command on a target
@@ -627,9 +622,27 @@ Someone in your org can test this change using the `Get-AzSKAzureServicesSecurit
 the controls severity shows as `Important` instead of `High` and `Moderate` instead of `Medium` in the output CSV.
 
 
-## Using CICD Extension with custom org-policy
+## Consuming custom org policy
 
-To set up CICD when using custom org-policy, please follow below steps:
+Running scan with org policy is supported from all three environments by AzSK i.g. local scan (SDL), CICD SVT task, continuous assurance setup. Follow below steps for same
+
+### 1. Running scan in local machine with custom org policy
+
+ To run scan with org policy from any other machine, get IWR cmdlet from org policy owner. This cmdlet is generated at the time of policy setup or update with below format
+
+```PowerShell
+#Example IWR to install org specific configurations
+iwr 'https://azskcontosoitsa.blob.core.windows.net/installer/AzSK-EasyInstaller.ps1' -UseBasicParsing | iex
+
+#Subscription Scan with org policy
+Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubId>
+```
+
+This step is pre-requistie for other two methods.
+
+### Using CICD Extension with custom org policy
+
+To set up CICD when using custom org policy, please follow below steps:
 1. Add Security Verification Tests (SVTs) in VSTS pipeline by following the main steps [here](../03-Security-In-CICD#adding-svts-in-the-release-pipeline).
 2. Obtain the policy store URl by:
 	1. Download the installer file (ps1) from Org specific iwr command. To download file, just open the URL from iwr command.
