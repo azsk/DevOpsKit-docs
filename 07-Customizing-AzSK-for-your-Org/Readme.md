@@ -786,7 +786,7 @@ that, you may have to keep a separate copy and upload it. (We will revisit this 
 
 Generally AzSK modules gets released on every mid of the month with latest features and control updates. It is recommended to go through release notes for the version and follow below steps to upgrade org AzSK version to latest available version.
 
-1. Go through latest version [release notes](https://azsk.azurewebsites.net/ReleaseNotes/LatestReleaseNotes.html) and breaking changes updates for Org policy 
+1. Go through latest version [release notes](https://azsk.azurewebsites.net/ReleaseNotes/LatestReleaseNotes.html) and breaking changes [updates for Org policy](https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/OrgPolicyUpdate.md)
 
 2. Install latest AzSK module in local machine with the help of common setup command
 
@@ -839,6 +839,16 @@ Once Org policy is updated with latest version, you will see it in effect in all
  ![CAVersionSummary.json](../Images/07_OrgPolicy_CAVersionSummary.PNG)
  
  **CICD:** As of now, CICD SVT task does not support version from org policy settings. It always installs latest AzSK version irrespective of version mentioned in policy. Although it refers other control policies from policy stores.
+
+### Maintaining policy in source-control
+
+Coming soon
+
+### Policy deployment using CICD pipeline
+
+Coming soon
+
+## Create Monitoring Solutions
 
 ## Create Cloud Security Compliance Report for your org in PowerBI
 Once you have an org policy setup and running smoothly with multiple subscriptions across your org being scanned using your policy, you will need a solution that provides visibility to security compliance for all the subscriptions across your org. This will help you drive compliance/risk governance initiatives for your organization. 
@@ -963,6 +973,75 @@ Add refresh scheduling timings and click on "Apply"
 **Note:** You may not see "Schedule refresh" option if step [a3] and [a4] is not completed successfully.
 
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_24.png)
+
+
+
+
+### AzSK org health monitoring dashboard
+
+Monitoring dashboard gets created along with policy setup and it lets you monitor the operations for various DevOps Kit workflows at your org.(e.g. CA issues, anomalous control drifts, evaluation errors, etc.). 
+
+You will be able to see the dashboard at the home page of Azure Portal. If not, you can navigate to below path see the dashboard
+
+Go to Azure Portal --> Select "Browse all dashboards" in dashboard dropdown -->  Select type "Shared Dashboard" --> Select subscription where policy is setup -->Select "DevOps Kit Monitoring Dashboard [OrgName]"
+
+Below is snapshot of the dashboard
+<img alt="Effective Org Policy Evaluation" src="../Images/07_OrgPolicy_MonitoringDashboard.png" />
+
+### Detail resource inventory dashboard
+
+Coming soon
+
+
+## Compliance reporting
+
+### Create compliance notification to Org users
+
+Coming soon
+
+## Advanced Scenarios for org policy customization/extending AzSK
+
+### Subscription Security
+   
+   #### Changing ARM policy
+
+   #### Changing alerts set
+
+   #### Changing RBAC mandatory/deprecated lists
+   
+
+### SVT customization
+   - [Update/extend existing control by augmenting logic]()
+   - [Add new control for existing GSS/GRS SVT]()
+   - [Add new SVT altogether (non-existing SVT)]()
+
+- [ARM Checker policy customization]()
+
+### Scenario(s) for modifying ScanAgent
+   #### Scanning only baseline controls using continuous assurance setup
+
+   Continuous Assurance (CA) is configured to scan all the controls. We have kept this as a default behavior since org users often tend to miss out on configuring baseline controls. This behavior is controlled from org policy. 
+   If you observed, there are two files present in policy folder under **CA-Runbook** folder, 
+   
+   - RunbookCoreSetup.ps1: Responsible to install AzSK module  
+   - RunbookScanAgent.ps1: Performs CA scans and export results to storage account 
+   
+   If you open RunbookScanAgent and search for the scan command text Get-AzSKAzureServicesSecurityStatus and Get-AzSKSubscriptionSecurityStatus, you will find it is scanning for all controls excluding "OwnerAccess" control. This is due to limited (reader) permission on subscription.  
+   To make baseline scan append filter _-UseBaselineControls_ parameter to commands
+
+   Follow the same steps to publish this files to org policy store. 
+
+   After policy update, CA will start scanning only baseline controls.
+
+
+   #### Scan on resource deployment
+
+   #### Reporting critical alerts
+
+### Plugging in listeners
+   #### Sending events to EventHub for entire org
+
+   #### Sending events to Splunk (via WebHook) for entire org
 
 
 ## Frequently Asked Questions
