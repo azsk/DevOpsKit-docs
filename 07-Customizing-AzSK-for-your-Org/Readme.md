@@ -624,23 +624,57 @@ the controls severity shows as `Important` instead of `High` and `Moderate` inst
 
 ## Consuming custom org policy
 
-Running scan with org policy is supported from all three environments by AzSK i.g. local scan (SDL), CICD SVT task, continuous assurance setup. Follow below steps for same
+Running scan with org policy is supported from all three environments by AzSK i.g. local scan (SDL), continuous assurance setup and CICD SVT task. Follow below steps for same
 
 ### 1. Running scan in local machine with custom org policy
 
- To run scan with org policy from any other machine, get IWR cmdlet from org policy owner. This cmdlet is generated at the time of policy setup or update with below format
+ To run scan with org policy from any other machine, get IWR cmdlet from org policy owner. This IWR is generated at the time of policy setup (IOP) or update (UOP) with below format
 
 ```PowerShell
 #Example IWR to install org specific configurations
 iwr 'https://azskcontosoitsa.blob.core.windows.net/installer/AzSK-EasyInstaller.ps1' -UseBasicParsing | iex
 
-#Subscription Scan with org policy
+#Run subscription scan cmdlet and validate if it is running with org policy
 Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubId>
 ```
 
 This step is pre-requistie for other two methods.
 
 ### 2. Setup Continuous Assurance
+
+Setting up CA with Org policy is pretty simple. Once you follow first step i.g. running IWR in local machine. You can run CA setup with the help of doc [here](https://github.com/azsk/DevOpsKit-docs/blob/master/04-Continous-Assurance/Readme.md#setting-up-continuous-assurance---step-by-step). 
+CA setup command will refer policy setting from your local machine and configure it in automation runbook.
+For existing CA, you just need to run *Update-AzSKContinuousAssurance* in your local.
+
+
+To validate if CA is running with Org policy, you can check with one of the below options 
+
+   Option 1:
+
+   Go to central CA resource group --> automation account --> Jobs --> Open one of completed job --> It prints initials of PolicyStoreURL (Policy Store URL is nothing but Org policy storage account blob url)
+
+   ![AzSK Org policy check using runbook ](../Images/07_OrgPolicy_CA_PolicyCheck-0.PNG)
+
+   Option 2:
+
+   i) Download latest AzSK Scan logs stored in storage account (inside AzSKRG) 
+
+   ![AzSK Scan Logs](../Images/07_OrgPolicy_CA_PolicyCheck-1.PNG)
+
+   ii) Open PowerShellOutput.log file under etc folder and validate policy name
+
+   ![AzSK Scan Logs](../Images/07_OrgPolicy_CA_PolicyCheck-2.PNG)
+
+   Option 3:
+
+   Go to OMS workspace which was configured during CA setup and execute below query
+
+   ```AI Query
+   AzSK_CL | where Source_s == "CA" |  summarize arg_max(TimeGenerated,*) by SubscriptionId  | project SubscriptionId,PolicyOrgName_s | render table
+   ```
+   It will output the subscriptoins running with org policy table like below
+
+   ![AzSK Scan Logs](../Images/07_OrgPolicy_CA_PolicyCheck-3.PNG)
 
 
 ### 3. Using CICD Extension with custom org policy
@@ -797,20 +831,20 @@ Generally AzSK modules gets released on every mid of the month with latest featu
 
 3. Perform breaking changes with the help of Org policy updates page and run UOP AzSK version update flag
 
-```PowerShell
-# For Basic Setup
-Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
-   -OrgName "Contoso" `
-   -DepartmentName "IT" `
-   -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
+   ```PowerShell
+   # For Basic Setup
+   Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+      -OrgName "Contoso" `
+      -DepartmentName "IT" `
+      -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
 
-#For custom Resource Group Setup
-Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
-   -OrgName "Contoso-IT" `           
-   -ResourceGroupName "Contoso-IT-RG" `
-   -StorageAccountName "contosoitsa" `
-   -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
-```
+   #For custom Resource Group Setup
+   Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+      -OrgName "Contoso-IT" `           
+      -ResourceGroupName "Contoso-IT-RG" `
+      -StorageAccountName "contosoitsa" `
+      -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
+   ```
 
  Internally, this will update AzSK.Pre.json file present on Org policy with latest AzSK version. 
  
@@ -1002,10 +1036,44 @@ Coming soon
 ## Advanced Scenarios for org policy customization/extending AzSK
 
 ### Subscription Security
-   
+   Along with subscription security checks, AzSK provides security provisioning commands (like set mandatory ARM policies, RBAC roles, ASC configurations etc.) on subscription. Refer [link](https://github.com/azsk/DevOpsKit-docs/blob/master/01-Subscription-Security/Readme.md#azsk-subscription-security-provisioning-1) for more details on provisioning commands. All these policies can be customized with the help of org policy.
+
    #### Changing ARM policy
+   GSS ARM policy control validates default AzSK ARM policy presence in subscription i.g. whether subscription contain ARM policy to restrict creation of classic resources
+
+
+   GSS -SID <SubId> -ControlIds "Azure_Subscription_Config_ARM_Policy"
+
+   ```JSON
+   {
+   "Version": "3.1809.0",
+   "Policies": [      
+      {
+         "policyDefinitionName": "AzSK_ARMPol_Deny_Classic_Resource_Create",
+         "policyDefinition": "{\"if\":{\"anyOf\":[{\"field\":\"type\",\"like\":\"Microsoft.ClassicCompute/*\"},{\"field\":\"type\",\"like\":\"microsoft.classicStorage/*\"},{\"field\":\"type\",\"like\":\"Microsoft.ClassicNetwork/*\"}]},\"then\":{\"effect\":\"deny\"}}",
+         "description": "Policy to deny upon creation of classic/v1 (i.e., ASM-based) resources",
+         "tags": [
+            "Mandatory"
+         ],
+         "applicableForRGs": ["*"],
+         "enabled": true,
+         "scope": "/subscriptions/$subscriptionId"
+      }
+   ],
+   "DeprecatedPolicies" : ["AzSK_ARMPol_Audit_Classic_Resource_Create",
+      "AzSK_ARMPol_Audit_NonHBI_Resource_Create",
+      "AzSK_ARMPol_Audit_Job_Scheduler_Free_Tier",
+      "AzSK_ARMPol_Audit_SQL_Basic_Create",
+      "AzSK_ARMPol_Audit_NonGRS_Storage_SKU",
+      "AzSK_ARMPol_Audit_Old_SQL_Version"
+   ]
+}
+   ```
+
 
    #### Changing alerts set
+
+   #### Security center configurations
 
    #### Changing RBAC mandatory/deprecated lists
    
