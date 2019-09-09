@@ -269,16 +269,20 @@ Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubId>
 <img alt="Effective Org Policy Evaluation" src="../Images/07_Custom_Policy_IWROutput.png" />
 
 
-To run this policy in different environment other than local like AzSK CICD SVT Task or Continuous Assurance setup, refer section [Consuming custom Org policy]()
+## Next Steps:
 
-Monitoring dashboard gets created along with policy deployment and it lets you monitor the operations for various DevOps Kit workflows at your org.(e.g., CA issues, anomalous control drifts, evaluation errors, etc.). 
+Once your org policy is setup, all scenarios/use cases of AzSK should work seamlessly with your org policy server
+as the policy endpoint for your org (instead of the default CDN endpoint). Basically, you should be able to do one 
+or more of the following using AzSK:
 
-You will be able to see the dashboard at the home page of Azure Portal. If not, you can navigate to below path see the dashboard
-
-Go to Azure Portal --> Select "Browse all dashboards" in dashboard dropdown -->  Select type "Shared Dashboard" --> Select subscription where policy is setup -->Select "DevOps Kit Monitoring Dashboard [OrgName]"
-
-Below is snapshot of the dashboard
-<img alt="Effective Org Policy Evaluation" src="../Images/07_OrgPolicy_MonitoringDashboard.png" />
+ - People will be able to install AzSK using your special org-specific installer (the 'iwr' install command)
+ - Developers will be able to run manual scans for security of their subscriptions and resources (GRS, GSS commands)
+ - Teams will be able to configure the AzSK SVT release task in their CICD pipelines
+ - Subscription owners will be able to setup Continuous Assurance (CA) from their local machines (**after** they've installed
+ AzSK using your org-specific 'iwr' installer locally)
+ - Monitoring teams will be able to setup AzSK Log Analytics view and see scan results from CA (and also manual scans and CICD if configured) 
+ - You will be able to do central governance for your org by leveraging telemetry events that will collect in the master subscription
+ from all the AzSK activity across your org. 
 
 
 ## Modifying and customizing org policy 
@@ -624,11 +628,11 @@ the controls severity shows as `Important` instead of `High` and `Moderate` inst
 
 ## Consuming custom org policy
 
-Running scan with org policy is supported from all three environments by AzSK i.g. local scan (SDL), continuous assurance setup and CICD SVT task. Follow below steps for same
+Running scan with org policy is supported from all three environments i.g. local scan (SDL), continuous assurance setup and CICD SVT task. Follow below steps for same
 
 ### 1. Running scan in local machine with custom org policy
 
- To run scan with org policy from any other machine, get IWR cmdlet from org policy owner. This IWR is generated at the time of policy setup (IOP) or update (UOP) with below format
+ To run scan with org policy from any machine, get IWR cmdlet from org policy owner. This IWR is generated at the time of policy setup (IOP) or update (UOP) with below format
 
 ```PowerShell
 #Example IWR to install org specific configurations
@@ -681,40 +685,29 @@ To validate if CA is running with Org policy, you can check with one of the belo
 
 To set up CICD when using custom org policy, please follow below steps:
 1. Add Security Verification Tests (SVTs) in VSTS pipeline by following the main steps [here](../03-Security-In-CICD#adding-svts-in-the-release-pipeline).
-2. Obtain the policy store URl by:
-	1. Download the installer file (ps1) from Org specific iwr command. To download file, just open the URL from iwr command.
-	```	
-	E.g.: iwr 'https://azskxxx.blob.core.windows.net/installer/AzSK-EasyInstaller.ps1' -UseBasicParsing | iex
-	```
-	2.  Open the downloaded file, find the following variable and copy the URL as below. 
-	```	
-	[string] $OnlinePolicyStoreUrl = "https://azskxxx.blob.core.windows.net/policies/`$(`$Version)/`$(`$FileName)?sv=2016-05-		31&sr=c&sig=xxx&spr=https&st=2018-01-02T11%3A18%3A37Z&se=2018-07-03T11%3A18%3A37Z&sp=rl" , 
-	```
-3. Remove the 4 backtick (\`) characters from URL.
-```
-E.g. https://azskxxx.blob.core.windows.net/policies/$($Version)/$($FileName)?sv=2016-05-31&sr=c&sig=xxx&spr=https&st=2018-01-02T11%3A18%3A37Z&se=2018-07-03T11%3A18%3A37Z&sp=rl
-```
-4. Add following variables in the release definition in which ‘AzSK Security Verification Tests’ task is added. 
-	1. AzSKServerURL = <Modified URL from step 4>.
-	2. EnableServerAuth = false 
-	
+2. Make sure step 5 is completed for adding variables(AzSKServerURL and EnableServerAuth) in same document
+
 Having set the policy URL along with AzSK_SVTs Task, you can verify if your CICD task has been properly setup by following steps [here](../03-Security-In-CICD#verifying-that-the-svts-have-been-added-and-configured-correctly).
 
 
-## Next Steps:
 
-Once your org policy is setup, all scenarios/use cases of AzSK should work seamlessly with your org policy server
-as the policy endpoint for your org (instead of the default CDN endpoint). Basically, you should be able to do one 
-or more of the following using AzSK:
+Policy owner can monitor subscriptions being scanned from different environments with the help of application insight telemetry.
 
- - People will be able to install AzSK using your special org-specific installer (the 'iwr' install command)
- - Developers will be able to run manual scans for security of their subscriptions and resources (GRS, GSS commands)
- - Teams will be able to configure the AzSK SVT release task in their CICD pipelines
- - Subscription owners will be able to setup Continuous Assurance (CA) from their local machines (**after** they've installed
- AzSK using your org-specific 'iwr' installer locally)
- - Monitoring teams will be able to setup AzSK Log Analytics view and see scan results from CA (and also manual scans and CICD if configured) 
- - You will be able to do central governance for your org by leveraging telemetry events that will collect in the master subscription
- from all the AzSK activity across your org. 
+```AI Query
+customEvents
+| where timestamp >= ago(7d)
+| where name == "Control Scanned"
+| summarize arg_max(timestamp, *)  by Day = bin(timestamp,1d), ScanSource = tostring(customDimensions.ScanSource),tostring(customDimensions.SubscriptionId) 
+| summarize SubscriptionCount = count() by Day, ScanSource
+| render barchart
+```
+Output:
+
+![AzSK Scan Logs](../Images/06_AIGraph_Usage.png)
+
+
+
+
 
 ### Managing policy/advanced policy usage
 
@@ -926,6 +919,8 @@ In this step we will import the data above into the AI workspace created during 
  
  **(b)** To push Org Mapping details, copy and execute the script available [here](./Scripts/OrgPolicyPushOrgMappingEvents.txt).
 
+ > **Note**: Due to limitation of application insight, you will need to repeat this step every 90 days interval. 
+
 #### Step 3: Create a PowerBI report file
 In this section we shall create a PowerBI report locally within PowerBI Desktop using the AI workspace from org policy subscription as the datasource. We will start with a default (out-of-box) PowerBI template and configure it with settings specific to your environment. 
 
@@ -1007,7 +1002,6 @@ Add refresh scheduling timings and click on "Apply"
 **Note:** You may not see "Schedule refresh" option if step [a3] and [a4] is not completed successfully.
 
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_24.png)
-
 
 
 
