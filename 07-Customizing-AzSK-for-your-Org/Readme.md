@@ -27,7 +27,7 @@
          - Changing Severity
          - Disable attestation e. Customizing Severity labels
       - [Setting up and updating baselines]()
-      - [Use of preview baselines]()
+      - [Customizing Severity labels]()
 
 
 ### [Consuming custom Org policy](Readme.md#modifying-and-customizing-org-policy-1)
@@ -39,12 +39,9 @@
 
 ### [Managing policy/advanced policy usage ]()
 
-- [Downloading, examining policy]()
-   - Configurations
-   - Runbooks
+- [Downloading and examining policy folder]()
 
 - [Working with ‘local’ mode (policy dev-test-debug)]()
-   - [Testing locally]()
 
 - [How to upgrade Org version to latest AzSK version]()
    
@@ -73,11 +70,7 @@
 - [Create compliance notification to Org users]()
 
 
-### [Advanced Scenarios for org policy customization/extending AzSK)]() 
-
-- [Subscription Security]()
-   - [Changing RBAC mandatory/deprecated lists]()
-   - [Changing ARM policy/Alerts set]()
+### [Advanced scenarios for org policy customization/extending AzSK]() 
 
 - [SVT customization]()
    - [Update/extend existing control by augmenting logic]()
@@ -86,14 +79,24 @@
 
 - [ARM Checker policy customization]()
 
+- [Subscription Security]()
+   - [Changing RBAC mandatory/deprecated lists]()
+   - [Changing ARM policy/Alerts set]()
+
 - [Scenario(s) for modifying ScanAgent]()
    - [Scanning only baseline controls using continuous assurance setup]()
+   - [Scanning admin and graph access controls using CA]()
    - [Scan on resource deployment]()
    - [Reporting critical alerts]()
+   - [Collecting dynamic resource metadata using scan agent]()
 
 - [Plugging in listeners]()
    - [Sending events to EventHub for entire org]()
    - [Sending events to Splunk (via WebHook) for entire org]()
+
+- [Change default resource group name (AzSKRG) and location (EastUS2) created for AzSK components]()
+
+### [Org policy usage statistics and monitoring using telemetry]()
 
 
 ### [Troubleshooting common issues](Readme.md#testing-and-troubleshooting-org-policy-1)
@@ -454,85 +457,7 @@ the subscription security scan (Get-AzSKSubscriptionSecurityStatus) should refle
 effect. (E.g., if you change the max count to 3 and they had 4 owners/admins in their subscription, then the control (Azure_Subscription_AuthZ_Limit_Admin_Owner_Count)
 result will change from 'Passed' to 'Failed'.)
 
-
-##### c) Creating a custom control 'baseline' for your org
-Note that a powerful capability of AzSK is the ability for an org to define a baseline control set on the policy server
-that can be leveraged by all individuals in the org (and in other AzSK scenarios like CICD, CA, etc.) via the "-UseBaselineControls" parameter
-during scan commands. 
-
-By default, when someone runs against the CDN endpoint, the "-UseBaselineControls" parameter leverages the set of
-controls listed as baseline in the ControlSettings.json file present on CDN. 
-
-However, once you have set up an org policy server for your organization, the CDN endpoint is no more in use. (As a 
-side note, you can always 'simulate' CDN-based/org-neutral execution by removing or renaming your 
-`%localappdata%\Microsoft\AzSK\AzSKSettings.json` file.) Thus, after org policy is setup, there will 
-not be a 'baseline' control set defined for your organization. Indeed, if you run any of the scan commands using the
-"-UseBaselineControls" switch, you will see that the switch gets ignored and **all** controls for respective 
-resources are evaluated. 
-
-To support the baseline controls behavior for your org, you will need to define your baseline in the ControlSettings.json
-file. Here are the steps...
-
-###### Steps: 
-
-(We will assume you have tried the max owner/admin count steps in (b) above and edit the ControlSettings.json 
-file already present in your org policy folder.)
-
- i) Edit the ControlSettings.json file to add a 'BaselineControls' object as per below:
- 
-```JSON
-{
-   "NoOfApprovedAdmins": 1,
-   "BaselineControls": {
-      "ResourceTypeControlIdMappingList": [
-         {
-            "ResourceType": "AppService",
-            "ControlIds": [
-               "Azure_AppService_DP_Dont_Allow_HTTP_Access",
-               "Azure_AppService_AuthN_Use_AAD_for_Client_AuthN"
-            ]
-         },
-         {
-            "ResourceType": "Storage",
-            "ControlIds": [
-               "Azure_Storage_AuthN_Dont_Allow_Anonymous",
-               "Azure_Storage_DP_Encrypt_In_Transit"
-            ]
-         }
-      ],
-      "SubscriptionControlIdList": [
-         "Azure_Subscription_AuthZ_Limit_Admin_Owner_Count",
-         "Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities",
-         "Azure_Subscription_Config_Azure_Security_Center"
-      ]
-   }
-}
-```
-
-> Notice how, apart from the couple of extra elements at the end, the baseline set is pretty much a list of 'ResourceType'
-and 'ControlIds' for that resource...making it fairly easy to customize/tweak your own org baseline. 
-> Here the name and casing of the resource type name must match that of the policy JSON file for the corresponding 
-> resource's JSON file in the SVT folder and the control ids must match those included in the JSON file. 
-
-> Note: Here we have used a very simple baseline with just a couple of resource types and a very small control set.
-> A more realistic baseline control set will be more expansive. 
-> <!-- TODO - add CDN-baseline pointer --> 
-    
- ii) Save the ControlSettings.json file
- 
- iii) Confirm that an entry for ControlSettings.json is already there in the ServerConfigMetadata.json file. (Else see step-iii in (c) above.)
- 
- iv) Run the policy setup command (the same command you ran for the first-time setup)
-
-###### Testing:
-
-To test that the baseline controls set is in effect, anyone in your org can start a fresh PS console and run the subscription
-and resources security cmdlets with the `-UseBaselineControls` parameter. You will see that regardless of the actual
-types of Azure resources present in their subscriptions, only the ones mentioned in the baseline get evaluated in the scan
-and, even for those, only the baseline controls get evaluated.
-
-
-##### d) Customizing specific controls for a service 
+##### c) Customizing specific controls for a service 
 
 In this example, we will make a slightly more involved change in the context of a specific SVT (Storage). 
 
@@ -595,6 +520,85 @@ from a baseline scan after this change:
 
 Likewise, if you run without the `-UseBaselineControls` parameter, you will see that the anon-alert control does not get evaluated and does not
 appear in the resulting CSV file. 
+
+
+##### c) Creating a custom control 'baseline' for your org
+Note that a powerful capability of AzSK is the ability for an org to define a baseline control set on the policy server
+that can be leveraged by all individuals in the org (and in other AzSK scenarios like CICD, CA, etc.) via the "-UseBaselineControls" parameter
+during scan commands. 
+
+By default, when someone runs against the CDN endpoint, the "-UseBaselineControls" parameter leverages the set of
+controls listed as baseline in the ControlSettings.json file present on CDN. 
+
+However, once you have set up an org policy server for your organization, the CDN endpoint is no more in use. (As a 
+side note, you can always 'simulate' CDN-based/org-neutral execution by removing or renaming your 
+`%localappdata%\Microsoft\AzSK\AzSKSettings.json` file.) Thus, after org policy is setup, there will 
+not be a 'baseline' control set defined for your organization. Indeed, if you run any of the scan commands using the
+"-UseBaselineControls" switch, you will see exception "There are no baseline controls defined for your org. No controls will be scanned."
+
+To support the baseline controls behavior for your org, you will need to define your baseline in the ControlSettings.json
+file. Here are the steps...
+
+###### Steps: 
+
+(We will assume you have tried the max owner/admin count steps in (b) above and edit the ControlSettings.json 
+file already present in your org policy folder.)
+
+ i) Edit the ControlSettings.json file to add a 'BaselineControls' object as per below:
+ 
+```JSON
+{
+   "NoOfApprovedAdmins": 1,
+   "BaselineControls": {
+      "ResourceTypeControlIdMappingList": [
+         {
+            "ResourceType": "AppService",
+            "ControlIds": [
+               "Azure_AppService_DP_Dont_Allow_HTTP_Access",
+               "Azure_AppService_AuthN_Use_AAD_for_Client_AuthN"
+            ]
+         },
+         {
+            "ResourceType": "Storage",
+            "ControlIds": [
+               "Azure_Storage_AuthN_Dont_Allow_Anonymous",
+               "Azure_Storage_DP_Encrypt_In_Transit"
+            ]
+         }
+      ],
+      "SubscriptionControlIdList": [
+         "Azure_Subscription_AuthZ_Limit_Admin_Owner_Count",
+         "Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities",
+         "Azure_Subscription_Config_Azure_Security_Center"
+      ]
+   }
+}
+```
+
+> Notice how, apart from the couple of extra elements at the end, the baseline set is pretty much a list of 'ResourceType'
+and 'ControlIds' for that resource...making it fairly easy to customize/tweak your own org baseline. 
+> Here the name and casing of the resource type name must match that of the policy JSON file for the corresponding 
+> resource's JSON file in the SVT folder and the control ids must match those included in the JSON file. 
+
+> Note: Here we have used a very simple baseline with just a couple of resource types and a very small control set.
+> A more realistic baseline control set will be more expansive. You can refere CSEO defined baseline using ControlSettings file [here](https://github.com/azsk/DevOpsKit/blob/master/src/OSSConfiguration/ControlSettings.json).
+    
+ ii) Save the ControlSettings.json file
+ 
+ iii) Confirm that an entry for ControlSettings.json is already there in the ServerConfigMetadata.json file. (Else see step-iii in (c) above.)
+ 
+ iv) Run the policy setup command (the same command you ran for the first-time setup)
+
+###### Testing:
+
+To test that the baseline controls set is in effect, anyone in your org can start a fresh PS console and run the subscription
+and resources security cmdlets with the `-UseBaselineControls` parameter. You will see that regardless of the actual
+types of Azure resources present in their subscriptions, only the ones mentioned in the baseline get evaluated in the scan
+and, even for those, only the baseline controls get evaluated.
+
+
+> **Note:** Similar to baseline control, you can also define preview baseline set with the help of similar property "PreviewBaselineControls" in ControlSettings.json. This preview set gets scanned using parameter `-UsePreviewBaselineControls` with scan commands.
+
 
 ##### e) Customizing Severity labels 
 Ability to customize naming of severity levels of controls (e.g., instead of High/Medium, etc. one can now have Important/Moderate, etc.) with the changes reflecting in all avenues (manual scan results/CSV, Log Analytics workspace, compliance summaries, dashboards, etc.)
@@ -711,14 +715,23 @@ Output:
 
 ### Managing policy/advanced policy usage
 
-#### Downloading, examining policy
+#### Downloading and examining policy folder
 
-   - Configurations
-   - Runbooks
+After installing org policy, you must have observed command creates policy folder in local machine with some default folders and files. 
+
+
+
+If you dont have policies, you can always download it using below command
+
+These files gets uploaded to policy storage with below mapping
+
+
+
+
 
 #### Working with ‘local’ mode (policy dev-test-debug)
 
-You will be able to run scan pointing to local policy present in machine and test it. It always recommended to test you policy customization using this method before updating it to server with the help of below steps 
+You will be able to run scan pointing to local policy present in machine and test the configuration changes. It always recommended to test you policy customization using this method before updating it to server with the help of below steps 
 
 Step 1: Point AzSK settings to local Org policy folder("D:\ContosoPolicies\"). 
     
@@ -728,7 +741,21 @@ Set-AzSKPolicySettings -LocalOrgPolicyFolderPath "D:\ContosoPolicies\"
 
 This will update "AzSKSettings.json" file present at location "%LocalAppData%\Microsoft\AzSK" to point to local folder instead of server storage.
 
-Step 2: Perform the customization to policy files as per scenarios. If you are adding any new files to policy folder, you must update configuration index (ServerConfigMetadata.json) with new policy file name.
+You can run Get-AzSKInfo (GAI) cmdlet to check the current AzSK settings. It will show OnlinePolicyStoreUrl as policyFolder path (instead of the blob URL). 
+
+   ```PowerShell
+   GAI -InfoType HostInfo
+   ```
+![Local Host Settings](../Images/07_OrgPolicy_LocalSettings.PNG)
+
+
+Step 2: Perform the customization to policy files as per scenarios. 
+
+Here we will take example of adding preview baseline controls to ControlSettings.json
+
+
+
+If you are adding any new files to policy folder, you must update configuration index (ServerConfigMetadata.json) with new policy file name.
 
 ![Entry in ServerConfigMetadata.json](../Images/07_OrgPolicy_Chg_SCMD_Entry.PNG)
 
@@ -1029,6 +1056,14 @@ Coming soon
 
 ## Advanced Scenarios for org policy customization/extending AzSK
 
+### SVT customization
+
+
+   - [Update/extend existing control by augmenting logic]()
+   - [Add new control for existing GSS/GRS SVT]()
+   - [Add new SVT altogether (non-existing SVT)]()
+
+
 ### Subscription Security
    Along with subscription security checks, AzSK provides security provisioning commands (like set mandatory ARM policies, RBAC roles, ASC configurations etc.) on subscription. Refer [link](https://github.com/azsk/DevOpsKit-docs/blob/master/01-Subscription-Security/Readme.md#azsk-subscription-security-provisioning-1) for more details on provisioning commands. All these policies can be customized with the help of org policy.
 
@@ -1072,12 +1107,37 @@ Coming soon
    #### Changing RBAC mandatory/deprecated lists
    
 
-### SVT customization
-   - [Update/extend existing control by augmenting logic]()
-   - [Add new control for existing GSS/GRS SVT]()
-   - [Add new SVT altogether (non-existing SVT)]()
-
 - [ARM Checker policy customization]()
+
+#### Change default resource group name (AzSKRG) and location (EastUS2) created for AzSK components
+You can control default resource group name and location using AzSK config present in Org policy. Follow below steps to override default behaviour.
+
+> **Note:** Changing default resource group name will break existing continuous assurance setup. You will need to do resetup of all CA.
+
+**Steps:**
+
+i) Open the AzSK.json from your local org-policy folder
+
+ii) Add the properties for  as under:
+
+    "AzSKRGName" : "<ResourceGroupName>",
+    "AzSKLocation" : "<Location>"
+
+iii) Save the file
+
+iv) Run the policy update command.
+
+
+##### Testing:
+
+Run "IWR" in new session (you can ask any other user to run this IWR) to setup policy setting in local. If you have already installed policy using IWR, just run CSS (Clear-AzSKSessionState) followed by command *Set-AzSKSubscriptionSecurity* with required parameters as per [doc](../01-Subscription-Security/Readme.md#azsk-subscription-security-provisioning-1). This will provision AzSK components(Alerts/Storage etc) under new resource group and location.
+
+**Note:** For contineous assurance setup, you need to follow two extra steps.
+
+i) Pass location parameter "AutomationAccountLocation" explicitly during execution of installation command (Install-AzSKContinuousAssurance). 
+
+ii) Update $StorageAccountRG variable (In RunbookScanAgent.ps1 file present in policy store) value  to AzSKRGName value.
+
 
 ### Scenario(s) for modifying ScanAgent
    #### Scanning only baseline controls using continuous assurance setup
@@ -1105,6 +1165,9 @@ Coming soon
 
    #### Sending events to Splunk (via WebHook) for entire org
 
+### Org policy usage statistics and monitoring using telemtry
+
+The telemetry data can be leveraged by org policy owners to understand AzSK usage, monitor compliance drift, CA health, resource inventory, troubleshooting etc. All helpful AI queries are listed on page [here](https://github.com/azsk/DevOpsKit-docs/tree/master/06-Security-Telemetry/App-Insights-Queries).
 
 ## Frequently Asked Questions
 
@@ -1168,34 +1231,6 @@ In general, we make practice to individual teams to perform scan with high privi
 - Provide CA SPN's as [Owner/Co-Admin RBAC role](https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal#grant-access) at subscription scope and [graph API read permissions](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications#updating-an-application).
 
 - Remove *-ExcludeTags "OwnerAccess"* parameter against scan commands (*Get-AzSKAzureServicesSecurityStatus* and *Get-AzSKSubscriptionSecurityStatus*) present in RunbookScanAgent.ps1 file on policy store. 
-
-#### Is it possible to control default resource group name (AzSKRG) and location (EastUS2) created for AzSK components?
-Yes. You can control default resource group name and location using AzSK config present in Org policy. Follow below steps to override default behaviour.
-
-**Steps:**
-
-i) Open the AzSK.json from your local org-policy folder
-
-ii) Add the properties for  as under:
-
-    "AzSKRGName" : "<ResourceGroupName>",
-    "AzSKLocation" : "<Location>"
-
-iii) Save the file
-
-iv) Run the policy setup command (the same command you ran for the first-time setup) or update command.
-
-
-##### Testing:
-
-Run "IWR" in new session (you can ask any other user to run this IWR) to setup policy setting in local. If you have already installed policy using IWR, just run CSS (Clear-AzSKSessionState) followed by command *Set-AzSKSubscriptionSecurity* with required parameters as per [doc](../01-Subscription-Security/Readme.md#azsk-subscription-security-provisioning-1). This will provision AzSK components(Alerts/Storage etc) under new resource group and location.
-
-**Note:** For contineous assurance setup, you need to follow two extra steps.
-
-i) Pass location parameter "AutomationAccountLocation" explicitly during execution of installation command (Install-AzSKContinuousAssurance). 
-
-ii) Update $StorageAccountRG variable ( In RunbookScanAgent.ps1 file present in policy store) value  to AzSKRGName value.
-
 
 #### How should I protect Org policy with AAD based auth?
 
