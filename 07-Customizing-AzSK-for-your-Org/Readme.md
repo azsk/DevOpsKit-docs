@@ -4,37 +4,37 @@
 
 # Customizing AzSK for your organization
  
-### [Overview](Readme.md#overview-1)
+### [Overview](Readme.md#Overview)
  - [When and why should I set up org policy?](Readme.md#when-and-why-should-i-setup-org-policy)
  - [How does AzSK use online policy?](Readme.md#how-does-azsk-use-online-policy)
 
-### [Setting up org policy](Readme.md#setting-up-org-policy-1)
+### [Setting up org policy](Readme.md#setting-up-org-policy)
  - [What happens during org policy setup?](Readme.md#what-happens-during-org-policy-setup)
  - [The org policy setup command: Install-AzSKOrganizationPolicy](Readme.md#the-org-policy-setup-command-install-azskorganizationpolicy)
  - [First-time policy setup - an example](Readme.md#first-time-policy-setup---an-example)
  
-### [Modifying and customizing org policy](Readme.md#modifying-and-customizing-org-policy-1)
- - [Getting Started](Readme.md#common-scenarios-for-org-policy-customization)
+### [Modifying and customizing org policy](Readme.md#modifying-and-customizing-org-policy)
+ - [Getting Started](Readme.md#Getting-Started)
 
 
- - [Basic scenarios for org policy customization](Readme.md#common-scenarios-for-org-policy-customization) 
+ - [Basic scenarios for org policy customization](Readme.md#Basic-scenarios-for-org-policy-customization) 
 
-      - [Changing the default 'Running AzSK using…' message]()
-      - [Changing control setting]()
-      - [Customizing specific controls for a service SVT]()
+      - [Changing the default 'Running AzSK using…' message](Readme.md#a-changing-the-default-running-azsk-using-message)
+      - [Changing control setting](Readme.md#b-changing-a-control-setting-for-specific-controls)
+      - [Customizing specific controls for a service SVT](Readme.md#c-customizing-specific-controls-for-a-service)
          - Turning controls On/Off
          - Changing Recommendation Text
          - Changing Severity
          - Disable attestation e. Customizing Severity labels
-      - [Setting up and updating baselines]()
-      - [Customizing Severity labels]()
+      - [Setting up and updating baselines for your org](Readme.md#c-creating-a-custom-control-baseline-for-your-org)
+      - [Customizing Severity labels](Readme.md#e-customizing-severity-labels)
 
 
-### [Consuming custom Org policy](Readme.md#modifying-and-customizing-org-policy-1)
+### [Consuming custom Org policy](Readme.md#consuming-custom-org-policy)
 
- - [Running scan in local machine]()
- - [Setup Continuous Assurance]()
- - [Using CICD Extension with custom org-policy]()
+ - [Running scan in local machine with custom org policy](Readme.md#1-running-scan-in-local-machine-with-custom-org-policy)
+ - [Setup Continuous Assurance](Readme.md#2-setup-continuous-assurance)
+ - [Using CICD Extension with custom org-policy](Readme.md#3-using-cicd-extension-with-custom-org-policy)
 
 
 ### [Managing policy/advanced policy usage ]()
@@ -67,7 +67,7 @@
 
 ### [Compliance reporting]()
 
-- [Create compliance notification to Org users]()
+- [Create compliance notification to subscription owners]()
 
 
 ### [Advanced scenarios for org policy customization/extending AzSK]() 
@@ -215,7 +215,7 @@ host and maintain a custom set of policy files that override the default AzSK be
 #### First-time policy setup - an example
 The following example will set up policies for IT department of Contoso organization.  
 
-You must be an 'Owner' or 'Contributor' for the subscription in which you want to host your org's policy artefacts.
+You must be an 'Owner' or 'Contributor' for the subscription in which you want to host your org's policy artifacts.
 Also, make sure that that the org name and dept name are purely alphanumeric and their combined length is less than 19 characters. The policy setup command is fairly lightweight - both in terms of effort/time and in terms of costs incurred.
 
 ```PowerShell
@@ -581,7 +581,7 @@ and 'ControlIds' for that resource...making it fairly easy to customize/tweak yo
 > resource's JSON file in the SVT folder and the control ids must match those included in the JSON file. 
 
 > Note: Here we have used a very simple baseline with just a couple of resource types and a very small control set.
-> A more realistic baseline control set will be more expansive. You can refere CSEO defined baseline using ControlSettings file [here](https://github.com/azsk/DevOpsKit/blob/master/src/OSSConfiguration/ControlSettings.json).
+> A more realistic baseline control set will be more expansive. You can refer CSEO defined baseline using ControlSettings file [here](https://github.com/azsk/DevOpsKit/blob/master/src/OSSConfiguration/ControlSettings.json).
     
  ii) Save the ControlSettings.json file
  
@@ -646,7 +646,7 @@ iwr 'https://azskcontosoitsa.blob.core.windows.net/installer/AzSK-EasyInstaller.
 Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubId>
 ```
 
-This step is pre-requistie for other two methods.
+This step is pre-requisite for other two methods.
 
 ### 2. Setup Continuous Assurance
 
@@ -680,7 +680,7 @@ To validate if CA is running with Org policy, you can check with one of the belo
    ```AI Query
    AzSK_CL | where Source_s == "CA" |  summarize arg_max(TimeGenerated,*) by SubscriptionId  | project SubscriptionId,PolicyOrgName_s | render table
    ```
-   It will output the subscriptoins running with org policy table like below
+   It will output the subscriptions running with org policy table like below
 
    ![AzSK Scan Logs](../Images/07_OrgPolicy_CA_PolicyCheck-3.PNG)
 
@@ -719,14 +719,12 @@ Output:
 
 After installing org policy, you must have observed command creates policy folder in local machine with some default folders and files. 
 
+If you don't have policies, you can always download it using command
 
-
-If you dont have policies, you can always download it using below command
 
 These files gets uploaded to policy storage with below mapping
 
-
-
+\<TODO> Talk about each file role
 
 
 #### Working with ‘local’ mode (policy dev-test-debug)
@@ -753,7 +751,7 @@ Step 2: Perform the customization to policy files as per scenarios.
 
 Here we will take example of adding preview baseline controls to ControlSettings.json
 
-
+\<TODO>
 
 If you are adding any new files to policy folder, you must update configuration index (ServerConfigMetadata.json) with new policy file name.
 
@@ -762,11 +760,17 @@ If you are adding any new files to policy folder, you must update configuration 
 Step 3: Now you run scan to see policy updates in effect. Clear session state and run scan commands (GRS or GSS) with parameters sets for which config changes are done like UseBaselineControls,ResourceGroupNames, controlIds etc.
 
 ```PowerShell
+# Clear AzSK session cache for settings
 Clear-AzSKSessionState
+
+# Run subscription scan using local policy settings
 Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubscriptionId>
 
+# Run services security scan with baseline using local policy settings
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -UseBaselineControls
 ```    
+
+<TODO Screenshot> 
 
 Step 3: If scan commands are running fine with respect to the changes done to the configuration, you can update policy based on parameter set used during installations. If you see some issue in scan commands, you can fix configurations and repeat step 2. 
 
@@ -787,10 +791,20 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
 
 Step 4: Validate if policy is correctly uploaded and there is no missing mandatory policies using policy health check command
 
+**Note:**
+It is always recommended to validate health of Org policy for mandatory configurations and policy schema syntax issues using below command. You can review the failed checks and follow the remedy suggested.
+
 ```PowerShell
 Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
-   -OrgName "Contoso" `
-   -DepartmentName "IT"
+           -OrgName "Contoso" `
+           -DepartmentName "IT"
+
+#If you have used customized resource names, you can use below parameter sets to run health check
+
+Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
+           -OrgName "Contoso-IT" `
+           -ResourceGroupName "RGName" `
+           -StorageAccountName "PolicyStorageAccountName" 
 ```
 
 Step 5: If all above steps works fine. You can point back your AzSK setting to online policy server by running "IWR" command generated at the end of *Update-AzSKOrganizationPolicy*
@@ -801,22 +815,9 @@ people could be engaged for testing the actual end user effects of changes befor
 Also, you can choose to retain the staging setup or just re-create a fresh one for each major policy change.
 
 
-**Note:**
-It is always recommendated to validate health of Org policy for mandatory configurations and policy schema syntax issues using below command. You can review the failed checks and follow the remedy suggested.
 
-```PowerShell
-Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
-           -OrgName "Contoso" `
-           -DepartmentName "IT"
 
-#If you have used customized resource names, you can use below parameter sets to run health check
 
-```PowerShell
-Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
-           -OrgName "Contoso-IT" `
-           -ResourceGroupName "RGName" `
-           -StorageAccountName "PolicyStorageAccountName" 
-```
 
 For your actual (production) policies, we recommend that you check them into source control and use the local close of *that* folder as the location
 for the AzSK org policy setup command when uploading to the policy server. In fact, setting things up so that any policy
@@ -845,8 +846,8 @@ Generally AzSK modules gets released on every mid of the month with latest featu
 2. Install latest AzSK module in local machine with the help of common setup command
 
    ```PowerShell
-   Install-Module AzSK -Scope CurrentUser -AllowClobber
    # Use -Force switch as and when required 
+   Install-Module AzSK -Scope CurrentUser -AllowClobber
    ```
 
 3. Perform breaking changes with the help of Org policy updates page and run UOP AzSK version update flag
@@ -876,7 +877,7 @@ Once Org policy is updated with latest version, you will see it in effect in all
 
 ![Entry in ServerConfigMetadata.json](../Images/07_OrgPolicy_Old_Version_Warning.PNG)
 
-**Continuouse Assurance:** CA will auto-upgrade to latest org version in next scheduled job. 
+**Continuous Assurance:** CA will auto-upgrade to latest org version in next scheduled job. 
  CA will auto-upgrade to latest org version in next schedule. You can monitor upgrade status with the help of application insight events. Use below query in org AI 
 
  ``` AI Query
@@ -902,12 +903,13 @@ Coming soon
 
 Coming soon
 
-## Create Monitoring Solutions
-
-## Create Cloud Security Compliance Report for your org in PowerBI
+# Create Security Compliance and Monitoring Solutions
 Once you have an org policy setup and running smoothly with multiple subscriptions across your org being scanned using your policy, you will need a solution that provides visibility to security compliance for all the subscriptions across your org. This will help you drive compliance/risk governance initiatives for your organization. 
 
-When you setup your org policy endpoint, one of the things that happens is creation of an Application Insights workspace for your setup. After that, whenever someone performs an AzSK scan for a subscription that is configured to use your org policy, the scan results are sent (as 'security' telemetry) to your org's Application Insights workspace. Because this workspace receives scan events from all such subscriptions, it can leveraged to generate aggregate security compliance views for your cloud-based environments. In the steps below, we will look at how a PowerBI-based compliance dashboard can be created and deployed in a matter of minutes starting with a template dashboard that ships with the AzSK. All you need apart from the Application Insights instance is a CSV file that provides a mapping of your organization hierarchy to subscription ids (so that we know which team/service group owns each subscription).
+When you setup your org policy endpoint, one of the things that happens is creation of an Application Insights workspace for your setup. After that, whenever someone performs an AzSK scan for a subscription that is configured to use your org policy, the scan results are sent (as 'security' telemetry) to your org's Application Insights workspace. Because this workspace receives scan events from all such subscriptions, it can leveraged to generate aggregate security compliance views for your cloud-based environments. 
+
+## Create Cloud Security Compliance Report for your org in PowerBI
+We will look at how a PowerBI-based compliance dashboard can be created and deployed in a matter of minutes starting with a template dashboard that ships with the AzSK. All you need apart from the Application Insights instance is a CSV file that provides a mapping of your organization hierarchy to subscription ids (so that we know which team/service group owns each subscription).
 
 > Note: This is a one-time activity with tremendous leverage as you can use the resulting dashboard (example below) towards driving security governance activities over an extended period at your organization. 
 
@@ -1032,7 +1034,7 @@ Add refresh scheduling timings and click on "Apply"
 
 
 
-### AzSK org health monitoring dashboard
+## AzSK org health monitoring dashboard
 
 Monitoring dashboard gets created along with policy setup and it lets you monitor the operations for various DevOps Kit workflows at your org.(e.g. CA issues, anomalous control drifts, evaluation errors, etc.). 
 
@@ -1043,20 +1045,20 @@ Go to Azure Portal --> Select "Browse all dashboards" in dashboard dropdown --> 
 Below is snapshot of the dashboard
 <img alt="Effective Org Policy Evaluation" src="../Images/07_OrgPolicy_MonitoringDashboard.png" />
 
-### Detail resource inventory dashboard
+## Detail resource inventory dashboard
 
 Coming soon
 
 
-## Compliance reporting
+# Compliance reporting
 
-### Create compliance notification to Org users
+## Compliance notification to subscription owners
 
 Coming soon
 
-## Advanced Scenarios for org policy customization/extending AzSK
+# Advanced Scenarios for org policy customization/extending AzSK
 
-### SVT customization
+## SVT customization
 
 
    - [Update/extend existing control by augmenting logic]()
@@ -1064,7 +1066,7 @@ Coming soon
    - [Add new SVT altogether (non-existing SVT)]()
 
 
-### Subscription Security
+## Subscription Security
    Along with subscription security checks, AzSK provides security provisioning commands (like set mandatory ARM policies, RBAC roles, ASC configurations etc.) on subscription. Refer [link](https://github.com/azsk/DevOpsKit-docs/blob/master/01-Subscription-Security/Readme.md#azsk-subscription-security-provisioning-1) for more details on provisioning commands. All these policies can be customized with the help of org policy.
 
    #### Changing ARM policy
@@ -1112,7 +1114,7 @@ Coming soon
 #### Change default resource group name (AzSKRG) and location (EastUS2) created for AzSK components
 You can control default resource group name and location using AzSK config present in Org policy. Follow below steps to override default behaviour.
 
-> **Note:** Changing default resource group name will break existing continuous assurance setup. You will need to do resetup of all CA.
+> **Note:** Changing default resource group name will break existing continuous assurance setup. You will need to do re-setup of all CA.
 
 **Steps:**
 
@@ -1132,7 +1134,7 @@ iv) Run the policy update command.
 
 Run "IWR" in new session (you can ask any other user to run this IWR) to setup policy setting in local. If you have already installed policy using IWR, just run CSS (Clear-AzSKSessionState) followed by command *Set-AzSKSubscriptionSecurity* with required parameters as per [doc](../01-Subscription-Security/Readme.md#azsk-subscription-security-provisioning-1). This will provision AzSK components(Alerts/Storage etc) under new resource group and location.
 
-**Note:** For contineous assurance setup, you need to follow two extra steps.
+**Note:** For continuous assurance setup, you need to follow two extra steps.
 
 i) Pass location parameter "AutomationAccountLocation" explicitly during execution of installation command (Install-AzSKContinuousAssurance). 
 
@@ -1165,7 +1167,7 @@ ii) Update $StorageAccountRG variable (In RunbookScanAgent.ps1 file present in p
 
    #### Sending events to Splunk (via WebHook) for entire org
 
-### Org policy usage statistics and monitoring using telemtry
+### Org policy usage statistics and monitoring using telemetry
 
 The telemetry data can be leveraged by org policy owners to understand AzSK usage, monitor compliance drift, CA health, resource inventory, troubleshooting etc. All helpful AI queries are listed on page [here](https://github.com/azsk/DevOpsKit-docs/tree/master/06-Security-Telemetry/App-Insights-Queries).
 
@@ -1179,7 +1181,7 @@ When your subscription is running under Org policy, AzSK marks subscription for 
 
 - Run “**IWR**" installation command shared by Policy Owner. This will ensure latest version installed with Org policy settings.(**Note:** If you are from CSE, please install the AzSK via instructions at https://aka.ms/devopskit/onboarding so that CSE-specific policies are configured for your installation.)
 
-- Run "*Clear-AzSKSessionState*" followed by any scan command and validate its running with Org policy. It gets dispayed at the start of command execution "Running AzSK cmdlet using ***** policy"
+- Run "*Clear-AzSKSessionState*" followed by any scan command and validate its running with Org policy. It gets displayed at the start of command execution "Running AzSK cmdlet using ***** policy"
 
 **Continuous Assurance:**
 
@@ -1290,7 +1292,7 @@ ii) Update configurations for all required controls in AppService.json
 
 iii) Add entry for configuration in index file(ServerConfigMetadata.json) with OverrideOffline property 
 
-![Overide Configurations](../Images/07_OrgPolicy_ServerConfigOverride.png)
+![Override Configurations](../Images/07_OrgPolicy_ServerConfigOverride.png)
 
 iv) Run update/install Org policy command with required parameters. 
 
