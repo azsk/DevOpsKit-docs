@@ -37,23 +37,23 @@
  - [Using CICD Extension with org-policy](Readme.md#3-using-cicd-extension-with-custom-org-policy)
 
 
-### [Managing policy/advanced policy usage ]()
+### [Managing policy/advanced policy usage ](Readme.md#managing-policyadvanced-policy-usage)
 
-- [Downloading and examining policy folder]()
+- [Downloading and examining policy folder](Readme.md#downloading-and-examining-policy-folder)
 
-- [Working with ‘local’ mode (policy dev-test-debug)]()
+- [Working with ‘local’ mode (policy dev-test-debug)](Readme.md#working-with-local-mode-policy-dev-test-debug)
 
-- [How to upgrade org version to latest AzSK version]()
+- [How to upgrade org version to latest AzSK version](Readme.md#how-to-upgrade-org-version-to-latest-azsk-version)
    
-   - [Testing CA ($updateToLatestVersion variable) before flipping AzSK.Pre]()
-   - [Use of AzSK.Pre.JSON]() 
+   <!-- - [Testing CA ($updateToLatestVersion variable) before flipping AzSK.Pre]()
+   - [Use of AzSK.Pre.JSON]()  -->
    - [Upgrade scenarios in different scan sources(SDL/CA/CICD)]()
 
-- [How to keep in sync with AzSK release updates]()
+- [How to keep in sync with AzSK release updates](Readme.md#upgrade-scenarios-in-different-scan-sources)
 
-- [Maintaining policy in source-control]()
+- [Maintaining policy in source-control](Readme.md#maintaining-policy-in-source-control)
 
-- [Policy deployment using CICD pipeline]()
+- [Policy deployment using CICD pipeline](Readme.md#policy-deployment-using-cicd-pipeline)
 
 
 ### [Create compliance and monitoring solutions]()
@@ -80,8 +80,8 @@
 - [ARM checker policy customization]()
 
 - [Subscription security provisioning]()
-   - [Changing RBAC mandatory/deprecated list]()
-   - [Changing ARM policy/Alerts set]()
+   - [Provisioning mandatory/deprecated RBAC list]()
+   - [Provisioning ARM policy/Alerts set]()
 
 - [Scenarios for modifying scanagent]()
    - [Scanning only baseline controls using continuous assurance setup]()
