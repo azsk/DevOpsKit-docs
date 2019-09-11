@@ -338,17 +338,22 @@ modifications there.
 In this section let us look at typical use cases for org policy customization and how to accomplish them. 
 We will cover the following:
 
-a. Changing the default 'Running AzSK using…' message  
-b. Changing a global setting for some control 
+a. Changing the default 'Running AzSK using…' message
+
+b. Changing a global setting for some control
+
 c. Changing/customizing a server baseline policy set
+
 d. Customizing specific controls for a service SVT (e.g., Storage.json)
-   1. Turning controls On/Off
-   2. Changing Recommendation Text
-   3. Changing Severity, etc.
-   4. Disable attestation
+	1. Turning controls On/Off
+   	2. Changing Recommendation Text
+   	3. Changing Severity, etc.
+   	4. Disable attestation
 
 e. Customizing Severity labels
+
 f. Changing ARM policy/Alerts set (coming soon…)
+
 g. Changing RBAC mandatory/deprecated lists (coming soon…)
 
 
