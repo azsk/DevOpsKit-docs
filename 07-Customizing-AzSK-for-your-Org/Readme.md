@@ -492,22 +492,20 @@ A powerful capability of AzSK is the ability for an org to define a baseline con
 that can be leveraged by all individuals in the org (and in other AzSK scenarios like CICD, CA, etc.) via the "-UseBaselineControls" parameter
 during scan commands. 
 
-By default, when someone runs against the CDN endpoint, the "-UseBaselineControls" parameter leverages the set of
-controls listed as baseline in the ControlSettings.json file present on CDN. 
+By default, when someone runs the scan with "-UseBaselineControls" parameter, it leverages the set of
+controls listed as baseline in the ControlSettings.json file present on default AzSK CDN endpoint. 
 
-However, once you have set up an org policy server for your organization, the CDN endpoint is no more in use. (As a 
+However, once you have set up an org policy server for your organization, this CDN endpoint is no more in use. (As a 
 side note, you can always 'simulate' CDN-based/org-neutral execution by removing or renaming your 
 `%localappdata%\Microsoft\AzSK\AzSKSettings.json` file.) Thus, after org policy is setup, there will 
 not be a 'baseline' control set defined for your organization. Indeed, if you run any of the scan commands using the
 "-UseBaselineControls" switch, you will see exception "There are no baseline controls defined for your org. No controls will be scanned."
 
-To support the baseline controls behavior for your org, you will need to define your baseline in the ControlSettings.json
-file. Here are the steps...
-
-###### Steps: 
-
-(We will assume you have tried the max owner/admin count steps in (b) above and edit the ControlSettings.json 
-file already present in your org policy folder.)
+To define baseline controls for your org, you will need to define update the ControlSettings.json
+file as per the steps below-
+ 
+(We assume that you have tried the max owner/admin count steps in (b) above and edited the ControlSettings.json 
+file is already present in your org policy folder.)
 
  i) Edit the ControlSettings.json file to add a 'BaselineControls' object as per below:
  
@@ -542,8 +540,7 @@ file already present in your org policy folder.)
 
 > Notice how, apart from the couple of extra elements at the end, the baseline set is pretty much a list of 'ResourceType'
 and 'ControlIds' for that resource...making it fairly easy to customize/tweak your own org baseline. 
-> Here the name and casing of the resource type name must match that of the policy JSON file for the corresponding 
-> resource's JSON file in the SVT folder and the control ids must match those included in the JSON file. 
+> Here the name and casing of the resource type name must match that of the policy JSON file for the corresponding resource's JSON file > in the SVT folder and the control ids must match those included in the JSON file. 
 
 > Note: Here we have used a very simple baseline with just a couple of resource types and a very small control set.
 > A more realistic baseline control set will be more expansive. You can refer CSEO defined baseline using ControlSettings file [here](https://github.com/azsk/DevOpsKit/blob/master/src/OSSConfiguration/ControlSettings.json).
