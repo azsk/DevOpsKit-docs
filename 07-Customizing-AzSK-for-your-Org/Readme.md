@@ -1107,8 +1107,10 @@ ii) Update $StorageAccountRG variable (In RunbookScanAgent.ps1 file present in p
 
    After policy update, CA will start scanning only the baseline controls.
 
-   ### Scanning admin and graph access controls using CA
-   Coming soon
+   ### Scanning owner and graph access controls using CA
+   
+   During CA setup, SPN is assigned with minimum privileges i.e. reader access on subscription and contributor access on AzSKRG. As a reader, it will not be able to scan controls requiring owner or graph read permissions. You can elevate SPN permission to 'Owner' and remove '-ExcludeTags "OwnerAccess"' parameter against the scan commands in above 2 files. As always, follow the same steps tp publish these files to org policy server.
+   However, in general we let SPN have minimum permissions assigned and make it a practice for individual teams to perform scan with high privileged role on regular basis to validate Owner access controls.
    
    ### Scan on resource deployment
    Coming soon
