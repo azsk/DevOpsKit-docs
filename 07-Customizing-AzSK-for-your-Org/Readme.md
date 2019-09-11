@@ -636,7 +636,7 @@ types of Azure resources present in their subscriptions, only the ones mentioned
 and, even for those, only the baseline controls get evaluated.
 
 
-> **Note:** Similar to baseline control, you can also define preview baseline set with the help of similar property "PreviewBaselineControls" in ControlSettings.json. This preview set gets scanned using parameter `-UsePreviewBaselineControls` with scan commands.
+> **PreviewBaseline controls:** Similar to baseline controls, you can also define preview baseline set of controls for your org with the help of similar property "PreviewBaselineControls" in ControlSettings.json. This preview set is scanned using parameter `-UsePreviewBaselineControls` with scan commands. Preview baseline controls setup is a great way to try out certain controls across the org before those are made mandatory via the baseline list. 
 
 
 ##### e) Customizing Severity labels 
