@@ -13,6 +13,12 @@
  - [The org policy setup command: Install-AzSKOrganizationPolicy](Readme.md#the-org-policy-setup-command-install-azskorganizationpolicy)
  - [First-time policy setup - an example](Readme.md#first-time-policy-setup---an-example)
  
+### [Consuming custom org policy](Readme.md#consuming-custom-org-policy)
+
+ - [Running scan in local machine with org policy](Readme.md#1-running-scan-in-local-machine-with-custom-org-policy)
+ - [Setup Continuous Assurance](Readme.md#2-setup-continuous-assurance)
+ - [Using CICD Extension with org-policy](Readme.md#3-using-cicd-extension-with-custom-org-policy)
+ 
 ### [Modifying and customizing org policy](Readme.md#modifying-and-customizing-org-policy)
  - [Getting Started](Readme.md#Getting-Started)
 
@@ -24,14 +30,6 @@
       - [Customizing specific controls for a service SVT](Readme.md#c-customizing-specific-controls-for-a-service)
       - [Setting up and updating baselines for your org](Readme.md#c-creating-a-custom-control-baseline-for-your-org)
       - [Customizing severity labels](Readme.md#e-customizing-severity-labels)
-
-
-### [Consuming custom org policy](Readme.md#consuming-custom-org-policy)
-
- - [Running scan in local machine with org policy](Readme.md#1-running-scan-in-local-machine-with-custom-org-policy)
- - [Setup Continuous Assurance](Readme.md#2-setup-continuous-assurance)
- - [Using CICD Extension with org-policy](Readme.md#3-using-cicd-extension-with-custom-org-policy)
-
 
 ### [Managing policy/advanced policy usage ](Readme.md#managing-policyadvanced-policy-usage)
 
@@ -280,6 +278,85 @@ or more of the following using AzSK:
  - Monitoring teams will be able to setup AzSK Log Analytics view and see scan results from CA (and also manual scans and CICD if configured) 
  - You will be able to do central governance for your org by leveraging telemetry events that will collect in the master subscription
  from all the AzSK activity across your org. 
+
+## Consuming custom org policy
+
+Running scan with org policy is supported from all three environments i.g. local scan (SDL), continuous assurance setup and CICD SVT task. Follow below steps for same
+
+### 1. Running scan in local machine with custom org policy
+
+ To run scan with org policy from any machine, get IWR cmdlet from org policy owner. This IWR is generated at the time of policy setup (IOP) or update (UOP) with below format
+
+```PowerShell
+#Example IWR to install org specific configurations
+iwr 'https://azskcontosoitsa.blob.core.windows.net/installer/AzSK-EasyInstaller.ps1' -UseBasicParsing | iex
+
+#Run subscription scan cmdlet and validate if it is running with org policy
+Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubId>
+```
+
+This step is pre-requisite for other two methods.
+
+### 2. Setup Continuous Assurance
+
+Setting up CA with org policy is pretty simple. Once you follow first step i.g. running IWR in local machine. You can run CA setup with the help of doc [here](https://github.com/azsk/DevOpsKit-docs/blob/master/04-Continous-Assurance/Readme.md#setting-up-continuous-assurance---step-by-step). 
+CA setup command will refer policy setting from your local machine and configure it in automation runbook.
+For existing CA, you just need to run *Update-AzSKContinuousAssurance* in your local.
+
+
+To validate if CA is running with org policy, you can check with one of the below options 
+
+   Option 1:
+
+   Go to central CA resource group --> automation account --> Jobs --> Open one of completed job --> It prints initials of PolicyStoreURL (Policy Store URL is nothing but org policy storage account blob url)
+
+   ![AzSK org policy check using runbook ](../Images/07_OrgPolicy_CA_PolicyCheck-0.PNG)
+
+   Option 2:
+
+   i) Download latest AzSK Scan logs stored in storage account (inside AzSKRG) 
+
+   ![AzSK Scan Logs](../Images/07_OrgPolicy_CA_PolicyCheck-1.PNG)
+
+   ii) Open PowerShellOutput.log file under etc folder and validate policy name
+
+   ![AzSK Scan Logs](../Images/07_OrgPolicy_CA_PolicyCheck-2.PNG)
+
+   Option 3:
+
+   Go to OMS workspace which was configured during CA setup and execute below query
+
+   ```AI Query
+   AzSK_CL | where Source_s == "CA" |  summarize arg_max(TimeGenerated,*) by SubscriptionId  | project SubscriptionId,PolicyOrgName_s | render table
+   ```
+   It will output the subscriptions running with org policy table like below
+
+   ![AzSK Scan Logs](../Images/07_OrgPolicy_CA_PolicyCheck-3.PNG)
+
+
+### 3. Using CICD Extension with custom org policy
+
+To set up CICD when using custom org policy, please follow below steps:
+1. Add Security Verification Tests (SVTs) in VSTS pipeline by following the main steps [here](../03-Security-In-CICD#adding-svts-in-the-release-pipeline).
+2. Make sure step 5 is completed for adding variables(AzSKServerURL and EnableServerAuth) in same document
+
+Having set the policy URL along with AzSK_SVTs Task, you can verify if your CICD task has been properly setup by following steps [here](../03-Security-In-CICD#verifying-that-the-svts-have-been-added-and-configured-correctly).
+
+
+
+Policy owner can monitor subscriptions being scanned from different environments with the help of application insight telemetry.
+
+```AI Query
+customEvents
+| where timestamp >= ago(7d)
+| where name == "Control Scanned"
+| summarize arg_max(timestamp, *)  by Day = bin(timestamp,1d), ScanSource = tostring(customDimensions.ScanSource),tostring(customDimensions.SubscriptionId) 
+| summarize SubscriptionCount = count() by Day, ScanSource
+| render barchart
+```
+Output:
+
+![AzSK Scan Logs](../Images/06_AIGraph_Usage.png)
 
 
 ## Modifying and customizing org policy 
@@ -567,9 +644,6 @@ Ability to customize naming of severity levels of controls (e.g., instead of Hig
 
 ###### Steps: 
 
-(We will assume you have tried the max owner/admin count steps in (b) above and edit the ControlSettings.json 
-file already present in your org policy folder.)
-
  i) Edit the ControlSettings.json file to add a 'ControlSeverity' object as per below:
  
 ```JSON
@@ -590,90 +664,6 @@ file already present in your org policy folder.)
 
 Someone in your org can test this change using the `Get-AzSKAzureServicesSecurityStatus`. You will see that
 the controls severity shows as `Important` instead of `High` and `Moderate` instead of `Medium` in the output CSV.
-
-
-## Consuming custom org policy
-
-Running scan with org policy is supported from all three environments i.g. local scan (SDL), continuous assurance setup and CICD SVT task. Follow below steps for same
-
-### 1. Running scan in local machine with custom org policy
-
- To run scan with org policy from any machine, get IWR cmdlet from org policy owner. This IWR is generated at the time of policy setup (IOP) or update (UOP) with below format
-
-```PowerShell
-#Example IWR to install org specific configurations
-iwr 'https://azskcontosoitsa.blob.core.windows.net/installer/AzSK-EasyInstaller.ps1' -UseBasicParsing | iex
-
-#Run subscription scan cmdlet and validate if it is running with org policy
-Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubId>
-```
-
-This step is pre-requisite for other two methods.
-
-### 2. Setup Continuous Assurance
-
-Setting up CA with org policy is pretty simple. Once you follow first step i.g. running IWR in local machine. You can run CA setup with the help of doc [here](https://github.com/azsk/DevOpsKit-docs/blob/master/04-Continous-Assurance/Readme.md#setting-up-continuous-assurance---step-by-step). 
-CA setup command will refer policy setting from your local machine and configure it in automation runbook.
-For existing CA, you just need to run *Update-AzSKContinuousAssurance* in your local.
-
-
-To validate if CA is running with org policy, you can check with one of the below options 
-
-   Option 1:
-
-   Go to central CA resource group --> automation account --> Jobs --> Open one of completed job --> It prints initials of PolicyStoreURL (Policy Store URL is nothing but org policy storage account blob url)
-
-   ![AzSK org policy check using runbook ](../Images/07_OrgPolicy_CA_PolicyCheck-0.PNG)
-
-   Option 2:
-
-   i) Download latest AzSK Scan logs stored in storage account (inside AzSKRG) 
-
-   ![AzSK Scan Logs](../Images/07_OrgPolicy_CA_PolicyCheck-1.PNG)
-
-   ii) Open PowerShellOutput.log file under etc folder and validate policy name
-
-   ![AzSK Scan Logs](../Images/07_OrgPolicy_CA_PolicyCheck-2.PNG)
-
-   Option 3:
-
-   Go to OMS workspace which was configured during CA setup and execute below query
-
-   ```AI Query
-   AzSK_CL | where Source_s == "CA" |  summarize arg_max(TimeGenerated,*) by SubscriptionId  | project SubscriptionId,PolicyOrgName_s | render table
-   ```
-   It will output the subscriptions running with org policy table like below
-
-   ![AzSK Scan Logs](../Images/07_OrgPolicy_CA_PolicyCheck-3.PNG)
-
-
-### 3. Using CICD Extension with custom org policy
-
-To set up CICD when using custom org policy, please follow below steps:
-1. Add Security Verification Tests (SVTs) in VSTS pipeline by following the main steps [here](../03-Security-In-CICD#adding-svts-in-the-release-pipeline).
-2. Make sure step 5 is completed for adding variables(AzSKServerURL and EnableServerAuth) in same document
-
-Having set the policy URL along with AzSK_SVTs Task, you can verify if your CICD task has been properly setup by following steps [here](../03-Security-In-CICD#verifying-that-the-svts-have-been-added-and-configured-correctly).
-
-
-
-Policy owner can monitor subscriptions being scanned from different environments with the help of application insight telemetry.
-
-```AI Query
-customEvents
-| where timestamp >= ago(7d)
-| where name == "Control Scanned"
-| summarize arg_max(timestamp, *)  by Day = bin(timestamp,1d), ScanSource = tostring(customDimensions.ScanSource),tostring(customDimensions.SubscriptionId) 
-| summarize SubscriptionCount = count() by Day, ScanSource
-| render barchart
-```
-Output:
-
-![AzSK Scan Logs](../Images/06_AIGraph_Usage.png)
-
-
-
-
 
 ### Managing policy/advanced policy usage
 
