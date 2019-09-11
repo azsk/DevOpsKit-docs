@@ -682,9 +682,7 @@ Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
 ```
 
 
-These files gets uploaded to policy storage with below mapping
-
-\<TODO> Talk about each file role
+These files are uploaded to the policy storage as well. You can recollect the function of each of these files from [here](Readme.md#basic-files-setup-during-policy-setup)
 
 
 #### Working with ‘local’ mode (policy dev-test-debug)
