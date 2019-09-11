@@ -847,12 +847,12 @@ Coming soon
 
 Coming soon
 
-# Create Security Compliance and Monitoring Solutions
-Once you have an org policy setup and running smoothly with multiple subscriptions across your org being scanned using your policy, you will need a solution that provides visibility to security compliance for all the subscriptions across your org. This will help you drive compliance/risk governance initiatives for your organization. 
+# Create security compliance monitoring solutions
+Once you have an org policy setup running smoothly with multiple subscriptions across your org, you will need a solution that provides visibility of security compliance for all the subscriptions across your org. This will help you drive compliance/risk governance initiatives for your organization. 
 
-When you setup your org policy endpoint, one of the things that happens is creation of an Application Insights workspace for your setup. After that, whenever someone performs an AzSK scan for a subscription that is configured to use your org policy, the scan results are sent (as 'security' telemetry) to your org's Application Insights workspace. Because this workspace receives scan events from all such subscriptions, it can leveraged to generate aggregate security compliance views for your cloud-based environments. 
+When you setup your org policy endpoint (i.e. policy server), one of the things that happens is creation of an Application Insights workspace for your setup. After that, whenever someone performs an AzSK scan for a subscription that is configured to use your org policy, the scan results are sent (as 'security' telemetry) to your org's Application Insights workspace. Because this workspace receives scan events from all such subscriptions, it can be leveraged to generate aggregate security compliance views for your cloud-based environments. 
 
-## Create Cloud Security Compliance Report for your org in PowerBI
+## Create cloud security compliance report for your org using PowerBI
 We will look at how a PowerBI-based compliance dashboard can be created and deployed in a matter of minutes starting with a template dashboard that ships with the AzSK. All you need apart from the Application Insights instance is a CSV file that provides a mapping of your organization hierarchy to subscription ids (so that we know which team/service group owns each subscription).
 
 > Note: This is a one-time activity with tremendous leverage as you can use the resulting dashboard (example below) towards driving security governance activities over an extended period at your organization. 
@@ -861,8 +861,8 @@ We will look at how a PowerBI-based compliance dashboard can be created and depl
 To create, edit and publish your compliance dashboard, you will need to install the latest version of PowerBI desktop on your local machine. Download it from [here](https://powerbi.microsoft.com/en-us/desktop/).
 
 
-#### Step 1: Prepare your Org-Subscription Mapping
-In this step we will prepare the data file which will be fed to the PowerBI dashboard creation process as the mapping from subscription ids to the org hierarchy within your environment. The file is in a simple CSV form and should appear like the one below. 
+#### Step 1: Prepare your org-subscription mapping
+In this step you will prepare the data file which will be fed to the PowerBI dashboard creation process as the mapping from subscription ids to the org hierarchy within your environment. The file is in a simple CSV form and should appear like the one below. 
 
 > Note: You may want to create a small CSV file with just a few subscriptions for a trial pass and then update it with the full subscription list for your org after getting everything working end-to-end.
 
@@ -886,9 +886,9 @@ The table below describes the different columns in the CSV file and their intent
 
 #### Step 2: Upload your mapping to the Application Insights (AI) workspace
 
-In this step we will import the data above into the AI workspace created during org policy setup. 
+In this step you will import the data above into the AI workspace created during org policy setup. 
 
- **(a)** Locate the AI resource that was created during org policy setup in your central subscription. This should be present under org Policy resource group. After selecting the AI resource, copy the Instrumentation Key.
+ **(a)** Locate the AI resource that was created during org policy setup in your central subscription. This should be present under org policy resource group. After selecting the AI resource, copy the Instrumentation Key.
  
  **(b)** To push org Mapping details, copy and execute the script available [here](./Scripts/OrgPolicyPushOrgMappingEvents.txt).
 
@@ -982,7 +982,7 @@ Add refresh scheduling timings and click on "Apply"
 
 Monitoring dashboard gets created along with policy setup and it lets you monitor the operations for various DevOps Kit workflows at your org.(e.g. CA issues, anomalous control drifts, evaluation errors, etc.). 
 
-You will be able to see the dashboard at the home page of Azure Portal. If not, you can navigate to below path see the dashboard
+You will be able to see the dashboard at the home page of Azure Portal. If not, you can navigate to the following path to see the dashboard
 
 Go to Azure Portal --> Select "Browse all dashboards" in dashboard dropdown -->  Select type "Shared Dashboard" --> Select subscription where policy is setup -->Select "DevOps Kit Monitoring Dashboard [OrgName]"
 
@@ -1000,7 +1000,7 @@ Coming soon
 
 Coming soon
 
-# Advanced Scenarios for org policy customization/extending AzSK
+# Advanced usage of org policy / extending AzSK
 
 ## SVT customization
 
