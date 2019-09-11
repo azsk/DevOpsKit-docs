@@ -521,7 +521,7 @@ Likewise, if you run without the `-UseBaselineControls` parameter, you will see 
 appear in the resulting CSV file. 
 
 
-##### c) Creating a custom control 'baseline' for your org
+##### d) Creating a custom control 'baseline' for your org
 Note that a powerful capability of AzSK is the ability for an org to define a baseline control set on the policy server
 that can be leveraged by all individuals in the org (and in other AzSK scenarios like CICD, CA, etc.) via the "-UseBaselineControls" parameter
 during scan commands. 
