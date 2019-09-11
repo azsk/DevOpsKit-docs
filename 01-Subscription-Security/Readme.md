@@ -607,7 +607,8 @@ As Azure Government and Azure China are limited to particular location, provide 
 E.g., Install-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
            -OrgName <OrgName> `
            -PolicyFolderPath <PolicyFolderPath> `
-           -ResourceGroupLocation "USGov Virginia"                          (for Azure Government)
+           -ResourceGroupLocation "USGov Virginia" `
+	   -AppInsightLocation "USGov Virginia"                   (for Azure Government)
 ```
 
 ## AzSK: Privileged Identity Management (PIM) helper cmdlets
