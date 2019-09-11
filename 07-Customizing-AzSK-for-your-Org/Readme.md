@@ -1162,11 +1162,18 @@ ii) Update $StorageAccountRG variable (In RunbookScanAgent.ps1 file present in p
 
    After policy update, CA will start scanning only baseline controls.
 
-
+   ### Scanning admin and graph access controls using CA
+   Coming soon
+   
    ### Scan on resource deployment
-Coming soon
+   Coming soon
+   
    ### Reporting critical alerts
-
+   Coming soon
+   
+   ### Collecting dynamic resource metadata using scan agent
+   Coming soon
+   
    ## Plugging in listeners
    
    ### Sending events to EventHub for entire org
