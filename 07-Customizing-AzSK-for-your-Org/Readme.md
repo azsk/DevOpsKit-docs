@@ -1000,19 +1000,19 @@ Coming soon
 
 Coming soon
 
-# Advanced usage of org policy / extending AzSK
+# Advanced usage of org policy (extending AzSK)
 
-## SVT customization
+## Customizing the SVTs
 
-   It is powerful capability of AzSK to enable an org to customize the SVT behaviour. You will able to acheive below scenarios. Refer page [extending AzSK modules](./Extending%20AzSK%20Module/Readme.md) which covers steps in detail 
+   It is powerful capability of AzSK to enable an org to customize the SVT behaviour.  Refer [extending AzSK modules](./Extending%20AzSK%20Module/Readme.md) for more details. You will be able to achieve the following scenarios.
 
    - [Update/extend existing control by augmenting logic](./Extending%20AzSK%20Module/Readme.md##steps-to-extend-the-control-svt)
    - [Add new control for existing GSS/GRS SVT](./Extending%20AzSK%20Module/Readme.md#a-extending-a-gss-svt)
-   - [Add new SVT altogether (non-existing service scan)](./Extending%20AzSK%20Module/Readme.md#steps-to-add-a-new-svt-to-the-azsk-module)
+   - [Add an altogether new SVT (non-existing service scan)](./Extending%20AzSK%20Module/Readme.md#steps-to-add-a-new-svt-to-the-azsk-module)
 
 
-## Subscription Security
-   Along with subscription security checks, AzSK provides security provisioning commands (like set mandatory ARM policies, RBAC roles, ASC configurations etc.) on subscription. Refer [link](https://github.com/azsk/DevOpsKit-docs/blob/master/01-Subscription-Security/Readme.md#azsk-subscription-security-provisioning-1) for more details on provisioning commands. All these policies can be customized with the help of org policy.
+## Customizing subscription security
+   Along with subscription security checks, AzSK provides security provisioning commands (e.g. setting up mandatory ARM policies, RBAC roles, ASC configurations etc.) on a subscription. Refer [link](https://github.com/azsk/DevOpsKit-docs/blob/master/01-Subscription-Security/Readme.md#azsk-subscription-security-provisioning-1) for more details on provisioning commands. All these policies can be customized with the help of org policy.
 
    ### Changing ARM policy
 Coming soon
@@ -1081,7 +1081,7 @@ iv) Run the policy update command.
 
 ##### Testing:
 
-Run "IWR" in new session (you can ask any other user to run this IWR) to setup policy setting in local. If you have already installed policy using IWR, just run CSS (Clear-AzSKSessionState) followed by command *Set-AzSKSubscriptionSecurity* with required parameters as per [doc](../01-Subscription-Security/Readme.md#azsk-subscription-security-provisioning-1). This will provision AzSK components(Alerts/Storage etc) under new resource group and location.
+Run "IWR" in a fresh PS session (you can ask any other user to run this IWR) to setup policy setting in local. If you have already installed policy using IWR, just run CSS (Clear-AzSKSessionState) followed by command *Set-AzSKSubscriptionSecurity* with required parameters as per the [doc](../01-Subscription-Security/Readme.md#azsk-subscription-security-provisioning-1). This will provision AzSK components(Alerts/Storage etc) under new resource group and location.
 
 **Note:** For continuous assurance setup, you need to follow two extra steps.
 
@@ -1100,12 +1100,12 @@ ii) Update $StorageAccountRG variable (In RunbookScanAgent.ps1 file present in p
    - RunbookCoreSetup.ps1: Responsible to install AzSK module  
    - RunbookScanAgent.ps1: Performs CA scans and export results to storage account 
    
-   If you open RunbookScanAgent and search for the scan command text Get-AzSKAzureServicesSecurityStatus and Get-AzSKSubscriptionSecurityStatus, you will find it is scanning for all controls excluding "OwnerAccess" control. This is due to limited (reader) permission on subscription.  
-   To make baseline scan append filter _-UseBaselineControls_ parameter to commands
+   If you open RunbookScanAgent and search for the scan command text Get-AzSKAzureServicesSecurityStatus and Get-AzSKSubscriptionSecurityStatus, you will find it is scanning for all controls excluding "OwnerAccess" control. This is due to the CA SPN having limited (reader) permissions on the subscription.  
+   To make CA scan only thr baseline controls, append parameter '-UseBaselineControls' to these scan commands.
 
-   Follow the same steps to publish this files to org policy store. 
+   Follow the same steps as earlier to publish these files to org policy server. 
 
-   After policy update, CA will start scanning only baseline controls.
+   After policy update, CA will start scanning only the baseline controls.
 
    ### Scanning admin and graph access controls using CA
    Coming soon
