@@ -281,34 +281,34 @@ or more of the following using AzSK:
 
 ## Consuming custom org policy
 
-Running scan with org policy is supported from all three environments i.g. local scan (SDL), continuous assurance setup and CICD SVT task. Follow below steps for same
+Running scan with custom org policy is supported from all three avenues of AzSK viz. local scan (SDL), continuous assurance setup and CICD SVT task. Follow the steps below for the same:
 
 ### 1. Running scan in local machine with custom org policy
 
- To run scan with org policy from any machine, get IWR cmdlet from org policy owner. This IWR is generated at the time of policy setup (IOP) or update (UOP) with below format
+ To run scan with custom org policy from any machine, get IWR cmdlet from org policy owner. This IWR is generated at the time of policy setup (IOP) or policy update (UOP) in the following format
 
 ```PowerShell
-#Example IWR to install org specific configurations
+#Sample IWR to install org specific configurations
 iwr 'https://azskcontosoitsa.blob.core.windows.net/installer/AzSK-EasyInstaller.ps1' -UseBasicParsing | iex
 
 #Run subscription scan cmdlet and validate if it is running with org policy
 Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubId>
 ```
 
-This step is pre-requisite for other two methods.
+This step is pre-requisite for the other two scan methods.
 
 ### 2. Setup Continuous Assurance
 
-Setting up CA with org policy is pretty simple. Once you follow first step i.g. running IWR in local machine. You can run CA setup with the help of doc [here](https://github.com/azsk/DevOpsKit-docs/blob/master/04-Continous-Assurance/Readme.md#setting-up-continuous-assurance---step-by-step). 
+Setting up CA with org policy is pretty simple. Once you have followed the first step i.e. running iwr in local machine, you can run CA setup with the help of doc [here](https://github.com/azsk/DevOpsKit-docs/blob/master/04-Continous-Assurance/Readme.md#setting-up-continuous-assurance---step-by-step). 
 CA setup command will refer policy setting from your local machine and configure it in automation runbook.
 For existing CA, you just need to run *Update-AzSKContinuousAssurance* in your local.
 
 
-To validate if CA is running with org policy, you can check with one of the below options 
+You can validate if CA is running with custom org policy, via the options below:
 
    Option 1:
 
-   Go to central CA resource group --> automation account --> Jobs --> Open one of completed job --> It prints initials of PolicyStoreURL (Policy Store URL is nothing but org policy storage account blob url)
+   Go to central CA resource group --> automation account --> Jobs --> Open one of the completed jobs --> It prints initials of PolicyStoreURL (Policy Store URL is nothing but org policy storage account blob url)
 
    ![AzSK org policy check using runbook ](../Images/07_OrgPolicy_CA_PolicyCheck-0.PNG)
 
@@ -324,12 +324,12 @@ To validate if CA is running with org policy, you can check with one of the belo
 
    Option 3:
 
-   Go to OMS workspace which was configured during CA setup and execute below query
+   Go to Log Analytics workspace which was configured during CA setup and execute below query
 
    ```AI Query
    AzSK_CL | where Source_s == "CA" |  summarize arg_max(TimeGenerated,*) by SubscriptionId  | project SubscriptionId,PolicyOrgName_s | render table
    ```
-   It will output the subscriptions running with org policy table like below
+   It will show the subscriptions running with org policy in a table as depicted below:
 
    ![AzSK Scan Logs](../Images/07_OrgPolicy_CA_PolicyCheck-3.PNG)
 
@@ -337,14 +337,14 @@ To validate if CA is running with org policy, you can check with one of the belo
 ### 3. Using CICD Extension with custom org policy
 
 To set up CICD when using custom org policy, please follow below steps:
-1. Add Security Verification Tests (SVTs) in VSTS pipeline by following the main steps [here](../03-Security-In-CICD#adding-svts-in-the-release-pipeline).
-2. Make sure step 5 is completed for adding variables(AzSKServerURL and EnableServerAuth) in same document
+1. Add Security Verification Tests (SVTs) in VSTS pipeline by following the steps [here](../03-Security-In-CICD#adding-svts-in-the-release-pipeline).
+2. Make sure AzSKServerURL and EnableServerAuth settings in the AzSK_SVTs task are setup correctly (Refer step 5 in the document referred above)
 
 Having set the policy URL along with AzSK_SVTs Task, you can verify if your CICD task has been properly setup by following steps [here](../03-Security-In-CICD#verifying-that-the-svts-have-been-added-and-configured-correctly).
 
 
 
-Policy owner can monitor subscriptions being scanned from different environments with the help of application insight telemetry.
+Policy owner can monitor the subscriptions being scanned from different environments with the help of application insight telemetry.
 
 ```AI Query
 customEvents
