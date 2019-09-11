@@ -286,9 +286,9 @@ or more of the following using AzSK:
 
 #### Getting Started
 
-The general workflow for all policy changes will be similar and involve the following basic steps:
+The typical workflow for all policy changes will remain same and will involve the following basic steps:
 
- 1) Go to the folder on your dev box which has your org-customized policies. This could either be the folder you specified while running org policy setup command or the default one used by it. If you don't have policies on your dev box, you can download those using the following cmdlet. (Please note OrgName, DepartmentName and PolicyFolderPath values are for illustration only. You may need to replace those with the ones used during org policy setup.
+ 1) Go to the folder on your dev box which has your org-customized policies. This could either be the folder you specified while running org policy setup command or the default one used by it. If you don't have policies on your dev box, you can download those using the following cmdlet. (Please note that the OrgName, DepartmentName and PolicyFolderPath values are for illustration only. You may need to replace them with the ones used during your org policy setup.)
 
       ```PowerShell
       Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
@@ -321,27 +321,7 @@ modifications there.
 ### Basic scenarios for org policy customization
 
 
-In this section let us look at typical use cases for org policy customization and how to accomplish them. 
-We will cover the following:
-
-a. Changing the default 'Running AzSK using…' message
-
-b. Changing a global setting for some control
-
-c. Changing/customizing a server baseline policy set
-
-d. Customizing specific controls for a service SVT (e.g., Storage.json)
-	1. Turning controls On/Off
-   	2. Changing Recommendation Text
-   	3. Changing Severity, etc.
-   	4. Disable attestation
-
-e. Customizing Severity labels
-
-f. Changing ARM policy/Alerts set (coming soon…)
-
-g. Changing RBAC mandatory/deprecated lists (coming soon…)
-
+In this section let us look at typical scenarios where you would want to customize the org policy and ways to accomplish them. 
 
 > Note: To edit policy JSON files, use a friendly JSON editor such as Visual Studio Code. It will save you lot of
 > debugging time by telling you when objects are not well-formed (extra commas, missing curly-braces, etc.)! This
