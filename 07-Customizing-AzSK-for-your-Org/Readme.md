@@ -251,7 +251,7 @@ Output of command looks like below
 
 
 If you note section 3 of the command output , an 'iwr' command line is printed to the console. This command leverages the org-specific
- installation script from the storage account for installing AzSK. You can run this IWR followed by some scan commands (GSS/GRS) to see org policy in effect in your local.
+ installation script from the storage account for installing AzSK. You can run this IWR followed by some scan commands (GSS/GRS) to see org policy in effect in your dev box.
 
 
 ```PowerShell
