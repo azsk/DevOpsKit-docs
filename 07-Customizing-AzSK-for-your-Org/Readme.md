@@ -636,7 +636,7 @@ types of Azure resources present in their subscriptions, only the ones mentioned
 and, even for those, only the baseline controls get evaluated.
 
 
-> **PreviewBaseline controls:** Similar to baseline controls, you can also define preview baseline set of controls for your org with the help of similar property "PreviewBaselineControls" in ControlSettings.json. This preview set is scanned using parameter `-UsePreviewBaselineControls` with scan commands. Preview baseline controls setup is a great way to try out certain controls across the org before those are made mandatory via the baseline list. 
+> **Note:** Similar to baseline control, you can also define preview baseline set with the help of similar property "PreviewBaselineControls" in ControlSettings.json. This preview set gets scanned using parameter `-UsePreviewBaselineControls` with scan commands.
 
 
 ##### e) Customizing Severity labels 
@@ -707,11 +707,7 @@ You can run Get-AzSKInfo (GAI) cmdlet to check the current AzSK settings. It wil
 
 Step 2: Perform the customization to policy files as per scenarios. 
 
-Here we will take example of adding preview baseline controls to ControlSettings.json
-
-\<TODO>
-
-![Entry in ServerConfigMetadata.json](../Images/07_OrgPolicy_Chg_SCMD_Entry.PNG)
+Here you can customize the list of baseline or preview baseline controls for your org using steps already explained [here](Readme.md#d-creating-a-custom-control-baseline-for-your-org) (excluding the last step of running the policy setup or policy update command.)
 
 Step 3: Now you run scan to see policy updates in effect. Clear session state and run scan commands (GRS or GSS) with parameters sets for which config changes are done like UseBaselineControls,ResourceGroupNames, controlIds etc.
 
@@ -724,9 +720,7 @@ Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubscriptionId>
 
 # Run services security scan with baseline using local policy settings
 Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -UseBaselineControls
-```    
-
-<TODO Screenshot> 
+```     
 
 Step 3: If scan commands are running fine with respect to the changes done to the configuration, you can update policy based on parameter set used during installations. If you see some issue in scan commands, you can fix configurations and repeat step 2. 
 
@@ -745,7 +739,7 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
    -PolicyFolderPath "D:\ContosoPolicies"
 ```
 
-Step 4: Validate if policy is correctly uploaded and there is no missing mandatory policies using policy health check command
+Step 4: Validate if policy is correctly uploaded and there are no missing mandatory policies using policy health check command
 
 **Note:**
 It is always recommended to validate health of org policy for mandatory configurations and policy schema syntax issues using below command. You can review the failed checks and follow the remedy suggested.
@@ -763,19 +757,15 @@ Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
            -StorageAccountName "PolicyStorageAccountName" 
 ```
 
-Step 5: If all above steps works fine. You can point back your AzSK setting to online policy server by running "IWR" command generated at the end of *Update-AzSKOrganizationPolicy*
+Step 5: If all the above steps works fine, you can point back your AzSK setting to online policy server by running "IWR" command generated at the end of *Update-AzSKOrganizationPolicy*
 
 
 You can also set up a 'Staging' environment where you can do all pre-testing of policy setup, policy changes, etc. A limited number of 
-people could be engaged for testing the actual end user effects of changes before deploying them broadly. 
+people could be engaged in testing the actual end user effects of the policy changes before deploying them for broader usage. 
 Also, you can choose to retain the staging setup or just re-create a fresh one for each major policy change.
 
 
-
-
-
-
-For your actual (production) policies, we recommend that you check them into source control and use the local close of *that* folder as the location
+For your actual (production) policies, we recommend that you check them into source control and use the local clone of *that* folder as the location
 for the AzSK org policy setup command when uploading to the policy server. In fact, setting things up so that any policy
 modifications are pushed to the policy server via a CICD pipeline would be ideal. (That is how we do it at CSE.)
 Refer [maintaining policy in source-control]() and [deployment using CICD pipeline]().
@@ -788,14 +778,13 @@ Here are a few common things that may cause glitches and you should be careful a
 with the entries in the ServerConfigMetadata.json file)
 - Make sure that no special/BOM characters get introduced into the policy file text. (The policy upload code does scrub for
 a few known cases, but we may have missed the odd one.)
-- Don't forget to make entries in ServerConfigMetadata.json for all files you have changed.
 - Note that the policy upload command always generates a fresh installer.ps1 file for upload. If you want to make changes to 
 that, you may have to keep a separate copy and upload it. (We will revisit this in future sprints.)
 
 
-### How to upgrade org version to latest AzSK version
+### How to upgrade org AzSK version to the latest AzSK version
 
-Usually AzSK modules are released every month around 15th with latest features and control updates. It is recommended to go through release notes for the version and follow below steps to upgrade org AzSK version to latest available version.
+Usually AzSK modules are released on 15th of every month with latest features and control updates. It is recommended to go through release notes for the version and follow below steps to upgrade org AzSK version to latest available version.
 
 1. Go through latest version [release notes](https://azsk.azurewebsites.net/ReleaseNotes/LatestReleaseNotes.html) and breaking changes [updates for org policy](https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/OrgPolicyUpdate.md)
 
@@ -806,7 +795,7 @@ Usually AzSK modules are released every month around 15th with latest features a
    Install-Module AzSK -Scope CurrentUser -AllowClobber
    ```
 
-3. Perform breaking changes with the help of org policy updates page and run UOP AzSK version update flag
+3. Perform breaking changes with the help of org policy updates page and run UOP with AzSK version update flag
 
    ```PowerShell
    # For Basic Setup
@@ -827,14 +816,13 @@ Usually AzSK modules are released every month around 15th with latest features a
  
 #### Upgrade scenarios in different scan sources
 
-Once org policy is updated with latest version, you will see it in effect in all environments
+Once org policy is updated with the latest AzSK version, you will see it in effect in all environments
 
- **Local scans:** If application teams are using older version(or any other version than mentioned in org Policy), will start getting update warning with the help of IWR cmdlet.
+ **Local scans:** If application teams are using older version(or any other version than mentioned in org Policy), they will start seeing warning as shown below while running scans .
 
 ![Entry in ServerConfigMetadata.json](../Images/07_OrgPolicy_Old_Version_Warning.PNG)
 
-**Continuous Assurance:** CA will auto-upgrade to latest org version in next scheduled job. 
- CA will auto-upgrade to latest org version in next schedule. You can monitor upgrade status with the help of application insight events. Use below query in org AI 
+**Continuous Assurance:** CA will auto-upgrade to latest org version when the next scheduled job runs. You can monitor upgrade status with the help of application insight events. Use below query in org AI 
 
  ``` AI Query
 | customEvents
