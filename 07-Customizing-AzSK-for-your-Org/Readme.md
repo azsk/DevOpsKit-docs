@@ -682,12 +682,12 @@ Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
 ```
 
 
-These files are uploaded to the policy storage as well. You can recollect the function of each of these files from [here](Readme.md#basic-files-setup-during-policy-setup)
+These files are uploaded to the policy storage as well. You can recollect the function of each of these files from [here.](Readme.md#basic-files-setup-during-policy-setup)
 
 
 #### Working with ‘local’ mode (policy dev-test-debug)
 
-You will be able to run scan pointing to local policy present in machine and test the configuration changes. It always recommended to test you policy customization using this method before updating it to server with the help of below steps 
+You can run the scan pointing to the local policy present on your dev box using the following steps. It will enable you test the policy customizations before pushing those to the server. 
 
 Step 1: Point AzSK settings to local org policy folder("D:\ContosoPolicies\"). 
     
@@ -710,8 +710,6 @@ Step 2: Perform the customization to policy files as per scenarios.
 Here we will take example of adding preview baseline controls to ControlSettings.json
 
 \<TODO>
-
-If you are adding any new files to policy folder, you must update configuration index (ServerConfigMetadata.json) with new policy file name.
 
 ![Entry in ServerConfigMetadata.json](../Images/07_OrgPolicy_Chg_SCMD_Entry.PNG)
 
