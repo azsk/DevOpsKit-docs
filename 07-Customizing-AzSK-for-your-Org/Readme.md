@@ -22,10 +22,6 @@
       - [Changing the default 'Running AzSK using…' message](Readme.md#a-changing-the-default-running-azsk-using-message)
       - [Changing control setting](Readme.md#b-changing-a-control-setting-for-specific-controls)
       - [Customizing specific controls for a service SVT](Readme.md#c-customizing-specific-controls-for-a-service)
-         - Turning controls On/Off
-         - Changing Recommendation Text
-         - Changing Severity
-         - Disable attestation e. Customizing Severity labels
       - [Setting up and updating baselines for your org](Readme.md#c-creating-a-custom-control-baseline-for-your-org)
       - [Customizing severity labels](Readme.md#e-customizing-severity-labels)
 
