@@ -386,12 +386,12 @@ image below:
 
 ![org Policy - Changed Message](../Images/07_OrgPolicy_Chg_Org_Policy_Msg_PS.PNG) 
 
-This change will be immediately in effect across your organization. Anyone running AzSK commands (in fresh PS sessions)
+This change will be effective across your organization immediately. Anyone running AzSK commands (in fresh PS sessions)
 should see the new message. 
 
 ##### b) Changing a control setting for specific controls 
-Let us now change some numeric setting for a control. A typical setting you may want to tweak is the count of
-maximum owners/admins for your org's subscriptions that is checked in one of the subscription security controls. (The out-of-box default is 5.)
+Let us now change some numeric setting for a control. A typical setting you may want to tweak is the maximum number of
+owners/admins allowed for your org's subscriptions.  It is verified in one of the subscription security controls. (The default value is 5.)
 
 This setting resides in a file called ControlSettings.json. Because the first-time org policy setup does not
 customize anything from this, we will first need to copy this file from the local AzSK installation.
@@ -423,8 +423,7 @@ Rather, **always** copy the file to your own org-policy folder and edit it there
 
 Anyone in your org can now start a fresh PS console and the result of the evaluation of the number of owners/admins control in 
 the subscription security scan (Get-AzSKSubscriptionSecurityStatus) should reflect that the new setting is in 
-effect. (E.g., if you change the max count to 3 and they had 4 owners/admins in their subscription, then the control (Azure_Subscription_AuthZ_Limit_Admin_Owner_Count)
-result will change from 'Passed' to 'Failed'.)
+effect. (E.g., if you change the max count to 3 and they had 4 owners/admins in their subscription, then the result for control (Azure_Subscription_AuthZ_Limit_Admin_Owner_Count) will change from 'Passed' to 'Failed'.)
 
 ##### c) Customizing specific controls for a service 
 
@@ -435,14 +434,14 @@ Also, for another control, you want people to use a recommendation which leverag
 in your org has developed. Let us do this for the Storage.json file. Specifically, we will:
 1. Turn off the evaluation of `Azure_Storage_Audit_Issue_Alert_AuthN_Req` altogether.
 2. Modify severity of `Azure_Storage_AuthN_Dont_Allow_Anonymous` to `Critical` for our org (it is `High` by default).
-3. Change the recommendation people in our org will follow if they need to address an issue with the `Azure_Storage_DP_Encrypt_In_Transit` control.
-4. Disable attestation of `Azure_Storage_DP_Restrict_CORS_Access` by adding 'ValidAttestationStates' object.
+3. Change the recommendation for people in our org to follow if they need to address an issue with the `Azure_Storage_DP_Encrypt_In_Transit` control.
+4. Disable capability to attest the control `Azure_Storage_DP_Restrict_CORS_Access` by adding 'ValidAttestationStates' object.
 
 ###### Steps: 
  
  i) Copy the Storage.json from the AzSK installation to your org-policy folder
 
- ii) Remove everything except the ControlID, the Id and the specific property we want to modify as discussed above. 
+ ii) Remove everything except the ControlID, the Id and specific property we want to modify as mentioned above. 
 
  iii) Make changes to the properties of the respective controls so that the final JSON looks like the below. 
 
@@ -481,18 +480,15 @@ in your org has developed. Let us do this for the Storage.json file. Specificall
 ###### Testing: 
 Someone in your org can test this change using the `Get-AzSKAzureServicesSecurityStatus` command on a target
 resource group which contains a storage account. If run with the `-UseBaselineControls` switch, you will see that
-the anonymous access control shows as `Critical` in the output CSV and the GRS control recommendation has changed to
-the custom (internal tool) recommendation you wanted people in your org to follow. The image below shows the CSV file
-from a baseline scan after this change: 
+the control Azure_Storage_AuthN_Dont_Allow_Anonymous shows as `Critical` in the output CSV and the recommendation for control Azure_Storage_DP_Encrypt_In_Transit has changed to
+the custom (internal tool) recommendation you wanted people in your org to follow. 
 
-![Changed Storage controls - Baseline Scan](../Images/07_OrgPolicy_Chg_SVT_JSON.PNG) 
-
-Likewise, if you run without the `-UseBaselineControls` parameter, you will see that the anon-alert control does not get evaluated and does not
+Likewise, even after you run the scan without the `-UseBaselineControls` parameter, you will see that the control Azure_Storage_Audit_Issue_Alert_AuthN_Req is not evaluated and does not
 appear in the resulting CSV file. 
 
 
 ##### d) Creating a custom control 'baseline' for your org
-Note that a powerful capability of AzSK is the ability for an org to define a baseline control set on the policy server
+A powerful capability of AzSK is the ability for an org to define a baseline control set on the policy server
 that can be leveraged by all individuals in the org (and in other AzSK scenarios like CICD, CA, etc.) via the "-UseBaselineControls" parameter
 during scan commands. 
 
