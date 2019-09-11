@@ -838,7 +838,7 @@ that, you may have to keep a separate copy and upload it. (We will revisit this 
 
 ### How to upgrade org version to latest AzSK version
 
-Generally AzSK modules gets released on every mid of the month with latest features and control updates. It is recommended to go through release notes for the version and follow below steps to upgrade org AzSK version to latest available version.
+Usually AzSK modules are released every month around 15th with latest features and control updates. It is recommended to go through release notes for the version and follow below steps to upgrade org AzSK version to latest available version.
 
 1. Go through latest version [release notes](https://azsk.azurewebsites.net/ReleaseNotes/LatestReleaseNotes.html) and breaking changes [updates for org policy](https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/OrgPolicyUpdate.md)
 
