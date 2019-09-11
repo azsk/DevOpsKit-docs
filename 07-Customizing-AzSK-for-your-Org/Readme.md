@@ -398,7 +398,7 @@ modifications there.
 ### Basic scenarios for org policy customization
 
 
-In this section let us look at typical scenarios where you would want to customize the org policy and ways to accomplish them. 
+In this section let us look at typical scenarios in which you would want to customize the org policy and ways to accomplish them. 
 
 > Note: To edit policy JSON files, use a friendly JSON editor such as Visual Studio Code. It will save you lot of
 > debugging time by telling you when objects are not well-formed (extra commas, missing curly-braces, etc.)! This
@@ -669,9 +669,17 @@ the controls severity shows as `Important` instead of `High` and `Moderate` inst
 
 #### Downloading and examining policy folder
 
-After installing org policy, you must have observed command creates policy folder in local machine with some default folders and files. 
+After installing org policy, you must have observed that the command creates policy folder in local machine with some default folders and files. 
 
-If you don't have policies, you can always download it using command
+If you don't have policies, you can always download them using the following command:
+
+```PowerShell
+Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
+         -OrgName "Contoso" `
+         -DepartmentName "IT" `
+         -DownloadPolicy `
+         -PolicyFolderPath "D:\ContosoPolicies"
+```
 
 
 These files gets uploaded to policy storage with below mapping
