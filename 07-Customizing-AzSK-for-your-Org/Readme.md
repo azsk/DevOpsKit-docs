@@ -150,7 +150,7 @@ Let us look at how policy files are leveraged in a little more detail.
 
 When you install AzSK, it downloads the latest AzSK module from the PS Gallery. Along with this module there
 is an *offline* set of policy files that go in a sub-folder under the %userprofile%\documents\WindowsPowerShell\Modules\AzSK\<version> folder. 
-It also places (or updates) an AzSKSettings.JSON file in your %LocalAppData%\Microsoft\AzSK file that contains the policy endpoint (or policy server) URL that is used by all local commands. 
+It also places (or updates) an AzSKSettings.JSON file in your %LocalAppData%\Microsoft\AzSK folder that contains the policy endpoint (or policy server) URL that is used by all local commands. 
 
 Whenever any command is run, AzSK uses the policy server URL to access the policy endpoint. It first downloads 
 a 'metadata' file that contains information about what other files are available on the policy server. After 
