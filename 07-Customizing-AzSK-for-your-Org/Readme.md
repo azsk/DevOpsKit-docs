@@ -356,7 +356,7 @@ customEvents
 ```
 Output:
 
-![AzSK Scan Logs](../Images/06_AIGraph_Usage.png)
+![AzSK Scan Logs](../Images/06_AIGraph_Usage.PNG)
 
 
 ## Modifying and customizing org policy 
