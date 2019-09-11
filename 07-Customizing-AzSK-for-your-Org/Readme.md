@@ -250,7 +250,7 @@ Output of command looks like below
 <img alt="Effective org Policy Evaluation" src="../Images/07_OrgPolicy_Installation.PNG" />
 
 
-If you note the output, at the end of execution, an 'iwr' command line will be printed to the console. This command leverages the org-specific
+If you note section 3 of the command output , an 'iwr' command line is printed to the console. This command leverages the org-specific
  installation script from the storage account for installing AzSK. You can run this IWR followed by some scan commands (GSS/GRS) to see org policy in effect in your local.
 
 
