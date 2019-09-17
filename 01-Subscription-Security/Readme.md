@@ -1011,7 +1011,7 @@ AzSK has also introduced the concept of ‘credential groups’ wherein a set of
                                  -CredentialName '<Friendly name of the credential>' `
                                  [-RotationIntervalInDays <Int>] `
                                  [-CredentialGroup '<Action group name for configuring alerts>'] `
-                                 [-ResetLastUpdate]
+                                 [-ResetLastUpdate] `
                                  -Comment '<Comment to capture the credential info>'                              
 ```
 
