@@ -98,7 +98,7 @@ Note: The next few items mention features from recent releases retained for visi
     *	N/A. 
 
 *	Privileged Identity Management (PIM)
-    * Fixed an issue where activating PIM role at resource level wasn�t working before. 
+    * Fixed an issue where activating PIM role at resource level wasn't working before. 
     * While extending PIM assignments using the Set-AzSKPIMConfiguration cmdlet, if the provided assignment duration exceeds the maximum allowed days for assignment, the command will assign role only for the maximum allowed days.
     * Assignment state of eligible roles will now be displayed when Get-AzSKPIMConfiguration cmdlet is used with -ListMyEligibleRoles switch.
 
