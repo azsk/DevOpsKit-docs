@@ -379,21 +379,6 @@ Remove-AzSKAlerts -SubscriptionId <SubscriptionID> -Tags "Optional"
 **Note**: This command cleans up all alerts in the resource group 'AzSKRG' with matched tag. This resource group is used internally as a container for AzSK objects. As a result, it is advisable to not add other alerts (or other types of resources) to this RG.
 
 [Back to top…](Readme.md#contents)
-### Configure alerts scoped to specific resource groups
-You may be interested in enabling alerts but only for resources within a particular (target) resource group. This may be done using the -TargetResourceGroup parameter. 
-
-Run the below command
-```PowerShell
-Set-AzSKAlerts -SubscriptionId <subscriptionid> -TargetResourceGroup <TargetRGName>
-```
-These parameters above have to be updated with the appropriate values. See the table below for details.
-
-|Config Param Name	|Purpose	|
-| -----------------  | --------- | 
-|SubscriptionId 	|Subscription ID against which these alerts would be setup	| 
-|TargetResourceGroup 	|Target resource group on which alerts needs to be configured	|
-
-[Back to top…](Readme.md#contents)
 ### FAQs
 #### Can I get the alert emails to go to a distribution group instead of an individual email id?
 Yes it is possible. While setting up the alerts you are asked to provide the SecurityContactEmails. It supports individual point of contact or mail enabled security group or a distribution list.  
