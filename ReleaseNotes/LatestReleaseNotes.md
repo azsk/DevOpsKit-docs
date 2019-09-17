@@ -1,129 +1,113 @@
-## 190814 (AzSK v.4.0.0)
+## 190916 (AzSK v.4.1.0)
 
 ### Feature updates
 
+* Security Verification Tests (SVTs):
+	* New SVTs for two Azure services - Azure Database for MySQL and PostgreSQL.
+	* Automated controls include checks for firewall & virtual network rules, SSL connection, backup & disaster recovery, advanced threat protection and diagnostic settings as applicable.
 
-*	(Preview) Restructuring of DevOps Kit framework for reusability:
-	*	From the learnings of developing DevOps Kit-based AAD & ADO scanners, we have done an extensive refactoring exercise to make it easy to leverage core framework capabilities to create security/compliance scanners for other technology areas.
 
+* (Preview) Security IntelliSense (SecIntel) extension for Visual Studio Code: 
+  * SecIntel for Visual Studio Code can downloaded from [here](https://marketplace.visualstudio.com/items?itemName=azsdktm.SecurityIntelliSense).
+  * This is a VS Code editor extension mainly targeted towards providing quick and inline security suggestions and fixes for Azure related C# source code, web projects and crypto-related code.
 *	Privileged Identity Management (PIM):
-	*	The following new switches have been added to PIM cmdlets:
-	*	-ListSoonToExpireAssignments switch in Get-AzSKPIMConfiguration cmdlet to list eligible assignments that will expire within specified duration.
-	*	-ExtendExpiringAssignments switch in Set-AzSKPIMConfiguration cmdlet to extend the eligibility of assignments by a specified duration.
+    * We have added capabilities for admin to configure role settings like maximum activation duration, maximum allowed days for assignment and MFA requirement on activation for a specific role on a resource using the below command
+    
+      setpim -ConfigureRoleSettings -SubscriptionId $subid -RoleName $roleName -ExpireEligibleAssignmentsInDays 30 
 
 *	(Preview) Credential Hygiene:
-	*	Credential hygiene events generated via control scan will now be send to DevOps Kit configured log analytics workspace.
-	*	We have also introduced New-AzSKTrackedCredentialGroup cmdlet to configure email alerts to notify users about AzSK-tracked credentials that are about to expire or have already expired.
-
-*	(Preview) Approved exception support in control attestation:
-	*	The control attestation feature has been augmented to support a special “GRC-approved” exception for controls. This covers scenarios where controls cannot be passed due to limitations/conditions beyond the realm of application teams (e.g., a product bug). It can be triggered by using the new -AddException switch during attestation.
-
-
-
-*	Security Verification Tests (SVTs):
-	*   Support for severity-based filter for Get-AzSKControlsStatus (GACS) command.
-
+    *	We have introduced the concept of 'credential groups' wherein a set of credentials belonging to a specific application/functionality can be tracked together for expiry notifications.
 *	ARM Template Checker:
-	*	N/A
+    *	N/A.
+    
+* CICD:
+    * N/A.
 
-*	CICD:
-	*	Support for a switch to toggle whether to ‘pass’ or ‘fail’ the pipeline if no controls are scanned via SVT and 	    ARM Checker task (default is ‘fail’).
-	*	This flag is useful in situations where due to scan criteria (e.g., -Severity ‘Critical’) no controls might be      scanned when the task runs.
-
- 
-*	(Preview) In-cluster security scans for ADB, AKS, HDI Spark
-	*	In-cluster CA now supports sending scan telemetry to log analytics (LA) workspace. This can be configured by 	    using the Install-AzSKContinuousAssuranceForCluster cmdlet. (If no LA workspace is specified, the workspace         configured for the regular DevOps Kit CA in the subscription will be used.)
-	*	The DevOps Kit monitoring solution (Install-AzSKMonitoringSolution) views will now show in-cluster compliance       status for your HDInsight and Databricks workspaces.
-
+*	In-cluster security scans for ADB, AKS, HDI Spark
+    * N/A.
 
 *	Log Analytics:
-	*	N/A
+    *	N/A.
 
-*	Org-policy updates (for non-CSEO users):
-	*	Fixed an issue in Get-AzSKOrganizationPolicyStatus cmdlet where in local debugging mode, extension files            weren't getting loaded.
-	*	Fixed an issue in Get-AzSKOrganizationPolicyStatus cmdlet checks which were failing after fresh installation of     org-policy.
-	*	Improved messages in the org-policy cmdlets (Install, Get & Update- org policy).
-	*	Introduced DisableOrgPolicyCheckForSession flag in Set-AzSKPolicySettings cmdlet to disable enforcement of          org-policy for the current PS session. This helps in situations when an org-policy owner is working with            multiple side-by-side policies.
-
+*	Org policy/external user updates (for non-CSEO users):
+    *	Support for AzSK-based telemetry (Log Analytics and Application Insights) features in Azure US Government and Azure China.
+    * Documentation covering end-to-end org policy scenarios with hands-on code examples will be published in the org policy section this week.  
+    * Added support for org policy debug mode to extend ARM Checker controls.
 
 Note: The next few items mention features from recent releases retained for visibility in case you missed those release announcements:
 
+*	Credential Hygiene helper cmdlets (from last sprint)  
+    * New-AzSKTrackedCredential to onboard a credential for tracking via DevOps Kit. You can set the reminder period (in days) for the credential.
+    * Get-AzSKTrackedCredential to list the onboarded credential(s).
+    * Update-AzSKTrackedCredential to update the credential settings and reset the last updated timestamp.
+    * Remove-AzSKTrackedCredential to deboard a credential from AzSK tracking.
+
 *	Privileged Identity Management (PIM) helper cmdlets (from last sprint)  
-	*	Set-AzSKPIMConfiguration for configuring/changing PIM settings
-	*	Get-AzSKPIMConfiguration for querying various PIM settings/status
-	*	Activating your PIM role is now as simple as this:
-		pim -ActivateMyRole -SubscriptionId $s5 -DurationInHours 8 -Justification 'ad hoc test' -RoleName Owner
-	*	See docs [here](https://github.com/azsk/DevOpsKit-docs/blob/master/01-Subscription-Security/Readme.md#azsk-privileged-identity-management-pim-helper-cmdlets-1) for more.
+    *	Set-AzSKPIMConfiguration for configuring/changing PIM settings
+    * Get-AzSKPIMConfiguration for querying various PIM settings/status
+    * Activating your PIM role is now as simple as this:
+    setpim -ActivateMyRole -SubscriptionId $s5 -DurationInHours 8 -Justification 'ad hoc test' -RoleName Owner
+    * See docs [here](https://github.com/azsk/DevOpsKit-docs/blob/master/01-Subscription-Security/Readme.md#azsk-privileged-identity-management-pim-helper-cmdlets-1) for more.
 
 *	(Preview) Security Scan for Azure Active Directory (AAD)
-	*	You can scan security controls for your AAD tenant (as either an admin or even as a regular user) using the DevOps Kit AAD Security Scan module.
-	*	Use following steps:
-		 AAD scan cmdlets are packaged as a separate module (AzSK.AAD)
-		```Powershell
-		Install-module AzSK.AAD -Scope CurrentUser -AllowClobber
-		Import-module AzSK.AAD
-		Get-AzSKAADSecurityStatusTenant    # to check the tenant (admin)
-		Get-AzSKAADSecurityStatusUser      # to check objects you own (user) 
-		```
-	*	Caveats: 
-		*	Do not run these in the same PS session as AzSK. Start a new PS console.
-		*	Az- modules require .Net Framework v4.7.2.
-		*	By default, the current cmdlets will scan just 3 objects of each type (Apps/SPNs/Groups, etc.). This is until we work out how best to group/batch scans when scanning the entire tenant. If you want to scan more objects you can use the ‘-MaxObj’ switch in the cmdlets.
+    *	You can scan security controls for your AAD tenant (as either an admin or even as a regular user) using the DevOps Kit AAD Security Scan module.
+    *	Use following steps:
+    ```Powershell
+    # AAD scan cmdlets are packaged as a separate module (AzSK.AAD)
+    Install-Module AzSK.AAD -Scope CurrentUser -AllowClobber
+    Import-Module AzSK.AAD
+    Get-AzSKAADSecurityStatusTenant    # check the tenant (admin)
+    Get-AzSKAADSecurityStatusUser      # check objects you own (user)
+    ``` 
+    *	Caveats: 
+        * Do not run these in the same PS session as AzSK. Start a new PS console.
+        * Az- modules require .Net Framework v4.7.2.
+        * By default, the current cmdlets will scan just 3 objects of each type (Apps/SPNs/Groups, etc.). This is until we work out how best to group/batch scans when scanning the entire tenant. If you want to scan more objects you can use the '-MaxObj' switch in the cmdlets.
 
-*	(Preview) AzSK module for Azure DevOps (VSTS) 
-	*	You can try the scan cmdlet using:
-  		#VSTS scan cmdlet is in a separate module called AzSK.AzureDevOps!
-  		Install-Module AzSK.AzureDevOps -Scope CurrentUser -AllowClobber    
-  		Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "MicrosoftIT"`
+*	(Preview) AzSK module for Azure DevOps (ADO/VSTS) 
+    *	You can try the scan cmdlet using:
+  ```Powershell
+  #VSTS scan cmdlet is in a separate module called AzSK.AzureDevOps!
+  Install-Module AzSK.AzureDevOps -Scope CurrentUser -AllowClobber    
+  Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "MicrosoftIT"`
                                     -ProjectNames "OneITVSO"`
                                     -BuildNames "build_name_here"`
                                     -ReleaseNames "release_name_here"  
-.
-*	Org-policy updates (for non-CSEO users):
-	*	See CA section in “Other improvements/bug fixes” below to install CA in environments where subscription ownership resides with a different team. 
-
+  ```
 
 ### Other improvements/bug fixes
-
 *	Subscription Security:
-	*	N/A
-
+    *	N/A.
 *	SVTs: 
-	*	N/A
-
-
+    *	N/A.
 *	Controls:
-	*	The behavior for the controls ‘Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG, 	                        Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access’ has been enhanced to check persistent access of users        and groups on resource group and subscription scope respectively.
-	*	VM control ‘Azure_VirtualMachine_SI_Enable_Antimalware’ has been improved by adding Sophos antivirus check for      Linux VMs.
-	*	Added a new control ‘Azure_VirtualMachine_SI_Deploy_Required_Extension’ which can be used by organizations to       specify which VM extensions are mandatory across the org. Different sets of extensions can be specified for         Windows and Linux VMs.
-
-
-
+     *	For the justify admins/owners control, the attested data will now show the sign-in names as well.
+    * Fixed CORS access and restricted IP callers controls for API Management which were previously throwing error.
 *	ARM Template Checker:
-	*	N/A
+    *	Following new controls have been added to ARM Checker:
+      *	Azure_AnalysisServices_BCDR_Plan
+      *	Azure_AppService_DP_Use_Approved_TLS_Version
+      *	Azure_ContainerRegistry_Configure_Webhook_For_Vuln_Scan
+      *	Azure_ContainerRegistry_DP_Enable_Content_Trust
+      *	Azure_RedisCache_BCDR_Use_RDB_Backup
+      *	Azure_Search_AuthN_Use_Managed_Service_Identity
+      *	Azure_VNet_NetSec_Configure_NSG
+      *	Azure_VNet_NetSec_Justify_Peering
 
 *	CA:
-	*	N/A
+    *	N/A. 
 
 *	Privileged Identity Management (PIM)
-	*	Fixed an issue where Set-AzSKPIMConfiguration cmdlet was not working due to a recent change in the PIM API.
-	*	Set-AzSKPIMConfiguration cmdlet alias has been renamed to setpim (previously aliased as pim).
+    * Fixed an issue where activating PIM role at resource level wasn�t working before. 
+    * While extending PIM assignments using the Set-AzSKPIMConfiguration cmdlet, if the provided assignment duration exceeds the maximum allowed days for assignment, the command will assign role only for the maximum allowed days.
+    * Assignment state of eligible roles will now be displayed when Get-AzSKPIMConfiguration cmdlet is used with -ListMyEligibleRoles switch.
 
-*	Azure DevOps (VSTS)
-	*	Fixed a bug where a control scan was throwing an exception if no pool agents were found in the project.
+* Azure DevOps (ADO/VSTS)
+   * Configured and released AzSK module for Azure DevOps based on the restructured core framework.
 
+*	Log Analytics
+    *	N/A.
 
-*	Log Analytics (OMS)
-	*	N/A
-
-*	Other
-	*	GenerateFixScript flag now works for subscription ARM policy compliance control.
-	*	Updated the fix-script for the control 'Azure_AppService_BCDR_Use_Multiple_Instances'.
-	*	Fixed an issue in Get-AzSKInfo -InfoType SubscriptionInfo whereby incorrect CA runbook version was being            reported.
-	*	Fixed an issue to respect the -UsePreviewBaselineControls switch in Get-AzSKInfo -InfoType ControlInfo.
-
-*	AzSK has been upgraded to use the latest Azure PowerShell libraries (Az v.2.4.0).
-
-
-
+* Other
+	 * Updated the minimum required version for CA runbook, alerts and ARM policies. This can be verified for your subscription using the command Get-AzSKInfo -SubscriptionInfo.
 
