@@ -983,15 +983,15 @@ AzSK has also introduced the concept of ‘credential groups’ wherein a set of
 |CredentialName|Friendly name for the credential.|TRUE|None|
 |CredentialLocation|Host location of the credential.|TRUE|Custom/AppService/KeyVault|
 |RotationIntervalInDays|Time in days before which the credential needs an update.|TRUE|Integer|
-|NextExpiryInDays|Time in days for the next expiry of the credential|TRUE|Integer|
-|CredentialGroup|(Optional) Name of the action group to be used for expiry notifications|FALSE|Valid action group name|
+|NextExpiryInDays|Time in days for the next expiry of the credential.|TRUE|Integer|
+|CredentialGroup|(Optional) Name of the action group to be used for expiry notifications|FALSE|Valid action group name.|
 |Comment|Comment to capture more information about the credential for the user for future tracking purposes.|TRUE|None|
 
 > <b>NOTE 1:</b>
       > For credential location type 'AppService', you will have to provide app service name, resource group, app config type (app setting/connection string) & app config name. Make sure you have the required access on the resource.
 
 > <b>NOTE 2:</b>
-      > For credential location type 'KeyVault', you will have to provide key vault name, credential type (Key/Secret) & credential name. Make sure you have the required access on the resource.
+      > For credential location type 'KeyVault', you will have to provide key vault name, credential type (key/secret) & credential name. Make sure you have the required access on the resource.
 
 > <b>NOTE 3:</b>
       > Use credential location type 'Custom', if the credential doesn't belong to an appservice or key vault.
@@ -1016,7 +1016,7 @@ AzSK has also introduced the concept of ‘credential groups’ wherein a set of
 ```
 
 > <b>NOTE:</b>
-      > Use '-ResetLastUpdate' to reset the last update timestamp to current timestamp. 
+      > Use '-ResetLastUpdate' to reset the last update time to current timestamp. 
 
 ### Use Remove-AzSKTrackedCredential to deboard a credential from AzSK tracking 
 
