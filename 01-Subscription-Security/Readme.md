@@ -961,6 +961,8 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
 To help avoid availability disruptions due to credential expiry, AzSK has introduced cmdlets that will help you track and get notified about important credentials across your subscription. AzSK now offers a register-and-track solution to help monitor the last update of your credentials. This will help you periodically track the health of your credentials which are nearing expiry/need rotation.
 
+AzSK has also introduced the concept of ‘credential groups’ wherein a set of credentials belonging to a specific application/functionality can be tracked together for expiry notifications.
+
 <b>NOTE:</b>
       Ensure you have atleast 'Contributor' access on the subscription before running the below helper commands. To configure expiry notifications for the tracked credentials, ensure you have 'Owner' access on the subscription.
 
@@ -968,10 +970,10 @@ To help avoid availability disruptions due to credential expiry, AzSK has introd
 
 ```PowerShell
    New-AzSKTrackedCredential -SubscriptionId '<Subscription Id>' `
-                             -CredentialName '<Friendly name of the credential>' ` 
-                             -CredentialLocation '<Custom|AppService|KeyVault>' ` 
+                             -CredentialName '<Friendly name of the credential>' `
+                             -CredentialLocation '<Custom|AppService|KeyVault>' `
                              -RotationIntervalInDays <Int> `
-                             -NextExpiryInDays <Int> ` 
+                             -NextExpiryInDays <Int> `
                              [-CredentialGroup '<Action group name for configuring alerts>'] `
                              -Comment '<Comment to capture the credential info>'    
 ```
@@ -1005,12 +1007,12 @@ To help avoid availability disruptions due to credential expiry, AzSK has introd
 ### Use Update-AzSKTrackedCredential to update the credential settings and reset the last updated timestamp
 
 ```PowerShell
-   Update-AzSKTrackedCredential -SubscriptionId '<Subscription Id>' `
-                                -CredentialName '<Friendly name of the credential>' `  
-                                [-RotationIntervalInDays <Int>] `
-                                [-CredentialGroup '<Action group name for configuring alerts>'] ` 
-                                [-ResetLastUpdate]
-                                -Comment '<Comment to capture the credential info>'    
+    Update-AzSKTrackedCredential -SubscriptionId '<Subscription Id>' `
+                                 -CredentialName '<Friendly name of the credential>' `
+                                 [-RotationIntervalInDays <Int>] `
+                                 [-CredentialGroup '<Action group name for configuring alerts>'] `
+                                 [-ResetLastUpdate]
+                                 -Comment '<Comment to capture the credential info>'                              
 ```
 
 > <b>NOTE:</b>
