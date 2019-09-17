@@ -28,6 +28,7 @@ Below resource types can be checked for validating the security controls in SVT(
 |[DataFactoryV2](Feature/DataFactoryV2.md)|Microsoft.DataFactory/factories|
 |[DataLakeAnalytics](Feature/DataLakeAnalytics.md)|Microsoft.DataLakeAnalytics/accounts|
 |[DataLakeStore](Feature/DataLakeStore.md)|Microsoft.DataLakeStore/accounts|
+|[DBforPostgreSQL](Feature/DBforPostgreSQL.md)|Microsoft.DBforPostgreSQL/servers|
 |[ERvNet](Feature/ERvNet.md)|Microsoft.Network/virtualNetworks|
 |[EventHub](Feature/EventHub.md)|Microsoft.Eventhub/namespaces|
 |[HDInsight](Feature/HDInsight.md)|Microsoft.HDInsight/clusters|
@@ -47,5 +48,6 @@ Below resource types can be checked for validating the security controls in SVT(
 |[TrafficManager](Feature/TrafficManager.md)|Microsoft.Network/trafficmanagerprofiles|
 |[VirtualMachine](Feature/VirtualMachine.md)|Microsoft.Compute/virtualMachines|
 |[VirtualNetwork](Feature/VirtualNetwork.md)|Microsoft.Network/virtualNetworks|
+
 
 
