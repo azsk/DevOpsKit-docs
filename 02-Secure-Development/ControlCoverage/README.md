@@ -47,5 +47,5 @@ Below resource types can be checked for validating the security controls in SVT(
 |[TrafficManager](Feature/TrafficManager.md)|Microsoft.Network/trafficmanagerprofiles|
 |[VirtualMachine](Feature/VirtualMachine.md)|Microsoft.Compute/virtualMachines|
 |[VirtualNetwork](Feature/VirtualNetwork.md)|Microsoft.Network/virtualNetworks|
-
+|[DBForMySql](Feature/DBForMySql.md)|Microsoft.MySql/servers|
 
