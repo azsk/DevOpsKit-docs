@@ -19,7 +19,7 @@
 ----------------------------------------------
 ### Structure
 
-Before we get started with extending the toolkit, it is important to understand the structure of its PowerShell module. Below represents the tree structure of DevOpsKit PS module. You can currently extend SVT (subscription & services) and Listeners only. SVT stands for Security Verification Tests, which constitute different Azure security controls that are scanned by the DevOps Kit. Listeners are like subscribers for control evaluation results that can route the control results data to data source choice of yours. 
+Before we get started with extending the toolkit, it is important to understand the structure of PowerShell module. Below represents the tree structure of DevOpsKit PS module. You can currently extend SVT (subscription & services) and Listeners only. SVT stands for Security Verification Tests, which constitute different Azure security controls that are scanned by the DevOps Kit. Listeners are like subscribers for control evaluation results that can route the control results data to data source choice of yours. 
 		
     
       
