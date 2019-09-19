@@ -1012,48 +1012,194 @@ Coming soon
 
 
 ## Customizing subscription security
-   Along with subscription security checks, AzSK provides security provisioning commands (e.g. setting up mandatory ARM policies, RBAC roles, ASC configurations etc.) on a subscription. Refer [link](https://github.com/azsk/DevOpsKit-docs/blob/master/01-Subscription-Security/Readme.md#azsk-subscription-security-provisioning-1) for more details on provisioning commands. All these policies can be customized with the help of org policy.
+   Along with subscription security checks, AzSK provides security provisioning commands (e.g. setting up mandatory ARM policies, RBAC roles, ASC configurations etc.) on a subscription. Refer [link](https://github.com/azsk/DevOpsKit-docs/blob/master/01-Subscription-Security/Readme.md#azsk-subscription-security-provisioning-1) for more details on provisioning commands. Each provisioning status is validated with the help of subscription scan controls. Below table gives the details of provisioning commands , GSS control to validate provisioning status and policy file name where all provisioning configurations are present.
 
-   ### Changing ARM policy
-Coming soon
-   <!-- GSS ARM policy control validates default AzSK ARM policy presence in subscription i.g. whether subscription contain ARM policy to restrict creation of classic resources
+| Component  | Provisioning Command | Control in GSS  | Policy File Name | Description | 
+| ---- | ---- | ---- |---- | ---- |
+| ARM Policy | Set-AzSKARMPolicies | Azure_Subscription_Config_ARM_Policy | Subscription.ARMPolicies.json | Sets ARM policies corresponding to certain actions that are considered insecure. |
+| Critical Alerts | Set-AzSKAlerts | Azure_Subscription_Audit_Configure_Critical_Alerts |  Subscription.InsARMAlerts.json | Configuration of subscription and resource alerts for activities with significant security implications |
+| Azure Security Center configuration | Set-AzSKAzureSecurityCenterPolicies | Azure_Subscription_Config_Azure_Security_Center |  SecurityCenter.json | Default enterprise policy settings for Azure Security Center like configuring security contact information in ASC etc. |
+| RBAC roles/permissions | Set-AzSKSubscriptionRBAC | Azure_Subscription_AuthZ_Add_Required_Central_Accounts |  Subscription.RBAC.json | Setup mandatory accounts that are required for central scanning/audit/compliance functions. |
+
+Common steps for configuring policies for subscription provisioning
+
+ i) Copy the provisioning policy file from the AzSK installation folder (%userprofile%\documents\WindowsPowerShell\Modules\AzSK\<version>\Framework\Configurations\SubscriptionSecurity) to your org-policy folder
+
+ ii) Edit policy file with schema and guidance given below section for each component 
+
+ iii) Add entry for configuration in index file (ServerConfigMetadata.json) with OverrideOffline property. OverrideOffline is required for all provisioning policies as it does not support overlay method. 
+
+![Override Configurations](../Images/07_OrgPolicy_PovisioningPolicy.PNG)
+
+ iv) Rerun the org policy update or setup command (the same command you ran for the first-time setup)
 
 
-   GSS -SID <SubId> -ControlIds "Azure_Subscription_Config_ARM_Policy"
+Once policy is updated, it will start respecting in subscription scan command and failing controls with details of missing configuration on subscriptions. 
+Ideally below steps are expected to be executed by individual subscription owners.
+
+ i) Run subscription scan
+   
+   ```PowerShell
+   # Subscription scan
+   Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubscriptionId>
+   # Scanning perticular policy control 
+   Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubscriptionId> -ControlIds "Azure_Subscription_Config_ARM_Policy"
+   ```
+
+ii) Validate detail logs printing missing policies expected by Org policy
+
+iii) Execute [provisioning command](../01-Subscription-Security/Readme.md#azsk-subscription-security-provisioning-1) with required parameters
+      
+   > **Note:** If you want to configure all policies(alert,ARM policy, ASC and RBAC), you can use all in one command Set-AzSKSubscriptionSecurity.
+
+iv) Run subscription scan again and validate control gets passed. 
+
+
+### Schema for policy files 
+#### ARM policy 
 
    ```JSON
    {
-   "Version": "3.1809.0",
-   "Policies": [      
-      {
-         "policyDefinitionName": "AzSK_ARMPol_Deny_Classic_Resource_Create",
-         "policyDefinition": "{\"if\":{\"anyOf\":[{\"field\":\"type\",\"like\":\"Microsoft.ClassicCompute/*\"},{\"field\":\"type\",\"like\":\"microsoft.classicStorage/*\"},{\"field\":\"type\",\"like\":\"Microsoft.ClassicNetwork/*\"}]},\"then\":{\"effect\":\"deny\"}}",
-         "description": "Policy to deny upon creation of classic/v1 (i.e., ASM-based) resources",
-         "tags": [
+      "Version": "3.1809.0",
+      "Policies": [      
+         {
+            "policyDefinitionName": "AzSK_ARMPol_Deny_Classic_Resource_Create", // Friendly policy name. The format used is AzSK_ARMPol_<PolicyAction-Audit,Deny>_<Resource>_<Operation> 
+            "policyDefinition": "{\"if\":{\"anyOf\":[{\"field\":\"type\",\"like\":\"Microsoft.ClassicCompute/*\"},{\"field\":\"type\",\"like\":\"microsoft.classicStorage/*\"},{\"field\":\"type\",\"like\":\"Microsoft.ClassicNetwork/*\"}]},\"then\":{\"effect\":\"deny\"}}", // Policy definition. Here we are defining denial of classic resource creation
+            "description": "Policy to deny upon creation of classic/v1 (i.e., ASM-based) resources", //  Description about the policy
+            "tags": [   
+               "Mandatory"
+            ], // Tag for policy. Mandatory tag is always picked up by set-AzSKARMPolicy command. If you mention any other tags, you will need to pass explicitly to set command
+            "enabled": true, // Defines whether the ARM policy is enabled or not.
+            "scope": "/subscriptions/$subscriptionId" // Scope at which policy needs to be applied
+         }
+      ],
+      "DeprecatedPolicies" : [] // Array of deprecated policydefinitionnames. This policy will get removed during policy setup
+   }
+   ```
+
+To view the samples of ARM policy definitions rules and syntaxes, refer [link](https://docs.microsoft.com/en-us/azure/governance/policy/samples/)
+
+#### Alert set
+You will find current supported alert list [here](/02-Secure-Development/ControlCoverage/Feature/AlertList.md).  
+
+   ```JSON
+   {
+      "Version": "3.1803.0",
+      "AlertList": [ 
+         {
+            "Name": "AzSK_Subscription_Alert", // Alert name containing group of all operations.  
+            "Description": "Alerts for Subscription Activities", // Alert description
+            "Enabled": true, // Defines alert is enabled or not
+            "Tags": [ 
             "Mandatory"
-         ],
-         "applicableForRGs": ["*"],
-         "enabled": true,
-         "scope": "/subscriptions/$subscriptionId"
-      }
-   ],
-   "DeprecatedPolicies" : ["AzSK_ARMPol_Audit_Classic_Resource_Create",
-      "AzSK_ARMPol_Audit_NonHBI_Resource_Create",
-      "AzSK_ARMPol_Audit_Job_Scheduler_Free_Tier",
-      "AzSK_ARMPol_Audit_SQL_Basic_Create",
-      "AzSK_ARMPol_Audit_NonGRS_Storage_SKU",
-      "AzSK_ARMPol_Audit_Old_SQL_Version"
-   ]
+            ], // Tag for Alerts group. Mandatory tag is always picked up by set-AzSKAlerts command. 
+            "AlertOperationList": [
+            {
+               "Name": "AzSK_Assign_the_caller_to_User_Access_Administrator_role", // Friendly name for operations
+               "Description": "Grants the caller User Access Administrator access at the tenant scope", // operation details
+               "OperationName": "Microsoft.Authorization/elevateAccess/action", // operation name
+               "Tags": [
+                  "Mandatory"
+               ],
+               "Severity": "Critical", // severity for operation Critial/High. Critical operations are considered for SMS alerts
+               "Enabled": true  // // Defines operation is enabled or not
+            }
+            ]
+         }
+   }
+   ```
+You will get all activity operations that can be added as part of alert using below command 
+
+```PowerShell
+Get-AzProviderOperation | FT
+```
+
+#### Security center configurations
+
+   Security center can be configured for three things
+
+   -  Autoprovisioning 
+   -  SecurityContacts
+   -  Default policy setup
+
+```JSON
+{
+    "Version": "3.1906.0",    
+    "autoProvisioning" : {
+        "id": "/subscriptions/{0}/providers/Microsoft.Security/autoProvisioningSettings/default",
+        "name": "default",
+        "type": "Microsoft.Security/autoProvisioningSettings",
+        "properties": {
+        "autoProvision": "On"
+        }
+    },
+    "securityContacts" : {
+        "id": "/subscriptions/{0}/providers/Microsoft.Security/securityContacts/default1",
+        "name": "default1",
+        "type": "Microsoft.Security/securityContacts",
+        "properties": {
+        "email": "{1}",
+        "phone": "{2}",
+        "alertNotifications": "On",
+        "alertsToAdmins": "On"
+        }
+    },
+    "policySettings" : {
+        "properties": {
+            "displayName": "ASC Default (subscription: {0})",
+            "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/1f3afdf9-d0c9-4c3d-847f-89da613e70a8",
+            "scope": "/subscriptions/{0}",
+            "notScopes": [],
+            "parameters": {                                                              
+                "endpointProtectionMonitoringEffect": {
+                    "value": "AuditIfNotExists"
+                }
+            },
+            "description": "This policy assignment was automatically created by Azure Security Center",
+            "metadata": {
+                "assignedBy": "Security Center"
+            }
+        },
+        "id": "/subscriptions/{0}/providers/Microsoft.Authorization/policyAsssignments/SecurityCenterBuiltIn",
+        "type": "Microsoft.Authorization/policyAssignments",
+        "name": "SecurityCenterBuiltIn"
+    },
+    "optionalPolicySettings" : {}
 }
-   ``` -->
+```
 
+   ### RBAC mandatory/deprecated lists
+   
+   You will be able to check/configure mandatory and deprecated list of RBAC for all subscriptions with the help of below schema
 
-   ### Changing alerts set
-Coming soon
-   ### Security center configurations
-Coming soon
-   ### Changing RBAC mandatory/deprecated lists
-   Coming soon
+   ```Json
+   {
+      "ActiveCentralAccountsVersion": "2.1709.0",
+      "DeprecatedAccountsVersion": "2.1709.0",
+      "ValidActiveAccounts": [
+         {
+            "Name": "Contoso Cost Trackers", // Name of the account to be provisioned or checked for. 
+            "Description": "This AAD group account is deployed as Reader on all subscriptions at Contoso to monitor cost.", //Description for your account. 
+            "ObjectId": "", // Object id for user or group or SPN in tenant 
+            "ObjectType": "Group", // ServicePrincipal or User or Group.
+            "RoleDefinitionName": "Reader", //Subscription RBAC rolename. 
+            "Scope": "/subscriptions/$subscriptionId", //Scope of access.
+            "Type": "Provision or Validate. E.g., Provision",
+            "Tags": [ "Mandatory" ], //Commma separated list of tags each in double quotes. The tag 'Mandatory' means this account is deployed by default and always checked during verification. 
+            "Enabled": true
+         }
+      ],
+      "DeprecatedAccounts": [
+         {
+            "Name": "Name of the account that is considered deprecated and must be deprovisioned. E.g., AutoDeploySPN",
+            "Description": "Description for the account. E.g., This was used for automated deployments in the past. It must be removed from all subscriptions.",
+            "ObjectId": "object_id_for_user_or_group_or_SPN_in_tenant",
+            "ObjectType": "ServicePrincipal or User or Group, E.g., ServicePrincipal",
+            "Enabled": false
+         }
+      ]
+   }
+```
 
 ## ARM checker policy customization
 
@@ -1111,9 +1257,6 @@ ii) Update $StorageAccountRG variable (In RunbookScanAgent.ps1 file present in p
    
    During CA setup, SPN is assigned with minimum privileges i.e. reader access on subscription and contributor access on AzSKRG. As a reader, it will not be able to scan controls requiring owner or graph read permissions. You can elevate SPN permission to 'Owner' and remove '-ExcludeTags "OwnerAccess"' parameter against the scan commands in above 2 files. As always, follow the same steps tp publish these files to org policy server.
    However, in general we let SPN have minimum permissions assigned and make it a practice for individual teams to perform scan with high privileged role on regular basis to validate Owner access controls.
-   
-   ### Scan on resource deployment
-   Coming soon
    
    ### Reporting critical alerts
    Coming soon
