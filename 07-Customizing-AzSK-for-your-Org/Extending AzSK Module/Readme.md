@@ -229,10 +229,10 @@ class SubscriptionCore: SVTBase
   
   4. 	For the above a corresponding control in extension json is required. 
   	Step 1: Copy the default base json, rename it to <feature>.ext.json. 
-	Step 2: Remove all the other controls except for one being added, update it with new control details. See additional instructions as '//comments' on each line in the example JSON below. Note: Remove the comments from JSON if you happen to use the below as-is.
+	Step 2: Remove all the other controls except for one being added, update it with new control details. See additional instructions as '//comments' on each line in the example json below. Note: Remove the comments from json if you happen to use the below as-is.
 	
   > IMPT: Do *not* tag 'Ext' to the 'FeatureName' here. Make sure you have updated the method name to corresponding method in ps1 file. 
-  > Note: Remove the comments in the below JSON before saving the file
+  > Note: Remove the comments in the below json before saving the file
   
 ```
 	{
@@ -297,7 +297,7 @@ Below is an example to add a mock control that 'storage accounts must be created
 
 3) Copy Storage.json from module folder to <localPolicyfolderpath>\Storage.ext.json
        
-    a) Remove all, except one existing control (to update it into new control JSON)
+    a) Remove all, except one existing control (to update it into new control json)
        
     b) Edit the control to reflect desired controlId, description, etc.
        
@@ -308,7 +308,7 @@ Below is an example to add a mock control that 'storage accounts must be created
             
     ii) MethodName should correctly reflect the new method written in Storage.ext.ps1 above
             
-    iii) Do not change 'Storage' to 'StorageExt' inside the JSON (at the root node) 
+    iii) Do not change 'Storage' to 'StorageExt' inside the json (at the root node) 
 
 4) Update org policy using below command... (Important: Do not edit anything else or manually tweak policy in the blob)!
 
