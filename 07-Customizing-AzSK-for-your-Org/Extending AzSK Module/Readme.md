@@ -272,7 +272,7 @@ class SubscriptionCore: SVTBase
    Refer the below screenshot.  
    ![Block diagram of AzSK extension](../../Images/08_AzSK_Extension_SVT_Storage_Policy_Example.png)
   
-6. 	 The new control is now added the SubscriptionCore SVT. The new extended control can be scanned like any other control.
+6. 	 The new control is now added to SubscriptionCore SVT. The new extended control can be scanned like any other control.
   
 ```PowerShell
 	Get-AzSKSubscriptionSecurityStatus -SubscriptionId '<sid>' -ControlIds 'Azure_Subscription_AuthZ_Limit_Admin_Count_Ext'
@@ -280,7 +280,7 @@ class SubscriptionCore: SVTBase
 
 ##### B. Extending a GRS SVT
 
-Below is an example to add a mock control that 'storage accounts must be created in 'eastus2' region.
+Below is an example to add a mock control that checks 'storage accounts must be created in 'eastus2' region.
 
 1) Download preview policy to a local folder on your system by executing the below command:
 
