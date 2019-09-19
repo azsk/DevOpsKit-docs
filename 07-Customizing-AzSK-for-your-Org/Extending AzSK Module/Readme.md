@@ -285,17 +285,17 @@ Below is an example to add a mock control that checks 'storage accounts must be 
 1) Download preview policy to a local folder on your system by executing the below command:
 
     ```Powershell
-    gop -SubscriptionId <subid> -OrgName <orgname> -DepartmentName <deptname> -PolicyFolderPath <localPolicyfolderpath> -DownloadPolicy
+    gop -SubscriptionId <subid> -OrgName <orgname> -DepartmentName <deptname> -PolicyFolderPath <localPolicyFolderPath> -DownloadPolicy
     ```
 
-2) Copy Storage.ps1 from module folder ->  <localPolicyfolderpath>\Storage.ext.ps1
+2) Copy Storage.ps1 from module folder ->  <localPolicyFolderpath>\Storage.ext.ps1
 
     a)  Remove all the methods except constructor, change class name to StorageExt, base-class to Storage, remove all class members.
 
     b) Add method that will implement the new control. Find sample script StorageExt.ps1 [here](../StorageExt.ps1)
 
 
-3) Copy Storage.json from module folder to <localPolicyfolderpath>\Storage.ext.json
+3) Copy Storage.json from module folder to <localPolicyFolderPath>\Storage.ext.json
        
     a) Remove all, except one existing control (to update it into new control json)
        
@@ -313,7 +313,7 @@ Below is an example to add a mock control that checks 'storage accounts must be 
 4) Update org policy using below command... (Important: Do not edit anything else or manually tweak policy in the blob)!
 
     ```Powershell    
-    uop -SubscriptionId <subid> -OrgName <orgname> -DepartmentName <deptname> -PolicyFolderPath <policyfolderpath> 
+    uop -SubscriptionId <subid> -OrgName <orgname> -DepartmentName <deptname> -PolicyFolderPath <localPolicyFolderPath> 
     ```
 
 
