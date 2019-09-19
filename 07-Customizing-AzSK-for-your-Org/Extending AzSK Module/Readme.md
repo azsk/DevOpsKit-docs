@@ -86,7 +86,7 @@ Before we get started with extending the toolkit, it is important to understand 
 ### Know more about SVTs:
 
 
-All the SVTs inherit from a base class called SVTBase which take cares of all the required plumbing from the control evaluation code. Every SVT has a corresponding feature json file under the Framework -> configurations folder. For example, Storage.ps1 (in the Core folder) has a corresponding Storage.json file under configurations folder. The SVT json has a bunch of configuration parameters that can be controlled by a policy owner, for instance, based on the org rquirements one can change the recommendation, modify the description of the control, change the severity, etc.
+All the SVTs inherit from a base class called SVTBase which takes care of all the required plumbing from the control evaluation code. Every SVT has a corresponding feature json file under the Framework -> Configurations folder. For example, Storage.ps1 (in the Core folder) has a corresponding Storage.json file under 'Configurations' folder. The SVT json has a bunch of configuration parameters that can be controlled by a policy owner, for instance, based on the org rquirements one can change the recommendation, modify the description of the control, change the severity, etc.
 Every time a SVT scan happens, each automated control calls the corresponding method which in turn evaluates the control result.
 
 Below is the typical schema for each control inside the feature json
