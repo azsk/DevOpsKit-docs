@@ -260,7 +260,7 @@ class SubscriptionCore: SVTBase
 	   ]
 	}
 ```
-5. 	 Upload these files(json and correspondinf ps1 file) to org policy storage container under base schema version folder (currently 3.1803.0) like any other org policy and add an entry to ServerConfigMetadata.json as shown below:
+5. 	 Upload these files(json and corresponding ps1 file) to org policy storage container under base schema version folder (currently 3.1803.0) like any other org policy and add an entry to ServerConfigMetadata.json as shown below:
 ``` 
     {
       "Name":  "SubscriptionCore.ext.json"
