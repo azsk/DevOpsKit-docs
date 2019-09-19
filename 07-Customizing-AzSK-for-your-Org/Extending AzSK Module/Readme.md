@@ -193,8 +193,8 @@ class SubscriptionCore: SVTBase
    ```
 > Note: All the other functions from the class file should be removed.
   
-3. 	 If logic for a specific control needs is to be updated, then retain the required function; or if a new control is to be added, copy any control function from the base class to the extension class reference.
-	> Note: For a given control in json, the corresponding PowerShell function is provided as value under MethodName property. For eg. Below is an example of adding a new control that fails if you have more than 2 co-admins. 
+3. 	 If logic for a specific control needs to be updated, then retain the required function; or if a new control is to be added, copy any control function from the base class to the extension class for reference.
+	> Note: For a given control in json, the corresponding PowerShell function is provided as value under 'MethodName' property. For eg. Below is an example of adding a new control that fails if you have more than 2 co-admins. 
   
   ```PowerShell
 	Set-StrictMode -Version Latest
