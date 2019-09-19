@@ -323,13 +323,13 @@ Below is an example to add a mock control that checks 'storage accounts must be 
 
 5) Verifying that the added control works:
 
-1) Put the local AzSK into the target policy for that run "iwr" that is echoed by Step-4 above.
+1) Put the local AzSK into the target policy.For that run "iwr" that is echoed by Step-4 above.
 
         
 2) Run grs for storage accounts and verify that the control is getting scanned:
         grs -s <subid> -rgns <resourcegroupname> -rtn Storage
 
-3) Run specific controlId across a couple of storage accounts in diff regions (the storage present AzSKRG one will pass 'eastus2' check):
+3) Run specific controlId across a couple of storage accounts in different regions (the storage present in AzSKRG will pass'eastus2' check):
         
 ```Powershell
     grs -s <subid> -ResourceGroupNames 'AzSKRG, <RG1>, <RG2>' -ResourceTypeName Storage -ControlIds 'Azure_Storage_Create_In_Approved_Regions'
@@ -353,9 +353,9 @@ Extended Feature.ext.ps1 files are downloaded at C:\Users\<UserAccount>\AppData\
 
 ### Steps to add a new SVT to the AzSK module:
 
-Followig are the instructions to add an SVT for an Azure service that is not currently supported in DevOps Kit.
+Following are the instructions to add an SVT for an Azure service that is not currently supported in DevOps Kit.
 
-Below are the step to develop a sample SVT for Application Insights (as Application Insights is a resource type not currently supported in the DevOps kit.)
+Below are the steps to develop a sample SVT for Application Insights (as Application Insights is a resource type not currently supported in the DevOps kit.)
 
 >**Note:** Currently, adding a completely new SVT to AzSK requires collaboration with the DevOps Kit team. This is because we need to make some changes in the core module to support the new SVT. Please email azsksup@microsoft.com to initiate a discussion. Typically, we will be able to turn such requests around within our monthly sprint. 
 
