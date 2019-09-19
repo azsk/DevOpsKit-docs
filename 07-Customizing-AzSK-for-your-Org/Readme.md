@@ -59,7 +59,7 @@
 - [Detail resource inventory dashboard]()
 
 
-### [Compliance reporting]()
+### [Compliance notifications]()
 
 - [Create compliance notification to subscription owners]()
 
@@ -994,7 +994,7 @@ Below is snapshot of the dashboard
 Coming soon
 
 
-# Compliance reporting
+# Compliance notifications
 
 ## Compliance notification to subscription owners
 
