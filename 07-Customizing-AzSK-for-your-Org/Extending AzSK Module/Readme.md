@@ -316,12 +316,19 @@ Below is an example to add a mock control that checks 'storage accounts must be 
     uop -SubscriptionId <subid> -OrgName <orgname> -DepartmentName <deptname> -PolicyFolderPath <localPolicyFolderPath> 
     ```
 
-
+5) Add an entry to ServerConfigMetadata.json as shown below:
+``` 
+    {
+      "Name":  "Storage.ext.json"
+    },
+    {
+      "Name":  "Storage.ext.ps1"
+    }
 > Important: Also note that the "ext" in the file-names above is in all lower-case!
 
 ===============================================================
 
-5) Verifying that the added control works:
+6) Verifying that the added control works:
 
 1) Put the local AzSK into the target policy.For that run "iwr" that is echoed by Step-4 above.
 
