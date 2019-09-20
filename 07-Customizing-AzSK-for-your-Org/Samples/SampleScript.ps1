@@ -7,6 +7,7 @@ $policyFolder = "" # Enter the folder path where you want to keep org policy fil
 $policyDownloadFolder = $policyFolder+'_Dwn' 
 #==============================================================================================================
 
+#==============================================================================================================
 # 1) Setting up org policy: Refer https://github.com/azsk/DevOpsKit-docs/tree/master/07-Customizing-AzSK-for-your-Org#setting-up-org-policy for details
 #==============================================================================================================
 install-module AzSK -Scope CurrentUser -AllowClobber -Repository AzSKStaging -Force
@@ -40,8 +41,8 @@ $azSKVer = (Get-Module $azSKModuleName).Version
 <#
    Below are few examples to get familiarization with org-policy customization	
 #  **Note**: 1) If you don't have existing configured Org policy, you can download policy to your local machine with below command. 
-	         2) It is recommended to use the below command before making any changes to the policy (while trying the below examples) and updating the existing policy changes by Update-AzSKOrganizationPolicy command.
-             3) If you are following step by step sample and want cummulative policy changes copy only the required settings from downloaded sample files   
+	     2) It is recommended to use the below command before making any changes to the policy (while trying the below examples) and updating the existing policy changes by Update-AzSKOrganizationPolicy command.
+             3) If you are following step by step sample and want cummulative policy changes copy only the required settings from downloaded sample files wherever it is asked to copy content from downloaded files keeping the hierarchy of json files intact	  
 #>  
 	 Get-AzSKOrganizationPolicy -SubscriptionId $subId -OrgName $oName -DepartmentName $depName -PolicyFolderPath $policyFolder
 
@@ -83,7 +84,7 @@ $azSKVer = (Get-Module $azSKModuleName).Version
 #Example 3: Creating a custom control 'baseline' for your org. Refer https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Readme.md#c-creating-a-custom-control-baseline-for-your-org
 #--------------------------------------------------------------------------------------------------------------
 <#	Step 1: Open the ControlSettings.json from your org-policy folder "$policyFolder\Config\ControlSettings.json"
-	Step 2: You can download sample ControlSettings.json from CustomizePolicy/EditBaseline/ControlSettings.json and copy its content to the ControlSettings.json file opened in Step1. You can use other controls of your choice.
+	Step 2: You can download sample ControlSettings.json from DevOpsKit-docs/07-Customizing-AzSK-for-your-Org/Samples/EditBaseline/ControlSettings.json and copy its content to the ControlSettings.json file opened in Step1. You can use other controls of your choice.
 	        Make sure the json format for defining Baseline controls is same as in the above referred sample.
 	Step 3: Save the edited file and run Update-AzSKOrganizationPolicy command as given below:
 	Step 4: Edit the ServerConfigMetadata.json file in the org-policy folder and create an entry for this file (if not already there)
@@ -125,7 +126,7 @@ $azSKVer = (Get-Module $azSKModuleName).Version
 #--------------------------------------------------------------------------------------------------------------
 #Example 6: Customizing Severity Labels for you org. Refer: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Readme.md#e-customizing-severity-labels
 #--------------------------------------------------------------------------------------------------------------
-<#  Step 1: Copy the content of sample files present in /SeveritySample/ControlSettings.json to your org-policy folder ControlSettings file ("$policyFolder\Config\ControlSettings.json")
+<#  Step 1: Copy the content of sample files present in DevOpsKit-docs/07-Customizing-AzSK-for-your-Org/Samples/SeveritySample/ControlSettings.json to your org-policy folder ControlSettings file ("$policyFolder\Config\ControlSettings.json")
     Step 2: Save the edited ControlSettings.json file and run Update-AzSKOrganizationPolicy command as given below:
 	Step 3: Edit the ServerConfigMetadata.json file in the org-policy folder and create an entry for this file (if not already there) and then run Update-AzSKOrganizationPolicy command as given below:	
 #>	
@@ -142,8 +143,8 @@ $azSKVer = (Get-Module $azSKModuleName).Version
 #--------------------------------------------------------------------------------------------------------------
 # 3a) Extend existing control or Modify existing logic. Refer https://github.com/azsk/DevOpsKit-docs/tree/master/07-Customizing-AzSK-for-your-Org/Extending%20AzSK%20Module#b-extending-a-gss-svt
 #--------------------------------------------------------------------------------------------------------------
-<#	Step 1: Download the sample Storage.ext.ps1 file from /ExtendingAzSKModule/Sample/ExtendingExistingGRSControl and save it to your local policy folder "$policyFolder\Config"
-	Step 2: Download the sample Storage.ext.json file from /ExtendingAzSKModule/Sample/ExtendingExistingGRSControl and save it to your local policy folder "$policyFolder\Config"
+<#	Step 1: Download the sample Storage.ext.ps1 file from DevOpsKit-docs/07-Customizing-AzSK-for-your-Org/Samples/ExtendingExistingGRSControl/ and save it to your local policy folder "$policyFolder\Config"
+	Step 2: Download the sample Storage.ext.json file from DevOpsKit-docs/07-Customizing-AzSK-for-your-Org/Samples/ExtendingExistingGRSControl/ and save it to your local policy folder "$policyFolder\Config"
 	Step 3: Ensure the ControlSettings.json has ExemptedHttpsRegions setting, if it is not present you can get copy the setting from ExtendingAzSKModule/Sample/ExtendingExistingGRSControl/ControlSettings.json and paste them in
 		your local policy ControlSettings.json file
 	Step 4: Edit the ServerConfigMetadata.json file in the org-policy folder and create an entry for this file (if not already there) and then run Update-AzSKOrganizationPolicy command as given below:	
@@ -159,8 +160,8 @@ $azSKVer = (Get-Module $azSKModuleName).Version
 #--------------------------------------------------------------------------------------------------------------
 # 3b) New control for a resource. Refer https://github.com/azsk/DevOpsKit-docs/tree/master/07-Customizing-AzSK-for-your-Org/Extending%20AzSK%20Module#b-extending-a-grs-svt	
 #--------------------------------------------------------------------------------------------------------------
-<#  Step 1: Download the sample Storage.ext.ps1 file from /ExtendingAzSKModule/Sample/NewGRSControl and save it to your local policy folder "$policyFolder\Config"
-	Step 2: Download the sample Storage.ext.json file from /ExtendingAzSKModule/Sample/NewGRSControl and save it to your local policy folder "$policyFolder\Config"
+<#  Step 1: Download the sample Storage.ext.ps1 file from DevOpsKit-docs/07-Customizing-AzSK-for-your-Org/Samples/NewGRSControl and save it to your local policy folder "$policyFolder\Config"
+	Step 2: Download the sample Storage.ext.json file from DevOpsKit-docs/07-Customizing-AzSK-for-your-Org/Samples/NewGRSControl and save it to your local policy folder "$policyFolder\Config"
 	Step 3: Ensure the ControlSettings.json has ExemptedHttpsRegions setting, if it is not present you can get copy the setting from ExtendingAzSKModule/Sample/ExtendingExistingGRSControl/ControlSettings.json and paste them in
 		    your local policy ControlSettings.json file
 	Step 4: Edit the ServerConfigMetadata.json file in the org-policy folder and create an entry for this file (if not already there) and then run Update-AzSKOrganizationPolicy command as given below:	
