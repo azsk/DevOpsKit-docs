@@ -941,6 +941,27 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 			      -DurationInDays 30 # The duration in days for expiration to be extended by
                               -Force
       ```
+7. <h4> Configure role settings for role on an Azure resource (-ConfigureRoleSettings) </h4>
+	 Use this command to configure a  PIM role settings like maximum role assignment duration on a resource, mfa requirement upon activation etc.
+     The command currently supports configuring the following settings: Maximum assignment duration, maximum activation duration, requirement of justification upon activation, requirement of mfa upon activation.
+     > Note: Currently all the 4 settings parameters are required to be supplied in command to change any configuration setting for a PIM role
+
+    <b>Example 1: </b> Configure 'Owner' PIM role on a subscription, to let maximum activation duration be 12 hours.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration  -ConfigureRoleSettings `
+                                -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
+                                -RoleNames "Owner" `
+                                -MaximumActivationDuration 12`
+                                -ExpireEligibleAssignmentsInDays 90 `
+                                -RequireJustificationOnActivation $true
+                                -RequireMFAOnActivation $true
+                                -DoNotOpenOutputFolder`
+      ```
+      
+
+
+
 ## AzSK: Credential hygiene helper cmdlets
 
 To help avoid availability disruptions due to credential expiry, AzSK has introduced cmdlets that will help you track and get notified about important credentials across your subscription. AzSK now offers a register-and-track solution to help monitor the last update of your credentials. This will help you periodically track the health of your credentials which are nearing expiry/need rotation.
