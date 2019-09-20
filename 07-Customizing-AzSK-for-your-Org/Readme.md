@@ -1058,7 +1058,7 @@ iv) Run subscription scan again and validate control gets passed.
 ### Schema for policy files 
 #### ARM policy 
 
-   ```json
+   ```C#
    {
       "Version": "3.1809.0",
       "Policies": [      
@@ -1082,7 +1082,7 @@ To view the samples of ARM policy definitions rules and syntaxes, refer [link](h
 #### Alert set
 You will find current supported alert list [here](/02-Secure-Development/ControlCoverage/Feature/AlertList.md).  
 
-   ```json
+   ```C#
    {
       "Version": "3.1803.0",
       "AlertList": [ 
@@ -1122,7 +1122,7 @@ Get-AzProviderOperation | FT
    -  SecurityContacts
    -  Default policy setup
 
-```json
+```C#
 {
     "Version": "3.1906.0",    
     "autoProvisioning" : {
@@ -1172,7 +1172,7 @@ Get-AzProviderOperation | FT
    
    You will be able to check/configure mandatory and deprecated list of RBAC for all subscriptions with the help of below schema
 
-   ```json
+   ```C#
    {
       "ActiveCentralAccountsVersion": "2.1709.0",
       "DeprecatedAccountsVersion": "2.1709.0",
@@ -1260,7 +1260,7 @@ ii) Update $StorageAccountRG variable (In RunbookScanAgent.ps1 file present in p
    
    ### Reporting critical alerts
    
-   Critical alert activity can be logged and monitored with the telemetry.  
+   Comming soon
    
    <!-- ### Collecting dynamic resource metadata using scan agent
    Coming soon -->
