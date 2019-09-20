@@ -1,0 +1,25 @@
+{
+   "NoOfApprovedAdmins": 2,
+   "BaselineControls": {
+      "ResourceTypeControlIdMappingList": [
+         {
+            "ResourceType": "AppService",
+            "ControlIds": [
+               "Azure_AppService_DP_Dont_Allow_HTTP_Access",
+               "Azure_AppService_AuthN_Use_AAD_for_Client_AuthN"
+            ]
+         },
+         {
+            "ResourceType": "Storage",
+            "ControlIds": [
+               "Azure_Storage_AuthN_Dont_Allow_Anonymous",
+               "Azure_Storage_DP_Encrypt_In_Transit"
+            ]
+         }
+      ],
+      "SubscriptionControlIdList": [
+         "Azure_Subscription_AuthZ_Limit_Admin_Owner_Count",
+         "Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities"
+      ]
+   }
+}
