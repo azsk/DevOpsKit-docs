@@ -991,8 +991,7 @@ Below is snapshot of the dashboard
 
 ## Detail resource inventory dashboard
 
-Coming soon
-
+With the help of telemetry events you will be able to monitor resources inventory in the Org. This will give the visibility over all resources along with control failures over all subscriptions. The PowerBI based template will be shared soon
 
 # Compliance notifications
 
@@ -1058,7 +1057,7 @@ iv) Run subscription scan again and validate control gets passed.
 ### Schema for policy files 
 #### ARM policy 
 
-   ```JSON
+   ```json
    {
       "Version": "3.1809.0",
       "Policies": [      
@@ -1082,7 +1081,7 @@ To view the samples of ARM policy definitions rules and syntaxes, refer [link](h
 #### Alert set
 You will find current supported alert list [here](/02-Secure-Development/ControlCoverage/Feature/AlertList.md).  
 
-   ```JSON
+   ```json
    {
       "Version": "3.1803.0",
       "AlertList": [ 
@@ -1122,7 +1121,7 @@ Get-AzProviderOperation | FT
    -  SecurityContacts
    -  Default policy setup
 
-```JSON
+```json
 {
     "Version": "3.1906.0",    
     "autoProvisioning" : {
@@ -1172,7 +1171,7 @@ Get-AzProviderOperation | FT
    
    You will be able to check/configure mandatory and deprecated list of RBAC for all subscriptions with the help of below schema
 
-   ```Json
+   ```json
    {
       "ActiveCentralAccountsVersion": "2.1709.0",
       "DeprecatedAccountsVersion": "2.1709.0",
@@ -1259,10 +1258,11 @@ ii) Update $StorageAccountRG variable (In RunbookScanAgent.ps1 file present in p
    However, in general we let SPN have minimum permissions assigned and make it a practice for individual teams to perform scan with high privileged role on regular basis to validate Owner access controls.
    
    ### Reporting critical alerts
-   Coming soon
    
-   ### Collecting dynamic resource metadata using scan agent
-   Coming soon
+   Critical alert activity can be logged and monitored with the telemetry.  
+   
+   <!-- ### Collecting dynamic resource metadata using scan agent
+   Coming soon -->
    
    ## Plugging in listeners
    
