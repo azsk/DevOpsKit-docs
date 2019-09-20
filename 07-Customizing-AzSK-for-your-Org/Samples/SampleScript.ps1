@@ -99,7 +99,7 @@ $azSKVer = (Get-Module $azSKModuleName).Version
 #Example 4: Modify an existing SVT control json
 #--------------------------------------------------------------------------------------------------------------
 <#	Step 1: Copy the Storage.json from the AzSK installation("$HOME\Documents\WindowsPowerShell\Modules\$azskmoduleName\$azskVer\Framework\Configurations\SVT\SubscriptionCore.json") to your org-policy folder "$policyFolder\Config"
-	Step 2: Remove everything except the ControlId, the Id and the specific property to be modified. You can use sample from CustomizePolicy/EditSVTControlSample/SubscriptionCore.json where we have changed control description & severity
+	Step 2: Remove everything except the ControlId, the Id and the specific property to be modified. You can use sample from CustomizePolicy/EditSVTControl/SubscriptionCore.json where we have changed control description & severity
 	Step 3: Save the updated SubscriptionCore.json file.
 	Step 4: Edit the ServerConfigMetadata.json file in the org-policy folder and create an entry for this file (if not already there) and then run Update-AzSKOrganizationPolicy command as given below:	
 #>	
@@ -112,7 +112,7 @@ $azSKVer = (Get-Module $azSKModuleName).Version
 #--------------------------------------------------------------------------------------------------------------
 #Example 5: Add Preview Baseline controls for your org
 #--------------------------------------------------------------------------------------------------------------
-<#	Step 1: Copy the content of sample files present in /AddPreviewBaselineSample/ControlSettings.json to your org-policy folder ControlSettings file (present at "$policyFolder\Config\ControlSettings.json")
+<#	Step 1: Copy the content of sample files present in /AddPreviewBaseline/ControlSettings.json to your org-policy folder ControlSettings file (present at "$policyFolder\Config\ControlSettings.json")
 	       We have added one automated control for AppService (TLS), one manual control for Storage (key-rotate) and one automated control for sub (PIM)	
 	Step 2: Save the edited ControlSettings.json file and run Update-AzSKOrganizationPolicy command as given below:
 	Step 3: Edit the ServerConfigMetadata.json file in the org-policy folder and create an entry for this file (if not already there) and then run Update-AzSKOrganizationPolicy command as given below:	
@@ -126,7 +126,7 @@ $azSKVer = (Get-Module $azSKModuleName).Version
 #--------------------------------------------------------------------------------------------------------------
 #Example 6: Customizing Severity Labels for you org. Refer: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Readme.md#e-customizing-severity-labels
 #--------------------------------------------------------------------------------------------------------------
-<#  Step 1: Copy the content of sample files present in DevOpsKit-docs/07-Customizing-AzSK-for-your-Org/Samples/SeveritySample/ControlSettings.json to your org-policy folder ControlSettings file ("$policyFolder\Config\ControlSettings.json")
+<#  Step 1: Copy the content of sample files present in DevOpsKit-docs/07-Customizing-AzSK-for-your-Org/Samples/EditSeverityLabel/ControlSettings.json to your org-policy folder ControlSettings file ("$policyFolder\Config\ControlSettings.json")
     Step 2: Save the edited ControlSettings.json file and run Update-AzSKOrganizationPolicy command as given below:
 	Step 3: Edit the ServerConfigMetadata.json file in the org-policy folder and create an entry for this file (if not already there) and then run Update-AzSKOrganizationPolicy command as given below:	
 #>	
