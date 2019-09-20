@@ -1,7 +1,6 @@
 
-> <b>NOTE:</b>
-> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
-
+> The Secure DevOps Kit for Azure (AzSK) was created by the Core Services Engineering & Operations (CSEO) division at Microsoft, to help accelerate Microsoft IT's adoption of Azure. We have shared AzSK and its documentation with the community to provide guidance for rapidly scanning, deploying and operationalizing cloud resources, across the different stages of DevOps, while maintaining controls on security and governance.
+<br>AzSK is not an official Microsoft product – rather an attempt to share Microsoft CSEO's best practices with the community..
 # Customizing AzSK for your organization
  
 ### [Overview](Readme.md#Overview)
@@ -1003,11 +1002,13 @@ Coming soon
 
 ## Customizing the SVTs
 
-   It is powerful capability of AzSK to enable an org to customize the SVT behaviour.  Refer [extending AzSK modules](./Extending%20AzSK%20Module/Readme.md) for more details. You will be able to achieve the following scenarios.
+
+ It is powerful capability of AzSK to enable an org to customize the SVT behaviour.  Refer [extending AzSK modules](./Extending%20AzSK%20Module/Readme.md) for more details. You will be able to achieve the following scenarios.
 
    - [Update/extend existing control by augmenting logic](./Extending%20AzSK%20Module/Readme.md##steps-to-extend-the-control-svt)
    - [Add new control for existing GSS/GRS SVT](./Extending%20AzSK%20Module/Readme.md#a-extending-a-gss-svt)
    - [Add an altogether new SVT (non-existing service scan)](./Extending%20AzSK%20Module/Readme.md#steps-to-add-a-new-svt-to-the-azsk-module)
+
 
 
 ## Customizing subscription security
@@ -1408,7 +1409,118 @@ Example: If you want to scan only the ARMControls present in your org-policy, th
 
 ![ARM Controls override](../Images/07_Custom_Policy_ARMControls.png)
 
-
 ##### Testing:
 
 Run clear session state command(Clear-AzSKSessionState) followed by services scan (Get-AzSKAzureServicesSecurityStatus). Scan should reflect configuration changes done.
+
+
+
+### How to customize attestation expiry period for controls? 
+
+There are two methods with which attestation expiry period can be controlled using org policy. 
+
+1. Update attestation expiry period for control severity 
+
+2. Update attestation expiry period for a particular control in SVT  
+
+**Note:** Expiry period can be customized only for statuses "WillNotFix", "WillFixLater" and "StateConfirmed". For status "NotAnIssue" and "NotApplicable", expiry period can be customized using "Default" period present as part of ControlSettings configuration.
+
+#### 1. Update attestation expiry period for control severity 
+   
+   Steps:
+
+   i) Go to ControlSettings configuration present in module folder.  
+
+      Source location: "%userprofile%\Documents\WindowsPowerShell\Modules\AzSK\<version>\Framework\Configurations\SVT\ControlSettings.json"
+
+   ii) Copy "AttestationExpiryPeriodInDays" settings
+
+   iii) Create/update "ControlSettings.json" in org policy configuration folder (It is the same folder from where org policy is installed) and paste AttestationExpiryPeriodInDays configurations to file
+
+
+   iv) Update attestation expiry period against control severity. For e.g., here we will make "High" severity control to expire after 60 days, "Critical" to 15 days and others set to 90 days 
+
+   ![Controls attestation expiry override](../Images/07_OrgPolicy_AttestationExpiryOverride.png)
+
+   v) Update org policy with the help of Update-AzSKOrganizationPolicy (UOP) cmdlet. (If you have created policy custom resources, mention resource names as parameter for UOP cmdlet)
+
+   ```
+      Update-AzSKOrganizationPolicy -SubscriptionId $SubId -OrgName "Contoso" -DepartmentName "IT" -PolicyFolderPath "D:\ContosoPolicies"
+   ```
+
+##### Testing:
+
+1. Run clear session state command (Clear-AzSKSessionState).
+
+2. You can attest one of the "High" severity controls or if you have control already attested, you can go to step 3
+
+   Example: In this example, we will attest storage control with "WillNotFix" status
+
+   ```
+   Get-AzSKAzureServicesSecurityStatus -SubscriptionId $SubId `
+                                    -ResourceNames azskpreviewcontosopr3sa `
+                                    -ControlIds "Azure_Storage_AuthN_Dont_Allow_Anonymous" `
+                                    -ControlsToAttest NotAttested 
+   ```
+
+   Output:
+   ![Controls attestation expiry override](../Images/07_OrgPolicy_AttestationFlow.png)
+   
+3. Run Get-AzSKInfo (GAI) cmdlet to get all attested controls in Sub with expiry details. 
+
+   Note: Make sure cmdlet is running with org policy. If not you will need to run "IWR" generated at the time of IOP or UOP cmdlet.
+
+   ```
+   Get-AzSKInfo -InfoType AttestationInfo -SubscriptionId <SubscriptionId>
+   ```
+
+4. Open CSV or detailed log file generated at the end of command execution. It will show expiry period column for attested column.
+
+   Detailed log:
+   ![Controls attestation expiry override](../Images/07_Custom_Policy_AttestationExpiryReportOutput.png)
+   
+   CSV report:
+   ![Controls attestation expiry override](../Images/07_Custom_Policy_AttestationExpiryReport.png)
+
+
+
+#### 2. Update attestation expiry period for particular control in SVT 
+ 
+
+i) Copy the Storage.json from the AzSK module to your org-policy folder
+
+   Source location: "%userprofile%\Documents\WindowsPowerShell\Modules\AzSK\<version>\Framework\Configurations\SVT\Services\Storage.json"
+
+   Destination location: Policy config folder in local (D:\ContosoPolicies\Config)
+
+ii) Remove everything except the ControlId, the Id and add property "AttestationExpiryPeriodInDays" as shown below. 
+
+   ```
+   {
+    "Controls": [
+     {
+        "ControlId": "Azure_Storage_AuthN_Dont_Allow_Anonymous",
+        "Id": "AzureStorage110",
+        "AttestationExpiryPeriodInDays": 45
+     }
+    ]
+   }
+   ```
+
+iii) Update org policy with the help of UOP cmdlet with required parameters. 
+
+   ```
+      Update-AzSKOrganizationPolicy -SubscriptionId $SubId -OrgName "Contoso" -DepartmentName "IT" -PolicyFolderPath "D:\ContosoPolicies"
+   ```
+
+##### Testing:
+
+   For testing follow same steps mentioned above for [scenario 1](./#testing-7)
+
+
+
+
+
+
+
+

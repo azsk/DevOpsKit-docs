@@ -1,7 +1,6 @@
 
-> <b>NOTE:</b>
-> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
-
+> The Secure DevOps Kit for Azure (AzSK) was created by the Core Services Engineering & Operations (CSEO) division at Microsoft, to help accelerate Microsoft IT's adoption of Azure. We have shared AzSK and its documentation with the community to provide guidance for rapidly scanning, deploying and operationalizing cloud resources, across the different stages of DevOps, while maintaining controls on security and governance.
+<br>AzSK is not an official Microsoft product – rather an attempt to share Microsoft CSEO's best practices with the community..
 # AzSK Subscription Security Package
 
 ![Subscription_Security](../Images/Subscription_Security.png)
@@ -378,21 +377,6 @@ Remove-AzSKAlerts -SubscriptionId <SubscriptionID> -Tags "Optional"
 **Note**: This command cleans up all alerts in the resource group 'AzSKRG' with matched tag. This resource group is used internally as a container for AzSK objects. As a result, it is advisable to not add other alerts (or other types of resources) to this RG.
 
 [Back to top…](Readme.md#contents)
-### Configure alerts scoped to specific resource groups
-You may be interested in enabling alerts but only for resources within a particular (target) resource group. This may be done using the -TargetResourceGroup parameter. 
-
-Run the below command
-```PowerShell
-Set-AzSKAlerts -SubscriptionId <subscriptionid> -TargetResourceGroup <TargetRGName>
-```
-These parameters above have to be updated with the appropriate values. See the table below for details.
-
-|Config Param Name	|Purpose	|
-| -----------------  | --------- | 
-|SubscriptionId 	|Subscription ID against which these alerts would be setup	| 
-|TargetResourceGroup 	|Target resource group on which alerts needs to be configured	|
-
-[Back to top…](Readme.md#contents)
 ### FAQs
 #### Can I get the alert emails to go to a distribution group instead of an individual email id?
 Yes it is possible. While setting up the alerts you are asked to provide the SecurityContactEmails. It supports individual point of contact or mail enabled security group or a distribution list.  
@@ -607,14 +591,15 @@ As Azure Government and Azure China are limited to particular location, provide 
 E.g., Install-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
            -OrgName <OrgName> `
            -PolicyFolderPath <PolicyFolderPath> `
-           -ResourceGroupLocation "USGov Virginia"                          (for Azure Government)
+           -ResourceGroupLocation "USGov Virginia" `
+	   -AppInsightLocation "USGov Virginia"                   (for Azure Government)
 ```
 
 ## AzSK: Privileged Identity Management (PIM) helper cmdlets
 
 AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This command provides a quicker way to perform Privileged Identity Management (PIM) operations and enables you to manage access to important Azure subscriptions, resource groups and resources.
 
-### Use Get-AzSKPIMConfiguration for querying various PIM settings/status
+### Use Get-AzSKPIMConfiguration (alias 'getpim') for querying various PIM settings/status
 
   1. <h4> List your PIM-eligible roles (-ListMyEligibleRoles) </h4>
 
@@ -706,8 +691,27 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                -ResourceName "AppServiceDemo" `
                                -DoNotOpenOutputFolder
       ```
+3. <h4> List expiring assignments (-ListSoonToExpireAssignments) </h4>
 
-### Use Set-AzSKPIMConfiguration for configuring/changing PIM settings:
+      Use this command to list Azure role with PIM assignments at the specified scope that are about to expire in given number of days. Use respective parameters to list expiring assignments for a specific role on a subscription or a resource group or a resource.
+
+      ```PowerShell
+	      Get-AzSKPIMConfiguration -ListSoonToExpireAssignment  `
+                              -SubscriptionId <SubscriptionId> `
+                              -RoleNames <Comma separated list of roles> `
+                              -ExpiringInDays ` # The number of days you want to query expiring assignments for
+                              [-DoNotOpenOutputFolder]
+      ```
+      <b>Example 1: </b> List 'Owner' PIM assignments at subscription level that will expire in 10 days.
+
+       ```PowerShell
+      Get-AzSKPIMConfiguration -ListSoonToExpireAssignment `
+                               -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
+                               -RoleNames 'Owner' `
+			       -ExpiringInDays 10`
+                               -DoNotOpenOutputFolder
+      ```
+### Use Set-AzSKPIMConfiguration (alias 'setpim') for configuring/changing PIM settings:
 
   1. <h4> Assigning users to roles (-AssignRole) </h4>
      
@@ -812,7 +816,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               -DoNotOpenOutputFolder
       ```
 
-  4. <h4> Converting permanent assignments at subscription/RG scope to PIM (-ConvertPermanentAssignmentsToPIM) </h4>
+  4. <h4> Assign PIM to permanent assignments at subscription/RG scope  (-AssignEligibleforPermanentAssignemnts) </h4>
 
       Use this command to change permanent assignments to PIM for specified roles, at the specified scope. 
 
@@ -821,7 +825,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
 
       ```PowerShell
-      Set-AzSKPIMConfiguration -ConvertPermanentAssignmentsToPIM `
+      Set-AzSKPIMConfiguration -AssignEligibleforPermanentAssignemnts `
                               -SubscriptionId <SubscriptionId> `
                               -RoleNames <Comma separated list of roles> `
                               -DurationInDays <Int> `
@@ -831,10 +835,10 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               [-Force]
       ```
 
-      <b>Example 1: </b> Convert permanent assignments to PIM for 'Contributor' and 'Owner' roles at subscription level . This command runs in an interactive fashion so that you get an opportunity to verify the accounts being converted.
+      <b>Example 1: </b> Convert permanent assignments to PIM for 'Contributor' and 'Owner' roles at subscription level . This command runs in an interactive manner so that you get an opportunity to verify the accounts being converted.
 
       ```PowerShell
-      Set-AzSKPIMConfiguration -ConvertPermanentAssignmentsToPIM `
+      Set-AzSKPIMConfiguration -AssignEligibleforPermanentAssignemnts `
                               -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
                               -RoleNames "Contributor,Owner" `
                               -DurationInDays 30 `
@@ -843,7 +847,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
       <b>Example 2: </b> Use *'-Force'* parameter to convert permanent assignments to PIM without giving runtime verification step.
 
       ```PowerShell
-      Set-AzSKPIMConfiguration -ConvertPermanentAssignmentsToPIM `
+      Set-AzSKPIMConfiguration -AssignEligibleforPermanentAssignemnts `
                               -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
                               -RoleNames "Contributor,Owner" `
                               -ResourceGroupName "DemoRG" `
@@ -890,7 +894,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
       ```
 
-      <b>Example 1: </b> Remove 'Contributor' and 'Owner' roles that have permanent assignment at subscription level. This command runs in an interactive fashion so that you get an opportunity to verify the accounts being removed. All the specified role with permanent access will get removed except your access.
+      <b>Example 1: </b> Remove 'Contributor' and 'Owner' roles that have permanent assignment at subscription level. This command runs in an interactive manner so that you get an opportunity to verify the accounts being removed. All the specified role with permanent access will get removed except your access.
 
       ```PowerShell
       Set-AzSKPIMConfiguration -RemovePermanentAssignments `
@@ -913,65 +917,112 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               -Force
       ```
 
+
+ 6. <h4> Extend PIM assignments for expiring assignments (-ExtendExpiringAssignments) </h4>
+	 Use this command to extend PIM eligible assignments that are about to expire in n days
+    <b>Example 1: </b>Extend Owner PIM roles that are to be expired in 10 days. This command runs in an interactive manner in order to verify the assignments being extended.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -ExtendExpiringAssignments `
+                              -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
+                              -RoleNames "Owner" `
+                              -ExpiringInDays 10
+			      -DurationInDays 30 # The duration in days for expiration to be extended by
+                              -DoNotOpenOutputFolder
+      ```
+      
+      <b>Example 1: </b> Use *'-Force'* parameter to run the command in non-interactive mode. This command will extend expiry of  'Owner' PIM roles that are about to be expired in 10 days by skipping the verification step.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -ExtendExpiringAssignments `
+                              -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
+                              -RoleNames "Owner" `
+                              -ExpiringInDays 10
+			      -DurationInDays 30 # The duration in days for expiration to be extended by
+                              -Force
+      ```
+7. <h4> Configure role settings for role on an Azure resource (-ConfigureRoleSettings) </h4>
+	 Use this command to configure a  PIM role settings like maximum role assignment duration on a resource, mfa requirement upon activation etc.
+     The command currently supports configuring the following settings: Maximum assignment duration, maximum activation duration, requirement of justification upon activation, requirement of mfa upon activation.
+     
+     > Note: Currently all the 4 settings parameters are required to be supplied in command to change any configuration setting for a PIM role
+
+    <b>Example 1: </b> Configure 'Owner' PIM role on a subscription, to let maximum activation duration be 12 hours.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration  -ConfigureRoleSettings `
+                                -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
+                                -RoleNames "Owner" `
+                                -MaximumActivationDuration 12`
+                                -ExpireEligibleAssignmentsInDays 90 `
+                                -RequireJustificationOnActivation $true
+                                -RequireMFAOnActivation $true
+                                -DoNotOpenOutputFolder`
+      ```
+      
+
+
+
 ## AzSK: Credential hygiene helper cmdlets
 
 To help avoid availability disruptions due to credential expiry, AzSK has introduced cmdlets that will help you track and get notified about important credentials across your subscription. AzSK now offers a register-and-track solution to help monitor the last update of your credentials. This will help you periodically track the health of your credentials which are nearing expiry/need rotation.
 
+AzSK has also introduced the concept of ‘credential groups’ wherein a set of credentials belonging to a specific application/functionality can be tracked together for expiry notifications.
+
 <b>NOTE:</b>
-      Ensure you have atleast 'Contributor' access on the subscription before running the below helper commands.
+      Ensure you have atleast 'Contributor' access on the subscription before running the below helper commands. To configure expiry notifications for the tracked credentials, ensure you have 'Owner' access on the subscription.
 
 ### Use New-AzSKTrackedCredential to onboard a credential for tracking 
 
 ```PowerShell
    New-AzSKTrackedCredential -SubscriptionId '<Subscription Id>' `
-                             -CredentialName '<Friendly name of the credential>' ` 
-                             -CredentialLocation '<Other|AppService|KeyVault>' ` 
+                             -CredentialName '<Friendly name of the credential>' `
+                             -CredentialLocation '<Custom|AppService|KeyVault>' `
                              -RotationIntervalInDays <Int> `
-                             -AlertEmail '<Alert email>' ` 
-                             [-AlertSMS '<Alert contact number>'] `
+                             -NextExpiryInDays <Int> `
+                             [-CredentialGroup '<Action group name for configuring alerts>'] `
                              -Comment '<Comment to capture the credential info>'    
 ```
 |Param Name|Purpose|Required?|Allowed Values|
 |----|----|----|----|
 |SubscriptionId|Subscription ID of the Azure subscription in which the to-be-tracked credential resides.|TRUE|None|
 |CredentialName|Friendly name for the credential.|TRUE|None|
-|CredentialLocation|Host location of the credential.|TRUE|Other/AppService/KeyVault|
+|CredentialLocation|Host location of the credential.|TRUE|Custom/AppService/KeyVault|
 |RotationIntervalInDays|Time in days before which the credential needs an update.|TRUE|Integer|
-|AlertEmail|Email Id for which the tracking notification is to be configured.|TRUE|Valid email address|
-|AlertSMS|(Optional) Contact number for which the tracking notification is to be configured.|FALSE|Valid contact number|
-|Comment|Comment to capture more information about the credential for the user for futire tracking purposes.|TRUE|None|
+|NextExpiryInDays|Time in days for the next expiry of the credential.|TRUE|Integer|
+|CredentialGroup|(Optional) Name of the action group to be used for expiry notifications|FALSE|Valid action group name.|
+|Comment|Comment to capture more information about the credential for the user for future tracking purposes.|TRUE|None|
 
 > <b>NOTE 1:</b>
       > For credential location type 'AppService', you will have to provide app service name, resource group, app config type (app setting/connection string) & app config name. Make sure you have the required access on the resource.
 
 > <b>NOTE 2:</b>
-      > For credential location type 'KeyVault', you will have to provide key vault name, credential type (Key/Secret) & credential name. Make sure you have the required access on the resource.
+      > For credential location type 'KeyVault', you will have to provide key vault name, credential type (key/secret) & credential name. Make sure you have the required access on the resource.
 
 > <b>NOTE 3:</b>
-      > Use credential location type 'Other', if the credential doesn't belong to an appservice or key vault.
+      > Use credential location type 'Custom', if the credential doesn't belong to an appservice or key vault.
 
 ### Use Get-AzSKTrackedCredential to list the onboarded credential(s) 
 
 ```PowerShell
-   Get-AzSKTrackedCredential -SubscriptionId '<Subscription Id>' [-CredentialName '<Friendly name of the credential>']
+   Get-AzSKTrackedCredential -SubscriptionId '<Subscription Id>' [-CredentialName '<Friendly name of the credential>'] [-DetailedView]
 ```
 > <b>NOTE:</b>
-      > Not providing credential name wil list all the AzSK-tracked credentials in the subscription.
+      > Not providing credential name will list all the AzSK-tracked credentials in the subscription. Use '-DetailedView' flag to list down detailed metadata about the credentials.
 
 ### Use Update-AzSKTrackedCredential to update the credential settings and reset the last updated timestamp
 
 ```PowerShell
-   Update-AzSKTrackedCredential -SubscriptionId '<Subscription Id>' `
-                                -CredentialName '<Friendly name of the credential>' `  
-                                [-RotationIntervalInDays <Int>] `
-                                [-AlertEmail '<Alert email>'] ` 
-                                [-AlertSMS '<Alert contact number>'] `
-                                [-ResetLastUpdate]
-                                -Comment '<Comment to capture the credential info>'    
+    Update-AzSKTrackedCredential -SubscriptionId '<Subscription Id>' `
+                                 -CredentialName '<Friendly name of the credential>' `
+                                 [-RotationIntervalInDays <Int>] `
+                                 [-CredentialGroup '<Action group name for configuring alerts>'] `
+                                 [-ResetLastUpdate] `
+                                 -Comment '<Comment to capture the credential info>'                              
 ```
 
 > <b>NOTE:</b>
-      > Use '-ResetLastUpdate' switch only when you want to reset the timer on the last update on the credential to current time. 
+      > Use '-ResetLastUpdate' to reset the last update time to current timestamp. 
 
 ### Use Remove-AzSKTrackedCredential to deboard a credential from AzSK tracking 
 
