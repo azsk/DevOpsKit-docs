@@ -1,0 +1,11 @@
+{
+  "FeatureName": "Storage",
+
+  "Controls": [
+   {
+      "ControlID": "Azure_Storage_DP_Encrypt_In_Transit",
+      "Id": "AzureStorage160",
+      "MethodName": "CheckStorageEncryptionInTransitExt"
+    }
+  ]
+}
