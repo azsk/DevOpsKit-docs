@@ -944,6 +944,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 7. <h4> Configure role settings for role on an Azure resource (-ConfigureRoleSettings) </h4>
 	 Use this command to configure a  PIM role settings like maximum role assignment duration on a resource, mfa requirement upon activation etc.
      The command currently supports configuring the following settings: Maximum assignment duration, maximum activation duration, requirement of justification upon activation, requirement of mfa upon activation.
+     
      > Note: Currently all the 4 settings parameters are required to be supplied in command to change any configuration setting for a PIM role
 
     <b>Example 1: </b> Configure 'Owner' PIM role on a subscription, to let maximum activation duration be 12 hours.
