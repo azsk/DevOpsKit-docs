@@ -1,6 +1,6 @@
 
-> <b>NOTE:</b>  
-> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+> The Secure DevOps Kit for Azure (AzSK) was created by the Core Services Engineering & Operations (CSEO) division at Microsoft, to help accelerate Microsoft IT's adoption of Azure. We have shared AzSK and its documentation with the community to provide guidance for rapidly scanning, deploying and operationalizing cloud resources, across the different stages of DevOps, while maintaining controls on security and governance.
+<br>AzSK is not an official Microsoft product – rather an attempt to share Microsoft CSEO's best practices with the community..
 
 ><b>NOTE:</b>  
 >The OMS* parameter/variable names will soon be deprecated. Please ensure that you have made the necessary changes to CA, CICD and AzSK Monitoring Solution as per below:  
@@ -695,6 +695,7 @@ that are supported by the ARM Checker task:
 |AzSKModuleName| This variable enable users to participate in the Preview testing. If you want to participate in preview, Provide the module name as "AzSKPreview". If not used, it would by default uses AzSK as module name| e.g. AzSKPreview|
 |ExtendedCommand| Enables you to provide other switches supported by the Get-AzSKARMTemplateSecurityStatus command to perform focused scanning in the CICD pipeline | e.g. -ControlIds "Azure_AppService_Deploy_Use_Latest_Version,</br>Azure_AppService_AuthN_Use_Managed_Service_Identity" or -UseBaselineControls or -Severity "High, Medium"
 |TreatAsPassed| This variable is to provide users with more control over behavior of the SVT extension in case of various control statuses other than ‘Passed’ or ‘Failed’. For e.g., using this, one may choose to have the extension treat statuses such as 'Verify','Manual' as 'Passed'.|e.g. The value of the variable TreatAsPassed can be passed as Verify,Manual to skip Verify and Manual controls|
+|FailTaskIfNoControlsScanned| This variable is to control the behavior of the SVT extension in case of no controls scanned. For e.g., using this, one may choose to pass the task if it is configured to scan only 'High' severity control but there are no resources for which 'High' severity controls are applicable.| e.g. The value of the variable 'FailTaskIfNoControlsScanned' can be passed as 'true' to fail the task if no controls scanned or 'false' to pass the task if no controls scanned|
 
 > **Note:** If you are using custom org policy features such as baseline controls scan etc., please make sure that CheckBox 'Use Org Baseline(s)' is checked and also provide an active azure service connection.
 

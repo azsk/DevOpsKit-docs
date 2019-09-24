@@ -2,7 +2,7 @@
 <head>
 
 </head><body>
-<H2>Organizaiton</H2><table><tr><th>Description & Rationale</th><th>ControlSeverity</th><th>Automated</th><th>Fix Script</th></tr>
+<H2>Organization</H2><table><tr><th>Description & Rationale</th><th>ControlSeverity</th><th>Automated</th><th>Fix Script</th></tr>
 <tr><td><b>Organization must be configured to authenticate users using Azure Active Directory backed credentials.</b><br/>Using the native enterprise directory for authentication ensures that there is a built-in high level of assurance in the user identity established for subsequent access control.All Enterprise subscriptions are automatically associated with their enterprise directory (xxx.onmicrosoft.com) and users in the native directory are trusted for authentication to enterprise subscriptions.</td><td>High</td><td>Yes</td><td>No</td></tr>
 
 <tr><td><b>Permissions to external accounts (i.e., accounts outside the native directory for the Organization) must be disabled</b>
