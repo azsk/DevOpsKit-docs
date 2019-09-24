@@ -18,7 +18,7 @@
 ----------------------------------------------
 ### Structure
 
-Before we get started with extending the toolkit, it is important to understand the structure of the PowerShell module. Below represents the tree structure of DevOpsKit PS module, out of which you can currently extend SVT (subscription & services) and Listeners only. SVT stands for Security Verification Tests, which constitute different Azure security controls that are scanned by the DevOps Kit. Listeners are like subscribers for control evaluation results. You can route the control results data to data source choice of yours. 
+Before we get started with extending the toolkit, it is important to understand the structure of PowerShell module. Below represents the tree structure of DevOpsKit PS module. You can currently extend SVT (subscription & services) and Listeners only. SVT stands for Security Verification Tests, which constitute different Azure security controls that are scanned by the DevOps Kit. Listeners are like subscribers for control evaluation results that can route the control results data to data source choice of yours. 
 		
     
       
@@ -85,7 +85,8 @@ Before we get started with extending the toolkit, it is important to understand 
 ### Know more about SVTs:
 
 
-All our SVTs inherit from a base class called SVTBase which will take care of all the required plumbing from the control evaluation code. Every SVT will have a corresponding feature json file under the configurations folder. For example, Storage.ps1 (in the core folder) has a corresponding Storage.json file under configurations folder. These SVTs json have a bunch of configuration parameters, that can be controlled by a policy owner, for instance, you can change the recommendation, modify the description of the control suiting your org, change the severity, etc.
+All the SVTs inherit from a base class called SVTBase which takes care of all the required plumbing from the control evaluation code. Every SVT has a corresponding feature json file under the Framework -> Configurations folder. For example, Storage.ps1 (in the Core folder) has a corresponding Storage.json file under 'Configurations' folder. The SVT json has a bunch of configuration parameters that can be controlled by a policy owner, for instance, based on the org rquirements one can change the recommendation, modify the description of the control, change the severity, etc.
+Every time a SVT scan happens, each automated control calls the corresponding method which in turn evaluates the control result.
 
 Below is the typical schema for each control inside the feature json
   ```
@@ -108,7 +109,7 @@ Below is the typical schema for each control inside the feature json
 }
  ```  
     
-After schema of the control json, let us look at the corresponding feature SVT PS1.
+Below is the corresponding feature SVT.ps1 for SubscriptionCore SVT.
 
 ```PowerShell
 #using namespace Microsoft.Azure.Commands.Search.Models
@@ -172,12 +173,12 @@ class SubscriptionCore: SVTBase
 	
 ### Steps to extend the control SVT:
 ##### A. Extending a GSS SVT
-1. 	 Copy the SVT ps1 script that you want to extend and rename the file by replacing ".ps1" with ".ext.ps1".
+1. 	Copy the SVT.ps1 script that you want to extend and rename the file by replacing ".ps1" with ".ext.ps1".
 	For example, if you want to extend SubscriptionCore.ps1, copy the file and rename it to SubscriptionCore.ext.ps1.
   
-2. 	 You need to rename the class, inherit from the core feature class, and then update the constructor to reflect the new name as shown below:
+2. 	Rename the class, inherit it from the core feature class, and then update the constructor to reflect the new name as shown below:
     
-   > e.g. class SubscriptionCore : SVTBase => SubscriptionCoreExt : SubscriptionCore
+   > For example, class SubscriptionCore : SVTBase => SubscriptionCoreExt : SubscriptionCore
 	
    ```PowerShell
 	Set-StrictMode -Version Latest
@@ -189,10 +190,10 @@ class SubscriptionCore: SVTBase
 	  }
 	}
    ```
-   All the other functions from the class file should be removed.
+> Note: All the other functions from the class file should be removed.
   
-3. 	 If you are modifying the logic for a specific control, then retain the required function; or if you are adding a new control, copy any control function from the base class to the extension class reference.
-	> Note: For a given control in json, the corresponding PowerShell function is provided as value under MethodName property. You can search for that method under the PS script. For eg. In the below case let us assume you want to add a new control that fails if you have more than 2 co-admins. 
+3. 	 If logic for a specific control needs to be updated, then retain the required function; or if a new control is to be added, copy any control function from the base class to the extension class for reference.
+	> Note: For a given control in json, the corresponding PowerShell function is provided as value under 'MethodName' property. For eg. Below is an example of adding a new control that fails if you have more than 2 co-admins. 
   
   ```PowerShell
 	Set-StrictMode -Version Latest
@@ -225,10 +226,12 @@ class SubscriptionCore: SVTBase
 	}
   ```  
   
-  4. 	Now you need to prepare the json for the above new control. You can get started by copying the default base json, rename it to <feature>.ext.json. In this case you need to rename it as SubscriptionCore.ext.json. Remove all the other controls except for one and update it with new control details. See additional instructions as '//comments' on each line in the example JSON below. Note: Remove the comments from JSON if you happen to use the below as-is.
+  4. 	For the above a corresponding control in extension json is required. 
+  	Step 1: Copy the default base json, rename it to <feature>.ext.json. 
+	Step 2: Remove all the other controls except for one being added, update it with new control details. See additional instructions as '//comments' on each line in the example json below. Note: Remove the comments from json if you happen to use the below as-is.
 	
-  > IMPT: Do *not* tag 'Ext' to the 'FeatureName' here. Make sure you have updated the MethodName to the new method name. 
-  > Note: Remove the comments in the below JSON before saving the file
+  > IMPT: Do *not* tag 'Ext' to the 'FeatureName' here. Make sure you have updated the method name to corresponding method in ps1 file. 
+  > Note: Remove the comments in the below json before saving the file
   
 ```
 	{
@@ -256,7 +259,7 @@ class SubscriptionCore: SVTBase
 	   ]
 	}
 ```
-5. 	 Now upload these files to your policy storage container under base schema version folder (currently 3.1803.0) like any other org policy and add an entry to ServerConfigMetadata.json as shown below:
+5. 	 Upload these files(json and corresponding ps1 file) to org policy storage container under base schema version folder (currently 3.1803.0) like any other org policy and add an entry to ServerConfigMetadata.json as shown below:
 ``` 
     {
       "Name":  "SubscriptionCore.ext.json"
@@ -268,7 +271,7 @@ class SubscriptionCore: SVTBase
    Refer the below screenshot.  
    ![Block diagram of AzSK extension](../../Images/08_AzSK_Extension_SVT_Storage_Policy_Example.png)
   
-6. 	 That's it!! You can now scan the new extended control like any other control.
+6. 	 The new control is now added to SubscriptionCore SVT. The new extended control can be scanned like any other control.
   
 ```PowerShell
 	Get-AzSKSubscriptionSecurityStatus -SubscriptionId '<sid>' -ControlIds 'Azure_Subscription_AuthZ_Limit_Admin_Count_Ext'
@@ -276,57 +279,63 @@ class SubscriptionCore: SVTBase
 
 ##### B. Extending a GRS SVT
 
-We will add a mock control that 'storage accounts must be created in 'eastus2' region.
+Below is an example to add a mock control that checks storage accounts must be created in 'eastus2' region.
 
-1) Get preview policy downloaded to local folder:
+1) Download preview policy to a local folder on your system by executing the below command:
 
     ```Powershell
-    gop -SubscriptionId <subid> -OrgName <orgname> -DepartmentName <deptname> -PolicyFolderPath <policyfolderpath> -DownloadPolicy
+    gop -SubscriptionId <subid> -OrgName <orgname> -DepartmentName <deptname> -PolicyFolderPath <localPolicyFolderPath> -DownloadPolicy
     ```
 
-2) Copy Storage.ps1 from module folder ->        <policyfolderpath>\Storage.ext.ps1
+2) Copy Storage.ps1 from module folder ->  <localPolicyFolderpath>\Storage.ext.ps1
 
-    a)  Clean up all but constructor, change to StorageExt, base-class to Storage, remove any class members.
+    a)  Remove all the methods except constructor, change class name to StorageExt, base-class to Storage, remove all class members.
 
-    b) Add method that will implement the new control
-    (see example file attached)
+    b) Add method that will implement the new control. Find sample script StorageExt.ps1 [here](../StorageExt.ps1)
 
-          
-3) Copy Storage.json from module folder -> <policyfolderpath>\Storage.ext.json
+
+3) Copy Storage.json from module folder to <localPolicyFolderPath>\Storage.ext.json
        
-    a) Remove all, except one existing control (to edit into new control JSON)
+    a) Remove all, except one existing control (to update it into new control json)
        
-    b) Edit the one control to reflect desired control-id, description, etc.
+    b) Edit the control to reflect desired controlId, description, etc.
        
     
     Few important things:
         
     i) ControlId and Id should not conflict with existing ones
             
-    ii) MethodName should correctly reflect the new method you wrote in Storage.ext.ps1 above
+    ii) MethodName should correctly reflect the new method written in Storage.ext.ps1 above
             
-    iii) Do not change 'Storage' to 'StorageExt' inside the JSON (at the root node) 
+    iii) Do not change 'Storage' to 'StorageExt' inside the json (at the root node) 
 
-4) Update org policy... (Important: you don't need to edit anything else or manually tweak policy in the blob)!
+4) Update org policy using below command... (Important: Do not edit anything else or manually tweak policy in the blob)!
 
     ```Powershell    
-    uop -SubscriptionId <subid> -OrgName <orgname> -DepartmentName <deptname> -PolicyFolderPath <policyfolderpath> 
+    uop -SubscriptionId <subid> -OrgName <orgname> -DepartmentName <deptname> -PolicyFolderPath <localPolicyFolderPath> 
     ```
 
-
-Important: Also note that the "ext" in the file-names above is in all lower-case!
+5) Add an entry to ServerConfigMetadata.json as shown below:
+``` 
+    {
+      "Name":  "Storage.ext.json"
+    },
+    {
+      "Name":  "Storage.ext.ps1"
+    }
+> Important: Also note that the "ext" in the file-names above is in all lower-case!
 
 ===============================================================
 
-Verifying that the added control works:
+6) Verifying that the added control works:
 
-1) Put your local AzSK into the target policy mode... (run "iwr" that is echoed by Step-4 above).
+1) Put the local AzSK into the target policy. For that run "iwr" that is echoed by Step-4 above.
 
         
-2) Run grs for a storage accounts and verify that the control is getting scanned:
+2) Run grs for storage accounts and verify that the control is getting scanned:
         grs -s <subid> -rgns <resourcegroupname> -rtn Storage
 
-3) Run specific control-id, and across a couple of storage accounts in diff regions (the AzSKRG one will pass 'eastus2' check):
+3) Run specific controlId across a couple of storage accounts in different regions (the storage present in AzSKRG will pass'eastus2' check):
         
 ```Powershell
     grs -s <subid> -ResourceGroupNames 'AzSKRG, <RG1>, <RG2>' -ResourceTypeName Storage -ControlIds 'Azure_Storage_Create_In_Approved_Regions'
@@ -342,17 +351,17 @@ Verifying that the added control works:
 
 1. Add new control to Feature.ext.json/SubscriptionCore.ext.json file as per the above documentation.
 2. Add the new ControlId in baseline control list as per https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Readme.md#c-creating-a-custom-control-baseline-for-your-org
-3. That's it!! The newly added control will be scanned while passing "-UseBaselineControls" switch to GSS/GRS cmdlets.
+3. That's it!! The newly added control will be scanned when "-UseBaselineControls" switch is passed to GSS/GRS cmdlets.
 
 ### Steps to debug the extended control while development:
 
-Extended Feature.ext.ps1 files are downloaded at C:\Users\<UserAccount>\AppData\Local\Microsoft\AzSK\Extensions folder in the execution machine. While debugging, breakpoints need be inserted in those files. 
+Extended Feature.ext.ps1 files are downloaded at C:\Users\<UserAccount>\AppData\Local\Microsoft\AzSK\Extensions folder in the execution machine. While debugging, breakpoints need to be inserted in those files to step into the code you want to debug. 
 
 ### Steps to add a new SVT to the AzSK module:
 
-The following instructions will help you develop SVT for a new Azure service from scratch. That is, using these steps you can add an SVT for an Azure service that is not currently supported in DevOps Kit.
+Following are the instructions to add an SVT for an Azure service that is not currently supported in DevOps Kit.
 
-For illustration purpose, we will be developing SVT for Application Insights (as Application Insights is a resource type not currently supported in the DevOps kit.)
+Below are the steps to develop a sample SVT for Application Insights (as Application Insights is a resource type not currently supported in the DevOps kit.)
 
 >**Note:** Currently, adding a completely new SVT to AzSK requires collaboration with the DevOps Kit team. This is because we need to make some changes in the core module to support the new SVT. Please email azsksup@microsoft.com to initiate a discussion. Typically, we will be able to turn such requests around within our monthly sprint. 
 
@@ -400,7 +409,7 @@ The steps below follow roundabout the same model as in section [Extending AzSK M
             if (-not $this.ResourceObject)
             {
                 # Get resource details from AzureRm
-                $this.ResourceObject = Get-AzureRmApplicationInsights -Name $this.ResourceContext.ResourceName -ResourceGroupName $this.ResourceContext.ResourceGroupName -Full 
+                $this.ResourceObject = Get-AzApplicationInsights -Name $this.ResourceContext.ResourceName -ResourceGroupName $this.ResourceContext.ResourceGroupName -Full # Use corresponding Az command for the SVT service 
     
                 if(-not $this.ResourceObject)
                 {
@@ -420,7 +429,7 @@ The steps below follow roundabout the same model as in section [Extending AzSK M
 
     Also copy these files to the (local) org policy folder (e.g., %userprofile%\Desktop\ContosoPolicies).
 
-    Note that below we have implemented a single dummy control for App Insights called ‘Azure_AppInsights_No_Limited_Basic_Plan’ (which merely checks and fails if the pricing plan is ‘Limited Basic’). 
+    Note that below we have implemented a single dummy control for App Insights called ‘Azure_AppInsights_No_Limited_Basic_Plan’ (which  checks and fails if the pricing plan is ‘Limited Basic’). 
 
     AppInsights.ext.json
 
@@ -506,10 +515,10 @@ The steps below follow roundabout the same model as in section [Extending AzSK M
 
     ```PowerShell
     # List all RPs/registration state:
-    Get-AzureRmResourceProvider -ListAvailable | Select-Object ProviderNamespace, RegistrationState
+    Get-AzResourceProvider -ListAvailable | Select-Object ProviderNamespace, RegistrationState
     
     # microsoft.insights
-    (Get-AzureRmResourceProvider -ProviderNamespace microsoft.insights).ResourceTypes.ResourceTypeName
+    (Get-AzResourceProvider -ProviderNamespace microsoft.insights).ResourceTypes.ResourceTypeName
     ```
 5.	[###] Edit SVTMapping.ps1 (<pathToAzSK>\AzSK\<version>\Framework\Helpers) to add a resource type mapping entry for Application Insights.
 
