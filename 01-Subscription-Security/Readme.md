@@ -816,7 +816,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               -DoNotOpenOutputFolder
       ```
 
-  4. <h4> Assign PIM to permanent assignments at subscription/RG scope  (-AssignEligibleforPermanentAssignemnts) </h4>
+  4. <h4> Assign PIM to permanent assignments at subscription/RG scope  (-AssignEligibleforPermanentAssignments) </h4>
 
       Use this command to change permanent assignments to PIM for specified roles, at the specified scope. 
 
@@ -825,7 +825,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
 
       ```PowerShell
-      Set-AzSKPIMConfiguration -AssignEligibleforPermanentAssignemnts `
+      Set-AzSKPIMConfiguration -AssignEligibleforPermanentAssignments `
                               -SubscriptionId <SubscriptionId> `
                               -RoleNames <Comma separated list of roles> `
                               -DurationInDays <Int> `
@@ -838,7 +838,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
       <b>Example 1: </b> Convert permanent assignments to PIM for 'Contributor' and 'Owner' roles at subscription level . This command runs in an interactive manner so that you get an opportunity to verify the accounts being converted.
 
       ```PowerShell
-      Set-AzSKPIMConfiguration -AssignEligibleforPermanentAssignemnts `
+      Set-AzSKPIMConfiguration -AssignEligibleforPermanentAssignments `
                               -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
                               -RoleNames "Contributor,Owner" `
                               -DurationInDays 30 `
@@ -847,7 +847,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
       <b>Example 2: </b> Use *'-Force'* parameter to convert permanent assignments to PIM without giving runtime verification step.
 
       ```PowerShell
-      Set-AzSKPIMConfiguration -AssignEligibleforPermanentAssignemnts `
+      Set-AzSKPIMConfiguration -AssignEligibleforPermanentAssignments `
                               -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
                               -RoleNames "Contributor,Owner" `
                               -ResourceGroupName "DemoRG" `
