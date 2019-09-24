@@ -3,31 +3,31 @@
 <br>AzSK is not an official Microsoft product – rather an attempt to share Microsoft CSEO's best practices with the community..
 # Customizing AzSK for your organization
  
-### [Overview](Readme.md#Overview)
+### [Overview](Readme.md#Overview-1)
  - [When and why should I set up org policy?](Readme.md#when-and-why-should-i-setup-org-policy)
  - [How does AzSK use online policy?](Readme.md#how-does-azsk-use-online-policy)
 
-### [Setting up org policy](Readme.md#setting-up-org-policy)
+### [Setting up org policy](Readme.md#setting-up-org-policy-1)
  - [What happens during org policy setup?](Readme.md#what-happens-during-org-policy-setup)
  - [The org policy setup command: Install-AzSKOrganizationPolicy](Readme.md#the-org-policy-setup-command-install-azskorganizationpolicy)
  - [First-time policy setup - an example](Readme.md#first-time-policy-setup---an-example)
  
-### [Consuming custom org policy](Readme.md#consuming-custom-org-policy)
+### [Consuming custom org policy](Readme.md#consuming-custom-org-policy-1)
 
  - [Running scan in local machine with org policy](Readme.md#1-running-scan-in-local-machine-with-custom-org-policy)
  - [Setup Continuous Assurance](Readme.md#2-setup-continuous-assurance)
  - [Using CICD Extension with org-policy](Readme.md#3-using-cicd-extension-with-custom-org-policy)
  
-### [Modifying and customizing org policy](Readme.md#modifying-and-customizing-org-policy)
- - [Getting Started](Readme.md#Getting-Started)
+### [Modifying and customizing org policy](Readme.md#modifying-and-customizing-org-policy-1)
+ - [Getting Started](Readme.md#getting-started)
 
 
- - [Basic scenarios for org policy customization](Readme.md#Basic-scenarios-for-org-policy-customization) 
+ - [Basic scenarios for org policy customization](Readme.md#basic-scenarios-for-org-policy-customization) 
 
       - [Changing the default 'Running AzSK using…' message](Readme.md#a-changing-the-default-running-azsk-using-message)
       - [Changing control setting](Readme.md#b-changing-a-control-setting-for-specific-controls)
       - [Customizing specific controls for a service SVT](Readme.md#c-customizing-specific-controls-for-a-service)
-      - [Setting up and updating baselines for your org](Readme.md#c-creating-a-custom-control-baseline-for-your-org)
+      - [Setting up and updating baselines for your org](Readme.md#d-creating-a-custom-control-baseline-for-your-org)
       - [Customizing severity labels](Readme.md#e-customizing-severity-labels)
 
 ### [Managing policy/advanced policy usage ](Readme.md#managing-policyadvanced-policy-usage)
@@ -36,60 +36,55 @@
 
 - [Working with ‘local’ mode (policy dev-test-debug)](Readme.md#working-with-local-mode-policy-dev-test-debug)
 
-- [How to upgrade org version to latest AzSK version](Readme.md#how-to-upgrade-org-version-to-latest-azsk-version)
+- [How to upgrade org version to latest AzSK version](Readme.md#how-to-upgrade-org-azsk-version-to-the-latest-azsk-version)
    
    <!-- - [Testing CA ($updateToLatestVersion variable) before flipping AzSK.Pre]()
    - [Use of AzSK.Pre.JSON]()  -->
-   - [Upgrade scenarios in different scan sources(SDL/CA/CICD)]()
-
-- [How to keep in sync with AzSK release updates](Readme.md#upgrade-scenarios-in-different-scan-sources)
+   - [Upgrade scenarios in different scan sources(SDL/CA/CICD)](Readme.md#upgrade-scenarios-in-different-scan-sources)
 
 - [Maintaining policy in source-control](Readme.md#maintaining-policy-in-source-control)
 
 - [Policy deployment using CICD pipeline](Readme.md#policy-deployment-using-cicd-pipeline)
 
 
-### [Create compliance and monitoring solutions]()
+### [Create compliance and monitoring solutions](Readme.md#create-security-compliance-monitoring-solutions)
 
-- [Create cloud security compliance report for your org in PowerBI](Readme.md#create-cloud-security-compliance-report-for-your-org-in-powerbi-1)
+- [Create cloud security compliance report for your org in PowerBI](Readme.md#create-cloud-security-compliance-report-for-your-org-using-powerbi)
 
-- [AzSK org health monitoring dashboard]()
+- [AzSK org health monitoring dashboard](Readme.md#azsk-org-health-monitoring-dashboard)
 
-- [Detail resource inventory dashboard]()
-
-
-### [Compliance notifications]()
-
-- [Create compliance notification to subscription owners]()
+- [Detail resource inventory dashboard](Readme.md#detail-resource-inventory-dashboard)
 
 
-### [Advanced scenarios for org policy customization/extending AzSK]() 
+### [Compliance notifications](Readme.md#compliance-notifications-1)
 
-- [SVT customization]()
-   - [Update/extend existing control by augmenting logic]()
-   - [Add new control for existing GSS/GRS SVT]()
-   - [Add new SVT altogether (non-existing SVT)]()
+- [Create compliance notification to subscription owners](Readme.md#compliance-notification-to-subscription-owners)
 
-- [ARM checker policy customization]()
 
-- [Subscription security provisioning]()
-   - [Provisioning mandatory/deprecated RBAC list]()
-   - [Provisioning ARM policy/Alerts set]()
+### [Advanced scenarios for org policy customization/extending AzSK](Readme.md#advanced-usage-of-org-policy-extending-azsk) 
 
-- [Scenarios for modifying scanagent]()
-   - [Scanning only baseline controls using continuous assurance setup]()
-   - [Scanning admin and graph access controls using CA]()
-   - [Scan on resource deployment]()
-   - [Reporting critical alerts]()
-   - [Collecting dynamic resource metadata using scan agent]()
+- [SVT customization](Readme.md#customizing-the-svts)
+   - [Update/extend existing control by augmenting logic](./Extending%20AzSK%20Module/Readme.md#steps-to-override-the-logic-of-existing-svt)
+   - [Add new control for existing GSS/GRS SVT](./Extending%20AzSK%20Module/Readme.md#steps-to-extend-the-control-svt)
+   - [Add new SVT altogether (non-existing SVT)](./Extending%20AzSK%20Module/Readme.md#steps-to-extend-the-control-svt)
 
-- [Plugging in listeners]()
-   - [Sending events to EventHub for entire org]()
-   - [Sending events to Splunk (via WebHook) for entire org]()
+- [Subscription security provisioning](Readme.md#customizing-subscription-security)
+   - [ARM policy](Readme.md#arm-policy)
+   - [Alert set](Readme.md#alert-set)
+   - [Security center configurations](Readme.md#security-center-configurations)
+   - [Mandatory/deprecated RBAC list](Readme.md#rbac-mandatorydeprecated-lists)
+
+- [ARM checker policy customization](Readme.md#arm-checker-policy-customization)
+
+- [Scenarios for modifying scanagent](Readme.md#scenarios-for-modifying-scanagent)
+   - [Scanning only baseline controls using continuous assurance setup](Readme.md#scanning-only-baseline-controls-using-continuous-assurance-setup)
+   - [Scanning admin and graph access controls using CA](Readme.md#scanning-owner-and-graph-access-controls-using-ca)
+   - [Reporting critical alerts](#reporting-critical-alerts)
+
 
 - [Change default resource group name (AzSKRG) and location (EastUS2) created for AzSK components]()
 
-### [Org policy usage statistics and monitoring using telemetry]()
+### [Org policy usage statistics and monitoring using telemetry](Readme.md#org-policy-usage-statistics-and-monitoring-using-telemetry-1)
 
 
 ### [Troubleshooting common issues](Readme.md#testing-and-troubleshooting-org-policy-1)
@@ -1264,13 +1259,6 @@ ii) Update $StorageAccountRG variable (In RunbookScanAgent.ps1 file present in p
    
    <!-- ### Collecting dynamic resource metadata using scan agent
    Coming soon -->
-   
-   ## Plugging in listeners
-   
-   ### Sending events to EventHub for entire org
-Coming soon
-   ### Sending events to Splunk (via WebHook) for entire org
-Coming soon
 
 # Org policy usage statistics and monitoring using telemetry
 
