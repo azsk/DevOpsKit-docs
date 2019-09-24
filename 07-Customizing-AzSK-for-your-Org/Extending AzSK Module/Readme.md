@@ -280,7 +280,7 @@ class SubscriptionCore: SVTBase
 
 ##### B. Extending a GRS SVT
 
-Below is an example to add a mock control that checks 'storage accounts must be created in 'eastus2' region.
+Below is an example to add a mock control that checks storage accounts must be created in 'eastus2' region.
 
 1) Download preview policy to a local folder on your system by executing the below command:
 
@@ -330,7 +330,7 @@ Below is an example to add a mock control that checks 'storage accounts must be 
 
 6) Verifying that the added control works:
 
-1) Put the local AzSK into the target policy.For that run "iwr" that is echoed by Step-4 above.
+1) Put the local AzSK into the target policy. For that run "iwr" that is echoed by Step-4 above.
 
         
 2) Run grs for storage accounts and verify that the control is getting scanned:
