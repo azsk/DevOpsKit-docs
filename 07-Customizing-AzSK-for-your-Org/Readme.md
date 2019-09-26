@@ -66,7 +66,7 @@
 - [SVT customization](Readme.md#customizing-the-svts)
    - [Update/extend existing control by augmenting logic](./Extending%20AzSK%20Module/Readme.md#steps-to-override-the-logic-of-existing-svt)
    - [Add new control for existing GSS/GRS SVT](./Extending%20AzSK%20Module/Readme.md#steps-to-extend-the-control-svt)
-   - [Add new SVT altogether (non-existing SVT)](./Extending%20AzSK%20Module/Readme.md#steps-to-extend-the-control-svt)
+   - [Add new SVT altogether (non-existing SVT)](./Extending%20AzSK%20Module/Readme.md#steps-to-add-a-new-svt-to-the-azsk-module)
 
 - [Subscription security provisioning](Readme.md#customizing-subscription-security)
    - [ARM policy](Readme.md#arm-policy)
@@ -82,7 +82,7 @@
    - [Reporting critical alerts](#reporting-critical-alerts)
 
 
-- [Change default resource group name (AzSKRG) and location (EastUS2) created for AzSK components]()
+- [Change default resource group name (AzSKRG) and location (EastUS2) created for AzSK components](Readme.md#change-default-resource-group-name-(AzSKRG)-and-location-(EastUS2)-created-for-AzSK-components)
 
 ### [Org policy usage statistics and monitoring using telemetry](Readme.md#org-policy-usage-statistics-and-monitoring-using-telemetry-1)
 
