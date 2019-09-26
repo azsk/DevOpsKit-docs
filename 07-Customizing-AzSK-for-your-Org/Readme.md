@@ -82,7 +82,7 @@
    - [Reporting critical alerts](#reporting-critical-alerts)
 
 
-- [Change default resource group name (AzSKRG) and location (EastUS2) created for AzSK components](Readme.md#change-default-resource-group-name-(AzSKRG)-and-location-(EastUS2)-created-for-AzSK-components)
+- [Change default resource group name (AzSKRG) and location (EastUS2) created for AzSK components](Readme.md#Change-default-resource-group-name-(AzSKRG)-and-location-(EastUS2)-created-for-AzSK-components)
 
 ### [Org policy usage statistics and monitoring using telemetry](Readme.md#org-policy-usage-statistics-and-monitoring-using-telemetry-1)
 
