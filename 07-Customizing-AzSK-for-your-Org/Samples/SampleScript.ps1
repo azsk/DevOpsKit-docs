@@ -121,7 +121,7 @@ $azSKVer = (Get-Module $azSKModuleName).Version
 <#Testing: 
     Step 1: Run "css" if you are working in the same PowerShell session but ff you have started a fresh one, run import-module AzSK and then run scan using below command
 #>	
-    gss -s $subId -UsePreviewBaselineControls # The controls added in the PreviewBaseline list for SubscriptionCore should be scanned
+    	gss -s $subId -UsePreviewBaselineControls # The controls added in the PreviewBaseline list for SubscriptionCore should be scanned
 
 #--------------------------------------------------------------------------------------------------------------
 #Example 6: Customizing Severity Labels for you org. Refer: https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/Readme.md#e-customizing-severity-labels
