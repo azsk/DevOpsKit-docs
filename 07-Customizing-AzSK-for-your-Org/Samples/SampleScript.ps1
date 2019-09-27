@@ -29,9 +29,9 @@ $azSKVer = (Get-Module $azSKModuleName).Version
 #--------------------------------------------------------------------------------------------------------------
 #  1b) To set your current session with the above policy so that you can subscription with that policy execute the iwr emitted in Install-AzSKOrganizationPolicy command
 #--------------------------------------------------------------------------------------------------------------
-   1c) Execute the below command to perform Subscription Scan with org policy
+#   1c) Execute the below command to perform Subscription Scan with org policy
 #--------------------------------------------------------------------------------------------------------------
-    Get-AzSKSubscriptionSecurityStatus -SubscriptionId $SubId #You can verify the org name in the yellow line that says "Running with $oName$DeptName policy..."	
+    	Get-AzSKSubscriptionSecurityStatus -SubscriptionId $SubId #You can verify the org name in the yellow line that says "Running with $oName$DeptName policy..."	
 
 
 
@@ -59,7 +59,7 @@ $azSKVer = (Get-Module $azSKModuleName).Version
 <# Testing: To check the updated message follow the below steps:
 	Step 1: Run "css" if you are working in the same powershell session but ff you have started a fresh one, run import-module AzSK and then run scan using below command
 #>	
-    grs -s $subId -ResourceTypeName Storage -ControlIds 'Azure_Storage_AuthN_Dont_Allow_Anonymous'# You should see updated message ""Running AzSK...**$oName-$deptName **..."  
+    	grs -s $subId -ResourceTypeName Storage -ControlIds 'Azure_Storage_AuthN_Dont_Allow_Anonymous'# You should see updated message ""Running AzSK...**$oName-$deptName **..."  
 
 #--------------------------------------------------------------------------------------------------------------
 #Example 2: Changing a control setting for specific controls
@@ -76,7 +76,7 @@ $azSKVer = (Get-Module $azSKModuleName).Version
 <# Testing: 
     	Step 1: Run "css" if you are working in the same PowerShell session but ff you have started a fresh one, run import-module AzSK and then run scan using below command
 #>	    
-    gss -s $subId -ControlIds 'Azure_Subscription_AuthZ_Limit_Admin_Owner_Count'
+    	gss -s $subId -ControlIds 'Azure_Subscription_AuthZ_Limit_Admin_Owner_Count'
 <#	    Check detailed Logs to determine if control is passing or failing (see # of admins found)
     	Default threshold is '5' 
 #>
@@ -103,7 +103,7 @@ $azSKVer = (Get-Module $azSKModuleName).Version
 	Step 3: Save the updated SubscriptionCore.json file.
 	Step 4: Edit the ServerConfigMetadata.json file in the org-policy folder and create an entry for this file (if not already there) and then run Update-AzSKOrganizationPolicy command as given below:	
 #>	
-    Update-AzSKOrganizationPolicy -SubscriptionId $subId -OrgName $oName -DepartmentName $depName -PolicyFolderPath $policyFolder
+    	Update-AzSKOrganizationPolicy -SubscriptionId $subId -OrgName $oName -DepartmentName $depName -PolicyFolderPath $policyFolder
 
 <# Testing: 
 	Step1: Run "css" if you are working in the same PowerShell session but ff you have started a fresh one, run import-module AzSK and then run scan using below command
@@ -150,7 +150,7 @@ $azSKVer = (Get-Module $azSKModuleName).Version
 	Step 4: Edit the ServerConfigMetadata.json file in the org-policy folder and create an entry for this file (if not already there) and then run Update-AzSKOrganizationPolicy command as given below:	
 
 #>	
-    Update-AzSKOrganizationPolicy -SubscriptionId $subId -OrgName $oName -DepartmentName $depName -PolicyFolderPath $policyFolder
+   	Update-AzSKOrganizationPolicy -SubscriptionId $subId -OrgName $oName -DepartmentName $depName -PolicyFolderPath $policyFolder
 
 <# Testing: 
 	Step 1: Run "css" if you are working in the same PowerShell session but ff you have started a fresh one, run import-module AzSK and then run scan using below command
@@ -172,8 +172,8 @@ $azSKVer = (Get-Module $azSKModuleName).Version
 <#Testing: 
 	Step 1: Run "css" if you are working in the same PowerShell session but ff you have started a fresh one, run import-module AzSK and then run scan using below command
 #>
-    grs -s $subId -ResourceTypeName Storage -ControlIds 'Azure_Storage_Create_In_Approved_Regions' # The scan should pass the storage account that are in 'eastus2' region
-    grs -s $subId -ResourceTypeName Storage -ControlIds 'Azure_Storage_Create_In_Approved_Regions' -rgns 'AzSKRG'# The scan should pass the storage account in AzSK 
+    	grs -s $subId -ResourceTypeName Storage -ControlIds 'Azure_Storage_Create_In_Approved_Regions' # The scan should pass the storage account that are in 'eastus2' region
+   	grs -s $subId -ResourceTypeName Storage -ControlIds 'Azure_Storage_Create_In_Approved_Regions' -rgns 'AzSKRG'# The scan should pass the storage account in AzSK 
 	
 #--------------------------------------------------------------------------------------------------------------
 
