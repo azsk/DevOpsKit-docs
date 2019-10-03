@@ -570,5 +570,22 @@ Some key vault controls require permission(‘Get and ’List’) on keys and se
 
 Ensure the user account/application executing the scan commands has atleast ‘Get’ and ‘List’ (read permissions) Key and Secret Permissions. [Azure Portal -> Key Vault resource -> Access Policy -> User/Application -> Enable ‘get’ and ‘List’ in Key Permissions + Secret Permissions]
 
+#### I am unable to scan/attest API connection controls independently. I am getting the error: Could not find any resources to scan under Resource Group. InvalidOperation: Could not find any resources that match the specified criteria. How should I scan and bulk attest API connection controls?
+
+In the DevOps kit, API connections are scanned as child resource of Logic App. To scan/attest controls associated with API connection, you need to scan the parent logic app and the child resources will get scanned with it. Please note that bulk attestation is not supported in this case. API connection controls can only be attested sequentially using the below command:
+
+```
+# Scan a specific Logic App and the API connections associated with the app
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ResourceTypeName LogicApps -ResourceNames <LogicAppName> -ControlsToAttest NotAttested
+
+# Scan all Logic Apps and the API connections associated with those apps
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ResourceTypeName LogicApps -ControlsToAttest NotAttested
+```
+
+#### I cannot find the API connection on portal that is listed in the AzSK CSV scan result. Where can I find these resource on portal?
+
+You may come across a scenario where you get multiple API connections in the scan result, but they are not available on portal. These API connections are Connectors that being used by your Logic App. To view these connectors, go to your Logic App --> Logic App Designer. Here is a document on various types of [Connectors for Azure Logic Apps](https://docs.microsoft.com/en-us/azure/connectors/apis-list). 
+
+
 
 [Back to top...](Readme.md#contents)
