@@ -147,7 +147,7 @@ name and attempt to use it (in this case the user must have 'Owner' permission o
 
 Here's a quick summary of the permissions required for the user who sets up CA:
 - "Owner" access on the subscription
-- Ability to create an AAD app in the tenant (this app is used as the runtime account for scanning via the CA runbook)
+- Ability to create an AAD app in the tenant (This permissions is only required if app does not exist in tenant)
 - "Owner" access to the AAD app if the user specifies one (or CA internally finds a previously created one)
 
 
