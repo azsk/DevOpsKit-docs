@@ -26,7 +26,7 @@
     setpim -AssignRole -SubscriptionId $subid -RoleName 'Owner' -PrincipalName $userId -DurationInDays $days 
  
 
-# If is likely that you have a lot of permanent assignments and you need to migrate those users to PIM-based model. 
+# If it is likely that you have a lot of permanent assignments and you need to migrate those users to PIM-based model. 
 # This can be achieve in 2 steps... first 'mirror' the permanent memberships as PIM assignments and then remove permanent ones 
 
 # Step-1: To mirror existing permanent assignments for a particular role in the subscription, use the below command: 
