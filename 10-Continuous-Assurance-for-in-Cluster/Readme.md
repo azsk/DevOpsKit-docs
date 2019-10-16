@@ -1,15 +1,12 @@
 # AzSK Continuous Assurance for Cluster Installation Steps
 
 ### Contents
-- [Downloading Script for AKS](Readme.md#downloading-script-for-AKS)
+
 - [Prerequisites](Readme.md#prerequisites)
 - [Setting up HDInsight](Readme.md#Setting-up-HDInsight)
 - [Setting up Azure Databricks](Readme.md#Setting-up-Azure-Databricks)
 - [Setting up AKS](Readme.md#Setting-up-AKS)
 -----------------------------------------------------------------
-## Downloading Script for AKS
-1.	If your choice of cluster is Kubernetes, please download the PowerShell script from [here](https://azsdkdataoss.blob.core.windows.net/azsdk-configurations/recmnds/Install-CAForCluster.ps1). 
-2.	Open and run the downloaded script in PowerShell ISE.
 
 ## Prerequisites
 1.	For every cluster type, we assume the required cluster is already created in your subscription. 
@@ -113,12 +110,12 @@
 1. To install AzSK CA on Kubernetes cluster run the below command 
 
     ```PowerShell
-    Install-AzSKContinuousAssuranceForCluster -SubscriptionId <SubscriptionId> -ResourceGroupName <ResourceGroupName> -ResourceName <ResourceName> -ResourceType Kubernetes [ -AppInsightKey <AppInsightKey> ]
+    Install-AzSKContinuousAssuranceForCluster -SubscriptionId <SubscriptionId> -ResourceGroupName <ResourceGroupName> -ResourceName <ResourceName> -ResourceType Kubernetes [ -LAWorkspaceId <ID of Log Analytics workspace> -LASharedSecret <Shared key of Log Analytics workspace> ]
     ```
 
    ![AKS-Step1](../Images/AKS-Step1.png)
 
-   During insatallation you can choose to send you control evaluation results to App Insight. If you want to send events to App Insight, please provide instrumention key during setup.
+   During insatallation you can also provide workspace ID and shared key of Log Analytics workspace, If you want to send security scan results to Log Analytics for monitoring.
 
 2.	To view the logs of the last CA job, run the below command
 
@@ -168,12 +165,12 @@
 
 1. Updating CA for Kubernetes will update the image used for scanning cluster. You can also update other configuration like scan interval, Application Insights key or can fix runtime account permissions key using the command. 
 ```PowerShell
-    Update-AzSKContinuousAssuranceForCluster -SubscriptionId <SubscriptionId> -ResourceGroupName <ResourceGroupName> -ResourceName <ResourceName> -ResourceType Kubernetes  [ -AppInsightKey <Application Insight Key>]  [ -FixRuntimeAccount ] [ -LogRetentionInDays <JobLogsRetentionInDays>] [ -SpecificImageVersion <DockerHubImageTag> ] [-ScanIntervalInHours <ScanIntervalInHours> ]
+    Update-AzSKContinuousAssuranceForCluster -SubscriptionId <SubscriptionId> -ResourceGroupName <ResourceGroupName> -ResourceName <ResourceName> -ResourceType Kubernetes  [ -NewAppInsightKey <Application Insight Key>]   [ -NewLAWorkspaceId <ID of Log Analytics workspace>]  [ -NewLASharedSecret <Shared key of Log Analytics workspace>] [ -FixRuntimeAccount ] [ -LogRetentionInDays <JobLogsRetentionInDays>] [ -SpecificImageVersion <DockerHubImageTag> ] [-ScanIntervalInHours <ScanIntervalInHours> ]
 ```
 ## Removing CA for AKS
 
 1. To uninstall CA, use the following command. This will download the scan logs of previous scans to your local machine. You can also choose not to download previous scan logs.
 
 ```PowerShell
-  Remove-AzSKContinuousAssuranceForCluster SubscriptionId <SubscriptionId> -ResourceGroupName <ResourceGroupName> -ResourceName <ResourceName> -ResourceType Kubernetes  -DownloadJobLogs <Yes/No>
+  Remove-AzSKContinuousAssuranceForCluster SubscriptionId <SubscriptionId> -ResourceGroupName <ResourceGroupName> -ResourceName <ResourceName> -ResourceType Kubernetes [-DownloadJobLogs <Yes/No>]
 ```
