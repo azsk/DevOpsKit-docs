@@ -7,7 +7,7 @@
 
 #===================================================================== 
 
-AzSK PIM helper Commands : Refer https://github.com/azsk/DevOpsKit-docs/blob/master/01-Subscription-Security/Readme.md#azsk-privileged-identity-management-pim-helper-cmdlets-1 
+# AzSK PIM helper Commands : Refer https://github.com/azsk/DevOpsKit-docs/blob/master/01-Subscription-Security/Readme.md#azsk-privileged-identity-management-pim-helper-cmdlets-1 
 
 # There are two use cases for AzSK PIM commands: Admin and Owner 
 
