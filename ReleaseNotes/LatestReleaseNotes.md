@@ -1,42 +1,52 @@
-## 191015 (AzSK v.4.2.0)
+## 190916 (AzSK v.4.1.0)
 
 ### Feature updates
 
-* DevOps Kit controls expressed as Azure Policy (in progress):
-	* Authored Azure Policy for 30 more DevOps Kit controls. These will be submitted to the Azure Security Center (ASC) team for inclusion in the ASC initiative.
+* Security Verification Tests (SVTs):
+	* New SVTs for two Azure services - Azure Database for MySQL and PostgreSQL.
+	* Automated controls include checks for firewall & virtual network rules, SSL connection, backup & disaster recovery, advanced threat protection and diagnostic settings as applicable.
+
+
+* (Preview) Security IntelliSense (SecIntel) extension for Visual Studio Code: 
+  * SecIntel for Visual Studio Code can downloaded from [here](https://marketplace.visualstudio.com/items?itemName=azsdktm.SecurityIntelliSense).
+  * This is a VS Code editor extension mainly targeted towards providing quick and inline security suggestions and fixes for Azure related C# source code, web projects and crypto-related code.
+*	Privileged Identity Management (PIM):
+    * We have added capabilities for admin to configure role settings like maximum activation duration, maximum allowed days for assignment and MFA requirement on activation for a specific role on a resource using the below command
+    
+      setpim -ConfigureRoleSettings -SubscriptionId $subid -RoleName $roleName -ExpireEligibleAssignmentsInDays 30 
+
+*	(Preview) Credential Hygiene:
+    *	We have introduced the concept of 'credential groups' wherein a set of credentials belonging to a specific application/functionality can be tracked together for expiry notifications.
+*	ARM Template Checker:
+    *	N/A.
     
 * CICD:
-    * DevOps Kit CICD SVT task can now optionally also cover subscription security controls.
+    * N/A.
 
-*	In-cluster security scans for ADB, AKS, HDI Spark: 
-    * In-cluster CA cmdlets (Install, Get, Update & Remove-CA) for AKS are now available in the main AzSK module.
-    * In-cluster CA now supports sending scan telemetry to log analytics (LA) workspace for AKS. This can be configured by using the ``` Install-AzSKContinuousAssuranceForCluster ``` cmdlet.
-    * Added 2 new in-cluster security controls for AKS.
-
+*	In-cluster security scans for ADB, AKS, HDI Spark
+    * N/A.
 
 *	Log Analytics:
-    * N/A.
-
-*	ARM Template Checker:
-    * N/A.
+    *	N/A.
 
 *	Org policy/external user updates (for non-CSEO users):
-    * Removed a check that was prohibiting use of custom-generated SPNs in central-mode CA.
+    *	Support for AzSK-based telemetry (Log Analytics and Application Insights) features in Azure US Government and Azure China.
+    * Documentation covering end-to-end org policy scenarios with hands-on code examples will be published in the org policy section this week.  
+    * Added support for org policy debug mode to extend ARM Checker controls.
 
 Note: The next few items mention features from recent releases retained for visibility in case you missed those release announcements:
 
 *	Credential Hygiene helper cmdlets (from last sprint)  
-    * ```New-AzSKTrackedCredential``` to onboard a credential for tracking via DevOps Kit. You can set the reminder period (in days) for the credential.
-    * ```Get-AzSKTrackedCredential``` to list the onboarded credential(s).
-    * ```Update-AzSKTrackedCredential``` to update the credential settings and reset the last updated timestamp.
-    * ```Remove-AzSKTrackedCredential``` to deboard a credential from AzSK tracking.
+    * New-AzSKTrackedCredential to onboard a credential for tracking via DevOps Kit. You can set the reminder period (in days) for the credential.
+    * Get-AzSKTrackedCredential to list the onboarded credential(s).
+    * Update-AzSKTrackedCredential to update the credential settings and reset the last updated timestamp.
+    * Remove-AzSKTrackedCredential to deboard a credential from AzSK tracking.
 
 *	Privileged Identity Management (PIM) helper cmdlets (from last sprint)  
-    * ```Set-AzSKPIMConfiguration``` for configuring/changing PIM settings
-    * ```Get-AzSKPIMConfiguration``` for querying various PIM settings/status
+    *	Set-AzSKPIMConfiguration for configuring/changing PIM settings
+    * Get-AzSKPIMConfiguration for querying various PIM settings/status
     * Activating your PIM role is now as simple as this:
-    
-    ``` setpim -ActivateMyRole -SubscriptionId $s5 -DurationInHours 8 -Justification 'ad hoc test' -RoleName Owner ```
+    setpim -ActivateMyRole -SubscriptionId $s5 -DurationInHours 8 -Justification 'ad hoc test' -RoleName Owner
     * See docs [here](https://github.com/azsk/DevOpsKit-docs/blob/master/01-Subscription-Security/Readme.md#azsk-privileged-identity-management-pim-helper-cmdlets-1) for more.
 
 *	(Preview) Security Scan for Azure Active Directory (AAD)
@@ -67,48 +77,37 @@ Note: The next few items mention features from recent releases retained for visi
 
 ### Other improvements/bug fixes
 *	Subscription Security:
-    * N/A.
-
+    *	N/A.
 *	SVTs: 
-    * Fixed an issue wherein fetching role assignments for Cloud Service Provider (CSP) subscriptions was resulting in an error (addresses the fact that CSP subscriptions do not have classic admins).
-    * Fixed a regression regarding telemetry for Env & ComponentId tags from security scans. 
-
+    *	N/A.
 *	Controls:
-     * Azure Security Center (ASC) std-tier requirement control has been augmented to check pricing tier for individual resource types (Virtual Machines, App Services, SQL Servers & Storage accounts).
-     * The app service Managed Service Identity (MSI) control will now emit a ‘passed’ status (instead of ‘verify’) if MSI is enabled.
-     * The following new controls have been added to various SVTs:
-        * Azure_Storage_AuthN_Use_AAD_Based_Access
-        * Azure_Storage_AuthZ_Grant_Min_RBAC_Access
-        * Azure_Storage_AuthZ_Restrict_Network_Access
-        * Azure_Storage_BCDR_Enable_Soft_Delete
-        * Azure_KubernetesService_DP_Disable_HTTP_Application_Routing
-
+     *	For the justify admins/owners control, the attested data will now show the sign-in names as well.
+    * Fixed CORS access and restricted IP callers controls for API Management which were previously throwing error.
 *	ARM Template Checker:
-    * Following new controls have been added to ARM Checker:
-      *	Azure_AnalysisServices_AuthZ_Min_Admin
-      * Azure_Databricks_AuthZ_Enable_Cluster_Access_Control
-      * Azure_Databricks_AuthZ_Enable_Job_Access_Control
-      * Azure_Databricks_AuthZ_Enable_Workspace_Access_Control
-
+    *	Following new controls have been added to ARM Checker:
+      *	Azure_AnalysisServices_BCDR_Plan
+      *	Azure_AppService_DP_Use_Approved_TLS_Version
+      *	Azure_ContainerRegistry_Configure_Webhook_For_Vuln_Scan
+      *	Azure_ContainerRegistry_DP_Enable_Content_Trust
+      *	Azure_RedisCache_BCDR_Use_RDB_Backup
+      *	Azure_Search_AuthN_Use_Managed_Service_Identity
+      *	Azure_VNet_NetSec_Configure_NSG
+      *	Azure_VNet_NetSec_Justify_Peering
 
 *	CA:
     *	N/A. 
 
-*	Privileged Identity Management (PIM):
-    * Added support for assigning roles to multiple users when using the -AssignRole flag.
-    ```
-    setpim -AssignRole -SubscriptionId $subid -RoleName $roleName -PrincipalName 'x@microsoft.com, y@microsoft.com, z@microsoft.com' -DurationInDays $days
-    ```
+*	Privileged Identity Management (PIM)
+    * Fixed an issue where activating PIM role at resource level wasn't working before. 
+    * While extending PIM assignments using the Set-AzSKPIMConfiguration cmdlet, if the provided assignment duration exceeds the maximum allowed days for assignment, the command will assign role only for the maximum allowed days.
+    * Assignment state of eligible roles will now be displayed when Get-AzSKPIMConfiguration cmdlet is used with -ListMyEligibleRoles switch.
 
-    * Documentation representing an end-to-end workflow for AzSK PIM cmdlets will be published [here](https://github.com/azsk/DevOpsKit-docs/tree/master/01-Subscription-Security) this week.
+* Azure DevOps (ADO/VSTS)
+   * Configured and released AzSK module for Azure DevOps based on the restructured core framework.
 
-
-* Azure DevOps (ADO/VSTS):
-   * N/A.
-
-*	Log Analytics:
-    * N/A.
+*	Log Analytics
+    *	N/A.
 
 * Other
-	 * N/A.
+	 * Updated the minimum required version for CA runbook, alerts and ARM policies. This can be verified for your subscription using the command Get-AzSKInfo -SubscriptionInfo.
 
