@@ -125,9 +125,10 @@ while running the AzSK SVTs manually - you can choose to specify the target reso
 a {tagname, tagvalue} pair based on how your application's resources are organized.  
 When the pipeline executes, SVTs will scan the specified set of resources.
 
-Along with input parameter, you can check for below options
-<br/>**Enable LAWS Logging:** Switch to enable this task to publish SVT evaluation results to a Log Analytics workspace. Steps to configure workspace credentials are explained in Step-4
-<br/>**Aggregate Control Status:** Switch to aggregate the SVTs control output. When this is turned off it would show all the failed individual controls in the task summary output.
+Apart from input parameter, you can also use checkboxes to enable/disable one or more below options
+<br/>**Also scan subscription controls:** Switch to scan subscription security controls. This will require Azure Connection (SPN) has reader access of the entire subscription.
+<br/>**Send events to Log Analytics:** Switch to enable this task to publish SVT evaluation results to a Log Analytics workspace. Steps to configure workspace credentials are explained in Step-4
+<br/>**Aggregate control status:** Switch to aggregate the SVTs control output. When this is turned off it would show all the failed individual controls in the task summary output.
 <br/>**Do not auto-update AzSK:** Switch to toggle auto update of AzSK and required Az modules on the build server. Keep this un-checked for Hosted agent and Hosted VS2017 and while using SVT task fot the first time and if you want to update AZSK the version of AzSK. 
 ![03_IP_Parameter_for_Task](../Images/03_IP_Parameters_for_Task.png)
 
@@ -288,6 +289,7 @@ that are supported by the VSTS task:
 |AzSKVersion| You could specify which version of toolkit you want to use in your CICD scan. And version specified should be >= N-2 where N is latest prod version. If variable is not provided, it uses the latest version available| e.g. 2.8.1|
 |AzSKModuleName| This variable enable users to participate in the Preview testing. If you want to participate in preview, Provide the module name as "AzSKPreview". If not used, it would by default uses AzSK as module name| e.g. AzSKPreview|
 |ExtendedCommand| Enables you to provide other switches supported by the Get-AzSKAzureServicesSecurityStatus command to perform focused scanning in the CICD pipeline | e.g. -ControlIds "Azure_Storage_DP_Encrypt_In_Transit,</br>Azure_Storage_DP_Encrypt_At_Rest_Blob" or -UseBaselineControls. More switches that can be used with ExtendedCommand can be found [here](../02-Secure-Development/Readme.md#security-verification-tests-svt). |
+|ExtendedCommandGSS| This variable is applicable when "Also scan subscription controls" option is enabled. It will enable you to provide additional parameters supported by the Get-AzSKSubscriptionSecurityStatus command to perform focused scanning in the CICD pipeline. ( Default implementation of GSS command in the task uses -ExcludeTags "OwnerAccess, GraphRead")| e.g. -FilterTags "AuthZ, BCDR" or -ControlIds "Azure_Subscription_Config_Azure_Security_Center". More switches that can be used with ExtendedCommandGSS can be found [here](../01-Subscription-Security/Readme.md#target-specific-controls-during-a-subscription-health-scan). |
 |TreatAsPassed| This variable is to provide users with more control over behavior of the SVT extension in case of various control statuses other than ‘Passed’ or ‘Failed’. For e.g., using this, one may choose to have the extension treat statuses such as 'Verify','Manual','Exception' or 'Remediate' as 'Passed'.|e.g. The value of the variable TreatAsPassed can be passed as Verify,Manual to skip Verify and Manual controls|
 
 
