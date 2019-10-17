@@ -126,7 +126,7 @@ a {tagname, tagvalue} pair based on how your application's resources are organiz
 When the pipeline executes, SVTs will scan the specified set of resources.
 
 Apart from input parameter, you can also use checkboxes to enable/disable one or more below options
-<br/>**Also scan subscription controls:** Switch to scan subscription security controls. This will require Azure Connection (SPN) has reader access of the entire subscription.
+<br/>**Also scan subscription controls:** Switch to scan subscription security controls. This will require Azure Connection (SPN) to have reader access at the subscription scope.
 <br/>**Send events to Log Analytics:** Switch to enable this task to publish SVT evaluation results to a Log Analytics workspace. Steps to configure workspace credentials are explained in Step-4
 <br/>**Aggregate control status:** Switch to aggregate the SVTs control output. When this is turned off it would show all the failed individual controls in the task summary output.
 <br/>**Do not auto-update AzSK:** Switch to toggle auto update of AzSK and required Az modules on the build server. Keep this un-checked for Hosted agent and Hosted VS2017 and while using SVT task fot the first time and if you want to update AZSK the version of AzSK. 
