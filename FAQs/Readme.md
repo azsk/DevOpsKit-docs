@@ -35,6 +35,7 @@
     - [What do the different columns in the status report mean?](../02-Secure-Development/Readme.md#what-do-the-different-columns-in-the-status-report-mean)
     - [How can I find out what to do for controls that are marked as 'manual'?](../02-Secure-Development/Readme.md#how-can-i-find-out-what-to-do-for-controls-that-are-marked-as-manual)
     - [How can I implement fixes for the failed ones which have no auto-fix available?](../02-Secure-Development/Readme.md#how-can-i-implement-fixes-for-the-failed-ones-which-have-no-auto-fix-available)
+    - [What are Owner access controls? Why can't those be run via CA and need to be run manually? <br><br> (Or) <br><br> I have setup AzSK Continuous Assurance on my subscription. Do I still need to run the scans locally? <br> <br> Description: <br> Running the scan locally for all the resources in the subscription is time consuming. Do I still need to run that even though I have already setup Continuous Assurance on my subscription?](../02-Secure-Development/Readme.md#what-are-owner-access-controls-why-cant-those-be-run-via-ca-and-need-to-be-run-manually---or--i-have-setup-azsk-continuous-assurance-on-my-subscription-do-i-still-need-to-run-the-scans-locally---description--running-the-scan-locally-for-all-the-resources-in-the-subscription-is-time-consuming-do-i-still-need-to-run-that-even-though-i-have-already-setup-continuous-assurance-on-my-subscription)
 
 - ### Security-In-CICD  
   - #### Security Verification Tests (SVTs) in VSTS pipeline
