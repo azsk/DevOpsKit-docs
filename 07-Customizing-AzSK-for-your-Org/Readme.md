@@ -460,7 +460,35 @@ image below:
 This change will be effective across your organization immediately. Anyone running AzSK commands (in fresh PS sessions)
 should see the new message. 
 
-##### b) Changing a control setting for specific controls 
+##### b) Customize output folder for my org
+Normally, when we run GSS for our org policy its security scan results goes to an folder 
+`%LOCALAPPDATA%\Microsoft\AzSKLogs\Sub_[yourSubscriptionName]E.g.`
+C:\Users\UserName\AppData\Local\Microsoft\AzSKLogs\Sub_[yourSubscriptionName]\20170331_142819. We can customize this location also so that our scan result log can be collected at a particular location given by you.
+
+###### Steps:
+
+i) Open the AzSk.json from your local org-policy folder. Path for example: D:\ContosoPolicies\Config\AzSK.json
+
+ii) Add new field OutputFolderPath and give an particular path where you want to store GSS/GRS security scan results 
+E.g.
+```PowerShell
+     "OutputFolderPath":  "Path"
+```
+iii) Save the file
+iv) Rerun the policy update or setup command (the same command you ran for the first-time setup)
+
+###### Testing: 
+
+Anyone in your org can now start a fresh PS console and again run IOP cmdlet to install updated org policy for your org and if he run GSS/GRS cmdlet then its security scan result log will be collected at a particular defined location in OutputFolderPath field added in azsk.json file.
+![Store Log-Given path](../Images/07_Custom_Policy_Scan_Result.PNG) 
+
+You can validate that this has the desired effect by running ‘gai -infotype hostinfo’
+![Validate-OutputFolderPath](../Images/07_Custom_Policy_Output_Folder_path.PNG) 
+
+The updated policy is now on the policy server. Now you 
+This change will be effective across your organization immediately. Anyone running AzSK commands (in fresh PS sessions) will able to see log in give location.
+
+##### c) Changing a control setting for specific controls 
 Let us now change some numeric setting for a control. A typical setting you may want to tweak is the maximum number of
 owners/admins allowed for your org's subscriptions.  It is verified in one of the subscription security controls. (The default value is 5.)
 
@@ -496,7 +524,7 @@ Anyone in your org can now start a fresh PS console and the result of the evalua
 the subscription security scan (Get-AzSKSubscriptionSecurityStatus) should reflect that the new setting is in 
 effect. (E.g., if you change the max count to 3 and they had 4 owners/admins in their subscription, then the result for control (Azure_Subscription_AuthZ_Limit_Admin_Owner_Count) will change from 'Passed' to 'Failed'.)
 
-##### c) Customizing specific controls for a service 
+##### d) Customizing specific controls for a service 
 
 In this example, we will make a slightly more involved change in the context of a specific SVT (Storage). 
 
@@ -558,7 +586,7 @@ Likewise, even after you run the scan without the `-UseBaselineControls` paramet
 appear in the resulting CSV file. 
 
 
-##### d) Creating a custom control 'baseline' for your org
+##### e) Creating a custom control 'baseline' for your org
 A powerful capability of AzSK is the ability for an org to define a baseline control set on the policy server
 that can be leveraged by all individuals in the org (and in other AzSK scenarios like CICD, CA, etc.) via the "-UseBaselineControls" parameter
 during scan commands. 
@@ -633,7 +661,7 @@ and, even for those, only the baseline controls get evaluated.
 > **Note:** Similar to baseline control, you can also define preview baseline set with the help of similar property "PreviewBaselineControls" in ControlSettings.json. This preview set gets scanned using parameter `-UsePreviewBaselineControls` with scan commands.
 
 
-##### e) Customizing Severity labels 
+##### f) Customizing Severity labels 
 Ability to customize naming of severity levels of controls (e.g., instead of High/Medium, etc. one can now have Important/Moderate, etc.) with the changes reflecting in all avenues (manual scan results/CSV, Log Analytics workspace, compliance summaries, dashboards, etc.)
 
 ###### Steps: 
