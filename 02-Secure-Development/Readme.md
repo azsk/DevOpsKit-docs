@@ -395,6 +395,26 @@ Note that not all security checks are automatable. The 'non-automated' checks (t
 - 	Reference - Link to detailed document/explanation.
 - 	Recommendation - Recommended steps to implement a fix for a failed control.  
 
+#### What are Owner access controls? Why can't those be run via CA and need to be run manually? <br> <br> (Or) <br><br> I have setup AzSK Continuous Assurance on my subscription. Do I still need to run the scans locally? <br> <br> Description: <br> Running the scan locally for all the resources in the subscription is time consuming. Do I still need to run that even though I have already setup Continuous Assurance on my subscription?
+
+Continuous Assurance scans and locally run scans have different permission models. Some of the AzSK controls need elevated permissions (e.g. Owner permissions, GraphRead access etc.). CA being runnning using SPN context, can't scan controls which need such elevated permissions. Note that SPN should not be granted elevated permissions from security stand point.
+
+That's the reason you or anyone on your team who has elevated permissions (as mentioned in the control recommendations) on the subscription; need to run the manual scans periodically.
+
+You can certainly minimize the time taken for the scan by runnning only those controls which are not run by CA.
+
+```
+# Command to scan subscription level controls
+Get-AzSKSubscriptionSecurityStatus -SubscriptionId '<SubscriptionId>' -FilterTags "OwnerAccess,GraphRead" 
+
+# Command to scan resource level controls
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId '<SubscriptionId>' -FilterTags "OwnerAccess,GraphRead" 
+
+# Command to scan both subscription and resource level controls
+Get-AzSKControlsStatus -SubscriptionId '<SubscriptionId>' -FilterTags "OwnerAccess,GraphRead" 
+
+```
+
 #### How can I find out what to do for controls that are marked as 'manual'?
 Refer the recommendations provided in the output CSV file for the security controls defined by AzSK. You can also email to AzSKSup@microsoft.com or reach out to your security point of contact for any queries.  
 
