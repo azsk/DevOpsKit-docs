@@ -960,7 +960,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                 -DoNotOpenOutputFolder`
       ```
       
-   1) The command now allow end users to apply conditional access policy upon activation for a particular role using -ApplyConditonalAccessPolicyForRoleActivation switch
+   2) The command now allows end users to apply conditional access policy for activation workflow for a particular role using -ApplyConditonalAccessPolicyForRoleActivation switch
 	
 	
       ```PowerShell
