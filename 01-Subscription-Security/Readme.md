@@ -943,7 +943,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
       ```
 7. <h4> Configure role settings for role on an Azure resource (-ConfigureRoleSettings) </h4>
 	 Use this command to configure a  PIM role settings like maximum role assignment duration on a resource, mfa requirement upon activation etc.
-     The command currently supports configuring the following settings: Maximum assignment duration, maximum activation duration, requirement of justification upon activation, requirement of mfa upon activation.
+     1) The command currently supports configuring the following settings: Maximum assignment duration, maximum activation duration, requirement of justification upon activation, requirement of mfa upon activation.
      
      > Note: Currently all the 4 settings parameters are required to be supplied in command to change any configuration setting for a PIM role
 
@@ -960,8 +960,15 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                 -DoNotOpenOutputFolder`
       ```
       
-
-
+   1) The command now allow end users to apply conditional access policy upon activation for a particular role using -ApplyConditonalAccessPolicyForRoleActivation switch
+	
+	
+      ```PowerShell
+      Set-AzSKPIMConfiguration  -ConfigureRoleSettings `
+                                -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
+                                -RoleNames "Owner" `
+                                -ApplyConditonalAccessPolicyForRoleActivation $true
+      ```
 
 ## AzSK: Credential hygiene helper cmdlets
 
