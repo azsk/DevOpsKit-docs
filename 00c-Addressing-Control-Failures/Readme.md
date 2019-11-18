@@ -586,5 +586,24 @@ Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ResourceTy
 You may come across a scenario where you get multiple API connections in the scan result, but they are not available on portal. These API connections are Connectors that being used by your Logic App. To view these connectors, go to your Logic App --> Logic App Designer. Here is a document on various types of [Connectors for Azure Logic Apps](https://docs.microsoft.com/en-us/azure/connectors/apis-list). 
 
 
+##### How do I remediate failing control Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG?
+
+
+The time taken to evaluate control Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG, is directly proportional to the number of resource groups you have in your subscription AND total number of identities that have access on those resource groups. As a result, the GSS scan may take up significant time to complete, depending upon the above numbers. Hence, we have enabled this control only in CA mode.
+If you are noticing this control failing in CA, you can scan it manually by temporarily setting your scan source to 'CA' using following commands. Don't forget to revert the scan source to 'SDL' later. 
+
+``` Import-Module AzSK
+
+// Set scan scource to 'CA'
+Set-AzSKMonitoringSettings -Source "CA"
+
+// Clear AzSK session state to make the scan source change effective
+Clear-AzSKSessionState
+
+// Perform the scan
+GSS -SubscriptionId '<SubscriptionId>' -ControlIds "Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG"
+
+// Revert the scan source to 'SDL'
+Set-AzSKMonitoringSettings -Source "SDL" ```
 
 [Back to top...](Readme.md#contents)
