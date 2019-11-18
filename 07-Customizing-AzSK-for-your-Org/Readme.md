@@ -1198,7 +1198,7 @@ Get-AzProviderOperation | FT
 
 ## ARM checker policy customization
 
-Coming soon
+Check [this](https://github.com/azsk/DevOpsKit-docs/blob/master/03-Security-In-CICD/Readme.md#extending-arm-template-checker-for-your-organization)
 
 
 ## Change default resource group name (AzSKRG) and location (EastUS2) created for AzSK components
