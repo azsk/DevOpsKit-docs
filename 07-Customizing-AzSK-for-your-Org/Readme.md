@@ -461,33 +461,28 @@ This change will be effective across your organization immediately. Anyone runni
 should see the new message. 
 
 ##### b) Customize output folder for my org
-Normally, when we run GSS the security scan results go to a default folder 
-`%LOCALAPPDATA%\Microsoft\AzSKLogs\Sub_[yourSubscriptionName]E.g.`
-C:\Users\UserName\AppData\Local\Microsoft\AzSKLogs\Sub_[yourSubscriptionName]\20170331_142819. 
-This location can be customized in an org policy so that the scan results can be collected at a particular location on org policy users machine.
+Usually, when we run AzSK command the results go to the default folder i.e.  
+C:\Users\<UserName>\AppData\Local\Microsoft\AzSKLogs\Sub_[yourSubscriptionName]\20170331_142819. 
+The default location for log storage can be customized in a custom org policy setup. Post customization the scan results will be stored in that particular location.
 
 ###### Steps:
 
-i) Open the AzSk.json from your local org-policy folder. Path for example: D:\ContosoPolicies\Config\AzSK.json
+i) Open the AzSk.json from your local org-policy folder that you have downloaded using # add the cmd to download
 
-ii) Add new field OutputFolderPath and give an particular path where you want to store GSS/GRS security scan results 
+ii) Add a new property 'OutputFolderPath' and provide the required destination path where you want to store the scan results. 
 E.g.
 ```PowerShell
-     "OutputFolderPath":  "Path"
+     "OutputFolderPath":  "<Path>" # D:\AzSKLogs
 ```
-iii) Save the file
-
-iv) Rerun the policy update or setup command (the same command you ran for the first-time setup)
+iii) Save the AzSK.json file and rerun the policy update or setup command (the same command you ran for the first-time setup)
 
 ###### Testing: 
 
-Now anyone in your org if start a fresh PS console and run GSS/GRS cmdlet then its security scan result logs will be collected at a particular defined location in OutputFolderPath field added in azsk.json file.
-![Store Log-Given path](../Images/07_Custom_Policy_Scan_Result.PNG) 
-
-You can validate that this has the desired effect by running ‘gai -infotype hostinfo’
+You can validate the changes by running ‘gai -infotype hostinfo’. 
 ![Validate-OutputFolderPath](../Images/07_Custom_Policy_Output_Folder_path.PNG) 
 
-The updated policy is now on the policy server.This change will be effective across your organization immediately. Anyone running AzSK commands (in fresh PS sessions) will able to see log in give location.
+Now if anyone in your org starts a fresh PS session and runs AzSK scan, the results will be stored in the location defined in the OutputFolderPath property added in step ii.
+![Store Log-Given path](../Images/07_Custom_Policy_Scan_Result.PNG) 
 
 ##### c) Changing a control setting for specific controls 
 Let us now change some numeric setting for a control. A typical setting you may want to tweak is the maximum number of
