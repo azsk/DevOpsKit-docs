@@ -467,7 +467,15 @@ The default location for log storage can be customized in a custom org policy se
 
 ###### Steps:
 
-i) Open the AzSk.json from your local org-policy folder that you have downloaded using # add the cmd to download
+i) Open the AzSk.json from your local org-policy folder that you have downloaded using.
+
+```PowerShell
+Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
+         -OrgName "Contoso" `
+         -DepartmentName "IT" `
+         -DownloadPolicy `
+         -PolicyFolderPath "D:\ContosoPolicies"
+```
 
 ii) Add a new property 'OutputFolderPath' and provide the required destination path where you want to store the scan results. 
 E.g.
