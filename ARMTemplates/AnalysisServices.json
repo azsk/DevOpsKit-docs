@@ -41,9 +41,9 @@
         "defaultValue": {
           "firewallRules": [
             {
-              "firewallRuleName": "AllowFromAll",
-              "rangeStart": "0.0.0.0",
-              "rangeEnd": "255.255.255.255"
+              "firewallRuleName": "Rule Name",
+              "rangeStart": "255.255.255.220",
+              "rangeEnd": "255.255.255.230"
             }
           ],
           "enablePowerBIService": true
