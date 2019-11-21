@@ -610,7 +610,7 @@ Set-AzSKMonitoringSettings -Source "SDL"
 
 #### How do I remediate failing control Azure_APIManagement_DP_Use_Secure_TLS_Version?
 
-TLS 1.2 is the latest and most secure protocol. Using 3DES Ciphers, TLS protocols (1.1 and 1.0) and SSL 3.0 exposes the API to meet-in-the-middle attack, chosen-plaintext or known-plaintext attacks. Use the following command to disable the aforementioned configurations. 
+3DES Ciphers, TLS protocols (1.1 and 1.0) and SSL 3.0 are outdated versions. Using these can expose the API to meet-in-the-middle attack, chosen-plaintext or known-plaintext attacks. Use the following command to disable the aforementioned configurations. 
 
 Make sure you test the implications before changing the configuration.
 
@@ -636,7 +636,7 @@ $apim | Set-AzResource -Force
 
 #### How do I remediate failing control Azure_AppService_DP_Use_Secure_TLS_Version?
 
-Using approved TLS version significantly reduces risks from security design issues and security bugs that may be present in older versions. If you are noticing this control failing for your app service, use the following command to set minimum TLS version to the org approved version (see detailed logs). The detailed logs are generated under a subscription-specific sub-folder in the folder *%LOCALAPPDATA%\Microsoft\AzSKLogs\Sub_[yourSubscriptionName]\[XXXXXXXX_XXXXXX_GRS]\[ResourceGroupName]\AppService.LOG*.
+Using latest TLS version significantly reduces risks from security design issues and security bugs that may be present in older versions. If you are noticing this control failing for your app service, use the following command to set minimum TLS version to a secure version as specified in the detailed logs file. The detailed logs are generated under a subscription-specific sub-folder in the folder *%LOCALAPPDATA%\Microsoft\AzSKLogs\Sub_[yourSubscriptionName]\[XXXXXXXX_XXXXXX_GRS]\[ResourceGroupName]\AppService.LOG*.
 
 Make sure you test the implications before changing the configuration.
 
