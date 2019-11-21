@@ -586,24 +586,80 @@ Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ResourceTy
 You may come across a scenario where you get multiple API connections in the scan result, but they are not available on portal. These API connections are Connectors that being used by your Logic App. To view these connectors, go to your Logic App --> Logic App Designer. Here is a document on various types of [Connectors for Azure Logic Apps](https://docs.microsoft.com/en-us/azure/connectors/apis-list). 
 
 
-##### How do I remediate failing control Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG?
+#### How do I remediate failing control Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG?
 
 
 The time taken to evaluate control Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG, is directly proportional to the number of resource groups you have in your subscription AND total number of identities that have access on those resource groups. As a result, the GSS scan may take up significant time to complete, depending upon the above numbers. Hence, we have enabled this control only in CA mode.
 If you are noticing this control failing in CA, you can scan it manually by temporarily setting your scan source to 'CA' using following commands. Don't forget to revert the scan source to 'SDL' later. 
 
-``` Import-Module AzSK
+``` 
+Import-Module AzSK
 
-// Set scan scource to 'CA'
+# Set scan scource to 'CA'
 Set-AzSKMonitoringSettings -Source "CA"
 
-// Clear AzSK session state to make the scan source change effective
+# Clear AzSK session state to make the scan source change effective
 Clear-AzSKSessionState
 
-// Perform the scan
+# Perform the scan
 GSS -SubscriptionId '<SubscriptionId>' -ControlIds "Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG"
 
-// Revert the scan source to 'SDL'
-Set-AzSKMonitoringSettings -Source "SDL" ```
+# Revert the scan source to 'SDL'
+Set-AzSKMonitoringSettings -Source "SDL" 
+```
+
+#### How do I remediate failing control Azure_APIManagement_DP_Use_Secure_TLS_Version?
+
+TLS 1.2 is the latest and most secure protocol. Using 3DES Ciphers, TLS protocols (1.1 and 1.0) and SSL 3.0 exposes the API to meet-in-the-middle attack, chosen-plaintext or known-plaintext attacks. Use the following command to disable the aforementioned configurations. 
+
+Make sure you test the implications before changing the configuration.
+
+Please note that this command may take 15 to 20 minutes to update the configuration.
+
+```
+# Get API Management service instance
+$apim = Get-AzResource -Name '<APIMServiceName>' -ResourceGroupName '<ResourceGroupName>' -ResourceType Microsoft.ApiManagement/service
+
+# Turn off unsecure protocol and cipher configurations
+$apim.Properties.customProperties.'Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Ciphers.TripleDes168' = "false"
+$apim.Properties.customProperties.'Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Ssl30' = "false"
+$apim.Properties.customProperties.'Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls10' = "false"
+$apim.Properties.customProperties.'Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls11' = "false"
+$apim.Properties.customProperties.'Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Ssl30' = "false"
+$apim.Properties.customProperties.'Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls10' = "false"
+$apim.Properties.customProperties.'Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls11' = "false"
+
+# Save the updated configuration
+$apim | Set-AzResource -Force
+
+```
+
+#### How do I remediate failing control Azure_AppService_DP_Use_Approved_TLS_Version?
+
+Using approved TLS version significantly reduces risks from security design issues and security bugs that may be present in older versions. If you are noticing this control failing for your app service, use the following command to set minimum TLS version to the org approved version (see detailed logs). The detailed logs are generated under a subscription-specific sub-folder in the folder *%LOCALAPPDATA%\Microsoft\AzSKLogs\Sub_[yourSubscriptionName]\[XXXXXXXX_XXXXXX_GRS]\[ResourceGroupName]\AppService.LOG*.
+
+Make sure you test the implications before changing the configuration.
+
+```
+
+Set-AzContext '<SubscriptionId>'
+
+# Enter the TLS version as given in the detailed log file
+$minTlsVersion = '<minTlsVersion>' 
+
+# Update TLS version
+Get-AzResource -ResourceType Microsoft.Web/sites -ResourceGroupName <ResourceGroupName> -Name <Name>  | ForEach-Object {
+
+    $params = @{
+        ApiVersion        = '2018-02-01'
+        ResourceName      = '{0}/web' -f $_.Name
+        ResourceGroupName = $_.ResourceGroupName
+        PropertyObject    = @{ minTlsVersion = $($minTlsVersion) }
+        ResourceType      = 'Microsoft.Web/sites/config'
+    }
+
+Set-AzResource @params -Force
+}
+```
 
 [Back to top...](Readme.md#contents)
