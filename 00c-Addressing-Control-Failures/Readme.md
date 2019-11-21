@@ -634,7 +634,7 @@ $apim | Set-AzResource -Force
 
 ```
 
-#### How do I remediate failing control Azure_AppService_DP_Use_Approved_TLS_Version?
+#### How do I remediate failing control Azure_AppService_DP_Use_Secure_TLS_Version?
 
 Using approved TLS version significantly reduces risks from security design issues and security bugs that may be present in older versions. If you are noticing this control failing for your app service, use the following command to set minimum TLS version to the org approved version (see detailed logs). The detailed logs are generated under a subscription-specific sub-folder in the folder *%LOCALAPPDATA%\Microsoft\AzSKLogs\Sub_[yourSubscriptionName]\[XXXXXXXX_XXXXXX_GRS]\[ResourceGroupName]\AppService.LOG*.
 
