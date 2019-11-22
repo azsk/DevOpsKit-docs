@@ -703,7 +703,7 @@ that are supported by the ARM Checker task:
 
 ### Extending ARM Template Checker for your organization
 
-If you are using [ org-policy ](../07-Customizing-AzSK-for-your-Org) feature, you can extend/customize the ARM Template Checker for your organization such as (a) by adding new controls to existing services or (b) by adding support to scan altogether new services (currently not supported by ARM Checker). In this section, let us walk through the steps required to do so. However, before learning about extending ARM Template Checker, let us first understand how it works.
+If you are using [ org-policy ](../07-Customizing-AzSK-for-your-Org) feature, you can extend/customize the ARM Template Checker for your organization such as (a) by adding new controls to existing services or (b) by adding support to scan altogether new services. In this section, let us walk through the steps required to do so. However, before learning about extending ARM Template Checker, let us first understand how it works.
 
 ### How ARM Checker scans a control
 
@@ -877,6 +877,6 @@ Once you have tested your new ARM Checker controls on your machine.You need to u
 	```
 
 3. If you have added new service in ARM Checker, copy the whole service object (with all controls) from ARMControls.json and add it to "resourceControlSets" in ARMControls.ext.json file.
-4. If you have extended controls in any existing service in ARM Checker, copy the service object (with only new controls) from ARMControls.json and add it to "resourceControlSets" in ARMControls.ext.json file.
+4. If you have extended controls in any existing service in ARM Checker, copy the service object (with only new controls) from ARMControls.json and add it to "resourceControlSets" in ARMControls.ext.json file. 
 5. Run Update-AzSKOrganizationPolicy command to upload ARMControls.ext.json file to policy store.
 
