@@ -606,6 +606,9 @@ GSS -SubscriptionId '<SubscriptionId>' -ControlIds "Azure_Subscription_AuthZ_Don
 
 # Revert the scan source to 'SDL'
 Set-AzSKMonitoringSettings -Source "SDL" 
+
+# Clear AzSK session state to make the scan source change effective
+Clear-AzSKSessionState
 ```
 
 #### How do I remediate failing control Azure_APIManagement_DP_Use_Secure_TLS_Version?
@@ -617,8 +620,15 @@ Make sure you test the implications before changing the configuration.
 Please note that this command may take 15 to 20 minutes to update the configuration.
 
 ```
+# Enter SubscriptionId, ResourceGroupName, APIMServiceName
+$SubscriptionId = ''
+$ResourceGroupName = ''
+$APIMServiceName = ''
+
+Set-AzContext $SubscriptionId
+
 # Get API Management service instance
-$apim = Get-AzResource -Name '<APIMServiceName>' -ResourceGroupName '<ResourceGroupName>' -ResourceType Microsoft.ApiManagement/service
+$apim = Get-AzResource -Name $APIMServiceName -ResourceGroupName $ResourceGroupName -ResourceType Microsoft.ApiManagement/service
 
 # Turn off unsecure protocol and cipher configurations
 $apim.Properties.customProperties.'Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Ciphers.TripleDes168' = "false"
@@ -636,25 +646,26 @@ $apim | Set-AzResource -Force
 
 #### How do I remediate failing control Azure_AppService_DP_Use_Secure_TLS_Version?
 
-Using latest TLS version significantly reduces risks from security design issues and security bugs that may be present in older versions. If you are noticing this control failing for your app service, use the following command to set minimum TLS version to a secure version as specified in the detailed logs file. The detailed logs are generated under a subscription-specific sub-folder in the folder *%LOCALAPPDATA%\Microsoft\AzSKLogs\Sub_[yourSubscriptionName]\[XXXXXXXX_XXXXXX_GRS]\[ResourceGroupName]\AppService.LOG*.
+Using latest TLS version significantly reduces risks from security design issues and security bugs that may be present in older versions. If you are noticing this control failing for your app service, use the following command to set minimum TLS version to 1.2.
 
 Make sure you test the implications before changing the configuration.
 
 ```
+# Enter SubscriptionId, ResourceGroupName, AppServiceName
+$SubscriptionId = ''
+$ResourceGroupName = ''
+$AppServiceName = ''
 
-Set-AzContext '<SubscriptionId>'
-
-# Enter the TLS version as given in the detailed log file
-$minTlsVersion = '<minTlsVersion>' 
+Set-AzContext $SubscriptionId
 
 # Update TLS version
-Get-AzResource -ResourceType Microsoft.Web/sites -ResourceGroupName <ResourceGroupName> -Name <Name>  | ForEach-Object {
+Get-AzResource -ResourceType Microsoft.Web/sites -ResourceGroupName $ResourceGroupName -Name $AppServiceName  | ForEach-Object {
 
     $params = @{
         ApiVersion        = '2018-02-01'
         ResourceName      = '{0}/web' -f $_.Name
         ResourceGroupName = $_.ResourceGroupName
-        PropertyObject    = @{ minTlsVersion = $($minTlsVersion) }
+        PropertyObject    = @{ minTlsVersion = 1.2 }
         ResourceType      = 'Microsoft.Web/sites/config'
     }
 
