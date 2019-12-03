@@ -3,6 +3,20 @@
 <br>AzSK is not an official Microsoft product – rather an attempt to share Microsoft CSEO's best practices with the community..
 # Secure Azure DevOps (VSTS) -Preview
 
+### [Overview](Readme.md#Overview)
+ - [Installation Guide](Readme.md#Installation-Guide)
+
+### [Scan your Azure DevOps resources](Readme.md#setting-up-org-policy)
+ 
+### [Continuous Assurance](Readme.md#setting-up-org-policy)
+  - [Setting up Continuous Assurance - Step by Step]()
+  - [Visualize security scan results]()
+
+
+ 
+
+
+
 AzSK for Azure DevOps performs security scanning for core areas of Azure DevOps/VSTS like Organization, Projects, Users, Connections, Pipelines (Build & Release). 
 
 
@@ -72,3 +86,118 @@ E.g.
 C:\Users\UserName\AppData\Local\Microsoft\Azure.DevOpsLogs\Org_[yourOrganizationName]\20181218_103136_GADS
 
 Refer [doc](../02-Secure-Development#understand-the-scan-reports) for understanding the scan report and [link](./ControlCoverage) for current control coverage for Azure DevOps
+
+
+## Continuous Assurance
+
+The basic idea behind Continuous Assurance (CA) is to setup periodic security scan and if new, more secure options become available for a feature, it should be possible to detect that an application or solution can benefit from them and notify/alert the owners concerned.
+
+Scan is performed via security scanner task in the pipeline and results can be visualized via dashboard by adding ADO security scanner widgets into the Azure DevOps project’s dashboard. Pipeline can be setup with the trigger to run periodically and provide continuous assurance.
+
+### Setting up Continuous Assurance - Step by Step
+
+In this section, we will walk through the steps of setting up a DevOps pipeline for ADO Continuous Assurance coverage.
+To get started, we need the following 
+
+__Prerequisite:__
+
+- DevOps organization and project 
+- "Project Collection Administrator" or "Owner" permission to perform below task:
+
+    •	Install "ADO Security Scanner" extension
+
+    •	Setup pipeline with scanner task.
+    
+    •	Create dashboard to visualize scan results
+
+
+
+#### Install “ADO Security Scanner” extension for your Azure DevOps Organization
+
+
+Extension has been published to the visual studio marketplace gallery under “Azure DevOps > Azure Pipeline” category. You can now install this extension from the Marketplace directly (https://marketplace.visualstudio.com/items?itemName=azsdktm.ADOSecurityScanner).
+
+Refer doc [here](https://docs.microsoft.com/en-us/azure/devops/marketplace/install-extension?view=azure-devops&tabs=browser) for more about installing extensions for org
+
+  ![Extension Details](../Images/09_ADO_ExtensionDetails.png) 
+
+
+#### Adding ADO Security Scanner in the pipeline
+
+This part assumes that you are familiar with Azure DevOps build tasks and pipelines at a basic level. Our goal is to show how ADO Security Scanner can be added into the build/release workflow.
+
+__Step-1__: Create a build pipeline or open an existing one.
+
+__Step-2__: Add “ADO Security Scanner” task to the pipeline
+
+Click on "Add Tasks" and select "Azure DevOps (ADO) Security Verification".
+
+![Add scanner task](../Images/09_ADO_AddADOScannerTask.png)
+
+__Step-3__: Specify the input parameters for the task.
+The "ADO Security Scanner" task starts showing in the "Run on Agent" list and displays some configuration inputs that are required for the task to run. These are none other than the familiar options we have been specifying while running the ADO scan manually - you can choose to specify the target Org, projects, builds and releases based on how your Org resources are organized.
+
+![Add task inputs](../Images/09_ADO_AddTaskDetails.png)
+
+> **Note:** This task also requires Azure DevOps connection containing Org details and PAT token to scan the required resources. Refer doc [here](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page) to create token and provide it as part of connection
+
+![Add Service connection](../Images/09_ADO_AddServiceConnection.png)
+
+
+__! important__ : Make sure you **DO NOT** select  checkbox for "Grant access permission to all pipelines" before saving service connection. 
+
+__Step-4__: Click “Save & queue”
+
+![Add Service connection](../Images/09_ADO_TriggerPipeline.png)
+
+Task will install latest AzureDevOps scanner module and start scanning based on input parameters. 
+
+![Scan Image](../Images/09_ADO_ScanImage-1.png)
+
+At the end, it will show the summery of scan and store the result in extension storage
+
+![Scan Image](../Images/09_ADO_ScanImage-2.png)
+
+__Step-4__: Setup scheduled trigger for pipeline
+
+Once you are able to successfully run the ADO scan using ADO pipeline, you can configure scheduled trigger to get latest visibility of security on resources
+
+![Schedule Trigger](../Images/09_ADO_ScheduleTrigger.png)
+
+
+### Visualize security scan results 
+
+Once scan is completed as part of pipeline, results can be visualized with the help of project dashboard.
+
+Extension mainly provides two widgets that can be added as part of dashboard
+
+__•	Org Level Security Scan Summary__: Displays Org level security control evaluation summary. This dashboard helps Org owners to take action based on control failures.
+
+__•	Project Components Security Scan Summary__: Displays project components (Build/Release/Connections) security control evaluation summary.
+
+__Steps__:
+
+1. Go to project dashboard under your organization and create new dashboard for Org level summary
+
+    ![Schedule Trigger](../Images/09_ADO_AddDashboard.png)
+
+2. Click edit or add widget > Search for “__Org Level Security Scan Summary__” > Click ‘Add’ followed by “Done Editing”
+
+    ![Schedule Trigger](../Images/09_ADO_AddOrgSummaryWidget.png)
+
+3. Dashboard will start displaying scanned results 
+
+    ![Schedule Trigger](../Images/09_ADO_OrgLevelDashboard.png)
+
+Step 1,2 & 3 needs to be repeated to add “__Project Component Security Scan Summary__”
+
+
+
+> **Note:**  Dashboard created will be visible to all users which are part of project.
+
+
+
+
+
+
+
