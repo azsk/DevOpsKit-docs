@@ -4,13 +4,13 @@
 # Secure Azure DevOps (VSTS) -Preview
 
 ### [Overview](Readme.md#Overview)
- - [Installation Guide](Readme.md#Installation-Guide)
+ - [Installation Guide](Readme.md#installation-guide)
 
-### [Scan your Azure DevOps resources](Readme.md#setting-up-org-policy)
+### [Scan your Azure DevOps resources](Readme.md#scan-your-azure-devops-resources-1)
  
-### [Continuous Assurance](Readme.md#setting-up-org-policy)
-  - [Setting up Continuous Assurance - Step by Step]()
-  - [Visualize security scan results]()
+### [Continuous Assurance](Readme.md#continuous-assurance-1)
+  - [Setting up Continuous Assurance - Step by Step](Readme.md#setting-up-continuous-assurance---step-by-step)
+  - [Visualize security scan results](Readme.md#visualize-security-scan-results)
 
 
  
@@ -179,18 +179,19 @@ __Steps__:
 
 1. Go to project dashboard under your organization and create new dashboard for Org level summary
 
-    ![Schedule Trigger](../Images/09_ADO_AddDashboard.png)
+    ![Create Dashboard](../Images/09_ADO_AddDashboard.png)
 
 2. Click edit or add widget > Search for “__Org Level Security Scan Summary__” > Click ‘Add’ followed by “Done Editing”
 
-    ![Schedule Trigger](../Images/09_ADO_AddOrgSummaryWidget.png)
+    ![Configure Widget](../Images/09_ADO_AddOrgSummaryWidget.png)
 
 3. Dashboard will start displaying scanned results 
 
-    ![Schedule Trigger](../Images/09_ADO_OrgLevelDashboard.png)
+    ![Org Level Summary](../Images/09_ADO_OrgLevelDashboard.png)
 
 Step 1,2 & 3 needs to be repeated to add “__Project Component Security Scan Summary__”
 
+![Schedule Trigger](../Images/09_ADO_ProjectComponentLevl.png)
 
 
 > **Note:**  Dashboard created will be visible to all users which are part of project.
