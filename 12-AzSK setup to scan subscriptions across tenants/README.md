@@ -19,15 +19,15 @@ Azure delegated resource management enables logical projection of resources from
 
 ### <b>Prerequisites</b>:
 1. You need to have 'Owner' permissions on all the subscriptions i.e. on which you want to setup CA and the ones which you want to be scanned by CA.
-2. You need to know the tenant id of the central subscription i.e. the subscription where the CA automation account and other related components will be installed.
-3. You need to know the tenant id(s) of the target subscriptions i.e. subscriptions which your central CA  is supposed to scan.
+2. You need to know the tenant id of the subscription where the CA automation account and other related components will be installed. We will refer this subscription as 'central subscription' in the context of this article.
+3. You need to know the tenant id(s) of all the subscriptions which your CA  is supposed to scan. We will refer these subscriptions as 'target subscriptions' in the context of this article.
 4. You need to know the subscription ids of the target subscriptions.
 
 ### <b>Steps to follow: </b>
-1. Go to your central Azure subscription (which you want to be responsible for scanning other subscriptions across different tenants)
+1. Go to your central subscription.
 2. Create a new service principal and note down it's 'Object Id'.
-3. Update the [CrossTenantParams.json](./CrossTenantParams.json) file with the collected prerequisites. 
-4. Deploy the [delegatedResourceManagement.json](./delegatedResourceManagement.json) and [CrossTenantParams.json](./CrossTenantParams.json) using the commands below:
+3. Update the [CrossTenantParams.json](./CrossTenantParams.json) with the collected prerequisites. 
+4. Deploy the [delegatedResourceManagement.json](./delegatedResourceManagement.json) and [CrossTenantParams.json](./CrossTenantParams.json) to the target subscription using the commands below:
 
     ```PowerShell
     # Log in first with Connect-AzAccount
