@@ -15,7 +15,7 @@ By now you would be aware that when you install CA in your Azure subscription, i
 You can achieve it by using Azure delegated resource management. 
 Azure delegated resource management enables logical projection of resources from one tenant onto another tenant.
 
-><b>NOTE:</b> This approach has certain [known limitations](ReadMe.md#known-limitations). It would be important that you go through them first before you take all the steps listed below.
+><b>NOTE:</b> This approach has certain [known limitations](README.md#known-limitations). It would be important that you go through them first before you take all the steps listed below.
 
 ### <b>Prerequisites</b>:
 1. You need to have 'Owner' permissions on all the subscriptions i.e. on which you want to setup CA and the ones which you want to be scanned by CA.
