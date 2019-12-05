@@ -54,9 +54,13 @@ Azure delegated resource management enables logical projection of resources from
 11. Now you need to install CA on the central subscription in 'central scan' mode by providing target subscription id(s) and passing display name of the service principal in step #2 as the AzureADAppName. 
 
     ```PowerShell
-      Install-AzSKContinuousAssurance -SubscriptionId <SubscriptionId of the central subs> -TargetSubscriptionIds $TargetSubscriptionIds 
-        -ResourceGroupNames $ResourceGroupNames -LAWSId $LAWSId -LAWSSharedKey $LAWSSharedKey -CentralScanMode 
-        -LoggingOption 'CentralSub' -SkipTargetSubscriptionConfig
+      Install-AzSKContinuousAssurance -SubscriptionId <SubscriptionId of the central subs> `
+                                      -TargetSubscriptionIds $TargetSubscriptionIds `
+                                      -ResourceGroupNames $ResourceGroupNames `
+                                      -LAWSId $LAWSId -LAWSSharedKey $LAWSSharedKey `
+                                      -CentralScanMode `
+                                      -LoggingOption 'CentralSub' `
+                                      -SkipTargetSubscriptionConfig `
     ```PowerShell
     
 12. Note that CA scan logs for all the target subscriptions will be available in the storage under AzSKRG resource group of the central subscription.
