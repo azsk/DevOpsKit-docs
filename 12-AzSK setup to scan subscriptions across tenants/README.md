@@ -1,6 +1,6 @@
 
-> <b>NOTE:</b>
-> This article has been updated to use the new Azure PowerShell Az module. To learn more about the new Az module and AzureRM compatibility, see [Introducing the new Azure PowerShell Az module](https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az).
+> The Secure DevOps Kit for Azure (AzSK) was created by the Core Services Engineering & Operations (CSEO) division at Microsoft, to help accelerate Microsoft IT's adoption of Azure. We have shared AzSK and its documentation with the community to provide guidance for rapidly scanning, deploying and operationalizing cloud resources, across the different stages of DevOps, while maintaining controls on security and governance. 
+AzSK is not an official Microsoft product – rather an attempt to share Microsoft CSEO's best practices with the community..
 
 # AzSK setup across multiple tenants
 
@@ -14,6 +14,8 @@ By now you would be aware that when you install CA in your Azure subscription, i
 
 You can achieve it by using Azure delegated resource management. 
 Azure delegated resource management enables logical projection of resources from one tenant onto another tenant.
+
+><b>NOTE:</b> This approach has certain [known limitations](ReadMe.md#known-limitations). It would be important that you go through them first before you take all the steps listed below.
 
 ### <b>Prerequisites</b>:
 1. You need to have 'Owner' permissions on all the subscriptions i.e. on which you want to setup CA and the ones which you want to be scanned by CA.
