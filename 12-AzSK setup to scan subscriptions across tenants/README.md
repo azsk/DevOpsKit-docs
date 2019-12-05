@@ -61,8 +61,8 @@ Azure delegated resource management enables logical projection of resources from
                                       -LAWSId $LAWSId -LAWSSharedKey $LAWSSharedKey `
                                       -CentralScanMode `
                                       -LoggingOption 'CentralSub' `
-                                      -SkipTargetSubscriptionConfig `
-    ```PowerShell
+                                      -SkipTargetSubscriptionConfig 
+    ```
     
 12. Note that CA scan logs for all the target subscriptions will be available in the storage under AzSKRG resource group of the central subscription.
 
