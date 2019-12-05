@@ -41,9 +41,8 @@ Azure delegated resource management enables logical projection of resources from
 
     ```
 5. You can confirm successful onboarding of the target subscription by going to 'Service Providers' page in target subscription.
-6. Once you confirm successful onboarding, you need to update CA in the central subscription by adding new target subsscription id.
-7. You need to follow this process for all the target subs that you want to onboard to CA.
-8. Now you need to install CA on the central subscription in 'central scan' mode by providing target subscription ids and passing display name of the service principal in step #2 as the AzureADAppName. You can refer the installation steps [here](../04-Continous-Assurance/Readme.md#continuous-assurance-ca---central-scan-mode)
+6. You need to follow this process for all the target subs that you want to onboard to CA.
+7. Now you need to install CA on the central subscription in 'central scan' mode by providing target subscription id(s) and passing display name of the service principal in step #2 as the AzureADAppName. You can refer the installation steps [here](../04-Continous-Assurance/Readme.md#continuous-assurance-ca---central-scan-mode)
 
 ## <b>Known limitations</b>
 * Currently, you can’t onboard a subscription (or resource group within a subscription) for Azure delegated resource management if the subscription uses Azure Databricks. Similarly, if a subscription has been registered for onboarding with the Microsoft.ManagedServices resource provider, you won’t be able to create a Databricks workspace for that subscription at this time.
