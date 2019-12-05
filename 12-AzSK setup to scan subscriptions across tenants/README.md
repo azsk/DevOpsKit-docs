@@ -27,9 +27,11 @@ Azure delegated resource management enables logical projection of resources from
 1. Go to your central subscription.
 2. Go to 'App registrations' and click on '+New registration'. 
 3. Select type 'Accounts in any organizational directory (Any Azure AD directory - Multitenant)'.
+   ![App Registration](../Images/12_AppRegistration.png)
 4. Provide 'Name' and click on 'Register'.
 5. Once the app registration is completed, click on 'Managed application in local directory' under 'Overview'.
-6. It will open up 'Properties' blade of the enterprise application. Note the 'ObjectId' of the application. It would be required in the further steps.
+6. It will open up 'Properties' blade of the enterprise application. Note the 'ObjectId' of the application. It would be required in the    further steps.
+   ![Object Id](../Images/12_AppObjectId.png)
 7. Update the [CrossTenantParams.json](./CrossTenantParams.json) with the collected prerequisites. 
 8. Deploy the [delegatedResourceManagement.json](./delegatedResourceManagement.json) and [CrossTenantParams.json](./CrossTenantParams.json) to the target subscription using the commands below:
 
