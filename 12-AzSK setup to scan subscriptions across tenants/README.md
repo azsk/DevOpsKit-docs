@@ -35,6 +35,8 @@ Azure delegated resource management enables logical projection of resources from
 
     ```PowerShell
     # Log in first with Connect-AzAccount
+    
+    Set-AzContext -Subscription <subscriptionId of the target subscription>
 
     # Deploy Azure Resource Manager template using template and parameter file locally
     New-AzDeployment -Name <deploymentName> `
