@@ -29,7 +29,7 @@ Azure delegated resource management enables logical projection of resources from
 4. Click on the 'AzureRunAsConnection' of type 'AzureServicePrincipal' and copy the 'ApplicationId'. This is the application id of the service principal running the CA automation account.
 5. Now open 'App registrations' on the Azure portal and search the above 'ApplicationId' under 'All Applications'. You'll find the service principal, click on it, it would show the service principal details. Note down the 'Object Id'.
 6. Update the [CrossTenantParams.json](./CrossTenantParams.json) file with the collected prerequisites. 
-7. Deploy the [delegatedResourceManagement.json](./delegatedResourceManagement.json) and [CrossTenantParams.json](./CrossTenantParams.json using the commands below:
+7. Deploy the [delegatedResourceManagement.json](./delegatedResourceManagement.json) and [CrossTenantParams.json](./CrossTenantParams.json) using the commands below:
 
     ```PowerShell
     # Log in first with Connect-AzAccount
