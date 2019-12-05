@@ -20,8 +20,7 @@ Azure delegated resource management enables logical projection of resources from
 ### <b>Prerequisites</b>:
 1. You need to have 'Owner' permissions on all the subscriptions i.e. on which you want to setup CA and the ones which you want to be scanned by CA.
 2. You need to know the tenant id of the subscription where the CA automation account and other related components will be installed. We will refer this subscription as <b>'central subscription'</b> in the context of this article.
-3. You need to know the tenant id(s) of all the subscriptions which your CA  is supposed to scan. We will refer these subscriptions as <b>'target subscriptions'</b> in the context of this article.
-4. You need to know the subscription ids of the target subscriptions.
+3. You need to know the subscription ids of the target subscriptions.
 
 ### <b>Steps to follow: </b>
 1. Go to your central subscription.
