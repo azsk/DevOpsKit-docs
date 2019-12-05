@@ -22,14 +22,10 @@ Azure delegated resource management enables logical projection of resources from
 4. You need to know the subscription ids of the target subscriptions.
 
 ### <b>Steps to follow: </b>
-1. Install CA in the central subscription using steps [here](https://github.com/azsk/DevOpsKit-docs/tree/master/04-Continous-Assurance#setting-up-continuous-assurance---step-by-step
-).
-2. Open Azure portal and go to the 'AzSKContinuousAssurance' automation account in 'AzSKRG' resource group in the central subscription.
-3. Go to 'Shared Resources > Connections'
-4. Click on the 'AzureRunAsConnection' of type 'AzureServicePrincipal' and copy the 'ApplicationId'. This is the application id of the service principal running the CA automation account.
-5. Now open 'App registrations' on the Azure portal and search the above 'ApplicationId' under 'All Applications'. You'll find the service principal, click on it, it would show the service principal details. Note down the 'Object Id'.
-6. Update the [CrossTenantParams.json](./CrossTenantParams.json) file with the collected prerequisites. 
-7. Deploy the [delegatedResourceManagement.json](./delegatedResourceManagement.json) and [CrossTenantParams.json](./CrossTenantParams.json) using the commands below:
+1. Go to your central Azure subscription (which you want to be responsible for scanning other subscriptions across different tenants)
+2. Create a new service principal and note down it's 'Object Id'.
+3. Update the [CrossTenantParams.json](./CrossTenantParams.json) file with the collected prerequisites. 
+4. Deploy the [delegatedResourceManagement.json](./delegatedResourceManagement.json) and [CrossTenantParams.json](./CrossTenantParams.json) using the commands below:
 
     ```PowerShell
     # Log in first with Connect-AzAccount
@@ -42,9 +38,10 @@ Azure delegated resource management enables logical projection of resources from
                     -Verbose
 
     ```
-8. You can confirm successful onboarding of the target subscription by going to 'Service Providers' page in target subscription.
-9. Once you confirm successful onboarding, you need to update CA in the central subscription by adding new target subsscription id.
-10. You need to follow this process for all the target subs that you want to onboard to CA.
+5. You can confirm successful onboarding of the target subscription by going to 'Service Providers' page in target subscription.
+6. Once you confirm successful onboarding, you need to update CA in the central subscription by adding new target subsscription id.
+7. You need to follow this process for all the target subs that you want to onboard to CA.
+8. Now you need to install CA on the central subscription in 'central scan' mode by providing target subscription ids and passing display name of the service principal in step #2 as the AzureADAppName. You can refer the installation steps [here](../04-Continous-Assurance/Readme.md#continuous-assurance-ca---central-scan-mode)
 
 ## <b>Known limitations</b>
 * Currently, you can’t onboard a subscription (or resource group within a subscription) for Azure delegated resource management if the subscription uses Azure Databricks. Similarly, if a subscription has been registered for onboarding with the Microsoft.ManagedServices resource provider, you won’t be able to create a Databricks workspace for that subscription at this time.
