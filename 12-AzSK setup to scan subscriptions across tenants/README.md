@@ -51,10 +51,11 @@ Azure delegated resource management enables logical projection of resources from
     ```
 9. You can confirm successful onboarding of the target subscription by going to 'Service Providers' page in target subscription.
 10. You need to follow this process for all the target subs that you want to onboard to CA.
-11. Now you need to install CA on the central subscription in 'central scan' mode by providing target subscription id(s) and passing display name of the service principal in step #2 as the AzureADAppName. 
+11. Now you need to install CA on the central subscription using the command below:
 
     ```PowerShell
       Install-AzSKContinuousAssurance -SubscriptionId <SubscriptionId of the central subs> `
+                                      -AzureADAppName <DisplayName of the SPN created in step 4> `
                                       -TargetSubscriptionIds $TargetSubscriptionIds `
                                       -ResourceGroupNames $ResourceGroupNames `
                                       -LAWSId $LAWSId -LAWSSharedKey $LAWSSharedKey `
