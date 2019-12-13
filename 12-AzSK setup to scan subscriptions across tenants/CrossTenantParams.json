@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "mspOfferName": {
+            "value": "AzSK Access from the central tenant"
+        },
+        "mspOfferDescription": {
+            "value": "Cross-tenant Delegation for AzSK CA"
+        },
+        "managedByTenantId": {
+            "value": "<Tenant Id of the central subscription>"
+        },
+        "authorizations": {
+            "value": [
+                {
+                    "principalId": "<ObjectId of the central CA SPN>", 
+                    "principalIdDisplayName": "<DisplayName of the SPN>",
+                    "roleDefinitionId": "acdd72a7-3385-48ef-bd42-f606fba81ae7"
+                }
+            ]
+        }
+    }
+}
