@@ -29,13 +29,13 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
 
 * Validated support for use of a local folder on the client machine (as opposed to a storage-based blob) as the source for org policy at AzSK runtime.
 
-No policy schema breaking changes.
+No policy schema changes.
 
 # AzSK v.4.2.0
 
 * Removed a check that was prohibiting use of custom-generated SPNs in central-mode CA.
 
-No policy schema breaking changes.
+No policy schema changes.
 
 # AzSK v.4.1.0
 
@@ -45,7 +45,7 @@ No policy schema breaking changes.
 
 * Added support for org policy debug mode to extend ARM Checker controls.
 
-No policy schema breaking changes.
+No policy schema changes.
 
 # AzSK v.4.0.0
 
@@ -57,7 +57,7 @@ No policy schema breaking changes.
 
 * Introduced DisableOrgPolicyCheckForSession flag in Set-AzSKPolicySettings cmdlet to disable enforcement of org-policy for the current PS session. This helps in situations when an org-policy owner is working with multiple side-by-side policies.
 
-No policy schema breaking changes.
+No policy schema changes.
 
 # AzSK v.3.14.0
 
@@ -82,7 +82,7 @@ No policy schema breaking changes.
 * Support for extensibility for ARM Checker. You can now add new controls to existing services and also add altogether new services to be scanned in the ARM Checker for your organization.
 * Some of the re-configuration of DevOps Kit alerts by mandatory v. optional will become available in the next sprint.
 
-No policy schema breaking changes
+No policy schema changes
 
 
 # AzSK v.3.12.0
