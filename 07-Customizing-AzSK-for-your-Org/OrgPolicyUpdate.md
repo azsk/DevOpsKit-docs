@@ -3,7 +3,7 @@
 <br>AzSK is not an official Microsoft product – rather an attempt to share Microsoft CSEO's best practices with the community..
 # Org Policy Updates
 
-This page will notify updates for Org Policy with different AzSK versions. You need to follow specific instruction/notes before updating Org policy with respective AzSK version. For all updates related to AzSK version, you can refer to [release page](https://azsk.azurewebsites.net/ReleaseNotes/RN180927.html)
+This page will notify updates for Org Policy with different AzSK versions. You need to follow specific instruction/notes before updating Org policy with respective AzSK version if any breaking changes available to base configurations files like policy files schema, CA runbooks changes, etc. For all updates related to AzSK version, you can refer to [release page](https://azsk.azurewebsites.net/ReleaseNotes/LatestReleaseNotes.html)
 
 To update Org policy with specific AzSK version, you need to run update Org policy command after installing AzSK module (in new PowerShell session). This will update AzSK.Pre.json present on Org policy with respective version. After policy updade, CA will auto-upgrade to latest Org version. If application teams are using older version(or any other version than mentioned in Org Policy), will start getting update warning.    
 
@@ -21,6 +21,73 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
    -StorageAccountName "contosoitsa" `
    -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
 ```
+# AzSK v.4.3.0
+
+* Added capabilities to setup AzSK to scan subscriptions across multiple tenants. Instructions will be available [here](https://aka.ms/devopskit/crosstenant) early next week.
+
+
+
+# AzSK v.4.3.0
+
+* Ported Org policy cmdlets to PS Core. After this change, users can perform all org policy management operations from OS X/Linux, etc.
+
+* Validated support for use of a local folder on the client machine (as opposed to a storage-based blob) as the source for org policy at AzSK runtime.
+
+
+
+# AzSK v.4.2.0
+
+* Removed a check that was prohibiting use of custom-generated SPNs in central-mode CA.
+
+
+
+# AzSK v.4.1.0
+
+* Support for AzSK-based telemetry (Log Analytics and Application Insights) features in Azure US Government and Azure China.
+
+* Documentation covering end-to-end org policy scenarios with hands-on code examples will be published in the org policy section this week.
+
+* Added support for org policy debug mode to extend ARM Checker controls.
+
+
+
+# AzSK v.4.0.0
+
+* Fixed an issue in Get-AzSKOrganizationPolicyStatus cmdlet where in local debugging mode, extension files weren't getting loaded.
+
+* Fixed an issue in Get-AzSKOrganizationPolicyStatus cmdlet checks which were failing after fresh installation of org-policy.
+
+* Improved messages in the org-policy cmdlets (Install, Get & Update- org policy).
+
+* Introduced DisableOrgPolicyCheckForSession flag in Set-AzSKPolicySettings cmdlet to disable enforcement of org-policy for the current PS session. This helps in situations when an org-policy owner is working with multiple side-by-side policies.
+
+
+
+# AzSK v.3.14.0
+
+* Install-AzSKContinuousAssurance (ICA) can now be run even without owner permissions at subscription scope. The user who ran ICA must get the actual owners to configure RBAC for the AzSK_SPN on the subscription.
+
+* Fixed a bug in CA runbook, CA scans were ignoring resource groups (as specified in the resource groups parameter of ICA) and scanning everything in the subscription. 
+
+> **Note:** Update runbook files with latest compatible version
+*"Update-AzSKOrganizationPolicy -SubscriptionId `<SubId>` -OrgName `<OrgName>` -DepartmentName `<DeptName>` -OverrideBaseConfig CARunbooks"* If you have customized these files for your Org(like adding -UseBaselineControls inside RunbookScanAgent etc.), You will need to re-do changes after running update command.
+
+
+# AzSK v.3.14.0
+
+* Support for segregating DevOps Kit alerts by mandatory v. optional is now available for all customers. The default cmdlets (Set-AzSKSubscriptionSecurity and Set-AzSKAlerts) will only setup ‘mandatory’ subset of activity alerts. (Please see previous sprint release notes for more.)
+
+> **Note:** Breaking schema changes are done for alert policy file "Subscription.InsARMAlerts.json". Refer path to get the latest schema and update org policy if this file is customized for the org "%userprofile%\Documents\WindowsPowerShell\Modules\AzSK\<version>\Framework\Configurations\SubscriptionSecurity\Subscription.InsARMAlerts.json"
+
+
+
+# AzSK v.3.13.0
+
+* Support for extensibility for ARM Checker. You can now add new controls to existing services and also add altogether new services to be scanned in the ARM Checker for your organization.
+* Some of the re-configuration of DevOps Kit alerts by mandatory v. optional will become available in the next sprint.
+
+No policy schema changes
+
 
 # AzSK v.3.12.0
 

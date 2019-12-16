@@ -780,7 +780,7 @@ that, you may have to keep a separate copy and upload it. (We will revisit this 
 
 Usually AzSK modules are released on 15th of every month with latest features and control updates. It is recommended to go through release notes for the version and follow below steps to upgrade org AzSK version to latest available version.
 
-1. Go through latest version [release notes](https://azsk.azurewebsites.net/ReleaseNotes/LatestReleaseNotes.html) and breaking changes [updates for org policy](https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/OrgPolicyUpdate.md)
+1. Go through latest version [release notes](https://azsk.azurewebsites.net/ReleaseNotes/LatestReleaseNotes.html) and breaking changes [updates for org policy](OrgPolicyUpdate.md)
 
 2. Install latest AzSK module in local machine with the help of common setup command
 
@@ -789,7 +789,7 @@ Usually AzSK modules are released on 15th of every month with latest features an
    Install-Module AzSK -Scope CurrentUser -AllowClobber
    ```
 
-3. Perform breaking changes with the help of org policy updates page and run UOP with AzSK version update flag
+3. Perform breaking changes with the help of [org policy updates page]((OrgPolicyUpdate.md)) and run UOP with AzSK version update flag
 
    ```PowerShell
    # For Basic Setup
