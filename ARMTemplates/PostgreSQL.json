@@ -102,6 +102,20 @@
             "metadata": {
                 "description": "Azure database for PostgreSQL sku family"
             }
+        },
+        "start_IP": {
+            "type": "String"
+            "defaultValue": "Enter start_IP", 
+            "metadata":{
+                "description": "Enter start IP address"
+             }
+         },
+        "end_IP": {
+            "type": "String"
+            "defaultValue": "Enter end_IP",
+            "metadata":{
+                "description": "Enter end IP address"
+             }
         }
     },
     "variables": {
@@ -139,8 +153,8 @@
                     "location": "[parameters('location')]",
                     "name": "[concat(variables('serverName'),'firewall')]",
                     "properties": {
-                        "startIpAddress": "0.0.0.0",
-                        "endIpAddress": "255.255.255.255"
+                        "startIpAddress": "[parameters('start_IP')]",
+                        "endIpAddress": "[parameters('end_IP')]"
                     }
                 },
                 {
