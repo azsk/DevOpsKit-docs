@@ -21,6 +21,10 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
    -StorageAccountName "contosoitsa" `
    -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
 ```
+# AzSK v.4.3.0
+
+* Added capabilities to setup AzSK to scan subscriptions across multiple tenants. Instructions will be available [here](https://aka.ms/devopskit/crosstenant) early next week.
+
 
 
 # AzSK v.4.3.0
@@ -29,13 +33,13 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
 
 * Validated support for use of a local folder on the client machine (as opposed to a storage-based blob) as the source for org policy at AzSK runtime.
 
-No policy schema changes.
+
 
 # AzSK v.4.2.0
 
 * Removed a check that was prohibiting use of custom-generated SPNs in central-mode CA.
 
-No policy schema changes.
+
 
 # AzSK v.4.1.0
 
@@ -45,7 +49,7 @@ No policy schema changes.
 
 * Added support for org policy debug mode to extend ARM Checker controls.
 
-No policy schema changes.
+
 
 # AzSK v.4.0.0
 
@@ -57,7 +61,7 @@ No policy schema changes.
 
 * Introduced DisableOrgPolicyCheckForSession flag in Set-AzSKPolicySettings cmdlet to disable enforcement of org-policy for the current PS session. This helps in situations when an org-policy owner is working with multiple side-by-side policies.
 
-No policy schema changes.
+
 
 # AzSK v.3.14.0
 
