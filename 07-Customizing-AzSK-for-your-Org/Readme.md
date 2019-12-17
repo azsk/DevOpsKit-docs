@@ -780,7 +780,7 @@ that, you may have to keep a separate copy and upload it. (We will revisit this 
 
 DevOps kit team releases the newer version of the AzSK module on 15th of every month. It is recommended that you upgrade your org's AzSK version to the latest available version to ensure that your org is up to date with the latest security controls and features. You need to follow the steps below to smoothly upgrade AzSK version for your org: 
 
-1. Install latest AzSK module in local machine with the help of common setup command
+1. Install latest AzSK module in your local machine with the help of common setup command
 
    ```PowerShell
    # Use -Force switch as and when required 
@@ -789,9 +789,10 @@ DevOps kit team releases the newer version of the AzSK module on 15th of every m
 
 2. Go through the [release notes](https://azsk.azurewebsites.net/ReleaseNotes/LatestReleaseNotes.html) for AzSK latest version. It typically lists the changes which may impact org policy users under section 'Org policy/external user updates'.
 
-3. If the release notes indicate that you need to perform any additional steps before upgrading the org policy version, then please perform those with the help of [org policy updates page](OrgPolicyUpdate.md). If there are no additional steps mentioned, then you can go ahead with step 4. 
+3. If the release notes indicate that you need to perform any additional steps before upgrading the org policy version then perform those changes with the help of [org policy updates page](OrgPolicyUpdate.md). It is highly recommended that you do these changes to your local policy folder and test those before pushing to the policy server. Instructions at [downloading your existing org policies](Readme.md#downloading-and-examining-policy-folder) and [Working with ‘local’ mode (policy dev-test-debug)](Readme.md#working-with-local-mode-policy-dev-test-debug) would be useful to do so. 
+If there are no additional steps mentioned, then you can go ahead with next step. 
 
-4. Run UOP with AzSK version update flag
+5. Run UOP with AzSK version update flag
 
    ```PowerShell
    # For Basic Setup
