@@ -21,9 +21,9 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
    -StorageAccountName "contosoitsa" `
    -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
 ```
-# AzSK v.4.3.0
+# AzSK v.4.4.0
 
-* Added capabilities to setup AzSK to scan subscriptions across multiple tenants. Instructions will be available [here](https://aka.ms/devopskit/crosstenant) early next week.
+* Added capabilities to setup AzSK to scan subscriptions across multiple tenants. Instructions are available [here](https://aka.ms/devopskit/crosstenant).
 
 
 
