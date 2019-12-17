@@ -814,7 +814,7 @@ DevOps kit team releases the newer version of the AzSK module on 15th of every m
 
 Once org policy is updated with the latest AzSK version, you will see it in effect in all environments
 
- **Local scans:** If application teams are using older version(or any other version than mentioned in org Policy), they will start seeing warning as shown below while running scans .
+ **Local scans:** If application teams are using older version(or any other version than mentioned in org policy), they will start seeing warning as shown below while running scans.
 
 ![Entry in ServerConfigMetadata.json](../Images/07_OrgPolicy_Old_Version_Warning.PNG)
 
@@ -833,7 +833,7 @@ Once org policy is updated with the latest AzSK version, you will see it in effe
 
  ![CAVersionSummary.json](../Images/07_OrgPolicy_CAVersionSummary.PNG)
  
- **CICD:** As of now, CICD SVT task does not support version from org policy settings. It always installs latest AzSK version irrespective of version mentioned in policy. Although it refers other control policies from policy stores.
+ **CICD:** As of now, CICD SVT task does not support version from org policy settings. It always installs latest AzSK version available in PowerShell gallery, irrespective of version mentioned in policy. Although it refers other control policies from policy store.
 
 ### Maintaining policy in source-control
 
