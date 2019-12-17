@@ -789,7 +789,7 @@ DevOps kit team releases the newer version of the AzSK module on 15th of every m
 
 2. Go through the [release notes](https://azsk.azurewebsites.net/ReleaseNotes/LatestReleaseNotes.html) for AzSK latest version. It typically lists the changes which may impact org policy users under section 'Org policy/external user updates'.
 
-3. If the release notes indicate that you need to perform any additional steps before upgrading the org policy version, then please perform those with the help of [org policy updates page]((OrgPolicyUpdate.md)). If there are no additional steps mentioned, then you can go ahead with step 4. 
+3. If the release notes indicate that you need to perform any additional steps before upgrading the org policy version, then please perform those with the help of [org policy updates page](OrgPolicyUpdate.md). If there are no additional steps mentioned, then you can go ahead with step 4. 
 
 4. Run UOP with AzSK version update flag
 
