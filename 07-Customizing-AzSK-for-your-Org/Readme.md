@@ -778,18 +778,20 @@ that, you may have to keep a separate copy and upload it. (We will revisit this 
 
 ### How to upgrade org AzSK version to the latest AzSK version
 
-Usually AzSK modules are released on 15th of every month with latest features and control updates. It is recommended to go through release notes for the version and follow below steps to upgrade org AzSK version to latest available version.
+DevOps kit team releases the newer version of the AzSK module on 15th of every month. It is recommended that you upgrade your org's AzSK version to the latest available version to ensure that your org is up to date with the latest security controls and features. You need to follow the steps below to smoothly upgrade AzSK version for your org: 
 
-1. Go through latest version [release notes](https://azsk.azurewebsites.net/ReleaseNotes/LatestReleaseNotes.html) and breaking changes [updates for org policy](OrgPolicyUpdate.md)
-
-2. Install latest AzSK module in local machine with the help of common setup command
+1. Install latest AzSK module in local machine with the help of common setup command
 
    ```PowerShell
    # Use -Force switch as and when required 
    Install-Module AzSK -Scope CurrentUser -AllowClobber
    ```
 
-3. Perform breaking changes with the help of [org policy updates page]((OrgPolicyUpdate.md)) and run UOP with AzSK version update flag
+2. Go through the [release notes](https://azsk.azurewebsites.net/ReleaseNotes/LatestReleaseNotes.html) for AzSK latest version. It typically lists the changes which may impact org policy users under section 'Org policy/external user updates'.
+
+3. If the release notes indicate that you need to perform any additional steps before upgrading the org policy version, then please perform those with the help of [org policy updates page]((OrgPolicyUpdate.md)). If there are no additional steps mentioned, then you can go ahead with step 4. 
+
+4. Run UOP with AzSK version update flag
 
    ```PowerShell
    # For Basic Setup
@@ -806,7 +808,7 @@ Usually AzSK modules are released on 15th of every month with latest features an
       -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
    ```
 
- Internally, this will update AzSK.Pre.json file present on org policy with latest AzSK version. 
+ Internally, this will update the AzSK version in the AzSK.Pre.json file present on your org policy server.. 
  
 #### Upgrade scenarios in different scan sources
 
