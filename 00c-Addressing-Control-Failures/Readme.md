@@ -221,6 +221,7 @@ As shown in the images, the command enters 'attest' mode after completing a scan
 2. The user gets to choose whether they want to attest the control
 3. If the user chooses to attest, attestation details (attest status, justification, etc.) are captured
 4. This is repeated for all attestable controls and each resource.
+5. After attestation workflow is completed, another scan is triggered for controls attested within the last 24 hrs so that the backend will get the latest control status.
 
  Sample attestation workflow in progress:
  ![02_SVT_Attest_1](../Images/02_SVT_Attest_1.PNG) 
@@ -228,7 +229,10 @@ As shown in the images, the command enters 'attest' mode after completing a scan
  Sample summary of attestation after workflow is completed:
  ![02_SVT_Attest_2](../Images/02_SVT_Attest_2.PNG) 
 
-Attestation details corresponding to each control (e.g., justification, user name, etc.) are also captured in the CSV file as shown below:
+ Sample summary of scan of attested controls:
+ ![02_SVT_Attest_4](../Images/02_SVT_Attest_4.PNG) 
+
+Attestation details corresponding to each control (e.g., justification, user name, etc.) are also captured in the CSV file in next scan as shown below:
  ![02_SVT_Attest_3](../Images/02_SVT_Attest_3.PNG) 
 
 The attestation process for application resources is similar to that for subscriptions. For example, the command below shows how to 
