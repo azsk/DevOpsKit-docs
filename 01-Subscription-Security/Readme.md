@@ -943,11 +943,9 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
       ```
 7. <h4> Configure role settings for role on an Azure resource (-ConfigureRoleSettings) </h4>
 	 Use this command to configure a  PIM role settings like maximum role assignment duration on a resource, mfa requirement upon activation etc.
-     The command currently supports configuring the following settings: Maximum assignment duration, maximum activation duration, requirement of justification upon activation, requirement of mfa upon activation.
+     The command currently supports configuring the following settings: Maximum assignment duration, maximum activation duration, requirement of justification upon activation, requirement of mfa upon activation and applying conditional access policies during activation.
      
-     > Note: Currently all the 4 settings parameters are required to be supplied in command to change any configuration setting for a PIM role
-
-    <b>Example 1: </b> Configure 'Owner' PIM role on a subscription, to let maximum activation duration be 12 hours.
+      <b>Example 1: </b> Configure 'Owner' PIM role on a subscription, to let maximum activation duration be 12 hours.
 
       ```PowerShell
       Set-AzSKPIMConfiguration  -ConfigureRoleSettings `
@@ -960,7 +958,16 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                 -DoNotOpenOutputFolder`
       ```
       
+	 <b>Example 1: </b> Configure 'Owner' PIM role on a subscription, to apply conditional access policy while activation.
+	    Note: Currently application of both MFA and conditional policy on the same role is not supported. Either of them should be applied to a given role. 
 
+      ```PowerShell
+      Set-AzSKPIMConfiguration  -ConfigureRoleSettings `
+                                -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
+                                -RoleNames "Owner" `
+                                -ApplyConditionalAccessPolicyForRoleActivation $true
+                                -DoNotOpenOutputFolder`
+      ```
 
 
 ## AzSK: Credential hygiene helper cmdlets
