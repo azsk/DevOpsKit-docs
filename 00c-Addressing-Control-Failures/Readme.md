@@ -588,14 +588,14 @@ You may come across a scenario where you get multiple API connections in the sca
 
 #### How do I remediate failing control Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG?
 
-The time taken to evaluate control Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG, is directly proportional to the number of resource groups you have in your subscription AND total number of identities that have access on those resource groups. As a result, the GSS scan may take up significant time to complete, depending upon the above numbers. If this control is failing, it can be evaluated locally now with the help of below command: 
+The time taken to evaluate control Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG, is directly proportional to the number of resource groups you have in your subscription AND total number of identities that have access on those resource groups. As a result, the GSS scan may take significant amount of time to complete for subscriptions with multiple resource groups. Hence, we have enabled this control only in CA mode. In manual mode, we skip the actual control scan and instruct the user to see the evaluation details about this control in the CA job scans.
+If you have addressed the causes for control failure and you need to manually scan the control, you can override the current behavior by explicitly specifying the controlId in the scan cmdlet as shown below.
 
 ``` 
 Import-Module AzSK
 
 Get-AzSKSubscriptionSecurityStatus -SubscriptionId $subid -ControlId Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG
 ```
-Only when the control is actually getting evaluated(via CA or passing controlIds in GSS local scan), the result will be counted towards dashboard compliance.
 
 #### How do I remediate failing control Azure_APIManagement_DP_Use_Secure_TLS_Version?
 
