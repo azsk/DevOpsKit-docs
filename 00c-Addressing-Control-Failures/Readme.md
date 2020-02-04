@@ -588,8 +588,7 @@ You may come across a scenario where you get multiple API connections in the sca
 
 #### How do I remediate failing control Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG?
 
-
-The control Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG can be evaluated locally now with the help of below command: 
+The time taken to evaluate control Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG, is directly proportional to the number of resource groups you have in your subscription AND total number of identities that have access on those resource groups. As a result, the GSS scan may take up significant time to complete, depending upon the above numbers. If this control is failing, it can be evaluated locally now with the help of below command: 
 
 ``` 
 Import-Module AzSK
