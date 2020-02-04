@@ -595,6 +595,7 @@ Import-Module AzSK
 
 Get-AzSKSubscriptionSecurityStatus -SubscriptionId $subid -ControlId Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG
 ```
+Only when the control is actually getting evaluated(via CA or passing controlIds in GSS local scan), the result will be counted towards dashboard compliance.
 
 #### How do I remediate failing control Azure_APIManagement_DP_Use_Secure_TLS_Version?
 
