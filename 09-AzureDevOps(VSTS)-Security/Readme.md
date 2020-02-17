@@ -60,7 +60,7 @@ For instance, you can also make use of the 'BuildNames','ReleaseNames' to filter
 #Scan Organization
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>"
 
-#San Organization and Project
+#Scan Organization and Project
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" 
 
 #Scan org, project and Builds
@@ -72,8 +72,23 @@ Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -Projec
 #Scan org, project, all builds and releases
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "*" -ReleaseNames "*" 
 
+#Scan org, project and service connections
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -ServiceConnectionNames "<SER1, SER2,...ect.>"
+
+#Scan org, project and agent pools
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -AgentPoolNames "<AGP1, AGP2,...etc.>"
+
+#Scan org, project, all builds, releases, service connectiopns and agent pools
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "*" -ReleaseNames "*" -ServiceConnectionNames "*" -AgentPoolNames "*"
+
 #Scan all supported artifacts
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ScanAllArtifacts
+
+#Scan resources for baseline controls only
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -ubc
+
+#Scan resources with severity
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -Severity "High/Medium/Low"
 ```
 
 
@@ -132,23 +147,23 @@ __Step-2__: Add “ADO Security Scanner” task to the pipeline
 
 Click on "Add Tasks" and select "Azure DevOps (ADO) Security Verification".
 
-![Add scanner task](../Images/09_ADO_AddADOScannerTask.png)
+![Add scanner task](../Images/10_ADO_AddADOScannerTask.png)
 
 __Step-3__: Specify the input parameters for the task.
 The "ADO Security Scanner" task starts showing in the "Run on Agent" list and displays some configuration inputs that are required for the task to run. These are none other than the familiar options we have been specifying while running the ADO scan manually - you can choose to specify the target org, projects, builds and releases based on how your org resources are organized.
 
-![Add task inputs](../Images/09_ADO_AddTaskDetails.png)
+![Add task inputs](../Images/10_ADO_AddTaskDetails.png)
 
 > **Note:** This task also requires Azure DevOps connection containing org details and PAT token to scan the required resources. Refer doc [here](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page) to create token and provide it as part of connection
 
-![Add Service connection](../Images/09_ADO_AddServiceConnection.png)
+![Add Service connection](../Images/10_ADO_AddServiceConnection.png)
 
 
 __! important__ : Make sure you **DO NOT** select  checkbox for "Grant access permission to all pipelines" before saving service connection. 
 
 __Step-4__: Click “Save & queue”
 
-![Add Service connection](../Images/09_ADO_TriggerPipeline.png)
+![Add Service connection](../Images/10_ADO_TriggerPipeline.png)
 
 Task will install latest AzureDevOps scanner module and start scanning based on input parameters. 
 
@@ -162,7 +177,7 @@ __Step-4__: Setup scheduled trigger for pipeline
 
 Once you are able to successfully run the ADO scan using ADO pipeline, you can configure scheduled trigger to get latest visibility of security on resources
 
-![Schedule Trigger](../Images/09_ADO_ScheduleTrigger.png)
+![Schedule Trigger](../Images/10_ADO_ScheduleTrigger.png)
 
 
 ### Visualize security scan results 
@@ -187,11 +202,11 @@ __Steps__:
 
 3. Dashboard will start displaying scanned results 
 
-    ![org Level Summary](../Images/09_ADO_OrgLevelDashboard.png)
+    ![org Level Summary](../Images/10_ADO_OrgLevelDashboard.png)
 
 Step 1,2 & 3 needs to be repeated to add “__Project Component Security Scan Summary__”
 
-![Schedule Trigger](../Images/09_ADO_ProjectComponentLevl.png)
+![Schedule Trigger](../Images/10_ADO_ProjectComponentLevl.png)
 
 
 > **Note:**  Dashboard created will be visible to all users which are part of project.
