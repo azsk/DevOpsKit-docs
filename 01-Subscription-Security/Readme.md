@@ -959,7 +959,29 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                 -RequireMFAOnActivation $true
                                 -DoNotOpenOutputFolder`
       ```
-      
+8. <h4> Remove PIM assignments for a role on an Azure resource (-RemovePIMAssignment) </h4>
+     Use this command to remove PIM assignments of specified role, at the specified scope.
+
+    <b>Example 1: </b> Remove 'Contributor' role that have PIM assignment at subscription level. This command runs in an interactive manner so that you get an opportunity to verify the accounts being removed. All the specified principal names with PIM access on the role will get removed.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration  -RemovePIMAssignment `
+                                -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
+                                -RoleName "Contributor" `
+                                -PrincipalNames "abc@microsoft.com,def@microsoft.com" 
+      ```
+
+      <b>Example 2: </b> Use *'-Force'* parameter to run the command in non-interactive mode. This will remove PIM assignment at resource level without giving runtime verification step. 
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration  -RemovePIMAssignment `
+                                -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
+                                -RoleName "Contributor" `
+                                -PrincipalNames "abc@microsoft.com,def@microsoft.com" `
+                                -ResourceGroupName "DemoRG" `
+                                -ResourceName "AppServiceDemo" `
+                                -Force
+      ```
 
 
 
