@@ -1,45 +1,33 @@
-## 200114 (AzSK v.4.5.0)
+## 200214 (AzSK v.4.6.0)
 
 ### Feature updates
 
-* Continuous Assurance (CA) – Runbook throttling issues for large subscriptions:
-    * For the last few sprints, we had been investigating some recurrent issues which were causing CA runbook scans to abruptly terminate for a few CSEO subscriptions.The CA runbook scan happens inside a container that is deployed with certain memory, CPU, networking thresholds imposed by Azure Automation service runtime. If any of the thresholds are exceeded, Azure Automation terminates the container (and, as a result, the scan remains incomplete).While this was mostly happening in some of the larger subscriptions (several thousand resources), we were also observing the same symptoms in the occasional small subscription.
-
-    * In the current sprint, we were able to identify and address most of the root causes leading to this resource exhaustion during CA scans. The fixes involved performance tuning at various layers (AzSK module code, control status/inventory reporting API, backend stored procedures, etc.). Furthermore, we improved the logic so that if the resource bottleneck was caused by a specific resource (e.g., a vNet with too many NIC configurations), we skip past that after a fixed number of retries. We also put in additional telemetry and diagnostic indications that would help us identify root causes quicker in future investigations.
-
-    * As a result of these changes, more resources will become visible from a compliance standpoint. Additionally, due to optimization in the state saved, attestation for some controls may show a drift. Also, in a few cases, we may skip certain controls in CA if we find that the resources consumed would cause the scan to terminate. (We are looking at a container-based solution that might alleviate this issue.)
-
-    * The following controls (belonging to respective resource types) were modified as part of this optimization effort:
-        * Virtual network (vNet,ErVNet)
-            * Azure_VNet_NetSec_Justify_PublicIPs
-            * Azure_VNet_NetSec_Justify_IPForwarding_for_NICs
-            * Azure_ERvNet_NetSec_Dont_Enable_IPForwarding_for_NICs
-            * Azure_ERvNet_NetSec_Dont_Use_PublicIPs 
-
-        * SQL Database
-            * Azure_SQLDatabase_Audit_Enable_Threat_Detection_Server
-            * Azure_SQLDatabase_Audit_Enable_Logging_and_Monitoring_Server
-
-        * API Management
-            * Azure_APIManagement_DP_Restrict_CORS_Access
-            * Azure_APIManagement_AuthZ_Restrict_Caller_IPs
-            * Azure_APIManagement_AuthZ_Enable_Requires_Subscription
-            * Azure_APIManagement_DP_Remove_Default_Products
-            * Azure_APIManagement_DP_Restrict_Critical_APIs_Access
-            * Azure_APIManagement_AuthZ_Validate_JWT
-            * Azure_APIManagement_AuthZ_Enable_User_Authorization_For_API
-
-        * Service Bus
-            * Azure_ServiceBus_AuthZ_Use_Minimum_Access_Policies
-        * SubscriptionCore
-            * Azure_Subscription_SI_Lock_Critical_Resources
+* 	(Preview) DevOps Kit Continuous Assurance using containers:
+    * Public preview to run DevOps Kit CA runbook inside a container image (in lieu of Azure Automation hosted runbooks).
+    * This has been developed as an alternate option that is not limited by the memory, CPU and networking thresholds imposed by Azure Automation service runtime. Currently in larger subscriptions, if any of the thresholds are exceeded, Azure Automation terminates the sandbox and, as a result, the scan remains incomplete. 
+    * This eliminates the need to renew the certificate periodically.
+    * Installation steps will be available [here](http://aka.ms/devopskit/containerizedCA) early next week.
 
 
-* Security Verification Tests (SVTs):
-    * N/A.
+*	(Preview) AzSK module for Azure DevOps (ADO):
+    * Packaged the DevOps Kit scanner for ADO as a native ADO extension that can be used for Continuous Assurance for ADO security. This also includes widgets to visualize the scan results for various stakeholders (such as org admin, project owners, build/release owners etc.).
+    * The dashboard now supports link to failing resources for each control.
+        * Refer the documentation [here](https://github.com/azsk/DevOpsKit-docs/blob/master/09-AzureDevOps(VSTS)-Security/Readme.md#continuous-assurance-1) for more information.
+    * Added ~20 new security controls at organization, project, user, pipeline (build & release), service connection and agent pool scope.
+    * Added support to target scans using parameters/switches like baseline controls, control id & severity.
+
+*	Security Verification Tests (SVTs):
+    * Introduced a new feature that lets us evaluate native DevOps Kit controls and the corresponding Azure policies (as available). 
+    * This will be useful in our efforts to transition from DevOps Kit controls to native Azure policies. Currently, this is available as an opt-in capability.
 
 * Privileged Identity Management (PIM):
-    * N/A.
+    * –RemovePIMAssignment switch has been added in Set-AzSKPIMConfiguration cmdlet to remove PIM assignments of users for a specific role. E.g.,
+        ```Powershell
+        setpim -RemovePIMAssignment -SubscriptionId $sub -RoleName ‘Owner’ -PrincipalNames ‘abc@microsoft.com,xyz@microsoft.com’ -Force
+        ```
+
+*	Control Attestation:
+    * Added capabilities to address situation where if the structure of the attested state for a resource is changed by DevOps Kit, the current control attestation will be respected till its actual expiry.
 
 * In-cluster security scans for ADB, AKS, HDI Spark:
     * N/A.
@@ -51,7 +39,7 @@
     * N/A.
 
 * Org policy/external user updates (for non-CSEO users):
-    * N/A.
+    * Added a view for resource inventory of an organization in the cloud security compliance report (using PowerBI).
 
 Note: The next few items mention features from recent releases retained for visibility in case you missed those release announcements:
 
@@ -96,29 +84,43 @@ Note: The next few items mention features from recent releases retained for visi
         * By default, the current cmdlets will scan just 3 objects of each type (Apps/SPNs/Groups, etc.). This is until we work out how best to group/batch scans when scanning the entire tenant. If you want to scan more objects you can use the '-MaxObj' switch in the cmdlets.
 
 
-
 ### Other improvements/bug fixes
 * Subscription Security:
-    * Azure Security Center (ASC) alerts/notifications control will now fail for high severity alerts without any grace period considerations. It will also fail if there are medium severity alerts that have not been addressed for more than 30 days.
-    * Added a new control Azure_Subscription_Use_Only_Alt_Credentials to check PIM assignments for non SC-ALT accounts with critical privileges (user access admin, owner & contributor) at subscription scope. This control currently requires graph access on the subscription.
-
+    * Azure Security Center (ASC) setup umbrella control (which checks for auto provisioning, security contacts and policies configuration in the subscription) is now refactored into three new controls to validate each of these checks separately.
+    * Set-AzSKAzureSecurityCenterPolicies cmdlet has been enhanced to update auto provisioning and security policies status by default. Additionally, security contact email/phone will be updated only if provided additionally.
+    * Azure_Subscription_Use_Only_Alt_Credentials control can now check assignments (both permanent & PIM) for non SC-ALT accounts with critical privileges at subscription as well as resource group scope. This control can now be scanned in CA mode as well.
+    * Moreover, if you want to force scan the actual control in local mode, you can do so by specifying the control id explicitly as shown in the command below:
+        ```Powershell
+        gss -s $sub -cid ‘Azure_Subscription_Use_Only_Alt_Credentials’
+        ```
 
 * Privileged Identity Management (PIM):
-    * N/A.
+    * Updated the setpim cmdlet to use v2 APIs to configure PIM role settings.
+    * Fixed issue to remove permanent assignments for groups in the setpim cmdlet using the -RemovePermanentAssignments switch.
+    * Added support for principal name-based filtering in the setpim cmdlet for -AssignEligibleforPermanentAssignments and –RemovePIMAssignment switches.
+    * getpim cmdlet will now output list of roles in CSV format as well. 
+
     
 * SVTs: 
     * N/A.
 
 * Controls:
-    * Fixed an issue to better handle BOM/special characters in control/metadata state.
+    *	Fixed antimalware control for VM which was previously reporting false positive results for Linux VMs.
+    *	Fixed issues in the controls Azure_AppService_AuthZ_Configure_IP_Restrictions and Azure_ServiceFabric_DP_Dont_Expose_Reverse_Proxy_Port which were previously resulting into error.
+    *	As a part of our efforts to resolve the CA runbook throttling issues for large subscriptions, the following APIM controls will be skipped in CA mode for an APIM resource having more than 30 associated APIs:
+        *	Azure_APIManagement_DP_Restrict_CORS_Access
+        *	Azure_APIManagement_AuthZ_Restrict_Caller_IPs
+        *	Azure_APIManagement_AuthZ_Validate_JWT
+        *	Azure_APIManagement_AuthZ_Enable_User_Authorization_For_API
+
  
 
 * ARM Template Checker:
-    * Fixed an issue in checking the .NET framework version for app service ARM template in the control Azure_AppService_Deploy_Use_Latest_Version.
+    * Fixed a bug where in a specific ARM template was failing the ARM Checker CICD task despite being compliant with all the applicable controls.
 
 
 * CA:
-    * ``` Get-AzSKContinuousAssurance ``` cmdlet has been improved to check for suspended jobs (in the last 3 days) and automation runbook scan logs in the DevOps Kit storage account in the subscription. 
+    * N/A.
 
 * In-cluster CA:
     * N/A. 
