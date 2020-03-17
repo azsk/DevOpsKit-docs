@@ -599,7 +599,7 @@ E.g., Install-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
 
 AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This command provides a quicker way to perform Privileged Identity Management (PIM) operations and enables you to manage access to important Azure subscriptions, resource groups and resources.
 
-### Use Get-AzSKPIMConfiguration (alias 'getpim') for querying various PIM settings/status
+### Use Get-AzSKPIMConfiguration (alias 'getpim') for querying various PIM settings/status at Subscription level
 
   1. <h4> List your PIM-eligible roles (-ListMyEligibleRoles) </h4>
 
@@ -696,7 +696,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
       Use this command to list Azure role with PIM assignments at the specified scope that are about to expire in given number of days. Use respective parameters to list expiring assignments for a specific role on a subscription or a resource group or a resource.
 
       ```PowerShell
-	      Get-AzSKPIMConfiguration -ListSoonToExpireAssignment  `
+	  Get-AzSKPIMConfiguration -ListSoonToExpireAssignment  `
                               -SubscriptionId <SubscriptionId> `
                               -RoleNames <Comma separated list of roles> `
                               -ExpiringInDays ` # The number of days you want to query expiring assignments for
@@ -704,14 +704,14 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
       ```
       <b>Example 1: </b> List 'Owner' PIM assignments at subscription level that will expire in 10 days.
 
-       ```PowerShell
+      ```PowerShell
       Get-AzSKPIMConfiguration -ListSoonToExpireAssignment `
                                -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
                                -RoleNames 'Owner' `
 			       -ExpiringInDays 10`
                                -DoNotOpenOutputFolder
       ```
-### Use Set-AzSKPIMConfiguration (alias 'setpim') for configuring/changing PIM settings:
+### Use Set-AzSKPIMConfiguration (alias 'setpim') for configuring/changing PIM settings at Subscription level:
 
   1. <h4> Assigning users to roles (-AssignRole) </h4>
      
@@ -969,6 +969,261 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                 -DoNotOpenOutputFolder`
       ```
 
+### Use Get-AzSKPIMConfiguration (alias 'getpim') for querying various PIM settings/status at Management Group level
+
+  1. <h4> List permanent assignments (-ListPermanentAssignments) </h4>  
+
+      Use this command to list Azure role with permanent assignments at the specified scope. By default, it lists all role assignments in the selected Azure Management Group. Use respective parameters to list assignments for a specific role, or to list assignments on a specific roles.
+      
+      ```PowerShell
+      Get-AzSKPIMConfiguration -ListPermanentAssignments`
+                              -ManagementGroupId <ManagementGroupId> `
+                              [-RoleNames <Comma separated list of roles>] `
+                              [-DoNotOpenOutputFolder]
+      ```
+
+      <b>Example 1: </b> List all permanent assignments at Management Group level.
+
+      ```PowerShell
+      Get-AzSKPIMConfiguration -ListPermanentAssignments `
+                               -ManagementGroupId <ManagementGroupId>
+      ```
+      <b>Example 2:</b> List all permanent assignments at Management Group level with 'Contributor' and 'Owner' roles.
+
+       ```PowerShell
+      Get-AzSKPIMConfiguration -ListPermanentAssignments `
+                               -ManagementGroupId <ManagementGroupId> `
+                               -RoleNames "Contributor,Owner" `
+                               -DoNotOpenOutputFolder
+      ```
+
+
+  2. <h4> List PIM assignments (-ListPIMAssignments) </h4>
+
+      Use this command to list Azure role with PIM assignments at the specified scope. By default, it lists all role assignments in the selected Azure Management Group. Use respective parameters to list assignments for a specific roles.
+
+      ```PowerShell
+      Get-AzSKPIMConfiguration -ListPIMAssignments `
+                              -ManagementGroupId <ManagementGroupId> `
+                              [-RoleNames <Comma separated list of roles>] `
+                              [-DoNotOpenOutputFolder]
+      ```
+      <b>Example 1: </b> List PIM assignments at Management Group level.
+
+      ```PowerShell
+      Get-AzSKPIMConfiguration -ListPIMAssignments `
+                               -ManagementGroupId <ManagementGroupId>
+      ```
+      <b>Example 2: </b> List 'Contributor' and 'Owner' PIM assignments at Management Group level.
+
+      ```PowerShell
+      Get-AzSKPIMConfiguration -ListPIMAssignments `
+                               -ManagementGroupId <ManagementGroupId> `
+                               -RoleNames "Contributor,Owner" `
+                               -DoNotOpenOutputFolder
+      ```
+      
+
+  3. <h4> List expiring assignments (-ListSoonToExpireAssignments) </h4>
+
+      Use this command to list Azure role with PIM assignments at the specified scope that are about to expire in given number of days. Use respective parameters to list expiring assignments for a specific role on a Management Group.
+
+      ```PowerShell
+	  Get-AzSKPIMConfiguration -ListSoonToExpireAssignment  `
+                               -ManagementGroupId <ManagementGroupId> `
+                               -RoleNames <Comma separated list of roles> `
+                               -ExpiringInDays <int> ` # The number of days you want to query expiring assignments for
+                               [-DoNotOpenOutputFolder]
+      ```
+      <b>Example 1: </b> List 'Owner' PIM assignments at subscription level that will expire in 10 days.
+
+      ```PowerShell
+      Get-AzSKPIMConfiguration -ListSoonToExpireAssignment `
+                               -ManagementGroupId <ManagementGroupId> `
+                               -RoleNames 'Owner' `
+			                   -ExpiringInDays 10`
+                               -DoNotOpenOutputFolder
+      ```
+
+### Use Set-AzSKPIMConfiguration (alias 'setpim') for configuring/changing PIM settings at Management Group level:
+
+  1. <h4> Assigning users to roles (-AssignRole) </h4>
+     
+     Use this command to assign PIM role to the specified principal, at the specified scope.
+      > <b>NOTE:</b>
+      > You must have owner access to run this command.
+      
+      ```PowerShell
+      Set-AzSKPIMConfiguration -AssignRole `
+                              -ManagementGroupId <ManagementGroupId> `
+                              -DurationInDays <Int> `
+                              -RoleName <RoleName> `
+                              -PrincipalNames  <PrincipalNames> `
+                              [-DoNotOpenOutputFolder]
+      ```
+      <b>Example 1: </b> Grant PIM access with 'Contributor' role to a user for 30 days on a Management Group.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -AssignRole `
+                               -ManagementGroupId <ManagementGroupId> `
+                               -DurationInDays 30 `
+                               -RoleName "Contributor" `
+                               -PrincipalName "john.brown@microsoft.com" `
+                               -DoNotOpenOutputFolder
+      ```
+
+  2. <h4> Activating your roles (-ActivateMyRole) </h4>
+
+      Use this command to activate your PIM access.
+
+      > <b>NOTE:</b>  
+      > a. Activation duration should range between 1 to 8 hours.  
+      > b. Make sure that the PIM role you are activating is eligible. If your PIM role has expired, contact subscription administrator to renew/re-assign your PIM role.  
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -ActivateMyRole `
+                              -ManagementGroupId <ManagementGroupId> `
+                              -RoleName <RoleName> `
+                              -DurationInHours <Int> `
+                              -Justification <String> `
+                              [-DoNotOpenOutputFolder]
+      ```
+
+      <b>Example 1: </b> Activate your PIM access on a Management Group.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -ActivateMyRole `
+                              -ManagementGroupId <ManagementGroupId> `
+                              -RoleName "Owner" `
+                              -DurationInHours 8 `
+                              -Justification "Add a valid justification for enabling PIM role" `
+                              -DoNotOpenOutputFolder
+      ```
+
+  3. <h4> Deactivating your roles (-DeactivateMyRole) </h4>
+
+      Use this command to deactivate your PIM access.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -DeactivateMyRole `
+                              -ManagementGroupId <ManagementGroupId> `
+                              -RoleName <RoleName> `
+                              [-DoNotOpenOutputFolder]
+      ```
+      <b>Example 1: </b> Deactivate your PIM access on a subscription.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -DeactivateMyRole `
+                              -ManagementGroupId <ManagementGroupId> `
+                              -RoleName "Owner" `
+                              -DoNotOpenOutputFolder
+      ```
+
+  4. <h4> Assign PIM to permanent assignments at Management Group scope  (-AssignEligibleforPermanentAssignments) </h4>
+
+      Use this command to change permanent assignments to PIM for specified roles, at the specified scope. 
+
+      > <b>NOTE:</b>  
+      > This command will create PIM, but will not remove the permanent assignments. After converting permanent assignments to PIM, you can use *"Set-AzSKPIMConfiguration -RemovePermanentAssignments"* command with *"-RemoveAssignmentFor MatchingEligibleAssignments"* parameter to remove permanent assignment.
+
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -AssignEligibleforPermanentAssignments `
+                              –ManagementGroupId <ManagementGroupId> `
+                              -RoleNames <Comma separated list of roles> `
+                              -DurationInDays <Int> `
+                              [-DoNotOpenOutputFolder]
+                              [-Force]
+      ```
+
+      <b>Example 1: </b> Convert permanent assignments to PIM for 'Contributor' and 'Owner' roles at Management Group level. This command runs in an interactive manner so that you get an opportunity to verify the accounts being converted.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -AssignEligibleforPermanentAssignments `
+                              –ManagementGroupId <ManagementGroupId> `
+                              -RoleNames "Contributor,Owner" `
+                              -DurationInDays 30 `
+                              -DoNotOpenOutputFolder
+      ```
+      
+      <b>Example 2: </b> Use '-Force' parameter to convert permanent assignments to PIM without giving runtime verification step.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -AssignEligibleforPermanentAssignments `
+                              –ManagementGroupId <ManagementGroupId> `
+                              -RoleNames "Contributor,Owner" `
+                              -DurationInDays 30 `
+                              -DoNotOpenOutputFolder `
+                              -Force
+      ```
+
+  5. <h4> Removing permanent assignments altogether (-RemovePermanentAssignments) </h4>
+
+      Use this command to remove permanent assignments of specified roles, at the specified scope.
+
+      There are two options with this command:
+
+        a. *-RemoveAssignmentFor MatchingEligibleAssignments (Default)*: Remove only those permanent roles which have a corresponding eligible PIM role.
+
+        b. *-RemoveAssignmentFor AllExceptMe*: Remove all permanent role except your access.
+
+      > <b>NOTE:</b>
+      > This command will *not* remove your permanent assignment if one exists.
+
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -RemovePermanentAssignments `
+                              -ManagementGroupId <ManagementGroupId> `
+                              -RoleNames <Comma separated list of roles> `
+                              [-RemoveAssignmentFor MatchingEligibleAssignments] `
+                              [-DoNotOpenOutputFolder]
+                              [-Force]
+      ```
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -RemovePermanentAssignments `
+                              -ManagementGroupId <ManagementGroupId> `
+                              -RoleNames <Comma separated list of roles> `
+                              [-RemoveAssignmentFor AllExceptMe] `
+                              [-DoNotOpenOutputFolder]
+                              [-Force]
+
+      ```
+
+      <b>Example 1: </b> Remove 'Contributor' and 'Owner' roles that have permanent assignment at Management Group level. This command runs in an interactive manner so that you get an opportunity to verify the accounts being removed. All the specified role with permanent access will get removed except your access.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -RemovePermanentAssignments `
+                              -ManagementGroupId <ManagementGroupId> `
+                              -RoleNames "Contributor,Owner" `
+                              -RemoveAssignmentFor AllExceptMe
+                              -DoNotOpenOutputFolder
+      ```
+
+
+ 6. <h4> Extend PIM assignments for expiring assignments (-ExtendExpiringAssignments) </h4>
+	 Use this command to extend PIM eligible assignments that are about to expire in n days
+    <b>Example 1: </b>Extend Owner PIM roles that are to be expired in 10 days. This command runs in an interactive manner in order to verify the assignments being extended.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -ExtendExpiringAssignments `
+                              -ManagementGroupId <ManagementGroupId> `
+                              -RoleNames "Owner" `
+                              -ExpiringInDays 10
+			                  -DurationInDays 30 # The duration in days for expiration to be extended by
+                              -DoNotOpenOutputFolder
+      ```
+      
+      <b>Example 1: </b> Use *'-Force'* parameter to run the command in non-interactive mode. This command will extend expiry of  'Owner' PIM roles that are about to be expired in 10 days by skipping the verification step.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -ExtendExpiringAssignments `
+                              -ManagementGroupId <ManagementGroupId> `
+                              -RoleNames "Owner" `
+                              -ExpiringInDays 10
+			                  -DurationInDays 30 # The duration in days for expiration to be extended by
+                              -Force
+      ```
 
 ## AzSK: Credential hygiene helper cmdlets
 
