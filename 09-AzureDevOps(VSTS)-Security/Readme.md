@@ -1,7 +1,7 @@
 
 > The Secure DevOps Kit for Azure (AzSK) was created by the Core Services Engineering & Operations (CSEO) division at Microsoft, to help accelerate Microsoft IT's adoption of Azure. We have shared AzSK and its documentation with the community to provide guidance for rapidly scanning, deploying and operationalizing cloud resources, across the different stages of DevOps, while maintaining controls on security and governance.
 <br>AzSK is not an official Microsoft product – rather an attempt to share Microsoft CSEO's best practices with the community..
-# Secure Azure DevOps (VSTS) -Preview
+# Azure DevOps (ADO) Security Scanner -Preview
 
 ### [Overview](Readme.md#Overview)
  - [Installation Guide](Readme.md#installation-guide)
@@ -12,12 +12,13 @@
   - [Setting up Continuous Assurance - Step by Step](Readme.md#setting-up-continuous-assurance---step-by-step)
   - [Visualize security scan results](Readme.md#visualize-security-scan-results)
 
+### [Control Attestation](Readme.md#control-attestation-1)
+- [Starting attestation](Readme.md#starting-attestation)  
+- [How toolkit determines the effective control result](Readme.md#how-toolkit-determines-the-effective-control-result)  
+- [Permissions required for attesting controls](Readme.md#permissions-required-for-attesting-controls) 
+- [Attestation expiry](Readme.md#attestation-expiry)  
 
- 
-
-
-
-AzSK for Azure DevOps performs security scanning for core areas of Azure DevOps/VSTS like Organization, Projects, Users, Connections, Pipelines (Build & Release). 
+Azure DevOps Security Scanner performs security scanning for core areas of Azure DevOps like Organization, Projects, Users, Connections, Pipelines (Build & Release). 
 
 
 ## Installation Guide
@@ -211,6 +212,172 @@ Step 1,2 & 3 needs to be repeated to add “__Project Component Security Scan Su
 
 > **Note:**  Dashboard created will be visible to all users which are part of project.
 
+# Control Attestation
+
+> **Note**: Please use utmost discretion when attesting controls. In particular, when choosing to not fix a failing control, you are taking accountability that nothing will go wrong even though security is not correctly/fully configured. 
+> </br>Also, please ensure that you provide an apt justification for each attested control to capture the rationale behind your decision.  
+
+### Overview
+
+The attestation feature empowers users to support scenarios where human input is required to augment or override the default control 
+evaluation status from AzSK.AzureDevOps. These may be situations such as:
+
+- The toolkit has generated the list of 'Administrators' for a project but someone needs to have a look at the list and ratify that 
+these are indeed the correct people, or
+- The toolkit has marked a control as failed. However, given the additional contextual knowledge, the application owner wants to ignore the control failure.
+
+In all such situations, there is usually a control result that is based on the technical evaluation (e.g., Verify, Failed, etc.) that has to 
+be combined with the user's input in order to determine the overall or effective control result. The user is said to have 'attested' such controls 
+and, after the process is performed once, AzSK.AzureDevOps remembers it and generates an effective control result for subsequent control scans _until_ there 
+is a state change.
+
+The attestation feature is implemented via a new switch called *ControlsToAttest* which can be specified in any of the standard security scan cmdlets
+of AzSK.AzureDevOps. When this switch is specified, the toolkit first performs a scan of the target resource(s) like it is business as usual and, once
+the scan is complete, it enters a special interactive 'attest mode' where it walks through each resource and relevant attestable controls
+and captures inputs from the user and records them (along with details about the person who attested, the time, etc.). 
+After this, for all future scans on the resource(s), AzSK.AzureDevOps will show the effective control evaluation results. Various options are provided to support
+different attestation scenarios (e.g., expiry of attestations, edit/change/delete previous attestations, attest only a subset of controls, etc.). 
+These are described below. Also, for 'stateful' controls (e.g., "are these the right service accounts with access to project collection?"), the attestation
+state is auto-reset if there is any change in 'state' (e.g., someone adds a new service account to the list).
+
+Lastly, due to the governance implications, the ability to attest controls is available to a subset of users. This is described in
+the permissions required section below.  
+
+
+[Back to top...](Readme.md#contents)
+### Starting attestation
+      
+The AzSK.AzureDevOps scan cmdlets now support a new switch called *ControlsToAttest*. When this switch is specified, 
+AzSK.AzureDevOps enters the attestation workflow immediately after a scan is completed. This ensures that attestation is done on the basis of the most current
+control status.
+
+All controls that have a technical evaluation status of anything other than 'Passed' (i.e., 'Verify' or 'Failed' or 'Manual' or 'Error') are considered 
+valid targets for attestation.
+
+> **Note**: Some controls are very crucial from security stand point and hence AzSK.AzureDevOps does not support attesting them.
+
+To manage attestation flow effectively, 4 options are provided for the *ControlsToAttest* switch to specify which subset of controls to target for attestation. These are described below:
+
+|Attestation Option|Description|
+|------------------|-----------|
+|NotAttested|Attest only those controls which have not been attested yet.|
+|AlreadyAttested|Attest those controls which have past attestations. To re-attest or clear attestation.|
+|All|Attest all controls which can be attested (including those that have past attestations).|
+|None|N/A.|
+
+For example, to attest organization controls, run the command below:
+```PowerShell  
+$subscriptionId = <Your SubscriptionId>
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName $orgName -ControlsToAttest NotAttested -ResourceTypeName Organization  
+``` 
+As shown in the images, the command enters 'attest' mode after completing a scan and does the following:
+
+1. For each resource that was scanned, if a control is a target for attestation, control details (such as description, severity, etc.) and the current evaluation result are displayed (to help the user)
+2. The user gets to choose whether they want to attest the control
+3. If the user chooses to attest, attestation details (attest status, justification, etc.) are captured
+4. This is repeated for all attestable controls and each resource.
+
+ Sample attestation workflow in progress:
+ ![02_SVT_Attest_1](../Images/09_SVT_Attest_1.PNG) 
+ 
+ Sample summary of attestation after workflow is completed:
+ ![02_SVT_Attest_2](../Images/09_SVT_Attest_2.PNG) 
+
+Attestation details corresponding to each control (e.g., justification, user name, etc.) are also captured in the CSV file as shown below:
+ ![02_SVT_Attest_3](../Images/09_SVT_Attest_3.PNG) 
+
+If you wish to revisit previous attestations, it can be done by using 'AlreadyAttested' flag in the command above.  
+
+[Back to top...](Readme.md#contents)
+### How toolkit determines the effective control result
+
+During the attestation workflow, the user gets to provide attestation status for each control attested. This basically represents the user's attestation preference w.r.t.
+a specific control (i.e., whether the user wants to override/augment the toolkit status and treat the control as passed or whether the user agrees with the toolkit status but wants to defer fixing the issue for the time being):
+
+|Attestation Status | Description|
+|---|---|
+|None | There is no attestation done for a given control. User can select this option during the workflow to skip the attestation|
+|NotAnIssue | User has verified the control data and attesting it as not an issue with proper justification to represent situations where the control is implemented in another way, so the finding does not apply. |
+|WillNotFix | User has verified the control data and attesting it as not fixed with proper justification|
+
+The following table shows the complete 'state machine' that is used by AzSK.AzureDevOps to support control attestation. 
+The columns are described as under:
+- 'Control Scan Result' represents the technical evaluation result 
+- 'Attestation Status' represents the user choice from an attestation standpoint
+- 'Effective Status' reflects the effective control status (combination of technical status and user input)
+- 'Requires Justification' indicates whether the corresponding row requires a justification comment
+- 'Comments' outlines an example scenario that would map to the row
+
+|Control Scan Result  |Attestation Status |Effective Status|Requires Justification | ExpiryInDays| Comments |
+|---|---|---|---|---|---|
+|Passed |None |Passed |No | -NA- |No need for attestation. Control has passed outright!|
+|Verify |None |Verify |No | -NA- |User has to ratify based on manual examination of AzSK.AzureDevOps evaluation log. E.g., Project Collection Service Account list.|
+|Verify |NotAnIssue |Passed |Yes | 90 |User has to ratify based manual examination that finding does not apply as the control has been implemented in another way.|
+|Verify |WillNotFix |Exception |Yes | Based on the control severity table below|Valid security issue but a fix cannot be implemented immediately.|
+|Failed |None |Failed |No | -NA- | Control has failed but has not been attested. Perhaps a fix is in the works...|	 
+|Failed |NotAnIssue |Passed |Yes | 90 |Control has failed. However, the finding does not apply as the control has been implemented in another way.|
+|Failed |WillNotFix |Exception |Yes | Based on the control severity table below| Control has failed. The issue is not benign, but the user has some other constraint and cannot fix it.|
+|Error |None |Error |No | -NA- | There was an error during evaluation. Manual verification is needed and is still pending.|
+|Error |NotAnIssue |Passed |Yes | 90| There was an error during evaluation. Manual verification by user indicates that the finding does not apply as the control has been implemented in another way.|
+|Error |WillNotFix |Exception |Yes | Based on the control severity table below| There was an error during evaluation. Manually verification by the user indicates a valid security issue.|
+|Manual |None |Manual |No | -NA-| The control is not automated and has to be manually verified. Verification is still pending.| 
+|Manual |NotAnIssue |Passed |Yes | 90| The control is not automated and has to be manually verified. User has reviewed the security concern and implemented the fix in another way.|
+|Manual |WillNotFix |Exception |Yes | Based on the control severity table below| The control is not automated and has to be manually verified. User has reviewed and found a security issue to be fixed.|
+
+-NA- => Not Applicable
+
+Control Severity Table:
+
+|ControlSeverity| ExpiryInDays|
+|----|---|
+|Critical| 7|
+|High   | 30|
+|Medium| 60|
+|Low| 90|
+ 
+  
+<br>
+The following table describes the possible effective control evaluation results (taking attestation into consideration).
+
+|Control Scan Result| Description|
+|---|---|
+|Passed |Fully automated control. Azure DevOps artifact configuration meeting the control requirement|
+|Verify |Semi-automated control. It would emit the required data in the log files which can be validated by the user/auditor.|
+|Failed |Fully automated control. Azure DevOps artifact configuration not meeting the control requirement|
+|Error |Automated control. Currently failing due to some exception. User needs to validate manually|
+|Manual |No automation as of now. User needs to validate manually|
+|Exception |Risk acknowledged. The 'WillNotFix' option was chosen as attestation choice/status. |
+
+[Back to top...](Readme.md#contents)
+### Permissions required for attesting controls:
+Attestation is currently supported only for organization and project controls with admin privileges on organization and project, respectively.
+
+Currently, attestation can be performed only via PowerShell session in local machine, but the scan results will be honored in both local as well as extension scan.
+
+> **Note**:   
+>* In order to attest organization control, user needs to be a member of the group 'Project Collection Administrators'.
+>* In order to attest project control, user needs to be a member of the group 'Project Administrators' of that particular project.
+[Back to top...](Readme.md#contents)
+
+### Attestation expiry:
+All the control attestations done through AzSK.AzureDevOps is set with a default expiry. This would force teams to revisit the control attestation at regular intervals. 
+Expiry of an attestation is determined through different parameters like control severity, attestation status etc. 
+There are two simple rules for determining the attestation expiry. Those are:
+
+Any control with evaluation result as not passed and, 
+ 1. attested as 'NotAnIssue', such controls would expire in 90 days.
+ 2. attested as 'WillFixLater', such controls would expire based on the control severity table below.
+
+|ControlSeverity| ExpiryInDays|
+|----|---|
+|Critical| 7|
+|High   | 30|
+|Medium| 60|
+|Low| 90|
+
+> **Note**:
+>* Attestation may also expire before actual expiry in cases when the attested state for the control doesn't match with current control state.
+[Back to top...](Readme.md#contents)
 
 
 
