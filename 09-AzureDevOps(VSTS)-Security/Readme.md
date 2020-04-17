@@ -287,13 +287,13 @@ As shown in the images, the command enters 'attest' mode after completing a scan
 4. This is repeated for all attestable controls and each resource.
 
  Sample attestation workflow in progress:
- ![02_SVT_Attest_1](../Images/09_SVT_Attest_1.PNG) 
+ ![09_SVT_Attest_1](../Images/09_SVT_Attest_1.PNG) 
  
  Sample summary of attestation after workflow is completed:
- ![02_SVT_Attest_2](../Images/09_SVT_Attest_2.PNG) 
+ ![09_SVT_Attest_2](../Images/09_SVT_Attest_2.PNG) 
 
 Attestation details corresponding to each control (e.g., justification, user name, etc.) are also captured in the CSV file as shown below:
- ![02_SVT_Attest_3](../Images/09_SVT_Attest_3.PNG) 
+ ![09_SVT_Attest_3](../Images/09_SVT_Attest_3.PNG) 
 
 If you wish to revisit previous attestations, it can be done by using 'AlreadyAttested' flag in the command above.  
 
