@@ -267,9 +267,17 @@ To manage attestation flow effectively, 4 options are provided for the *Controls
 
 For example, to attest organization controls, run the command below:
 ```PowerShell  
-$subscriptionId = <Your SubscriptionId>
+$orgName = '<Organization name>'
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName $orgName -ControlsToAttest NotAttested -ResourceTypeName Organization  
-``` 
+```
+
+For example, to attest project controls, run the command below:
+```PowerShell  
+$orgName = '<Organization name>'
+$prjName = '<Project name>'
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName $orgName -ProjectNames $prjName -ControlsToAttest NotAttested -ResourceTypeName Project  
+```
+
 As shown in the images, the command enters 'attest' mode after completing a scan and does the following:
 
 1. For each resource that was scanned, if a control is a target for attestation, control details (such as description, severity, etc.) and the current evaluation result are displayed (to help the user)
