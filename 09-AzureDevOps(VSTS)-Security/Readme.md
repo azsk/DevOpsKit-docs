@@ -13,6 +13,7 @@
   - [Visualize security scan results](Readme.md#visualize-security-scan-results)
 
 ### [Control Attestation](Readme.md#control-attestation-1)
+- [Overview](Readme.md#Overview-1)
 - [Starting attestation](Readme.md#starting-attestation)  
 - [How toolkit determines the effective control result](Readme.md#how-toolkit-determines-the-effective-control-result)  
 - [Permissions required for attesting controls](Readme.md#permissions-required-for-attesting-controls) 
