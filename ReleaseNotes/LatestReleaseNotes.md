@@ -1,35 +1,41 @@
-## 200316 (AzSK v.4.7.0)
+## 200415 (AzSK v.4.8.0)
 
 ### Feature updates
 
 * Privileged Identity Management (PIM):
-    * DevOps Kit PIM cmdlets now support PIM operations at management group scope.
+    *	Added a new switch -ConfigureRoleSettings in the setpim cmdlet to configure role settings at management group scope.
+        ```Powershell
+        setpim -ConfigureRoleSettings –ManagementGroupId $MGID -RoleName Reader -MaximumActivationDuration 7 -ExpireEligibleAssignmentsInDays 11 -RequireJustificationOnActivation $true -RequireMFAOnActivation $true
+        ```
+    *	Added a new switch -ListRoleSettings in the getpim cmdlet to list role settings in a subscription.
+        ```Powershell
+        getpim –ListRoleSettings -SubscriptionId $sub -RoleName Owner
+        ```
+        *	Added support in the setpim cmdlet to assign active roles to users.
+        ```Powershell 
+        setpim -AssignRole – SubscriptionId $sub -RoleName Owner -DurationInDays 10 -PrincipalNames ‘abc@microsoft.com’ -AssignmentType Active
+        ```
 
-    * ```Set-AzSKPIMConfiguration``` (alias ```setpim```) for configuring/changing PIM settings
-```setpim -ActivateMyRole –ManagementGroupId $MGID -RoleName Reader -DurationInHours 8 -Justification 'ad hoc test'```
-    
-    Similar operations can be performed for other switches like –AssignRole, -AssignEligibleforPermanentAssignments, -RemovePermanentAssignments, -ExtendExpiringAssignments and -RemovePIMAssignment in ```setpim``` command.
 
 
-    * ```Get-AzSKPIMConfiguration``` (alias ```getpim```) for querying various PIM settings/status 
-```getpim -ListPIMAssignments –ManagementGroupId $MGID``` 
-    
-    Similar operations can be performed for other switches like –ListPermanentAssignments and –ListSoonToExpireAssignments in ```getpim``` command.
+*	AzSK module for Azure DevOps (ADO):
+    *	Introduced attestation feature that empowers users to support scenarios where human input is required to augment or override the default control evaluation status from the toolkit.
+        *	Implemented via a new switch -ControlsToAttest which can be specified in any of the standard security scan cmdlets of the toolkit. 
+        *	Attestation is currently supported only for organization and project controls with admin privileges on organization and project, respectively.
+        *	Currently, attestation can be performed only via PowerShell session in local machine, but the scan results will be honored in both local as well as extension scan.
+    *	Added widget to visualize scan results of agent pools in a project.
+    *	Scan reports are now segregated by individual projects and results for every build can be viewed individually in the extension dashboard.
+    *	Scan reports can now also be downloaded from the build pipeline logs.
+    *	Service connection parameter is no more mandatory to run the extension in pipeline.
+    *	Enhanced a project control to evaluate different project visibility options.
+    *	Fixed an issue in the control AzureDevOps_Organization_Review_Project_Collection_Accounts which was earlier reporting manual state for passed scenario.
+    *	Fixed a bug with -UsePreviewBaselineControls switch which when used was scanning all the controls earlier.
+    *	Baseline information of controls will now be displayed in scan reports. 
+    *	Note: The DevOps Kit scanner for ADO is also available as a native ADO extension that can be used for Continuous Assurance for ADO security. This also includes widgets to visualize the scan results for various stakeholders (such as org admin, project owners, build/release owners etc.).
 
-
-* Az-* PowerShell libraries upgrade:
-    * This release of DevOps Kit has been updated to use the new Az-* PowerShell libraries (v.3.4.0). By and large, this should be a seamless transition for DevOps Kit users.
-    * We have also updated control recommendation, fix-scripts etc. to reflect the change due to this upgrade.
-
-* (Preview) AzSK module for Azure DevOps (ADO):
-    * Packaged the DevOps Kit scanner for ADO as a native ADO extension that can be used for Continuous Assurance for ADO security. This also includes widgets to visualize the scan results for various stakeholders (such as org admin, project owners, build/release owners etc.).
-    * Scan reports are now segregated by individual projects in the extension dashboard.
-    * Added support to target scans using parameters/switches like baseline controls & severity in the native ADO extension task.
-    * Resolved scalability issues to scan organizations with large number of projects/pipelines/service connections/agent pools.
 
 * Security Verification Tests (SVTs):
-    * N/A.
-
+    *	We have reviewed all AzSK controls and marked those that touch on network security (firewall, ports, etc.) with the 'NetSec' tag. You can target these controls using the -FilterTags 'NetSec' parameter.
 * In-cluster security scans for ADB, AKS, HDI Spark:
     * N/A.
 
@@ -88,17 +94,24 @@ Note: The next few items mention features from recent releases retained for visi
 
 ### Other improvements/bug fixes
 * Subscription Security:
-    * N/A.
+    * Fixed an issue in the Set-AzSKAzureSecurityCenterPolicies cmdlet which was previously resulting into error for policy assignments explicitly set from the portal.
 
 * Privileged Identity Management (PIM):
-    * N/A.
-    
+   * Switched to a different PIM API to address a timeout issue in the cmdlets.
+
 * SVTs: 
-    * N/A.
+   * Fixed an issue with the behavior of -FilterTags switch which was not working as expected when used in conjugation with -UseBaselineControls switch.
+   * You can now combine the -UseBaselineControls and -FilterTags like below to scan just the controls that CA does not check: 
+        ```Powershell
+        grs -s $subId -ubc -FilterTags OwnerAccess
+        ```
+
 
 * Controls:
-    * Fixed TLS enforcement control for App Service which was previously reporting false positive results.
-    * Fixed issues in the controls Azure_ServiceFabric_Audit_Use_Diagnostics_Log,Azure_ServiceFabric_DP_Exposed_Endpoint_SSL_Secured and Azure_ServiceFabric_DP_Dont_Expose_Reverse_Proxy_Port which were previously resulting into error.
+    * N/A
+
+* Privileged Identity Management (PIM):
+    * N/A
 
 
 * ARM Template Checker:
