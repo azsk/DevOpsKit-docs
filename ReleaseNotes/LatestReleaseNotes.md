@@ -139,7 +139,7 @@ Note: The next few items mention features from recent releases retained for visi
 * Log Analytics:
     * N/A.
 
-* Other
+* Known issues:
     * Late in the test pass, we found that below Cosmos DB controls are resulting into error due to recent API changes:
       * Azure_CosmosDB_AuthZ_Enable_Firewall
       * Azure_CosmosDB_AuthZ_Verify_IP_Range
