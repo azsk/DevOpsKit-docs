@@ -158,6 +158,8 @@ The "ADO Security Scanner" task starts showing in the "Run on Agent" list and di
 
 > **Note:** This task also requires Azure DevOps connection containing org details and PAT token to scan the required resources. Refer doc [here](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page) to create token and provide it as part of connection
 
+> Refer the list [here](./PATPrivileges) for customizing the PAT required for Azure DevOps Connection with minimum required privileges.
+
 ![Add Service connection](../Images/09_ADO_AddServiceConnection.png)
 
 
