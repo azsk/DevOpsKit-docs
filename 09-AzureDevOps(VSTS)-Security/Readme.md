@@ -187,7 +187,10 @@ The "ADO Security Scanner" task starts showing in the "Run on Agent" list and di
 ![Add Service connection](../Images/09_ADO_AddServiceConnection.png)
 
 
-__! important__ : Make sure you **DO NOT** select  checkbox for "Grant access permission to all pipelines" before saving service connection. 
+__! Important__ : Make sure you **DO NOT** select  checkbox for "Grant access permission to all pipelines" before saving service connection. 
+
+> **Note**: ADO Security Scanner extension enables you to leverage some of the advanced capabilities of scanner while running in adhoc mode. You could scan for only preview baseline controls in your build pipeline, or you could just scan for controls with specific severity etc. These advanced features are available to customers through ADO variables. For example, use *ExtendedCommand* variable in the pipeline with its value as *-Severity 'High'* to scan controls with high severity.
+
 
 __Step-4__: Click “Save & queue”
 
