@@ -35,14 +35,8 @@ Azure DevOps Security Scanner performs security scanning for core areas of Azure
 2. Install the Secure DevOps Kit for Azure DevOps (AzSK.AzureDevOps) PS module:  
 	  
 ```PowerShell
-  Install-Module AzSK.AzureDevOps -Scope CurrentUser
+  Install-Module AzSK.AzureDevOps -Scope CurrentUser -AllowClobber -Force
 ```
-
-Note: 
-
-You may need to use `-AllowClobber` and `-Force` options with the Install-Module command 
-above if you have a different version of same modules installed on your machine.
-
 
 ## Scan your Azure DevOps resources
 
