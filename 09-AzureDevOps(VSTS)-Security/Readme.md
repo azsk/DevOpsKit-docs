@@ -275,7 +275,7 @@ To attest organization specific controls, it required to setup a project which w
 Run below command to set attestation host project:
 For example: 
 ```PowerShell  
-#To setup attestation host project and attest organization controls:
+#Set attestation host project and attest organization controls:
 $orgName = '<Organization name>'
 $attHotProjectName = '<Project name>'
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName $orgName -AttestationHostProjectName $attHotProjectName -ControlsToAttest NotAttested -ResourceTypeName Organization  
