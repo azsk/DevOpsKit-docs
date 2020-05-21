@@ -390,6 +390,630 @@ Any control with evaluation result as not passed and,
 >* Attestation may also expire before actual expiry in cases when the attested state for the control doesn't match with current control state.
 [Back to top...](Readme.md#contents)
 
+# Customizing AzSK.AzureDevOps for your project
+
+## Overview
+
+#### When and why should I setup org policy
+
+When you run any scan command from AzSK.AzureDevOps, it relies on JSON-based policy files to determine various parameters that effect the behavior of the command it is about to run. These policy files are downloaded 'on the fly' from a policy server. When you run the public version of the scanner, the offline policy files present in the module are accessed. Thus, whenever you run a scan from a vanilla installation, AzSK.AzureDevOps accesses the offline file present in the module to get the policy configuration and runs the scan using it. 
+
+The JSON inside the policy files dictate the behavior of the security scan. 
+This includes things such as:
+ - Which set of controls to evaluate?
+ - What control set to use as a baseline?
+ - What settings/values to use for individual controls? 
+ - What messages to display for recommendations? Etc.
+
+
+Note that the policy files needed for security scans are downloaded into each PS session for **all** AzSK.AzureDevOps scenarios. That is, apart from manually-run scans from your desktop, this same behavior happens if you include the 'ADO Security Scanner' extension task in your CICD pipeline. 
+
+ While the out-of-box files in the module may be good for limited use, in many contexts you may want to "customize" the behavior of the security scans for your environment. You may want to do things such as: (a) enable/disable 
+some controls, (b) change control settings to better match specific security policies within your org, (c) change various messages, (d) add additional filter criteria for certain regulatory requirements that teams in your org can leverage, etc. When faced with such a need, you need a way to create and manage 
+a dedicated policy endpoint customized to the needs of your environment. The organization policy setup feature helps you do that in an automated fashion. 
+
+In this document, we will look at how to setup an organization-specific policy endpoint, how to make changes to and manage the policy files and how to accomplish various common org-specific policy/behavior customizations 
+for the scanner.
+
+#### How does AzSK.AzureDevOps use online policy?
+
+Let us look at how policy files are leveraged in a little more detail. 
+
+When you install AzSK.AzureDevOps, it downloads the latest AzSK.AzureDevOps module from the PS Gallery. Along with this module there is an *offline* set of policy files that go in a sub-folder under the %userprofile%\documents\WindowsPowerShell\Modules\AzSK.AzureDevOps\<version> folder. It also places (or updates) an AzSKSettings.JSON file in your %LocalAppData%\Microsoft\AzSK.AzureDevOps folder that contains the policy endpoint (or policy server) URL that is used by all local commands. 
+
+Whenever any command is run, AzSK.AzureDevOps uses the policy server URL to access the policy endpoint. It first downloads a 'metadata' file that contains information about what other files are available on the policy server. After 
+that, whenever AzSK.AzureDevOps needs a specific policy file to actually perform a scan, it loads the local copy of the policy file into memory and 'overlays' any settings *if* the corresponding file was also found on the 
+server-side. 
+
+It then accesses the policy to download a 'metadata' file that helps it determine the actual policy files list that is present on the server. Thereafter, the scan runs by overlaying the settings obtained from the server with 
+the ones that are available in the local installation module folder. This means that if there hasn't been anything overridden for a specific feature (e.g., Project), then it won't find a policy file for that listed in the server
+ metadata file and the local policy file for that feature will get used. 
+
+## Setting up org policy
+
+#### What happens during org policy setup?
+
+At a high level, the org policy setup support for AzSK.AzureDevOps does the following:
+ - Sets up a repository to hold various policy artifacts in the project you want to use for hosting your policy endpoint. (This should be a secure, limited-access repo to be used only for managing your project's AzSK.AzureDevOps policy.)
+ - Uploads the minimum set of policy files required to bootstrap your policy server.
+
+#### Steps to setup org policy setup 
+
+1. Create a Git repository in your project by importing this [repo](https://github.com/azsk/ADOScanner_Policy.git). [Project -> Repos -> Import repository -> Select 'Git' as repository type -> Enter 'https://github.com/azsk/ADOScanner_Policy.git' as clone URL -> Enter 'ADOScanner_Policy_\<ProjectName>' as name].
+
+It will import a very basic 'customized' policy involving below files uploaded to the policy repository.
+
+##### Basic files setup during policy setup 
+ 
+| File | Description  
+| ---- | ---- | 
+| AzSK.Pre.json | This file contains a setting that controls/defines the AzSK.AzureDevOps version that is 'in effect' in a project. A project can use this file to specify the specific version of AzSK.AzureDevOps that will get used in SDL/CICD scenarios at the project level.<br/> <br/>  **Note:** Whenever a new AzSK.AzureDevOps version is released, the org policy owner should update the AzSK.AzureDevOps version in this file with the latest released version after performing any compatibility tests in a test setup.<br/> You can get notified of new releases by following the AzSK.AzureDevOps module in PowerShell Gallery or release notes section [here](https://azsk.azurewebsites.net/ReleaseNotes/LatestReleaseNotes.html).   
+| AzSK.json | Includes org-specific message, installation command etc.
+| ServerConfigMetadata.json | Index file with list of policy files.  
+
+## Consuming custom org policy
+
+Running scan with custom org policy is supported from both avenues of AzSK.AzureDevOps viz. local scan (SDL) and ADO security scanner extension task (CICD). Follow the steps below for the same:
+
+### 1. Running scan in local machine with custom org policy
+
+ To run scan with custom org policy from any machine, run the below command
+
+```PowerShell
+#Run scan cmdlet and validate if it is running with org policy
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<Organization name>" -ProjectNames "<Project name where the org policy is configured>"
+```
+
+### 2. Using ADO security scanner extension with custom org policy
+
+To set up CICD when using custom org policy, add 'ADO Security Scanner' extension in ADO build pipeline by following the steps [here](Readme.md#setting-up-continuous-assurance---step-by-step).
+
+## Modifying and customizing org policy 
+
+#### Getting Started
+
+The typical workflow for all policy changes will remain same and will involve the following basic steps:
+
+ 1) Make modifications to the existing files (or add additional policy files as required)
+ 2) Update *ServerConfigMetadata.json* to include files to be overlayed while running scan commands.
+ 3) Test in a fresh PS console that the policy change is in effect. (Policy changes do not require re-installation of AzSK.AzureDevOps)
+
+
+Because policy on the server works using the 'overlay' approach, **the corresponding file on the server needs to have only those specific changes that are required (plus some identifying elements in some cases).**
+
+Lastly, note that while making modifications, you should **never** edit the files that came with the AzSK.AzureDevOps installation folder %userprofile%\documents\WindowsPowerShell\Modules\AzSK.AzureDevOps). 
+You should create copies of the files you wish to edit, place them in our org-policy repo and make requisite modifications there.
+	
+### Basic scenarios for org policy customization
+
+
+In this section let us look at typical scenarios in which you would want to customize the org policy and ways to accomplish them. 
+
+> Note: To edit policy JSON files, use a friendly JSON editor such as Visual Studio Code. It will save you lot of
+> debugging time by telling you when objects are not well-formed (extra commas, missing curly-braces, etc.)! This
+> is key because in a lot of policy customization tasks, you will be taking existing JSON objects and removing
+> large parts of them (to only keep the things you want to modify).
+
+
+##### a) Changing the default `'Running AzSK.AzureDevOps cmdlet...'` message
+Whenever any user in your project runs scan command targetting resources within the project (project/build/release/service connection/agent pool), 
+they should see such a message
+
+    Running AzSK.AzureDevOps cmdlet...
+
+This message resides in the AzSK.json policy file on the server and AzSK.AzureDevOps *always* displays the text from the server version of this file.
+
+You may want to change this message to something more detailed. (Or even use this as a mechanism to notify all users
+within the project about something related to AzSK.AzureDevOps that they need to attend to immediately.) 
+In this example let us just make a change to this message. We will add the project name in the message.
+
+###### Steps:
+
+ i) Open the AzSK.json in the *master* branch of your org-policy repo.
+     
+ ii) Edit the value for "Policy Message" field by adding the project name as under:
+   ```
+   "PolicyMessage" : "Running AzSK.AzureDevOps cmdlet using <Project name> policy"
+   ```
+ iii) Commit the file to the *master* branch of the repo. 
+ 
+ > **Note:** 1. Unless explicitly mentioned, we will be referring to the *master* branch of the org-policy repo.  
+ > 2. It is recommended to commit updates using a pull request workflow. 
+
+###### Testing:
+
+The updated policy is now on the policy server. You can ask another person to test this by running the below scan cmdlet in a **fresh** PS console.
+
+```PowerShell
+#Run scan cmdlet and validate if it is running with org policy
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<Organization name>" -ProjectNames "<Project name where the org policy is configured>"
+```
+ When the command starts, it will show an updated message as in the 
+image below:
+
+![Org-Policy - changed message](../Images/09_ADO_Org_Policy1.png) 
+
+This change will be effective across your project immediately. Anyone running AzSK.AzureDevOps commands (in fresh PS sessions) should see the new message. 
+
+##### b) Changing a control setting for specific controls 
+Let us now change some numeric setting for a control. A typical setting you may want to tweak is the maximum number of
+days when a build pipeline was last queued before it is marked inactive.  It is verified in one of the build security controls. (The default value is 180 days.)
+
+This setting resides in a file called ControlSettings.json. Because the first-time org policy setup does not customize anything from this, we will first need to copy this file from the local AzSK.AzureDevOps installation.
+
+The local version of this file should be in the following folder:
+```PowerShell
+    %userprofile%\Documents\WindowsPowerShell\Modules\AzSK.AzureDevOps\<version>\Framework\Configurations\SVT
+```
+
+   ![Local AzSK.AzureDevOps Policies](../Images/09_ADO_Org_Policy2.png) 
+ 
+Note that the 'Configurations' folder in the above picture holds all policy files (for all features) of AzSK.AzureDevOps. We 
+will make copies of files we need to change from here and place the changed versions in the org-policy repo. 
+Again, you should **never** edit any file directly in the local installation policy folder of AzSK.AzureDevOps. 
+Rather, **always** copy the file and edit it.
+
+###### Steps:
+
+ i) Copy the ControlSettings.json from the AzSK.AzureDevOps installation to your org-policy repo.
+ 
+ ii) Remove everything except the "BuildHistoryPeriodInDays" line while keeping the JSON object hierarchy/structure intact.
+
+  ![Edit Number of build history period in days](../Images/09_ADO_Org_Policy3.png) 
+
+ iii) Commit the file.
+
+ iv) Add an entry for *ControlSettings.json* in *ServerConfigMetadata.json* (in the repo) as shown below.
+
+ ![Update control settings in ServerConfigMetadata](../Images/09_ADO_Org_Policy4.png) 
+ 
+###### Testing: 
+
+Anyone in your project can now start a fresh PS console and the result of the evaluation whether a build pipeline is inactive in 
+the build security scan (Get-AzSKAzureDevOpsBuildSecurityStatus) should reflect that the new setting is in 
+effect. (E.g., if you change the period to 90 days and if the pipeline was inactive from past 120 days, then the result for control (AzureDevOps_Build_SI_Review_Inactive_Build) will change from 'Passed' to 'Failed'.)
+
+##### c) Customizing specific controls for a service 
+
+In this example, we will make a slightly more involved change in the context of a specific SVT (Project). 
+
+Imagine that you want to turn off the evaluation of some control altogether (regardless of whether people use the `-UseBaselineControls` parameter or not).
+Also, for another control, you want people to use a recommendation which leverages an internal tool the security team
+in your org has developed. Let us do this for the AzureDevOps.Project.json file. Specifically, we will:
+1. Turn off the evaluation of `AzureDevOps_Project_AuthZ_Min_RBAC_Access` altogether.
+2. Modify severity of `AzureDevOps_Project_AuthZ_Set_Visibility_Private` to `Critical` for our project (it is `High` by default).
+3. Change the recommendation for people in our project to follow if they need to address an issue with the `AzureDevOps_Project_AuthZ_Review_Group_Members` control.
+4. Disable capability to attest the control `AzureDevOps_Project_AuthZ_Limit_Job_Scope_To_Current_Project` by adding 'ValidAttestationStates' object.
+
+###### Steps: 
+ 
+ i) Copy the AzureDevOps.Project.json from the AzSK,.AzureDevOps installation to your org-policy repo
+
+ ii) Remove everything except the ControlID, Id and specific property we want to modify as mentioned above. 
+
+ iii) Make changes to the properties of the respective controls so that the final JSON looks like the below. 
+
+```JSON
+{
+  "Controls": [
+   {
+      "ControlID": "AzureDevOps_Project_AuthZ_Set_Visibility_Private",
+      "Id": "Project110",
+      "ControlSeverity": "Critical"
+   },
+   {
+      "ControlID": "AzureDevOps_Project_AuthZ_Min_RBAC_Access",
+      "Id": "Project120",
+      "Enabled": false
+   },
+   {
+      "ControlID": "AzureDevOps_Project_AuthZ_Review_Group_Members",
+      "Id": "Project130",
+      "Recommendation": "**Note**: Use our Contoso-MyProject-ReviewGroups.ps1 tool for this!"
+   },
+   {
+      "ControlID": "AzureDevOps_Project_AuthZ_Limit_Job_Scope_To_Current_Project",
+      "Id": "Project160",
+      "ValidAttestationStates" : ["None"]
+   }
+  ]
+}
+```
+> **Note:** The 'Id' field is used for identifying the control for policy merging. We are keeping the 'ControlId'
+> field only because of the readability.
+
+ iii) Commit the file
+
+ iv) Add an entry for *AzureDevOps.Project.json* in *ServerConfigMetadata.json* (in the repo) as shown below.
+
+  ![Update project SVT in ServerConfigMetadata](../Images/09_ADO_Org_Policy5.png) 
+ 
+ 
+###### Testing: 
+Someone in your project can test this change using the `Get-AzSKAzureDevOpsProjectSecurityStatus` command on the project for which we have configured the org policy. If run with the `-UseBaselineControls` switch, you will see that
+the control *AzureDevOps_Project_AuthZ_Set_Visibility_Private* shows as `Critical` in the output CSV and the recommendation for control *AzureDevOps_Project_AuthZ_Review_Group_Members* has changed to
+the custom (internal tool) recommendation you wanted people in your project to follow. 
+
+Likewise, even after you run the scan without the `-UseBaselineControls` parameter, you will see that the control *AzureDevOps_Project_AuthZ_Min_RBAC_Access* is not evaluated and does not
+appear in the resulting CSV file. 
+
+
+
+
+
+##### d) Customizing Severity labels 
+Ability to customize naming of severity levels of controls (e.g., instead of High/Medium, etc. one can now have Important/Moderate, etc.) with the changes reflecting in all avenues (manual scan results/CSV, dashboards, etc.)
+
+###### Steps: 
+
+ i) Edit the ControlSettings.json file to add a 'ControlSeverity' object as per below:
+ 
+```JSON
+{
+   "ControlSeverity": {
+    "Critical": "Critical",
+    "High": "Important",
+    "Medium": "Moderate",
+    "Low": "Low"
+  }
+}
+```
+ ii) Commit the file.
+ 
+ iii) Confirm that an entry for ControlSettings.json is already there in the ServerConfigMetadata.json file. (Else see step-iv in (b) above.)
+
+
+ ###### Testing: 
+
+Someone in your project can test this change using the `Get-AzSKAzureDevOpsSecurityStatus`. You will see that
+the controls severity shows as `Important` instead of `High` and `Moderate` instead of `Medium` in the output CSV.
+
+##### e) Modifying a custom control 'baseline' for your project
+A powerful capability of AzSK.AzureDevOps is the ability for a project to define a baseline control set on the policy server
+that can be leveraged by all individuals in the project in both local scan and CICD scenarios via the *-UseBaselineControls* parameter
+during scan commands. 
+
+By default, when someone runs the scan with *-UseBaselineControls* parameter, it leverages the set of
+controls listed as baseline in the ControlSettings.json file present in the default offline file of module. 
+
+To modify baseline controls for your project, you will need to update the ControlSettings.json
+file as per the steps below-
+ 
+(We assume that you have tried the inactive build period steps in (b) above and edited the ControlSettings.json 
+file is already present in your org policy repo.)
+
+ i) Edit the ControlSettings.json file to add a 'BaselineControls' object as per below:
+ 
+```JSON
+{
+    "Build": {
+        "BuildHistoryPeriodInDays": 90
+    },
+    "BaselineControls": {
+        "ResourceTypeControlIdMappingList": [
+            {
+                "ResourceType": "Project",
+                "ControlIds": [
+                    "AzureDevOps_Project_AuthZ_Set_Visibility_Private",
+                    "AzureDevOps_Project_SI_Limit_Variables_Settable_At_Queue_Time"
+                ]
+            },
+            {
+                "ResourceType": "Build",
+                "ControlIds": [
+                    "AzureDevOps_Build_SI_Review_Inactive_Build"
+                ]
+            }
+        ]
+    }
+}
+```
+
+> Notice how, apart from the couple of extra elements at the end, the baseline set is pretty much a list of 'ResourceType'
+and 'ControlIds' for that resource...making it fairly easy to customize/tweak your own project baseline. 
+> Here the name and casing of the resource type name must match that of the policy JSON file for the corresponding resource's JSON file in the SVT folder and the control ids must match those included in the JSON file. 
+
+> Note: Here we have used a very simple baseline with just a couple of resource types and a very small control set.
+
+> Note: This will include new controls that you added in the baseline set on the server side plus the original baseline set (present in the offline file in module). This happens as *ControlSetting.json* file has been **overlayed** on the server side. In order to not include the original baseline in the scan, you need to **override** the file on server side. Refer [this](Readme.md#Can-I-completely-override-policy-.-I-do-not-want-policy-to-be-run-in-Overlay-method-?).
+
+ ii) Commit the ControlSettings.json file.
+ 
+ iii) Confirm that an entry for ControlSettings.json is already there in the ServerConfigMetadata.json file. (Else see step-iv in (b) above.)
+
+###### Testing:
+
+To test that the baseline controls set is in effect, anyone in your project can start a fresh PS console and run the project and build security scan cmdlets with the `-UseBaselineControls` parameter.
+
+> **Note:** Similar to baseline control, you can also define preview baseline set with the help of similar property "PreviewBaselineControls" in ControlSettings.json. This preview set gets scanned using parameter `-UsePreviewBaselineControls` with scan commands.
+
+### Managing policy/advanced policy usage
+
+#### Working with ‘local’ mode (policy dev-test-debug)
+
+You can run the scan pointing to the local policy present on your dev box using the following steps. It will enable you test the policy customizations before pushing those to the server. 
+
+Step 1: Point AzSK settings to local org policy folder("D:\ContosoPolicies\"). 
+    
+```PowerShell
+Set-AzSKPolicySettings -LocalOrgPolicyFolderPath "D:\ContosoPolicies\"
+```
+
+This will update "AzSKSettings.json" file present at location "%LocalAppData%\Microsoft\AzSK" to point to local folder instead of server storage.
+
+You can run Get-AzSKInfo (GAI) cmdlet to check the current AzSK settings. It will show OnlinePolicyStoreUrl as policyFolder path (instead of the blob URL). 
+
+   ```PowerShell
+   GAI -InfoType HostInfo
+   ```
+![Local Host Settings](../Images/07_OrgPolicy_LocalSettings.PNG)
+
+
+Step 2: Perform the customization to policy files as per scenarios. 
+
+Here you can customize the list of baseline or preview baseline controls for your org using steps already explained [here](Readme.md#d-creating-a-custom-control-baseline-for-your-org) (excluding the last step of running the policy setup or policy update command.)
+
+Step 3: Now you run scan to see policy updates in effect. Clear session state and run scan commands (GRS or GSS) with parameters sets for which config changes are done like UseBaselineControls,ResourceGroupNames, controlIds etc.
+
+```PowerShell
+# Clear AzSK session cache for settings
+Clear-AzSKSessionState
+
+# Run subscription scan using local policy settings
+Get-AzSKSubscriptionSecurityStatus -SubscriptionId <SubscriptionId>
+
+# Run services security scan with baseline using local policy settings
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -UseBaselineControls
+```     
+
+Step 3: If scan commands are running fine with respect to the changes done to the configuration, you can update policy based on parameter set used during installations. If you see some issue in scan commands, you can fix configurations and repeat step 2. 
+
+```PowerShell
+Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+   -OrgName "Contoso" `
+   -DepartmentName "IT" `
+   -PolicyFolderPath "D:\ContosoPolicies"
+
+#If custom resources names are used during setup, you can use below parameters to download policy
+Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+   -OrgName "Contoso-IT" `           
+   -ResourceGroupName "Contoso-IT-RG" `
+   -StorageAccountName "contosoitsa" `
+   -AppInsightName "ContosoITAppInsight" `
+   -PolicyFolderPath "D:\ContosoPolicies"
+```
+
+Step 4: Validate if policy is correctly uploaded and there are no missing mandatory policies using policy health check command
+
+**Note:**
+It is always recommended to validate health of org policy for mandatory configurations and policy schema syntax issues using below command. You can review the failed checks and follow the remedy suggested.
+
+```PowerShell
+Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
+           -OrgName "Contoso" `
+           -DepartmentName "IT"
+
+#If you have used customized resource names, you can use below parameter sets to run health check
+
+Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
+           -OrgName "Contoso-IT" `
+           -ResourceGroupName "RGName" `
+           -StorageAccountName "PolicyStorageAccountName" 
+```
+
+Step 5: If all the above steps works fine, you can point back your AzSK setting to online policy server by running "IWR" command generated at the end of *Update-AzSKOrganizationPolicy*
+
+
+You can also set up a 'Staging' environment where you can do all pre-testing of policy setup, policy changes, etc. A limited number of 
+people could be engaged in testing the actual end user effects of the policy changes before deploying them for broader usage. 
+Also, you can choose to retain the staging setup or just re-create a fresh one for each major policy change.
+
+
+For your actual (production) policies, we recommend that you check them into source control and use the local clone of *that* folder as the location
+for the AzSK org policy setup command when uploading to the policy server. In fact, setting things up so that any policy
+modifications are pushed to the policy server via a CICD pipeline would be ideal. (That is how we do it at CSE.)
+Refer [maintaining policy in source-control]() and [deployment using CICD pipeline]().
+
+	
+#### Troubleshooting common issues 
+Here are a few common things that may cause glitches and you should be careful about:
+
+- Make sure you use exact case for file names for various policy files (and the names must match case-and-all
+with the entries in the ServerConfigMetadata.json file)
+- Make sure that no special/BOM characters get introduced into the policy file text. (The policy upload code does scrub for
+a few known cases, but we may have missed the odd one.)
+- Note that the policy upload command always generates a fresh installer.ps1 file for upload. If you want to make changes to 
+that, you may have to keep a separate copy and upload it. (We will revisit this in future sprints.)
+
+
+### How to upgrade org AzSK version to the latest AzSK version
+
+DevOps kit team releases the newer version of the AzSK module on 15th of every month. It is recommended that you upgrade your org's AzSK version to the latest available version to ensure that your org is up to date with the latest security controls and features. You need to follow the steps below to smoothly upgrade AzSK version for your org: 
+
+1. Install latest AzSK module in your local machine with the help of common setup command
+
+   ```PowerShell
+   # Use -Force switch as and when required 
+   Install-Module AzSK -Scope CurrentUser -AllowClobber
+   ```
+
+2. Go through the [release notes](https://azsk.azurewebsites.net/ReleaseNotes/LatestReleaseNotes.html) for AzSK latest version. It typically lists the changes which may impact org policy users under section 'Org policy/external user updates'.
+
+3. If the release notes indicate that you need to perform any additional steps before upgrading the org policy version then perform those changes with the help of [org policy updates page](OrgPolicyUpdate.md). It is highly recommended that you do these changes to your local policy folder and test those before pushing to the policy server. Instructions at [downloading your existing org policies](Readme.md#downloading-and-examining-policy-folder) and [Working with ‘local’ mode (policy dev-test-debug)](Readme.md#working-with-local-mode-policy-dev-test-debug) would be useful to do so. 
+If there are no additional steps mentioned, then you can go ahead with next step. 
+
+5. Run UOP with AzSK version update flag
+
+   ```PowerShell
+   # For Basic Setup
+   Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+      -OrgName "Contoso" `
+      -DepartmentName "IT" `
+      -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
+
+   #For custom Resource Group Setup
+   Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+      -OrgName "Contoso-IT" `           
+      -ResourceGroupName "Contoso-IT-RG" `
+      -StorageAccountName "contosoitsa" `
+      -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
+   ```
+
+ Internally, this will update the AzSK version in the AzSK.Pre.json file present on your org policy server.. 
+ 
+#### Upgrade scenarios in different scan sources
+
+Once org policy is updated with the latest AzSK version, you will see it in effect in all environments
+
+ **Local scans:** If application teams are using older version(or any other version than mentioned in org policy), they will start seeing warning as shown below while running scans.
+
+![Entry in ServerConfigMetadata.json](../Images/07_OrgPolicy_Old_Version_Warning.PNG)
+
+
+ **CICD:** As of now, CICD SVT task does not support version from org policy settings. It always installs latest AzSK version available in PowerShell gallery, irrespective of version mentioned in policy. Although it refers other control policies from policy store.
+
+# Advanced usage of org policy (extending AzSK)
+
+## Customizing the SVTs
+
+
+ It is powerful capability of AzSK to enable an org to customize the SVT behaviour.  Refer [extending AzSK modules](./Extending%20AzSK%20Module/Readme.md) for more details. You will be able to achieve the following scenarios.
+
+   - [Update/extend existing control by augmenting logic](./Extending%20AzSK%20Module/Readme.md##steps-to-extend-the-control-svt)
+   - [Add new control for existing GSS/GRS SVT](./Extending%20AzSK%20Module/Readme.md#a-extending-a-gss-svt)
+   - [Add an altogether new SVT (non-existing service scan)](./Extending%20AzSK%20Module/Readme.md#steps-to-add-a-new-svt-to-the-azsk-module)
+
+## Frequently Asked Questions
+
+#### Can I completely override policy. I do not want policy to be run in Overlay method?
+
+Yes. You can completely override policy configuration with the help of index file. 
+
+**Steps:**
+
+i) Copy local version of configuration file to org policy repo. Here we will copy complete ControlSettings.json. 
+
+Source location: "%userprofile%\Documents\WindowsPowerShell\Modules\AzSK.AzureDevOps\<version>\Framework\Configurations\SVT"
+
+ii) Update all the required configurations (baseline set, preview baseline set, build configurations, etc.) in ControlSettings.json
+
+iii) Commit the file.
+
+iv) Add entry for configuration in index file(ServerConfigMetadata.json) with OverrideOffline property as shown here 
+
+![Override ADO Configurations](../Images/09_ADO_Org_Policy6.png)
+
+### Control is getting scanned even though it has been removed from my custom org-policy.
+
+If you want only the controls which are present on your custom org-policy to be scanned, set the  OverrideOffline flag to true in the ServerConfigMetadata.json file.
+
+### How to customize attestation expiry period for controls? 
+
+There are two methods with which attestation expiry period can be controlled using org policy. 
+
+1. Update attestation expiry period for control severity 
+
+2. Update attestation expiry period for a particular control in SVT  
+
+**Note:** Expiry period can be customized only for statuses "WillNotFix", "WillFixLater" and "StateConfirmed". For status "NotAnIssue" and "NotApplicable", expiry period can be customized using "Default" period present as part of ControlSettings configuration.
+
+#### 1. Update attestation expiry period for control severity 
+   
+   Steps:
+
+   i) Go to ControlSettings configuration present in module folder.  
+
+      Source location: "%userprofile%\Documents\WindowsPowerShell\Modules\AzSK\<version>\Framework\Configurations\SVT\ControlSettings.json"
+
+   ii) Copy "AttestationExpiryPeriodInDays" settings
+
+   iii) Create/update "ControlSettings.json" in org policy configuration folder (It is the same folder from where org policy is installed) and paste AttestationExpiryPeriodInDays configurations to file
+
+
+   iv) Update attestation expiry period against control severity. For e.g., here we will make "High" severity control to expire after 60 days, "Critical" to 15 days and others set to 90 days 
+
+   ![Controls attestation expiry override](../Images/07_OrgPolicy_AttestationExpiryOverride.png)
+
+   v) Update org policy with the help of Update-AzSKOrganizationPolicy (UOP) cmdlet. (If you have created policy custom resources, mention resource names as parameter for UOP cmdlet)
+
+   ```
+      Update-AzSKOrganizationPolicy -SubscriptionId $SubId -OrgName "Contoso" -DepartmentName "IT" -PolicyFolderPath "D:\ContosoPolicies"
+   ```
+
+##### Testing:
+
+1. Run clear session state command (Clear-AzSKSessionState).
+
+2. You can attest one of the "High" severity controls or if you have control already attested, you can go to step 3
+
+   Example: In this example, we will attest storage control with "WillNotFix" status
+
+   ```
+   Get-AzSKAzureServicesSecurityStatus -SubscriptionId $SubId `
+                                    -ResourceNames azskpreviewcontosopr3sa `
+                                    -ControlIds "Azure_Storage_AuthN_Dont_Allow_Anonymous" `
+                                    -ControlsToAttest NotAttested 
+   ```
+
+   Output:
+   ![Controls attestation expiry override](../Images/07_OrgPolicy_AttestationFlow.png)
+   
+3. Run Get-AzSKInfo (GAI) cmdlet to get all attested controls in Sub with expiry details. 
+
+   Note: Make sure cmdlet is running with org policy. If not you will need to run "IWR" generated at the time of IOP or UOP cmdlet.
+
+   ```
+   Get-AzSKInfo -InfoType AttestationInfo -SubscriptionId <SubscriptionId>
+   ```
+
+4. Open CSV or detailed log file generated at the end of command execution. It will show expiry period column for attested column.
+
+   Detailed log:
+   ![Controls attestation expiry override](../Images/07_Custom_Policy_AttestationExpiryReportOutput.png)
+   
+   CSV report:
+   ![Controls attestation expiry override](../Images/07_Custom_Policy_AttestationExpiryReport.png)
+
+
+
+#### 2. Update attestation expiry period for particular control in SVT 
+ 
+
+i) Copy the Storage.json from the AzSK module to your org-policy folder
+
+   Source location: "%userprofile%\Documents\WindowsPowerShell\Modules\AzSK\<version>\Framework\Configurations\SVT\Services\Storage.json"
+
+   Destination location: Policy config folder in local (D:\ContosoPolicies\Config)
+
+ii) Remove everything except the ControlId, the Id and add property "AttestationExpiryPeriodInDays" as shown below. 
+
+   ```
+   {
+    "Controls": [
+     {
+        "ControlId": "Azure_Storage_AuthN_Dont_Allow_Anonymous",
+        "Id": "AzureStorage110",
+        "AttestationExpiryPeriodInDays": 45
+     }
+    ]
+   }
+   ```
+
+iii) Update org policy with the help of UOP cmdlet with required parameters. 
+
+   ```
+      Update-AzSKOrganizationPolicy -SubscriptionId $SubId -OrgName "Contoso" -DepartmentName "IT" -PolicyFolderPath "D:\ContosoPolicies"
+   ```
+
+##### Testing:
+
+   For testing follow same steps mentioned above for [scenario 1](./#testing-7)
+
+
+
+
+
+
 
 
 
