@@ -59,7 +59,7 @@ Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>"
 #Scan organization and Project
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" 
 
-#Scan organization, project and Builds
+#Scan organization, project and builds
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "<BLD1, BLD2,...etc.>" 
 
 #Scan organization, project and releases
@@ -80,19 +80,19 @@ Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -Projec
 #Scan all supported artifacts
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ScanAllArtifacts
 
-#Scan project only
+#Scan projects 
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -ResourceTypeName Project
 
-#Scan build only
+#Scan builds 
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "*" -ResourceTypeName Build
 
-#Scan release only
+#Scan releases 
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -ReleaseNames "*" -ResourceTypeName Release
 
-#Scan service connections only
+#Scan service connections 
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -ServiceConnectionNames "*" -ResourceTypeName ServiceConnection
 
-#Scan agent pools only
+#Scan agent pools 
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -AgentPoolNames "*" -ResourceTypeName AgentPool
 
 #Scan resources for baseline controls only
@@ -108,13 +108,13 @@ AzSK.AzureDevOps also supports individual scan cmdlets for organization, project
 #Scan organization
 Get-AzSKAzureDevOpsOrgSecurityStatus -OrganizationName "<OrganizationName>"
 
-#Scan project
+#Scan projects
 Get-AzSKAzureDevOpsProjectSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>"
 
-#Scan build
+#Scan builds
 Get-AzSKAzureDevOpsBuildSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -BuildNames "*"
 
-#Scan release
+#Scan releases
 Get-AzSKAzureDevOpsReleaseSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -ReleaseNames "*"
 ```
 
