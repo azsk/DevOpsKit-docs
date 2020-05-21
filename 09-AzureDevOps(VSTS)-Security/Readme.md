@@ -241,6 +241,7 @@ Step 1,2 & 3 needs to be repeated to add “__Project Component Security Scan Su
 
 
 > **Note:**  Dashboard created will be visible to all users which are part of project.
+> **Note:**  Dashboard reflects updates only upon pipeline execution. Local scan results don't reflect automatically. If you have remediated a control, make sure you run the pipeline to reflect the updated control results on dashboard.
 
 # Control Attestation
 
