@@ -297,17 +297,88 @@ To manage attestation flow effectively, 4 options are provided for the *Controls
 |All|Attest all controls which can be attested (including those that have past attestations).|
 |None|N/A.|
 
-For example, to attest organization controls, run the command below:
+### How is the control attestation information stored and managed?
+
+AzSK.AzureDevOps internally stores attestation details in a project repository named 'ADOScanner_Attestation' which needs to be configured typically by the project admin. 
+
+Attestation details for project and its components (build/release/service connection/agent pool) are recorded only when this repository is present inside the project.
+
+> **Note:** Control attestation details for project and its components are stored inside the attestation repo present in the project.
+
+> *Project Collection Administrator* needs to assign a project in the organization to host attestation details for organization-specific controls. See the next section for more details.   
+
+### How to setup attestation repository in a project?
+
+In order to setup attestation repository inside a project, follow the below steps:
+
+1. Navigate to *Repos* section of the project.
+2. Create a new Git repository with the name 'ADOScanner_Attestation'. Skip this step if this repository already exists.
+
+### How to setup host project to store attestation details for organization-specific controls?
+
+1. Host project to store attetstation details for organization-specific controls can be set using a scan parameter named 'AttestationHostProjectName'. Before setting up the host project, ensure this project has 'ADOScanner_Attestation' repository setup.
+2.  **Attestation host project can be set only once and can't be updated later**.
+
+For e.g., to attest organization controls, run the command below:
 ```PowerShell  
+#Set attestation host project and attest organization controls:
 $orgName = '<Organization name>'
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName $orgName -ControlsToAttest NotAttested -ResourceTypeName Organization  
+$hostProjectName = '<Name of the host project to store attestation details of org-specific controls>'
+  	
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName $orgName -AttestationHostProjectName $hostProjectName -ControlsToAttest NotAttested -ResourceTypeName Organization  
 ```
 
-For example, to attest project controls, run the command below:
+See the examples below to attest organization, project, build, release, service connection and agent pool controls.
 ```PowerShell  
+
+#Attest organization controls:
+$orgName = '<Organization name>'
+
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName $orgName -ControlsToAttest NotAttested -ResourceTypeName Organization  
+
+#Attest project controls:
 $orgName = '<Organization name>'
 $prjName = '<Project name>'
+
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName $orgName -ProjectNames $prjName -ControlsToAttest NotAttested -ResourceTypeName Project  
+
+#Attest build controls:
+$orgName = '<Organization name>'
+$prjName = '<Project name>'
+$buildName = '<Build name>'
+
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName $orgName -ProjectNames $prjName -BuildNames $buildName -ControlsToAttest NotAttested -ResourceTypeName Build  
+
+#Attest release controls:
+$orgName = '<Organization name>'
+$prjName = '<Project name>'
+$releaseName = '<Release name>'
+
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName $orgName -ProjectNames $prjName -ReleaseNames $releaseName -ControlsToAttest NotAttested -ResourceTypeName Release  
+
+#Attest service connection controls:  
+$orgName = '<Organization name>'
+$prjName = '<Project name>'
+$serviceConnectionName = '<Service Connection name>'
+
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName $orgName -ProjectNames $prjName -ServiceConnectionNames $serviceConnectionName -ControlsToAttest NotAttested -ResourceTypeName ServiceConnection  
+
+#Attest agent pool controls:
+$orgName = '<Organization name>'
+$prjName = '<Project name>'
+$agentPoolName = '<Agent pool name>'
+
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName $orgName -ProjectNames $prjName -AgentPoolNames $agentPoolName -ControlsToAttest NotAttested -ResourceTypeName AgentPool  
+
+#Organization, project, build, release, service connection and agent pool controls can be attested in same command too.  
+$orgName = '<Organization name>'
+$prjName = '<Project name>'
+$buildName = '<Build name>'
+$releaseName = '<Release name>'
+$serviceConnectionName = '<Service Connection name>'
+$agentPoolName = '<Agent pool name>'
+
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName $orgName -ProjectNames $prjName -BuildNames $buildName -ReleaseNames $releaseName -ServiceConnectionNames $serviceConnectionName  -AgentPoolNames $agentPoolName -ControlsToAttest NotAttested  
 ```
 
 As shown in the images, the command enters 'attest' mode after completing a scan and does the following:
@@ -390,7 +461,11 @@ The following table describes the possible effective control evaluation results 
 
 [Back to top...](Readme.md#contents)
 ### Permissions required for attesting controls:
-Attestation is currently supported only for organization and project controls with admin privileges on organization and project, respectively.
+Attestation is supported for organization and project controls only with admin privileges on organization and project, respectively. 
+
+In order to attest build, release, service connection and agent pool controls, user needs to have atleast contributor access on the 'ADOScanner_Attestation' repository of project these resources belong to.
+
+Note: The attestation data stored in the 'ADOScanner_Atestation' repository is opaque from an end user standpoint. Any attempts to access/change it may impact correctness of security evaluation results.
 
 Currently, attestation can be performed only via PowerShell session in local machine, but the scan results will be honored in both local as well as extension scan.
 
