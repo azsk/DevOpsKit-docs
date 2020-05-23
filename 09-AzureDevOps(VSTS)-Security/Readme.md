@@ -22,12 +22,14 @@
 - [Permissions required for attesting controls](Readme.md#permissions-required-for-attesting-controls) 
 - [Attestation expiry](Readme.md#attestation-expiry)  
 
-Security Scanner for Azure DevOps (ADO) performs security scanning for core areas of Azure DevOps like Organization, Projects, Users, Connections, Pipelines (Build & Release). 
+Security Scanner for Azure DevOps (ADO) helps you keep your ADO artifacts such as various org/project settings, build/release configurations, service connections, agent pools, etc. configured securely. You can run the ADO Security Scanner standalone in a PowerShell console or in an ADO pipeline via a marketplace extension.
 
-
+Security Scanner for Azure DevOps (ADO) performs security scanning for core areas of Azure DevOps like Organization, Projects, Users, Pipelines (Build & Release), Connections and Agent Pools. 
 
 
 ## Continuous Assurance
+
+Security Scanner for ADO is also available as a native ADO extension that can be set up to scan your ADO artifacts periodically so as to achieve “continuous assurance”. The extension also comes packaged with widgets that you can use to visualize scan results by relevance to stakeholder groups (such as org admin, project owners, build/release owners etc.) in dashboards.
 
 The basic idea behind Continuous Assurance (CA) is to setup periodic security scan and if new, more secure options become available for a feature, it should be possible to detect so that an application or solution can benefit from them and notify/alert the owners concerned.
 
@@ -35,12 +37,12 @@ Scan is performed via security scanner task in the pipeline and results can be v
 
 ### Setting up Continuous Assurance - Step by Step
 
-In this section, we will walk through the steps of setting up a DevOps pipeline for ADO Continuous Assurance coverage.
+In this section, we will walk through the steps of setting up an Azure DevOps pipeline for ADO Continuous Assurance coverage.
 To get started, we need the following 
 
 __Prerequisite:__
 
-- DevOps organization and project 
+- ADO organization and project 
 - "Project Collection Administrator" or "Owner" permission to perform below task:
 
     •	Install "ADO Security Scanner" extension
@@ -54,7 +56,7 @@ __Prerequisite:__
 #### Install “ADO Security Scanner” extension for your Azure DevOps Organization
 
 
-Extension has been published to the visual studio marketplace gallery under “Azure DevOps > Azure Pipeline” category. You can now install this extension from the Marketplace directly (https://marketplace.visualstudio.com/items?itemName=azsdktm.ADOSecurityScanner).
+Extension has been published to the Visual Studio marketplace gallery under “Azure DevOps > Azure Pipeline” category. You can now install this extension from the Marketplace directly (https://marketplace.visualstudio.com/items?itemName=azsdktm.ADOSecurityScanner).
 
 Refer doc [here](https://docs.microsoft.com/en-us/azure/devops/marketplace/install-extension?view=azure-devops&tabs=browser) for more about installing extensions for org
 
@@ -80,7 +82,83 @@ The "ADO Security Scanner" task starts showing in the "Run on Agent" list and di
 
 > **Note:** This task also requires Azure DevOps connection containing org details and PAT token to scan the required resources. Refer doc [here](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page) to create token and provide it as part of connection
 
-> Refer the list [here](./PATPrivileges) for customizing the PAT required for Azure DevOps Connection with minimum required privileges.
+
+<html>
+<head>
+
+</head><body>
+<H2> List for customizing the PAT required for Azure DevOps Connection with minimum required privileges.</H2><table><tr><th>Scope</th><th>Privilege</th></tr>
+
+<tr><td>
+Agent Pools
+</td><td>Read</tr>
+
+<tr><td>
+Auditing
+</td><td>Read Audit Log</tr>
+
+<tr><td>
+Build
+</td><td>Read</tr>
+
+<tr><td>
+Entitlements
+</td><td>Read</tr>
+
+<tr><td>
+Extensions
+</td><td>Read</tr>
+
+<tr><td>
+Extension Data
+</td><td>Read & write</tr>
+
+<tr><td>
+Graph
+</td><td>Read</tr>
+
+<tr><td>
+Identity
+</td><td>Read</tr>
+
+
+<tr><td>
+Member Entitlement Management
+</td><td>Read</tr>
+
+<tr><td>
+Project and Team
+</td><td>Read</tr>
+
+<tr><td>
+Release
+</td><td>Read</tr>
+
+<tr><td>
+Secure Files
+</td><td>Read</tr>
+
+<tr><td>
+Service Connections
+</td><td>Read</tr>
+
+<tr><td>
+Tokens
+</td><td>Read & manage</tr>
+
+<tr><td>
+User Profile
+</td><td>Read</tr>
+
+<tr><td>
+Variable Groups
+</td><td>Read</tr>
+
+</table>
+<table>
+</table>
+</body></html>
+
 
 ![Add Service connection](../Images/09_ADO_AddServiceConnection.png)
 
