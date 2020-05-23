@@ -8,13 +8,13 @@ Below resource types can be checked for validating the security controls.
 
 |FeatureName|
 |---|
-|[Organization](ControlCoverage#Organization.md)|
-|[Project](ControlCoverage#Project.md)|
-|[Build](ControlCoverage#Build.md)|
-|[Release](ControlCoverage#Release.md)|
-|[ServiceConnection](ControlCoverage#Service-Connection.md)|
-|[Agent Pool](ControlCoverage#Agent-Pool.md)|
-|[User](ControlCoverage#User.md)|
+|[Organization](ControlCoverage#Organization)|
+|[Project](ControlCoverage#Project|
+|[Build](ControlCoverage#Build)|
+|[Release](ControlCoverage#Release)|
+|[ServiceConnection](ControlCoverage#Service-Connection)|
+|[Agent Pool](ControlCoverage#Agent-Pool)|
+|[User](ControlCoverage#User)|
 
 
 ### Organization
