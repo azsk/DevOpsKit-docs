@@ -19,7 +19,7 @@
 - [Permissions required for attesting controls](Readme.md#permissions-required-for-attesting-controls) 
 - [Attestation expiry](Readme.md#attestation-expiry)  
 
-Azure DevOps Security Scanner performs security scanning for core areas of Azure DevOps like Organization, Projects, Users, Connections, Pipelines (Build & Release). 
+Security Scanner for Azure DevOps (ADO) performs security scanning for core areas of Azure DevOps like Organization, Projects, Users, Connections, Pipelines (Build & Release). 
 
 
 ## Installation Guide
@@ -32,17 +32,11 @@ Azure DevOps Security Scanner performs security scanning for core areas of Azure
  If the PSVersion is older than 5.0, update PowerShell from [here](https://www.microsoft.com/en-us/download/details.aspx?id=54616).  
    ![PowerShell Version](../Images/00_PS_Version.PNG)   
 
-2. Install the Secure DevOps Kit for Azure DevOps (AzSK.AzureDevOps) PS module:  
+2. Install the Security Scanner for Azure DevOps (AzSK.AzureDevOps) PS module:  
 	  
 ```PowerShell
-  Install-Module AzSK.AzureDevOps -Scope CurrentUser
+  Install-Module AzSK.AzureDevOps -Scope CurrentUser -AllowClobber -Force
 ```
-
-Note: 
-
-You may need to use `-AllowClobber` and `-Force` options with the Install-Module command 
-above if you have a different version of same modules installed on your machine.
-
 
 ## Scan your Azure DevOps resources
 
@@ -59,32 +53,47 @@ For instance, you can also make use of the 'BuildNames','ReleaseNames' to filter
 
 ```PowerShell
 
-#Scan Organization
+#Scan organization
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>"
 
-#Scan Organization and Project
+#Scan organization and Project
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" 
 
-#Scan org, project and Builds
+#Scan organization, project and builds
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "<BLD1, BLD2,...etc.>" 
 
-#Scan org, project and releases
+#Scan organization, project and releases
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -ReleaseNames "<RLS1, RLS2,...etc.>" 
 
-#Scan org, project, all builds and releases
+#Scan organization, project, all builds and releases
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "*" -ReleaseNames "*" 
 
-#Scan org, project and service connections
+#Scan organization, project and service connections
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -ServiceConnectionNames "<SER1, SER2,...ect.>"
 
-#Scan org, project and agent pools
+#Scan organization, project and agent pools
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -AgentPoolNames "<AGP1, AGP2,...etc.>"
 
-#Scan org, project, all builds, releases, service connectiopns and agent pools
+#Scan organization, project, all builds, releases, service connectiopns and agent pools
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "*" -ReleaseNames "*" -ServiceConnectionNames "*" -AgentPoolNames "*"
 
 #Scan all supported artifacts
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ScanAllArtifacts
+
+#Scan projects 
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -ResourceTypeName Project
+
+#Scan builds 
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "*" -ResourceTypeName Build
+
+#Scan releases 
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -ReleaseNames "*" -ResourceTypeName Release
+
+#Scan service connections 
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -ServiceConnectionNames "*" -ResourceTypeName ServiceConnection
+
+#Scan agent pools 
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -AgentPoolNames "*" -ResourceTypeName AgentPool
 
 #Scan resources for baseline controls only
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -ubc
@@ -92,7 +101,22 @@ Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -Projec
 #Scan resources with severity
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -Severity "High/Medium/Low"
 ```
+AzSK.AzureDevOps also supports individual scan cmdlets for organization, project, build and release.
 
+```PowerShell
+
+#Scan organization
+Get-AzSKAzureDevOpsOrgSecurityStatus -OrganizationName "<OrganizationName>"
+
+#Scan projects
+Get-AzSKAzureDevOpsProjectSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>"
+
+#Scan builds
+Get-AzSKAzureDevOpsBuildSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -BuildNames "*"
+
+#Scan releases
+Get-AzSKAzureDevOpsReleaseSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -ReleaseNames "*"
+```
 
 Similar to Azure AzSK SVT scan, outcome of the analysis is printed on the console during SVT execution and a CSV and LOG files are 
 also generated for subsequent use.
@@ -163,7 +187,10 @@ The "ADO Security Scanner" task starts showing in the "Run on Agent" list and di
 ![Add Service connection](../Images/09_ADO_AddServiceConnection.png)
 
 
-__! important__ : Make sure you **DO NOT** select  checkbox for "Grant access permission to all pipelines" before saving service connection. 
+__! Important__ : Make sure you **DO NOT** select  checkbox for "Grant access permission to all pipelines" before saving service connection. 
+
+> **Note**: ADO Security Scanner extension enables you to leverage some of the advanced capabilities of scanner while running in adhoc mode. You could scan for only preview baseline controls in your build pipeline, or you could just scan for controls with specific severity etc. These advanced features are available to customers through ADO variables. For example, use *ExtendedCommand* variable in the pipeline with its value as *-Severity 'High'* to scan controls with high severity.
+
 
 __Step-4__: Click “Save & queue”
 
@@ -214,6 +241,8 @@ Step 1,2 & 3 needs to be repeated to add “__Project Component Security Scan Su
 
 
 > **Note:**  Dashboard created will be visible to all users which are part of project.
+
+> **Note:**  Dashboard reflects updates only upon pipeline execution. Local scan results don't reflect automatically. If you have remediated a control, make sure you run the pipeline to reflect the updated control results on dashboard.
 
 # Control Attestation
 
