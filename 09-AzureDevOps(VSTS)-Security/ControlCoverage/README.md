@@ -8,13 +8,13 @@ Below resource types can be checked for validating the security controls.
 
 |FeatureName|
 |---|
-|[Organization](Readme.md#Organization.md)|
-|[Project](Readme.md#Project.md)|
-|[Build](Readme.md#Build.md)|
-|[Release](Readme.md#Release.md)|
-|[ServiceConnection](Readme.md#Service-Connection.md)|
-|[Agent Pool](Readme.md#Agent-Pool.md)|
-|[User](Readme.md#User.md)|
+|[Organization](ControlCoverage/Readme.md#Organization.md)|
+|[Project](ControlCoverage/Readme.md#Project.md)|
+|[Build](ControlCoverage/Readme.md#Build.md)|
+|[Release](ControlCoverage/Readme.md#Release.md)|
+|[ServiceConnection](ControlCoverage/Readme.md#Service-Connection.md)|
+|[Agent Pool](ControlCoverage/Readme.md#Agent-Pool.md)|
+|[User](ControlCoverage/Readme.md#User.md)|
 
 
 ### Organization
