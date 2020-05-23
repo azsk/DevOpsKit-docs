@@ -1,16 +1,19 @@
 
-> The Secure DevOps Kit for Azure (AzSK) was created by the Core Services Engineering & Operations (CSEO) division at Microsoft, to help accelerate Microsoft IT's adoption of Azure. We have shared AzSK and its documentation with the community to provide guidance for rapidly scanning, deploying and operationalizing cloud resources, across the different stages of DevOps, while maintaining controls on security and governance.
-<br>AzSK is not an official Microsoft product – rather an attempt to share Microsoft CSEO's best practices with the community..
+> Security Scanner for Azure DevOps (ADO)) was created by the Core Services Engineering & Operations (CSEO) division at Microsoft. We have shared the scanner and its documentation with the community to provide guidance for rapidly scanning, deploying and operationalizing ADO resources, across the different stages of DevOps, while maintaining controls on security and governance.
+<br>This is not an official Microsoft product – rather an attempt to share Microsoft CSEO's best practices with the community..
 # Azure DevOps (ADO) Security Scanner -Preview
 
 ### [Overview](Readme.md#Overview)
- - [Installation Guide](Readme.md#installation-guide)
 
-### [Scan your Azure DevOps resources](Readme.md#scan-your-azure-devops-resources-1)
- 
 ### [Continuous Assurance](Readme.md#continuous-assurance-1)
   - [Setting up Continuous Assurance - Step by Step](Readme.md#setting-up-continuous-assurance---step-by-step)
   - [Visualize security scan results](Readme.md#visualize-security-scan-results)
+
+
+ ### [Installation Guide](Readme.md#installation-guide)
+
+### [Scan your Azure DevOps resources](Readme.md#scan-your-azure-devops-resources-1)
+ 
 
 ### [Control Attestation](Readme.md#control-attestation-1)
 - [Overview](Readme.md#Overview-1)
@@ -22,111 +25,6 @@
 Security Scanner for Azure DevOps (ADO) performs security scanning for core areas of Azure DevOps like Organization, Projects, Users, Connections, Pipelines (Build & Release). 
 
 
-## Installation Guide
-
->**Pre-requisites**:
-> - PowerShell 5.0 or higher. 
-
-1. First verify that prerequisites are already installed:  
-    Ensure that you have PowerShell version 5.0 or higher by typing **$PSVersionTable** in the PowerShell ISE console window and looking at the PSVersion in the output as shown below.) 
- If the PSVersion is older than 5.0, update PowerShell from [here](https://www.microsoft.com/en-us/download/details.aspx?id=54616).  
-   ![PowerShell Version](../Images/00_PS_Version.PNG)   
-
-2. Install the Security Scanner for Azure DevOps (AzSK.AzureDevOps) PS module:  
-	  
-```PowerShell
-  Install-Module AzSK.AzureDevOps -Scope CurrentUser -AllowClobber -Force
-```
-
-## Scan your Azure DevOps resources
-
-Run the command below after replacing `<OrganizationName>` with your Azure DevOps org Name 
-and `<PRJ1, PRJ2, ..`> with a comma-separated list of project names where your Azure DevOps resources are hosted.
-You will get Organization name from vsts url e.g. http://samplevstsorg.visualstudio.com. In this 'samplevstsorg' is org name.
-
-```PowerShell
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1, PRJ2,...etc.>"
-```
-
-Command also supports other parameters of filtering resources.
-For instance, you can also make use of the 'BuildNames','ReleaseNames' to filter specific resource
-
-```PowerShell
-
-#Scan organization
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>"
-
-#Scan organization and Project
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" 
-
-#Scan organization, project and builds
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "<BLD1, BLD2,...etc.>" 
-
-#Scan organization, project and releases
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -ReleaseNames "<RLS1, RLS2,...etc.>" 
-
-#Scan organization, project, all builds and releases
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "*" -ReleaseNames "*" 
-
-#Scan organization, project and service connections
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -ServiceConnectionNames "<SER1, SER2,...ect.>"
-
-#Scan organization, project and agent pools
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -AgentPoolNames "<AGP1, AGP2,...etc.>"
-
-#Scan organization, project, all builds, releases, service connectiopns and agent pools
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "*" -ReleaseNames "*" -ServiceConnectionNames "*" -AgentPoolNames "*"
-
-#Scan all supported artifacts
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ScanAllArtifacts
-
-#Scan projects 
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -ResourceTypeName Project
-
-#Scan builds 
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "*" -ResourceTypeName Build
-
-#Scan releases 
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -ReleaseNames "*" -ResourceTypeName Release
-
-#Scan service connections 
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -ServiceConnectionNames "*" -ResourceTypeName ServiceConnection
-
-#Scan agent pools 
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -AgentPoolNames "*" -ResourceTypeName AgentPool
-
-#Scan resources for baseline controls only
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -ubc
-
-#Scan resources with severity
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -Severity "High/Medium/Low"
-```
-AzSK.AzureDevOps also supports individual scan cmdlets for organization, project, build and release.
-
-```PowerShell
-
-#Scan organization
-Get-AzSKAzureDevOpsOrgSecurityStatus -OrganizationName "<OrganizationName>"
-
-#Scan projects
-Get-AzSKAzureDevOpsProjectSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>"
-
-#Scan builds
-Get-AzSKAzureDevOpsBuildSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -BuildNames "*"
-
-#Scan releases
-Get-AzSKAzureDevOpsReleaseSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -ReleaseNames "*"
-```
-
-Similar to Azure AzSK SVT scan, outcome of the analysis is printed on the console during SVT execution and a CSV and LOG files are 
-also generated for subsequent use.
-
-The CSV file and LOG file are generated under a org-specific sub-folder in the folder  
-*%LOCALAPPDATA%\Microsoft\AzSK.AzureDevOpsLogs\Org_[yourOrganizationName]*  
-E.g.  
-C:\Users\UserName\AppData\Local\Microsoft\Azure.DevOpsLogs\Org_[yourOrganizationName]\20181218_103136_GADS
-
-Refer [doc](../02-Secure-Development#understand-the-scan-reports) for understanding the scan report and [link](./ControlCoverage) for current control coverage for Azure DevOps
 
 
 ## Continuous Assurance
@@ -244,10 +142,118 @@ Step 1,2 & 3 needs to be repeated to add “__Project Component Security Scan Su
 
 > **Note:**  Dashboard reflects updates only upon pipeline execution. Local scan results don't reflect automatically. If you have remediated a control, make sure you run the pipeline to reflect the updated control results on dashboard.
 
+## Installation Guide
+
+>**Pre-requisites**:
+> - PowerShell 5.0 or higher. 
+
+1. First verify that prerequisites are already installed:  
+    Ensure that you have PowerShell version 5.0 or higher by typing **$PSVersionTable** in the PowerShell ISE console window and looking at the PSVersion in the output as shown below.) 
+ If the PSVersion is older than 5.0, update PowerShell from [here](https://www.microsoft.com/en-us/download/details.aspx?id=54616).  
+   ![PowerShell Version](../Images/00_PS_Version.PNG)   
+
+2. Install the Security Scanner for Azure DevOps (AzSK.AzureDevOps) PS module:  
+	  
+```PowerShell
+  Install-Module AzSK.AzureDevOps -Scope CurrentUser -AllowClobber -Force
+```
+
+## Scan your Azure DevOps resources
+
+Run the command below after replacing `<OrganizationName>` with your Azure DevOps org Name 
+and `<PRJ1, PRJ2, ..`> with a comma-separated list of project names where your Azure DevOps resources are hosted.
+You will get Organization name from vsts url e.g. http://samplevstsorg.visualstudio.com. In this 'samplevstsorg' is org name.
+
+```PowerShell
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1, PRJ2,...etc.>"
+```
+
+Command also supports other parameters of filtering resources.
+For instance, you can also make use of the 'BuildNames','ReleaseNames' to filter specific resource
+
+```PowerShell
+
+#Scan organization
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>"
+
+#Scan organization and Project
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" 
+
+#Scan organization, project and builds
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "<BLD1, BLD2,...etc.>" 
+
+#Scan organization, project and releases
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -ReleaseNames "<RLS1, RLS2,...etc.>" 
+
+#Scan organization, project, all builds and releases
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "*" -ReleaseNames "*" 
+
+#Scan organization, project and service connections
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -ServiceConnectionNames "<SER1, SER2,...ect.>"
+
+#Scan organization, project and agent pools
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -AgentPoolNames "<AGP1, AGP2,...etc.>"
+
+#Scan organization, project, all builds, releases, service connectiopns and agent pools
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "*" -ReleaseNames "*" -ServiceConnectionNames "*" -AgentPoolNames "*"
+
+#Scan all supported artifacts
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ScanAllArtifacts
+
+#Scan projects 
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -ResourceTypeName Project
+
+#Scan builds 
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -BuildNames "*" -ResourceTypeName Build
+
+#Scan releases 
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -ReleaseNames "*" -ResourceTypeName Release
+
+#Scan service connections 
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -ServiceConnectionNames "*" -ResourceTypeName ServiceConnection
+
+#Scan agent pools 
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "PRJ1" -AgentPoolNames "*" -ResourceTypeName AgentPool
+
+#Scan resources for baseline controls only
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -ubc
+
+#Scan resources with severity
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -Severity "High/Medium/Low"
+```
+AzSK.AzureDevOps also supports individual scan cmdlets for organization, project, build and release.
+
+```PowerShell
+
+#Scan organization
+Get-AzSKAzureDevOpsOrgSecurityStatus -OrganizationName "<OrganizationName>"
+
+#Scan projects
+Get-AzSKAzureDevOpsProjectSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>"
+
+#Scan builds
+Get-AzSKAzureDevOpsBuildSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -BuildNames "*"
+
+#Scan releases
+Get-AzSKAzureDevOpsReleaseSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -ReleaseNames "*"
+```
+
+Similar to Azure AzSK SVT scan, outcome of the analysis is printed on the console during SVT execution and a CSV and LOG files are 
+also generated for subsequent use.
+
+The CSV file and LOG file are generated under a org-specific sub-folder in the folder  
+*%LOCALAPPDATA%\Microsoft\AzSK.AzureDevOpsLogs\Org_[yourOrganizationName]*  
+E.g.  
+C:\Users\UserName\AppData\Local\Microsoft\Azure.DevOpsLogs\Org_[yourOrganizationName]\20181218_103136_GADS
+
+Refer [doc](../02-Secure-Development#understand-the-scan-reports) for understanding the scan report and [link](./ControlCoverage) for current control coverage for Azure DevOps
+
+
 # Control Attestation
 
 > **Note**: Please use utmost discretion when attesting controls. In particular, when choosing to not fix a failing control, you are taking accountability that nothing will go wrong even though security is not correctly/fully configured. 
 > </br>Also, please ensure that you provide an apt justification for each attested control to capture the rationale behind your decision.  
+
 
 ### Overview
 
