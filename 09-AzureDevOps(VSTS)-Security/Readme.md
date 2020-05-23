@@ -1,5 +1,5 @@
 
-> Security Scanner for Azure DevOps (ADO)) was created by the Core Services Engineering & Operations (CSEO) division at Microsoft. We have shared the scanner and its documentation with the community to provide guidance for rapidly scanning, deploying and operationalizing ADO resources, across the different stages of DevOps, while maintaining controls on security and governance.
+> Security Scanner for Azure DevOps (ADO) was created by the Core Services Engineering & Operations (CSEO) division at Microsoft. We have shared the scanner and its documentation with the community to provide guidance for rapidly scanning, deploying and operationalizing ADO resources, across the different stages of DevOps, while maintaining controls on security and governance.
 <br>This is not an official Microsoft product – rather an attempt to share Microsoft CSEO's best practices with the community..
 # Azure DevOps (ADO) Security Scanner -Preview
 
