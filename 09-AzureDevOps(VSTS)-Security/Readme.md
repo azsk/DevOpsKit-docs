@@ -868,7 +868,7 @@ It is powerful capability of AzSK.AzureDevOps to enable a project to customize t
 All our SVTs inherit from a base class called SVTBase which will take care of all the required plumbing from the control evaluation code. Every SVT will have a corresponding feature json file under the configurations folder. For example, AzureDevOps.Project.ps1 (in the core folder) has a corresponding AzureDevOps.Project.json file under configurations folder. These SVTs json have a bunch of configuration parameters, that can be controlled by a policy owner, for instance, you can change the recommendation, modify the description of the control suiting your project, change the severity, etc.
 
 Below is the typical schema for each control inside the feature json
-  ``` JSON
+  ```
 {
     "ControlID": "AzureDevOps_Project_AuthZ_Limit_Job_Scope_To_Current_Project",   //Human friendly control Id. The format used is AzureDevOps_<FeatureName>_<Category>_<ControlName>
     "Description": "Scope of access of all pipelines should be restricted to current project.",  //Description for the control, which is rendered in all the reports it generates (CSV, AI telemetry, emails etc.).
@@ -876,7 +876,7 @@ Below is the typical schema for each control inside the feature json
     "ControlSeverity": "Medium", //Represents the severity of the Control. 
     "Automated": "Yes",   //Indicates whether the given control is Manual/Automated.
     "MethodName": "CheckJobAuthnScope",  // Represents the Control method that is responsible to evaluate this control. It should be present inside the feature SVT associated with this control.
-    "Recommendation": "TGo to Project Settings --> Pipelines --> Settings --> Enable 'Limit job authorization scope to current project.'.",	  //Recommendation typically provides the precise instructions on how to fix this control.
+    "Recommendation": "Go to Project Settings --> Pipelines --> Settings --> Enable 'Limit job authorization scope to current project.'.",	  //Recommendation typically provides the precise instructions on how to fix this control.
     "Tags": [
         "SDL",
         "TCP",
@@ -996,7 +996,7 @@ class SubscriptionCore: SVTBase
   > IMPT: Do *not* tag 'Ext' to the 'FeatureName' here. Make sure you have updated the MethodName to the new method name. 
   > Note: Remove the comments in the below JSON before saving the file
   
-``` JSON
+``` 
 	{
     "FeatureName":  "Project",
     "Reference":  "aka.ms/azsktcp/project",
