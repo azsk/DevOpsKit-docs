@@ -9,9 +9,9 @@
   - [Setting up Continuous Assurance - Step by Step](Readme.md#setting-up-continuous-assurance---step-by-step)
   - [Visualize security scan results](Readme.md#visualize-security-scan-results)
 
- ### [AzSK.AzureDevOps PowerShell module](Readme.md#installation-guide)
+ ### [AzSK.AzureDevOps PowerShell module](Readme.md#azskazuredevops-powershell-module-1)
   -  [Installation Guide](Readme.md#installation-guide)
-  -  [Scan your Azure DevOps resources](Readme.md#scan-your-azure-devops-resources-1)
+  -  [Scan your Azure DevOps resources](Readme.md#scan-your-azure-devops-resources)
  
 
 ### [Control Attestation](Readme.md#control-attestation-1)
@@ -20,6 +20,13 @@
 - [How toolkit determines the effective control result](Readme.md#how-toolkit-determines-the-effective-control-result)  
 - [Permissions required for attesting controls](Readme.md#permissions-required-for-attesting-controls) 
 - [Attestation expiry](Readme.md#attestation-expiry)  
+
+### [Customizing AzSK.AzureDevOps for your project](Readme.md#ustomizing-azskazuredevops-for-your-project)
+- [Overview](Readme.md#Overview-2)
+- [Setting up org policy](Readme.md#setting-up-org-policy)  
+- [Consuming custom org policy](Readme.md#consuming-custom-org-policy)  
+- [Advanced usage of org policy (extending AzSK.AzureDevOps)](Readme.md#advanced-usage-of-org-policy-extending-azskazuredevops) 
+- [Frequently Asked Questions](Readme.md#frequently-asked-questions)  
 
 Security Scanner for Azure DevOps (ADO) helps you keep your ADO artifacts such as various org/project settings, build/release configurations, service connections, agent pools, etc. configured securely. You can run the ADO Security Scanner standalone in a PowerShell console or in an ADO pipeline via a marketplace extension.
 
@@ -941,9 +948,9 @@ Here are a few common things that may cause glitches and you should be careful a
 with the entries in the ServerConfigMetadata.json file)
 - Make sure that no special/BOM characters get introduced into the policy file text. 
 
-# Advanced usage of org policy (extending AzSK)
+## Advanced usage of org policy (extending AzSK.AzureDevOps)
 
-## Customizing the SVTs
+### Customizing the SVTs
 
 It is powerful capability of AzSK.AzureDevOps to enable a project to customize the Security Verification Tests (SVT) behaviour. You will be able to achieve the following scenarios.
 
