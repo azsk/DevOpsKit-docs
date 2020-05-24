@@ -611,11 +611,13 @@ This includes things such as:
 Note that the policy files needed for security scans are downloaded into each PS session for **all** AzSK.AzureDevOps scenarios. That is, apart from manually-run scans from your desktop, this same behavior happens if you include the 'ADO Security Scanner' extension task in your CICD pipeline. 
 
  While the out-of-box files in the module may be good for limited use, in many contexts you may want to "customize" the behavior of the security scans for your environment. You may want to do things such as: (a) enable/disable 
-some controls, (b) change control settings to better match specific security policies within your org, (c) change various messages, (d) add additional filter criteria for certain regulatory requirements that teams in your org can leverage, etc. When faced with such a need, you need a way to create and manage 
+some controls, (b) change control settings to better match specific security policies within your project, (c) change various messages, (d) add additional filter criteria for certain regulatory requirements that teams in your project can leverage, etc. When faced with such a need, you need a way to create and manage 
 a dedicated policy endpoint customized to the needs of your environment. The organization policy setup feature helps you do that in an automated fashion. 
 
-In this document, we will look at how to setup an organization-specific policy endpoint, how to make changes to and manage the policy files and how to accomplish various common org-specific policy/behavior customizations 
+In this document, we will look at how to setup an org-specific policy endpoint, how to make changes to and manage the policy files and how to accomplish various common org-specific policy/behavior customizations 
 for the scanner.
+
+>**Note:** We will be treating **PROJECT** as a boundary to customize scanner behavior. Any customizations made will apply strictly only to the project (and its components) where the org-policy endpoint resides. We will be interchangeably using the terms 'org' and 'project'.  
 
 #### How does AzSK.AzureDevOps use online policy?
 
