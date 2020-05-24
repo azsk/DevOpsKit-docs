@@ -923,7 +923,9 @@ and 'ControlIds' for that resource...making it fairly easy to customize/tweak yo
  
  iii) Confirm that an entry for ControlSettings.json is already there in the ServerConfigMetadata.json file. (Else see step-iv in (b) above.)
 
-> Note: This will include new controls that you added in the baseline set on the server side plus the original baseline set (present in the offline file in module). This happens as *ControlSetting.json* file has been **overlayed** on the server side. In order to not include the original baseline in the scan, you need to **override** the file on server side. Refer the below steps to override baseline set on server side.
+> Note: This will include new controls that you added in the baseline set on the server side plus the original baseline set (present in the offline file in module). This happens as *ControlSetting.json* file has been **overlayed** on the server side. 
+
+In order to not include the original baseline in the scan, you need to **override** the file on server side. Refer the below steps to override baseline set on server side.
 
 **Steps:**
 
