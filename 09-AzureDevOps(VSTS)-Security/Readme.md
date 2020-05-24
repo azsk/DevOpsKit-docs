@@ -21,7 +21,7 @@
 - [Permissions required for attesting controls](Readme.md#permissions-required-for-attesting-controls) 
 - [Attestation expiry](Readme.md#attestation-expiry)  
 
-### [Customizing AzSK.AzureDevOps for your project](Readme.md#customizing-azskazuredevops-for-your-project)
+### [Customizing AzSK.AzureDevOps for your project](Readme.md#customizing-azskazuredevops-for-your-project-1)
 - [Overview](Readme.md#Overview-2)
 - [Setting up org policy](Readme.md#setting-up-org-policy)  
 - [Consuming custom org policy](Readme.md#consuming-custom-org-policy)  
