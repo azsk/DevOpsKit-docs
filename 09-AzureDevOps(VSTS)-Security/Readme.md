@@ -3,6 +3,8 @@
 <br>This is not an official Microsoft product – rather an attempt to share Microsoft CSEO's best practices with the community..
 # Azure DevOps (ADO) Security Scanner -Preview
 
+### Contents
+
 ### [Overview](Readme.md#Overview)
 
 ### [Continuous Assurance](Readme.md#continuous-assurance-1)
