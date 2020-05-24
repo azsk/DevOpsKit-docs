@@ -17,7 +17,7 @@
 ### [Control Attestation](Readme.md#control-attestation-1)
 - [Overview](Readme.md#Overview-1)
 - [Starting attestation](Readme.md#starting-attestation)  
-- [How toolkit determines the effective control result](Readme.md#how-toolkit-determines-the-effective-control-result)  
+- [How scanner determines the effective control result](Readme.md#how-scanner-determines-the-effective-control-result)  
 - [Permissions required for attesting controls](Readme.md#permissions-required-for-attesting-controls) 
 - [Attestation expiry](Readme.md#attestation-expiry)  
 
@@ -350,9 +350,9 @@ Refer [doc](../02-Secure-Development#understand-the-scan-reports) for understand
 The attestation feature empowers users to support scenarios where human input is required to augment or override the default control 
 evaluation status from AzSK.AzureDevOps. These may be situations such as:
 
-- The toolkit has generated the list of 'Administrators' for a project but someone needs to have a look at the list and ratify that 
+- The scanner has generated the list of 'Administrators' for a project but someone needs to have a look at the list and ratify that 
 these are indeed the correct people, or
-- The toolkit has marked a control as failed. However, given the additional contextual knowledge, the application owner wants to ignore the control failure.
+- The scanner has marked a control as failed. However, given the additional contextual knowledge, the application owner wants to ignore the control failure.
 
 In all such situations, there is usually a control result that is based on the technical evaluation (e.g., Verify, Failed, etc.) that has to 
 be combined with the user's input in order to determine the overall or effective control result. The user is said to have 'attested' such controls 
@@ -360,7 +360,7 @@ and, after the process is performed once, AzSK.AzureDevOps remembers it and gene
 is a state change.
 
 The attestation feature is implemented via a new switch called *ControlsToAttest* which can be specified in any of the standard security scan cmdlets
-of AzSK.AzureDevOps. When this switch is specified, the toolkit first performs a scan of the target resource(s) like it is business as usual and, once
+of AzSK.AzureDevOps. When this switch is specified, the scanner first performs a scan of the target resource(s) like it is business as usual and, once
 the scan is complete, it enters a special interactive 'attest mode' where it walks through each resource and relevant attestable controls
 and captures inputs from the user and records them (along with details about the person who attested, the time, etc.). 
 After this, for all future scans on the resource(s), AzSK.AzureDevOps will show the effective control evaluation results. Various options are provided to support
@@ -496,10 +496,10 @@ Attestation details corresponding to each control (e.g., justification, user nam
 If you wish to revisit previous attestations, it can be done by using 'AlreadyAttested' flag in the command above.  
 
 [Back to top...](Readme.md#contents)
-### How toolkit determines the effective control result
+### How scanner determines the effective control result
 
 During the attestation workflow, the user gets to provide attestation status for each control attested. This basically represents the user's attestation preference w.r.t.
-a specific control (i.e., whether the user wants to override/augment the toolkit status and treat the control as passed or whether the user agrees with the toolkit status but wants to defer fixing the issue for the time being):
+a specific control (i.e., whether the user wants to override/augment the scanner status and treat the control as passed or whether the user agrees with the scanner status but wants to defer fixing the issue for the time being):
 
 |Attestation Status | Description|
 |---|---|
