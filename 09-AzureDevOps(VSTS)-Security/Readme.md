@@ -9,10 +9,9 @@
   - [Setting up Continuous Assurance - Step by Step](Readme.md#setting-up-continuous-assurance---step-by-step)
   - [Visualize security scan results](Readme.md#visualize-security-scan-results)
 
-
- ### [Installation Guide](Readme.md#installation-guide)
-
-### [Scan your Azure DevOps resources](Readme.md#scan-your-azure-devops-resources-1)
+ ### [AzSK.AzureDevOps PowerShell module](Readme.md#installation-guide)
+  -  [Installation Guide](Readme.md#installation-guide)
+  -  [Scan your Azure DevOps resources](Readme.md#scan-your-azure-devops-resources-1)
  
 
 ### [Control Attestation](Readme.md#control-attestation-1)
@@ -80,15 +79,16 @@ The "ADO Security Scanner" task starts showing in the "Run on Agent" list and di
 
 ![Add task inputs](../Images/09_ADO_AddTaskDetails.png)
 
-> **Note:** This task also requires Azure DevOps connection containing org details and PAT token to scan the required resources. Refer doc [here](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page) to create token and provide it as part of connection
+> **Note:** This task also requires Azure DevOps connection containing org details and PAT to scan the required resources. Refer doc [here](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page) to create token and provide it as part of connection
 
 
 <html>
 <head>
 
 </head><body>
-<H2> List for customizing the PAT required for Azure DevOps Connection with minimum required privileges.</H2><table><tr><th>Scope</th><th>Privilege</th></tr>
+<H2> Customizing your PAT with minimum required privileges for Azure DevOps Connection</H2><table><tr><th>Scope</th><th>Privilege</th></tr>
 
+Here is a scope-wise list of minimum privileges that needs to be assigned to your PAT to ensure a smooth experience of the security scan.
 <tr><td>
 Agent Pools
 </td><td>Read</tr>
@@ -220,6 +220,10 @@ Step 1,2 & 3 needs to be repeated to add “__Project Component Security Scan Su
 
 > **Note:**  Dashboard reflects updates only upon pipeline execution. Local scan results don't reflect automatically. If you have remediated a control, make sure you run the pipeline to reflect the updated control results on dashboard.
 
+# AzSK.AzureDevOps PowerShell module
+
+At its core, the Security Scanner for ADO is a PowerShell module. This can be run locally from the PS console after installation. This is as simple as running PS in non-Admin mode and running the cmds as shown below:
+
 ## Installation Guide
 
 >**Pre-requisites**:
@@ -240,7 +244,7 @@ Step 1,2 & 3 needs to be repeated to add “__Project Component Security Scan Su
 
 Run the command below after replacing `<OrganizationName>` with your Azure DevOps org Name 
 and `<PRJ1, PRJ2, ..`> with a comma-separated list of project names where your Azure DevOps resources are hosted.
-You will get Organization name from vsts url e.g. http://samplevstsorg.visualstudio.com. In this 'samplevstsorg' is org name.
+You will get Organization name from your ADO organization url e.g. http://sampleadoorg.visualstudio.com. In this 'sampleadoorg' is org name.
 
 ```PowerShell
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1, PRJ2,...etc.>"
