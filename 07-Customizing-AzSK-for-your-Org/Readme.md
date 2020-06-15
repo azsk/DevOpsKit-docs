@@ -1508,6 +1508,56 @@ iii) Update org policy with the help of UOP cmdlet with required parameters.
 
    For testing follow same steps mentioned above for [scenario 1](./#testing-7)
 
+### How to configure non-AAD identity providers for AppService?
+   You will be able to configure non-AAD identity providers and external redirect URLs using below settings:
+
+i)Copy the ControlSettings.json from the AzSK installation to your org-policy folder.
+
+ii)Update required values in below tags under AppService:
+```JSON
+"AllowedAuthenticationProviders": [
+  ],
+"AllowedExternalRedirectURLs": [
+   ]
+```
+
+iii)Make sure identity providers from AllowedAuthenticationProviders are removed from NonAADAuthProperties.
+```JSON
+"NonAADAuthProperties": [
+	   "googleClientId",
+      "facebookAppId"
+      "twitterConsumerKey",
+      "microsoftAccountClientId"
+    ]
+```
+
+iv) Save the file.
+
+v) Override ControlSettings.json in ServerConfigMetaData.json as shown below:
+
+```JSON
+   {
+    "OnlinePolicyList" : [
+        {
+            "Name" : "AzSK.json"
+        }, 
+        {
+            "Name" : "ControlSettings.json",
+			   "OverrideOffline" :true
+        }, 
+        {
+            "Name" : "ServerConfigMetadata.json",
+			   "OverrideOffline" : true
+        }
+    ]
+}
+```
+
+vi) Rerun the policy update or setup command (the same command you ran for the first-time setup).
+
+
+
+
 
 
 

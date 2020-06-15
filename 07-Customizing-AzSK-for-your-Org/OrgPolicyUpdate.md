@@ -21,6 +21,11 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
    -StorageAccountName "contosoitsa" `
    -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
 ```
+# AzSK v.4.10.0
+
+* Added support for configuring non-AAD identity providers for app service. Refer [here](https://github.com/azsk/DevOpsKit-docs/tree/master/07-Customizing-AzSK-for-your-Org#frequently-asked-questions) for more information.
+* Fixed an issue in SVT extension framework wherein extended class were not being correctly applied across resources of the same type.
+
 # AzSK v.4.4.0
 
 * Added capabilities to setup AzSK to scan subscriptions across multiple tenants. Instructions are available [here](https://aka.ms/devopskit/crosstenant).
