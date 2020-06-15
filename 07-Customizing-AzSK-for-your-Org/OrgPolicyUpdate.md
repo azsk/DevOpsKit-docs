@@ -23,7 +23,7 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
 ```
 # AzSK v.4.10.0
 
-* Lists to check for authentication providers and external redirect URLs for an app service can be customized as per organization requirements. Refer [here](https://github.com/azsk/DevOpsKit-docs/tree/Users/Abolimsft/2006docchanges/07-Customizing-AzSK-for-your-Org) for more information.
+* Lists to check for authentication providers and external redirect URLs for an app service can be customized as per organization requirements. Refer [here](https://github.com/azsk/DevOpsKit-docs/tree/master/07-Customizing-AzSK-for-your-Org#frequently-asked-questions) for more information.
 * Fixed an issue in SVT extension framework wherein extended class were not being referred in scenarios involving scans of multiple resource types.
 
 # AzSK v.4.4.0
