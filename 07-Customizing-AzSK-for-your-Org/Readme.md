@@ -1508,6 +1508,54 @@ iii) Update org policy with the help of UOP cmdlet with required parameters.
 
    For testing follow same steps mentioned above for [scenario 1](./#testing-7)
 
+### How to configure Allowed Authentication Providers and Allowed External Redirect URLs for AppService?
+   You will be able to configure Allowed Authentication Providers and Allowed External Redirect URLs using below settings:
+   i) In ServerConfigMetadata.json file,
+
+```JSON
+   {
+    "OnlinePolicyList" : [
+        {
+            "Name" : "AzSK.json"
+        }, 
+        {
+            "Name" : "ControlSettings.json",
+			   "OverrideOffline" :true
+        }, 
+        {
+            "Name" : "ServerConfigMetadata.json",
+			   "OverrideOffline" : true
+        }
+    ]
+}
+```
+ii)Copy the ControlSettings.json from the AzSK installation to your org-policy folder.
+
+iii)Append file contents to ControlSettings.json and add required values in below tags under AppService:
+```JSON
+"AllowedAuthenticationProviders": [
+  ],
+    "AllowedExternalRedirectURLs": [
+    ]
+```
+
+iv)Make sure Allowed AuthenticationProviders are removed from NonAADAuthProperties.
+```JSON
+"NonAADAuthProperties": [
+	   "googleClientId",
+      "facebookAppId"
+      "twitterConsumerKey",
+      "microsoftAccountClientId"
+    ]
+```
+
+v) Save the file.
+
+vi) Rerun the policy update or setup command (the same command you ran for the first-time setup).
+
+
+
+
 
 
 

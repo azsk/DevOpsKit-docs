@@ -21,6 +21,11 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
    -StorageAccountName "contosoitsa" `
    -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
 ```
+# AzSK v.4.10.0
+
+* Lists to check for authentication providers and external redirect URLs for an app service can be customized as per organization requirements. Refer [here](https://github.com/azsk/DevOpsKit-docs/tree/Users/Abolimsft/2006docchanges/07-Customizing-AzSK-for-your-Org) for more information.
+* Fixed an issue in SVT extension framework wherein extended class were not being referred in scenarios involving scans of multiple resource types.
+
 # AzSK v.4.4.0
 
 * Added capabilities to setup AzSK to scan subscriptions across multiple tenants. Instructions are available [here](https://aka.ms/devopskit/crosstenant).
