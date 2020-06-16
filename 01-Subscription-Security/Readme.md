@@ -714,7 +714,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
 4. <h4> List existing role settings (-ListRoleSettings) </h4>
 
-      Use this command to list Azure role with PIM assignments at the specified scope that are about to expire in given number of days. Use respective parameters to list expiring assignments for a specific role on a subscription or a resource group or a resource.
+      Use this command to list Azure role with PIM assignments at the specified scope to fetch existing settings of a role for both Eligible and Active role assignments.
 
       ```PowerShell
 	  Get-AzSKPIMConfiguration -ListRoleSettings  `
@@ -1120,7 +1120,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                -ExpiringInDays <int> ` # The number of days you want to query expiring assignments for
                                [-DoNotOpenOutputFolder]
       ```
-      <b>Example 1: </b> List 'Owner' PIM assignments at subscription level that will expire in 10 days.
+      <b>Example 1: </b> List 'Owner' PIM assignments at Management Group level that will expire in 10 days.
 
       ```PowerShell
       Get-AzSKPIMConfiguration -ListSoonToExpireAssignment `
@@ -1128,6 +1128,22 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                -RoleNames 'Owner' `
 			                   -ExpiringInDays 10`
                                -DoNotOpenOutputFolder
+      ```
+   4. <h4> List existing role settings (-ListRoleSettings) </h4>
+
+      Use this command to list Azure role with PIM assignments at the specified scope to fetch existing settings of a role for both Eligible and Active role assignments.
+
+      ```PowerShell
+	  Get-AzSKPIMConfiguration -ListRoleSettings  `
+                              -ManagementGroupId <ManagementGroupId> `
+                              -RoleName "Owner" `
+      ```
+      <b>Example 1: </b> List role settings for 'Owner' PIM role at Management Group level.
+
+      ```PowerShell
+      Get-AzSKPIMConfiguration -ListRoleSettings `
+                               -ManagementGroupId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
+                               -RoleName "Owner" `
       ```
 
 ### Use Set-AzSKPIMConfiguration (alias 'setpim') for configuring/changing PIM settings at Management Group level:
