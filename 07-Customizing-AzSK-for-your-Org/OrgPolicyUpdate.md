@@ -23,7 +23,8 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
 ```
 # AzSK v.4.10.0
 
-* Added support for configuring non-AAD identity providers for app service. Refer [here](https://github.com/azsk/DevOpsKit-docs/tree/master/07-Customizing-AzSK-for-your-Org#frequently-asked-questions) for more information.
+* Added support for configuring non-AAD identity providers for app service. Refer [here](
+https://github.com/azsk/DevOpsKit-docs/tree/master/07-Customizing-AzSK-for-your-Org#how-to-configure-non-aad-identity-providers-for-appservice) for more information.
 * Fixed an issue in SVT extension framework wherein extended class were not being correctly applied across resources of the same type.
 
 # AzSK v.4.4.0
