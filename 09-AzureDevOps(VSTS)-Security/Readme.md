@@ -1190,14 +1190,14 @@ If you want only the controls which are present on your custom org-policy to be 
 # Auto bug logging
 ## Overview
 
-The auto bug logging feature facilitates user to identify and keep  track of security control failures in your ADO resources. Whenever a control failure is surfaced by the ADO Security Scanner, a bug will be logged in your ADO work items that would contain all the relevant details and remediation steps. The bug is assigned to the most relevant user (admin/creator/last known consumer) for the resource.
+The auto bug logging feature facilitates user to identify and keep  track of security control failures in ADO resources. Whenever a control failure is surfaced by the ADO Security Scanner, a bug will be logged in the ADO work items that would contain all the relevant details and remediation steps. The bug is assigned to the most relevant user (admin/creator/last known consumer) for the resource.
 
 Duplicate bugs are not logged again and are available in the summary as "active" bugs. 
 Upon the completion of all control scans, all passing controls whose bugs had been logged previously are closed automatically as well.
 
 ## Starting bug logging
 
-To leverage the bug logging feature following are the scan parameters you need to include along with any security scan command.
+To leverage the bug logging feature, following are the scan parameters that need to be include along with any security scan command.
 | Param Name | Purpose | Required?| Possible Values| 
 |--|--|--|--|
 |  AutoBugLog|To enable bug logging and identify which subset of control failures are to be logged as bugs  | TRUE| All, BaselineControls, PreviewBaselineControls| 
@@ -1208,7 +1208,7 @@ The bug logging feature is implemented via a new switch called *-AutoBugLog*. Al
 | AutoBugLog option |  Description|
 |--|--|
 | All | Log all control failures |
-| BaselineControls | Log only preview baseline control failures|
+| BaselineControls | Log only baseline control failures|
 | PreviewBaselineControls | Log only preview baseline control failures|
 
 ## Setting up host project for organization specific controls
@@ -1227,19 +1227,19 @@ See the examples below for auto bug logging of organization, project, build, rel
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -AutoBugLog All
 
 #Auto bug logging for project controls
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName" -AutoBugLog All
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -AutoBugLog All
 
 #Auto bug logging for build controls
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName" -BuildNames "<BuildName>" -AutoBugLog All
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -BuildNames "<BuildName>" -AutoBugLog All
 
 #Auto bug logging for release controls
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName" -ReleaseNames "<ReleaseName>" -AutoBugLog All
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -ReleaseNames "<ReleaseName>" -AutoBugLog All
 
 #Auto bug logging for agent pool controls
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName" -AgentPoolNames "<AgentPoolName>" -AutoBugLog All
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -AgentPoolNames "<AgentPoolName>" -AutoBugLog All
 
 #Auto bug logging for service connection controls
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName" -ServiceConnectionNames "<ServiceConnectionName>" -AutoBugLog All
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -ServiceConnectionNames "<ServiceConnectionName>" -AutoBugLog All
 ```
 ## Defining area and iteration path
 
@@ -1252,10 +1252,10 @@ The user can control the area and iteration paths, where the bugs are to be logg
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName" -AutoBugLog All -AreaPath "<AreaPath>" -IterationPath "<IterationPath>"
 
 #Specifying just area path
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName" -AutoBugLog All -AreaPath "<AreaPath>"
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -AutoBugLog All -AreaPath "<AreaPath>"
 
 #Specifying just iteration path
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName" -AutoBugLog All -IterationPath "<IterationPath>"
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -AutoBugLog All -IterationPath "<IterationPath>"
 ```
  2. **Specifying paths using org policy :** To leverage this method, make sure the org policy setup is complete in your project. Read more about org policy [here](Readme.md#setting-up-org-policy).
 	 - Copy the ControlSettings.json from the AzSK.AzureDevOps installation to your org-policy repo.
@@ -1263,8 +1263,8 @@ Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -Projec
 ```json
 {
 	"BugLogging": {
-	"BugLogAreaPath": "ProjectName\\AreaPath",
-	"BugLogIterationPath": "RootDefaultProject"
+	  "BugLogAreaPath": "ProjectName\\AreaPath",
+	  "BugLogIterationPath": "RootDefaultProject"
 	}
 }
 ```
@@ -1273,7 +1273,7 @@ Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -Projec
 
 ![Bug Logging Org Policy](../Images/ADO_BugLogging_OrgPolicy.png)
 
-By default the values for both of the paths are RootDefaultProject that correspond to the root level of your project work items. In ADO that means the project name that has been supplied is the area and iteration path. While specifying any other path, make sure you escape characters such as "\" to sanitize your JSON.
+By default the values for both of the paths are RootDefaultProject that correspond to the root level of your project work items. In ADO that means the project name that has been supplied is the area and iteration path. While specifying any other path, make sure you escape characters such as "\\" to sanitize your JSON.
 
 If no scan parameters are provided, the paths declared in the control settings will be used. If both scan parameters and org policies are specified, the org policies are overridden and paths mentioned in scan parameter are used.
 ### The bug logging summary
@@ -1326,7 +1326,7 @@ Any bug that has been resolved before can be reactivated if the control failure 
 ```json
 {
 	"BugLogging": {
-	"ResolvedBugLogBehaviour": "ReactiveOldBug"
+  	"ResolvedBugLogBehaviour": "ReactiveOldBug"
 	}
 }
 ```
@@ -1334,7 +1334,7 @@ Any bug that has been resolved before can be reactivated if the control failure 
 ```json
 {
 	"BugLogging": {
-	"ResolvedBugLogBehaviour": "CreateNewBug"
+	  "ResolvedBugLogBehaviour": "CreateNewBug"
 	}
 }
 ```
@@ -1348,8 +1348,8 @@ This can be controlled via the org policy as follows:
 ```json
 {
 	"BugLogging": {
-	"AutoCloseProjectBug": true,
-	"AutoCloseOrgBug": true
+	  "AutoCloseProjectBug": true,
+  	"AutoCloseOrgBug": true
 	}
 }
 ```
