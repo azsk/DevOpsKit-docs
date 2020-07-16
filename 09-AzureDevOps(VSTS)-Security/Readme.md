@@ -31,8 +31,8 @@
 - [Advanced usage of org policy (extending AzSK.AzureDevOps)](Readme.md#advanced-usage-of-org-policy-extending-azskazuredevops) 
 - [Frequently Asked Questions](Readme.md#frequently-asked-questions)  
 
-### [Auto Bug Logging](Readme.md#auto-bug-logging)
-- [Overview](Readme.md#overview)
+### [Auto Bug Logging](Readme.md#Overview-3)
+- [Overview](Readme.md#Overview-3)
 - [Starting bug logging](Readme.md#starting-bug-logging)  
 - [Setting up host project for organization specific controls](Readme.md#setting-up-host-project-for-organization-specific-controls)  
 - [Defining area and iteration path](Readme.md#defining-area-and-iteration-path)  
@@ -1199,7 +1199,7 @@ Upon the completion of all control scans, all passing controls whose bugs had be
 
 To leverage the bug logging feature following are the scan parameters you need to include along with any security scan command.
 | Param Name | Purpose | Required?| Possible Values| 
-|--|--|--|--|--|
+|--|--|--|--|
 |  AutoBugLog|To enable bug logging and identify which subset of control failures are to be logged as bugs  | TRUE| All, BaselineControls, PreviewBaselineControls| 
 |  AreaPath|To specify the area path where the bugs are to be logged  | FALSE| Valid area path in ADO| 
 |  IterationPath|To specify the iteration path where the bugs are to be logged  | FALSE| Valid iteration path in ADO| 
@@ -1257,7 +1257,7 @@ Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -Projec
 #Specifying just iteration path
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName" -AutoBugLog All -IterationPath "<IterationPath>"
 ```
- 2. **Specifying paths using org policy :** To leverage this method, make sure the org policy setup is complete in your project. Read more about org policy [here](Readme.md#customizing-azskazuredevops-for-your-project-).
+ 2. **Specifying paths using org policy :** To leverage this method, make sure the org policy setup is complete in your project. Read more about org policy [here](Readme.md#setting-up-org-policy).
 	 - Copy the ControlSettings.json from the AzSK.AzureDevOps installation to your org-policy repo.
 	 - Remove everything except the "*BugLogAreaPath*" and the "*BugLogIterationPath*" line while keeping the JSON object hierarchy/structure intact.
 ```json
