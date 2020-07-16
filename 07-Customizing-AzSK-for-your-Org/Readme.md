@@ -1560,10 +1560,10 @@ vi) Rerun the policy update or setup command (the same command you ran for the f
 
 i) Copy the ControlSettings.json from the AzSK installation to your org-policy folder.
 
-ii) Update the value to true in below tag under PublicIpAddress:
+ii) Update the EnablePublicIpResource setting to true.
 ```JSON
 "PublicIpAddress": {
-    "EnablePublicIpResource": false
+    "EnablePublicIpResource": true
    },
 ```
 
