@@ -1560,6 +1560,13 @@ vi) Rerun the policy update or setup command (the same command you ran for the f
 
 i) Copy the ControlSettings.json from the AzSK installation to your org-policy folder.
 
+   a) If you already have a overridden ControlSettings.json, add the following new settings to it.
+   ```JSON
+"PublicIpAddress": {
+    "EnablePublicIpResource": false
+   },
+```
+
 ii) Update the EnablePublicIpResource setting to true.
 ```JSON
 "PublicIpAddress": {
@@ -1583,10 +1590,25 @@ iv)  Edit the ServerConfigMetadata.json file in your local org-policy folder and
     ]
 }
 ```
+v) If you are using an already overridden ControlSettings.json, edit the ServerConfigMetadata.json file as follows:
 
-v) Rerun the policy update or setup command (the same command you ran for the first-time setup).
+```JSON
+   {
+    "OnlinePolicyList" : [
+        {
+            "Name" : "AzSK.json"
+        }, 
+        {
+            "Name" : "ControlSettings.json",
+            "OverrideOffline" : true
+        }, 
+    ]
+}
+```
 
-vi) Command that will be helpful in scanning a public IP address resource:
+vi) Rerun the policy update or setup command (the same command you ran for the first-time setup).
+
+vii) Command that will be helpful in scanning a public IP address resource:
 
 ```PowerShell
  $subscriptionId = <Your SubscriptionId>
