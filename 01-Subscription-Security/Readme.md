@@ -56,10 +56,10 @@
 - [Customizing AzSK for your organization](Readme.md#customizing-azsk-for-your-organization)
 
 ### [AzSK: Privileged Identity Management (PIM) helper cmdlets](Readme.md#azsk-privileged-identity-management-pim-helper-cmdlets-1)
-- [Get-AzSKPIMConfiguration at Subscription scope](Readme.md#use-get-azskpimconfiguration-(alias-'getpim')-for-querying-various-pim-settings/status-at-subscription-scope)
-- [Set-AzSKPIMConfiguration at Subscription scope](Readme.md#use-set-azskpimconfiguration-(alias-'setpim')-for-configuring/changing-pim-settings-at-subscription-scope:)
-- [Get-AzSKPIMConfiguration at Management Group scope](Readme.md#use-get-azskpimconfiguration-(alias-'getpim')-for-querying-various-pim-settings/status-at-management-group-level)
-- [Set-AzSKPIMConfiguration at Management Group scope](Readme.md#use-set-azskpimconfiguration-(alias-'setpim')-for-configuring/changing-pim-settings-at-management-group-level:)
+- [Get-AzSKPIMConfiguration at Subscription scope](Readme.md#use-get-azskpimconfiguration-alias-getpim-for-querying-various-pim-settingsstatus-at-subscription-scope)
+- [Set-AzSKPIMConfiguration at Subscription scope](Readme.md#use-set-azskpimconfiguration-alias-setpim-for-configuringchanging-pim-settings-at-subscription-scope)
+- [Get-AzSKPIMConfiguration at Management Group scope](Readme.md#use-get-azskpimconfiguration-alias-getpim-for-querying-various-pim-settingsstatus-at-management-group-level)
+- [Set-AzSKPIMConfiguration at Management Group scope](Readme.md#use-set-azskpimconfiguration-alias-setpim-for-configuringchanging-pim-settings-at-management-group-level)
 
 ----------------------------------------------------------
 ## AzSK: Subscription Health Scan
@@ -714,7 +714,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
 4. <h4> List existing role settings (-ListRoleSettings) </h4>
 
-      Use this command to list Azure role with PIM assignments at the specified scope that are about to expire in given number of days. Use respective parameters to list expiring assignments for a specific role on a subscription or a resource group or a resource.
+      Use this command to list Azure role with PIM assignments at the specified scope to fetch existing settings of a role for both Eligible and Active role assignments.
 
       ```PowerShell
 	  Get-AzSKPIMConfiguration -ListRoleSettings  `
@@ -984,12 +984,18 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               -ExpiringInDays 10
 			      -DurationInDays 30 # The duration in days for expiration to be extended by
                               -Force
-      ```
-7. <h4> Configure role settings for role on an Azure resource (-ConfigureRoleSettings) </h4>
+
+7. <h4>Configure role settings for role on an Azure resource (-ConfigureRoleSettings)  </h4>
 	 Use this command to configure a  PIM role settings like maximum role assignment duration on a resource, mfa requirement upon activation etc.
-     The command currently supports configuring the following settings: Maximum assignment duration, maximum activation duration, requirement of justification upon activation, requirement of mfa upon activation and applying conditional access policies during activation.
+    
+     The command currently supports configuring the following settings:
+
+      a. *For Eligible Assignment Type*: Maximum assignment duration, maximum activation duration, requirement of justification upon activation, requirement of mfa upon activation and applying conditional access policies during activation.
+
+      b. *For Active Assignment Type*: Maximum active assignment duration, requirement of justification on assignment, requirement of mfa on assignment.
+
      
-      <b>Example 1: </b> Configure 'Owner' PIM role on a subscription, to let maximum activation duration be 12 hours.
+      <b>Example 1: </b> Configure 'Owner' PIM role on a subscription for Eligible assignment type, to let maximum activation duration be 12 hours.
 
       ```PowerShell
       Set-AzSKPIMConfiguration  -ConfigureRoleSettings `
@@ -1002,7 +1008,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                 -DoNotOpenOutputFolder`
       ```
       
-	 <b>Example 1: </b> Configure 'Owner' PIM role on a subscription, to apply conditional access policy while activation.
+	 <b>Example 2: </b> Configure 'Owner' PIM role on a subscription for Eligible assignment type, to apply conditional access policy while activation.
 	    Note: Currently application of both MFA and conditional policy on the same role is not supported. Either of them should be applied to a given role. 
 
       ```PowerShell
@@ -1011,6 +1017,18 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                 -RoleNames "Owner" `
                                 -ApplyConditionalAccessPolicyForRoleActivation $true
                                 -DoNotOpenOutputFolder`
+      ```
+      
+	 <b>Example 3: </b> Configure 'Reader' PIM role on a subscription for Active assignment type, to let maximum assignment duration be 15 days. 
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration  -ConfigureRoleSettings `
+                                -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
+                                -RoleNames "Reader" `
+                                -ExpireActiveAssignmentsInDays 15 `
+                                -RequireJustificationOnActiveAssignment $false `
+                                -RequireMFAOnActiveAssignment $true `
+                                -DoNotOpenOutputFolder
       ```
 8. <h4> Remove PIM assignments for a role on an Azure resource (-RemovePIMAssignment) </h4>
      Use this command to remove PIM assignments of specified role, at the specified scope.
@@ -1102,7 +1120,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                -ExpiringInDays <int> ` # The number of days you want to query expiring assignments for
                                [-DoNotOpenOutputFolder]
       ```
-      <b>Example 1: </b> List 'Owner' PIM assignments at subscription level that will expire in 10 days.
+      <b>Example 1: </b> List 'Owner' PIM assignments at Management Group level that will expire in 10 days.
 
       ```PowerShell
       Get-AzSKPIMConfiguration -ListSoonToExpireAssignment `
@@ -1110,6 +1128,22 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                -RoleNames 'Owner' `
 			                   -ExpiringInDays 10`
                                -DoNotOpenOutputFolder
+      ```
+   4. <h4> List existing role settings (-ListRoleSettings) </h4>
+
+      Use this command to list Azure role with PIM assignments at the specified scope to fetch existing settings of a role for both Eligible and Active role assignments.
+
+      ```PowerShell
+	  Get-AzSKPIMConfiguration -ListRoleSettings  `
+                              -ManagementGroupId <ManagementGroupId> `
+                              -RoleName "Owner" `
+      ```
+      <b>Example 1: </b> List role settings for 'Owner' PIM role at Management Group level.
+
+      ```PowerShell
+      Get-AzSKPIMConfiguration -ListRoleSettings `
+                               -ManagementGroupId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
+                               -RoleName "Owner" `
       ```
 
 ### Use Set-AzSKPIMConfiguration (alias 'setpim') for configuring/changing PIM settings at Management Group level:
@@ -1292,10 +1326,15 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                               -Force
       ```
 7. <h4> Configure role settings for role on an Azure resource (-ConfigureRoleSettings) </h4>
-	 Use this command to configure a  PIM role settings like maximum role assignment duration on a resource, mfa requirement upon activation etc.
-     The command currently supports configuring the following settings: Maximum assignment duration, maximum activation duration, requirement of justification upon activation, requirement of mfa upon activation and applying conditional access policies during activation.
-     
-      <b>Example 1: </b> Configure 'Owner' PIM role on a Management Group, to let maximum activation duration be 12 hours.
+	Use this command to configure a  PIM role settings like maximum role assignment duration on a resource, mfa requirement upon activation etc.
+    
+     The command currently supports configuring the following settings:
+
+      a. *For Eligible Assignment Type*: Maximum assignment duration, maximum activation duration, requirement of justification upon activation, requirement of mfa upon activation and applying conditional access policies during activation.
+
+      b. *For Active Assignment Type*: Maximum active assignment duration, requirement of justification on assignment, requirement of mfa on assignment.
+      
+      <b>Example 1: </b> Configure 'Owner' PIM role on a Management Group for Eligible assignment type, to let maximum activation duration be 12 hours.
 
       ```PowerShell
       Set-AzSKPIMConfiguration  -ConfigureRoleSettings `
@@ -1308,7 +1347,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                 -DoNotOpenOutputFolder`
       ```
       
-	 <b>Example 1: </b> Configure 'Owner' PIM role on a Management Group, to apply conditional access policy while activation.
+	 <b>Example 2: </b> Configure 'Owner' PIM role on a Management Group for Eligible assignment type, to apply conditional access policy while activation.
 	    Note: Currently application of both MFA and conditional policy on the same role is not supported. Either of them should be applied to a given role. 
 
       ```PowerShell
@@ -1317,6 +1356,17 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                 -RoleNames "Owner" `
                                 -ApplyConditionalAccessPolicyForRoleActivation $true
                                 -DoNotOpenOutputFolder`
+      ```
+      <b>Example 3: </b> Configure 'Reader' PIM role on a Management Group for Active assignment type, to let maximum assignment duration be 15 days. 
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration  -ConfigureRoleSettings `
+                                -ManagementGroupId <ManagementGroupId> `
+                                -RoleNames "Reader" `
+                                -ExpireActiveAssignmentsInDays 15 `
+                                -RequireJustificationOnActiveAssignment $false `
+                                -RequireMFAOnActiveAssignment $true `
+                                -DoNotOpenOutputFolder
       ```
 
 ## AzSK: Credential hygiene helper cmdlets
