@@ -1,22 +1,20 @@
-## 200615 (AzSK v.4.10.0)
+## 200715 (AzSK v.4.11.0)
 
 ### Feature updates
 
-* Privileged Identity Management (PIM):
-    *	Earlier, role settings could be listed only for eligible assignments via the getpim cmdlet. We have now expanded support to list role settings for active assignments as well at subscription and management group scope.
-        ```Powershell
-            getpim –ListRoleSettings -SubscriptionId $sub -RoleName Owner
+* Management of DevOps Kit-based AAD applications:
+    * Added support for listing all the DevOps Kit-based service principals (used in continuous assurance) that are owned by the user via the Get-AzSKInfo cmd. It will list all such applications that have been actively in use.
+    ```Powershell
+        Get-AzSKInfo –InfoType SPNInfo
+    ```
 
-            getpim –ListRoleSettings -ManagementGroupId $MGID -RoleName Owner
-        ```
-   
 *	Security scanner for Azure DevOps (ADO)/ADO Security Scanner extension:
     
-    * Introduced alerting and monitoring solution to empower individual teams to view control status of their project components.
-    
-    * Scanner now supports checkpointing for large scans via a -UsePartialCommits switch. 
-    * Added support for bulk attestation feature which empowers teams to provide a common justification for a set of resources all of which have a specific (single) control id that requires attestation.
-    * ADO security scanner extension can now be used in release pipelines as well.
+    * Introduced capability to log bugs in ADO for control failures of your ADO resources.
+    * Added a dashboard in Log Analytics to support alerting and monitoring for ADO resources across the organization.
+    * Check-pointing behavior has been enhanced to support durable (server-based) checkpoints.
+    * Control attestation workflow has been enhanced so that the updated control status reflects immediately on the extension dashboard/log analytics workspace.
+    * Added soft protection to restrict users from scanning larger number of resources (>1000) in an organization
 
 * Security Verification Tests (SVTs):
     *	N/A.
@@ -31,8 +29,9 @@
     * N/A.
 
 * Org policy/external user updates (for non-CSEO users):
-    * Added support for configuring non-AAD identity providers for app service. Refer [here](https://github.com/azsk/DevOpsKit-docs/blob/master/07-Customizing-AzSK-for-your-Org/OrgPolicyUpdate.md) for more information.
-    * Fixed an issue in SVT extension framework wherein extended class were not being correctly applied across resources of the same type.
+    * Added SVT for ‘public IP address’ as a service to optionally treat each public IP address as an individual resource. To enable this behavior, refer the docs here.
+    * Fixed an issue to enable Get-AzSKOrganizationPolicyStatus command to work in Linux-based containers.
+    * Key Vault, CDN and Databricks control JSON files have been sanitized to remove hidden BOM/extended characters. Org policy admins should procure a fresh copy of these files from the module and replicate the overridden changes (if any). 
 
 Note: The next few items mention features from recent releases retained for visibility in case you missed those release announcements:
 
@@ -80,27 +79,44 @@ Note: The next few items mention features from recent releases retained for visi
 
 ### Other improvements/bug fixes
 * Subscription Security:
-    * Added Azure_Subscription_Configure_Conditional_Access_for_PIM_RG control to check whether conditional access policy for critical roles (User Access Administrator/Owner) is configured at resource group scope.
+    * The subscription controls below will not be evaluated in local scan mode unless the corresponding control ids are specified explicitly in the command. This is done because these controls require substantial amount of time for evaluation.
+
+        * Azure_Subscription_Configure_Conditional_Access_for_PIM_RG
+        * Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG
+        * Azure_Subscription_Use_Only_Alt_Credentials
+        ```Powershell
+        gss -s $sub -cid ‘Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG’
+        ```
+ 
+    * Results of persistent access (PIM) controls for subscription and resource group scope will not fluctuate in case the underlying API call throws exception.
 
 * Privileged Identity Management (PIM):
-   * N/A.
+   * Fixed an issue regarding activation of PIM role assignments where previously it was leading to an error if the role was assigned for the same scope for both direct and group assignments.
 
 * SVTs: 
-   * Fixed a bug in attestation workflow where previously if there was no previous attestation history in the subscription and multiple controls were being targeted for attestation, then only the first control in the list was being attested.
+   * N/A.
     
 * Controls:
-    * Anonymous blob access control is now enabled for Data Lake Storage Gen2 resources.
-    * Multiple controls have been enabled for APIM resources configured in consumption tier. These controls check for least access privileges, HTTPS enablement, CORS access, MSI, etc. on consumption tier APIM resources.
-    * Controls Azure_APIManagement_AuthN_Use_AAD_for_Client_AuthN and Azure_APIManagement_DP_Dont_Checkin_Secrets_In_Source will now emit manual status for APIM resources where port 3443 is restricted.
-    * Azure_KeyVault_AuthN_Dont_Share_KeyVault_Unless_Trust will now check for shared access on key vaults for enterprise applications apart from AAD applications.
-    * Resolved issues in firewall and IP controls for CosmosDB which were earlier resulting into error state due to recent API changes.
-    * Trimmed state data of virtual network peering control for ExpressRoute-connected VMs which was previously causing unwanted state drift due to changes unrelated to peering.
+    * States for below controls will not fluctuate if they are scanned with insufficient permissions (leading to manual control state):
+
+        * Azure_AppService_DP_Website_Load_Certificates_Not_All
+        * Azure_AppService_DP_Restrict_CORS_Access
+        * Azure_AppService_AuthN_Use_Managed_Service_Identity
+        * Azure_KeyVault_AuthN_Dont_Share_KeyVault_Unless_Trust
+        * Azure_KeyVault_AuthN_Use_Cert_Auth_for_Apps
+
+    * Trimmed state data of public IP address control for VMs which was previously causing unwanted state drift due to data fields unrelated to IP address.
+
+    * Spelling errors in two controls below have been fixed:
+
+        * Azure_DataFactory_AuthN_DataLakeStore_LinkedService
+        * Azure_DataFactory_BCDR_Multiple_Node_DMG
 
 * ARM Template Checker:
     * N/A.
 
 * CA:
-    * N/A.
+    * Fixed an issue in the CA check-pointing logic in scenarios where previously if a resource type does not have any applicable/enabled controls, CA scans were getting stuck at that resource.
 
 * In-cluster CA:
     * N/A. 
