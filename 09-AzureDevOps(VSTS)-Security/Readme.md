@@ -1197,14 +1197,20 @@ Upon the completion of all control scans, all passing controls whose bugs had be
 
 ## Starting bug logging
 
-To leverage the bug logging feature, following are the scan parameters that need to be include along with any security scan command.
+The bug logging feature is implemented via a new switch called *-AutoBugLog*. All controls that emit an evaluation status as "failed" or "verify" are considered as valid targets for bug logging. A typical security scan command with auto bug logging feature would look as :
+
+```Powershell
+#Setting attestation host project and auto bug logging for organization controls
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>"  -ProjectNames "<ProjectName>" -ResourceTypeName Project -AutoBugLog All -AreaPath "<Area Path>" -IterationPath "<Iteration Path"
+```
+To leverage the bug logging feature, following are the scan parameters that need to be included along with any security scan command.
 | Param Name | Purpose | Required?| Possible Values| 
 |--|--|--|--|
 |  AutoBugLog|To enable bug logging and identify which subset of control failures are to be logged as bugs  | TRUE| All, BaselineControls, PreviewBaselineControls| 
 |  AreaPath|To specify the area path where the bugs are to be logged  | FALSE| Valid area path in ADO| 
 |  IterationPath|To specify the iteration path where the bugs are to be logged  | FALSE| Valid iteration path in ADO| 
 
-The bug logging feature is implemented via a new switch called *-AutoBugLog*. All controls that emit an evaluation status as "failed" or "verify" are considered as valid targets for bug logging. The switch *-AutoBugLog*  takes up three values that specify which subset of control failures are to be logged. These are:
+The switch *-AutoBugLog*  takes up three values that specify which subset of control failures are to be logged. These are:
 | AutoBugLog option |  Description|
 |--|--|
 | All | Log all control failures |
@@ -1213,7 +1219,7 @@ The bug logging feature is implemented via a new switch called *-AutoBugLog*. Al
 
 ## Setting up host project for organization specific controls
 
-All organization control failures are logged in the work items of the host project. This host project is the same one which is used in the attestation process. If you haven't configured host project during attestation, you can do it during bug logging as well using *–AttestationHostProjectName*. Read about attestation [here](Readme.md#control-attestation-1)
+All organization control failures are logged in the work items of the host project. This host project is the same one which is used in the attestation process. If you haven't configured host project during attestation, you can do it during bug logging as well using the flag *–AttestationHostProjectName*. Read about attestation [here].(Readme.md#control-attestation-1)
 
 > **Note:** Attestation host project can only be set once, so this project will be used for both attestation and bug logging and can't be updated later.
 
@@ -1224,22 +1230,22 @@ Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -Attest
 See the examples below for auto bug logging of organization, project, build, release, service connection and agent pools control failures :
 ```Powershell
 #Auto bug logging for organization controls
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -AutoBugLog All
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ResourceTypeName Organization -AutoBugLog All
 
 #Auto bug logging for project controls
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -AutoBugLog All
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -ResourceTypeName Project -AutoBugLog All
 
 #Auto bug logging for build controls
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -BuildNames "<BuildName>" -AutoBugLog All
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -BuildNames "<BuildName>" -ResourceTypeName Build -AutoBugLog All
 
 #Auto bug logging for release controls
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -ReleaseNames "<ReleaseName>" -AutoBugLog All
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -ReleaseNames "<ReleaseName>" -ResourceTypeName Release -AutoBugLog All
 
 #Auto bug logging for agent pool controls
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -AgentPoolNames "<AgentPoolName>" -AutoBugLog All
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -AgentPoolNames "<AgentPoolName>" -ResourceTypeName AgentPool -AutoBugLog All
 
 #Auto bug logging for service connection controls
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -ServiceConnectionNames "<ServiceConnectionName>" -AutoBugLog All
+Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -ServiceConnectionNames "<ServiceConnectionName>" -ResourceTypeName ServiceConnection -AutoBugLog All
 ```
 ## Defining area and iteration path
 
@@ -1250,14 +1256,8 @@ The user can control the area and iteration paths, where the bugs are to be logg
 ```Powershell
 #Specifying area and iteration paths
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName" -AutoBugLog All -AreaPath "<AreaPath>" -IterationPath "<IterationPath>"
-
-#Specifying just area path
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -AutoBugLog All -AreaPath "<AreaPath>"
-
-#Specifying just iteration path
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<ProjectName>" -AutoBugLog All -IterationPath "<IterationPath>"
 ```
- 2. **Specifying paths using org policy :** To leverage this method, make sure the org policy setup is complete in your project. Read more about org policy [here](Readme.md#setting-up-org-policy).
+ 2. **Customizing area and iteration path using org policy :** To leverage this method, make sure the org policy setup is complete in your project. Read more about org policy [here](Readme.md#setting-up-org-policy).
 	 - Copy the ControlSettings.json from the AzSK.AzureDevOps installation to your org-policy repo.
 	 - Remove everything except the "*BugLogAreaPath*" and the "*BugLogIterationPath*" line while keeping the JSON object hierarchy/structure intact.
 ```json
@@ -1347,10 +1347,10 @@ For bugs logged against organization and project control failures, the user can 
 This can be controlled via the org policy as follows:
 ```json
 {
-	"BugLogging": {
-	  "AutoCloseProjectBug": true,
-  	"AutoCloseOrgBug": true
-	}
+  "BugLogging":{
+    "AutoCloseProjectBug": true,
+    "AutoCloseOrgBug": true
+  }
 }
 ```
 The *AutoCloseProjectBug* and *AutoCloseOrgBug* can be set to true, in which case bugs corresponding to organization and project control failures will be auto closed. If this is set to false, all bugs except organization and project level bugs will be closed. By default the behaviour is to auto close every bug.
