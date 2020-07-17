@@ -1345,12 +1345,13 @@ After setting any one of the above policies, commit the file and add an entry fo
 Using the *–AutoBugLog* switch, the scanner also evaluates all the passing control scans and checks for their corresponding bugs in the ADO. If such bugs are found, they are closed. This ensures only those bugs remain in your ADO work item whose control failures are to be fixed. 
 For bugs logged against organization and project control failures, the user can control whether to auto close them or to leave them for manual inspection.
 This can be controlled via the org policy as follows:
+
 ```json
 {
-  "BugLogging":{
-    "AutoCloseProjectBug": true,
-    "AutoCloseOrgBug": true
-  }
+	"BugLogging": {
+	  "AutoCloseProjectBug": true,
+	  "AutoCloseOrgBug": true
+	}
 }
 ```
 The *AutoCloseProjectBug* and *AutoCloseOrgBug* can be set to true, in which case bugs corresponding to organization and project control failures will be auto closed. If this is set to false, all bugs except organization and project level bugs will be closed. By default the behaviour is to auto close every bug.
