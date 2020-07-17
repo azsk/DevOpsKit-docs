@@ -1219,8 +1219,7 @@ The switch *-AutoBugLog*  takes up three values that specify which subset of con
 
 ## Setting up host project for organization specific controls
 
-All organization control failures are logged in the work items of the host project. This host project is the same one which is used in the attestation process. If you haven't configured host project during attestation, you can do it during bug logging as well using the flag *–AttestationHostProjectName*. Read about attestation [here].(Readme.md#control-attestation-1)
-
+All organization control failures are logged in the work items of the host project. This host project is the same one which is used in the attestation process. If you haven't configured host project during attestation, you can do it during bug logging as well using the flag *–AttestationHostProjectName*. Read about attestation [here](Readme.md#control-attestation-1).
 > **Note:** Attestation host project can only be set once, so this project will be used for both attestation and bug logging and can't be updated later.
 
 ```Powershell
