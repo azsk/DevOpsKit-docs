@@ -755,8 +755,8 @@ Run a few AzSK.AzureDevOps cmdlets to generate events for the Log Analytics repo
 For example, you can run one or both of the following:
 
 ```PowerShell
- Get-AzSKSubscriptionSecurityStatus -SubscriptionId $subID 
- Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subID -ResourceGroupNames 'app_rg_name'
+ Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "OrgName" 
+ Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "OrgName" -ProjectNames "PrjName"
 ```
 
 After the above scans finish, if we go into Log Analytics workspace Logs and search for 'AzSK_ADO_CL', it should show 
