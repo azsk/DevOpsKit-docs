@@ -1,5 +1,5 @@
 Set-StrictMode -Version Latest
-class AppInsights: SVTBase
+class AppInsights: AzSVTBase
 {
     hidden [PSObject] $ResourceObject;
 
