@@ -85,7 +85,7 @@ Before we get started with extending the toolkit, it is important to understand 
 ### Know more about SVTs:
 
 
-All our SVTs inherit from a base class called SVTBase which will take care of all the required plumbing from the control evaluation code. Every SVT will have a corresponding feature json file under the configurations folder. For example, Storage.ps1 (in the core folder) has a corresponding Storage.json file under configurations folder. These SVTs json have a bunch of configuration parameters, that can be controlled by a policy owner, for instance, you can change the recommendation, modify the description of the control suiting your org, change the severity, etc.
+All our SVTs inherit from a base class called AzSVTBase which will take care of all the required plumbing from the control evaluation code. Every SVT will have a corresponding feature json file under the configurations folder. For example, Storage.ps1 (in the core folder) has a corresponding Storage.json file under configurations folder. These SVTs json have a bunch of configuration parameters, that can be controlled by a policy owner, for instance, you can change the recommendation, modify the description of the control suiting your org, change the severity, etc.
 
 Below is the typical schema for each control inside the feature json
   ```
@@ -113,7 +113,7 @@ After schema of the control json, let us look at the corresponding feature SVT P
 ```PowerShell
 #using namespace Microsoft.Azure.Commands.Search.Models
 Set-StrictMode -Version Latest
-class SubscriptionCore: SVTBase
+class SubscriptionCore: AzSVTBase
 {
 	hidden [AzureSecurityCenter] $ASCSettings
 	hidden [ManagementCertificate[]] $ManagementCertificates
@@ -177,7 +177,7 @@ class SubscriptionCore: SVTBase
   
 2. 	 You need to rename the class, inherit from the core feature class, and then update the constructor to reflect the new name as shown below:
     
-   > e.g. class SubscriptionCore : SVTBase => SubscriptionCoreExt : SubscriptionCore
+   > e.g. class SubscriptionCore : AzSVTBase => SubscriptionCoreExt : SubscriptionCore
 	
    ```PowerShell
 	Set-StrictMode -Version Latest
@@ -385,7 +385,7 @@ The steps below follow roundabout the same model as in section [Extending AzSK M
 
     ``` PowerShell
     Set-StrictMode -Version Latest
-    class AppInsights: SVTBase
+    class AppInsights: AzSVTBase
     {
         hidden [PSObject] $ResourceObject;
     
