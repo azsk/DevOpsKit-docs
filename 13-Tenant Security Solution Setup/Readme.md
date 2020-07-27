@@ -30,13 +30,13 @@ To get started, we need the following prerequisites:
 - Windows 10
 - Windows Server 2016
 
-**2.** Install Az and Managed Service Identity Powershell Module using below command. For more details for Az installation refer [link](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps)
+**2.** Install Az and Managed Service Identity Powershell Module using below command. For more details of Az installation refer [link](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps)
 
 ``` Powershell
 # Install Az Modules
 Install-Module -Name Az -AllowClobber -Scope CurrentUser
 
-#Install managed service 
+#Install managed identity service module
 Install-Module -Name Az.ManagedServiceIdentity -AlloClobber -Scope CurrentUser
 ```
 
@@ -46,24 +46,29 @@ You can create user identity with below PowerShell command or Portal steps [here
 
 ``` Powershell
 
-        # Step 1: Set context to subscription where central scan identity needs to be created
-        Set-AzContext -SubscriptionId <MIHostingSubId>
+# Step 1: Set context to subscription where central scan identity needs to be created
+Set-AzContext -SubscriptionId <MIHostingSubId>
 
-        # Step 2: Create User Identity 
-        $UserAssignedIdentity = New-AzUserAssignedIdentity -ResourceGroupName <MIHostingRG> -Name <USER ASSIGNED IDENTITY NAME>
+# Step 2: Create User Identity 
+$UserAssignedIdentity = New-AzUserAssignedIdentity -ResourceGroupName <MIHostingRG> -Name <USER ASSIGNED IDENTITY NAME>
 
-        # Step 3: Assign user identity with reader role on all the subscriptions which needs to be scanned. 
-        # Below command help to assign access to single subscription. You need to repeat below step for all subscription
+# Step 3: Assign user identity with reader role on all the subscriptions which needs to be scanned. 
+# Below command help to assign access to single subscription. 
+# You need to repeat below step for all subscription
 
-        New-AzRoleAssignment -ApplicationId $UserAssignedIdentity.ClientId -Scope <SubscriptionScope> -RoleDefinitionName "Reader"
+New-AzRoleAssignment -ApplicationId $UserAssignedIdentity.ClientId -Scope <SubscriptionScope> -RoleDefinitionName "Reader"
+
+# Step 4: Keep resource id generated for user identity using below command. This will be used in installation parameter
+
+$UserAssignedIdentity.Id
 
 ```
 
-**3.** Owner access on hosting subscription 
+**3.** Owner access on hosting subscription
 
 The user setting up Tenant Security Solution needs to have 'Owner' access to the subscription.  
 
-**4.** Download and extract deployment content from [here](./TemplateFiles/Deploy.zip) to your local machine.  You may have to unblock the content. Below command will help to unblock files. 
+**4.** Download and extract deployment zip content from [here](./TemplateFiles/Deploy.zip) to your local machine.  You may have to unblock the content. Below command will help to unblock files. 
 
 ``` PowerShell
 Get-ChildItem -Path "<Extracted folder path>" -Recurse |  Unblock-File 
@@ -86,13 +91,15 @@ Set-AzContext -SubscriptionId <SubscriptionId>
 
 ``` PowerShell
 
-# Step 1: Load setup script from deploy folder 
+# Step 1: Point current path to extracted folder location and load setup script from deploy folder 
 
-. "<LocalPath>\Deploy\AzSKTSSetup.ps1"
+CD "<LocalExtractedFolderPath>\Deploy"
+
+. "\AzSKTSSetup.ps1"
 
 # Step 2: Run installation command
 
-Install-TenantSecuritySolution 
+Install-AzKSTenantSecuritySolution ` 
                 -SubscriptionId <SubscriptionId> `
                 -ScanHostRGName <ResourceGroupName> `
                 -ScanIdentityId <ManagedIdentityResourceId> `
@@ -101,7 +108,7 @@ Install-TenantSecuritySolution
 
 # Example:
 
-Install-TenantSecuritySolution 
+Install-AzSKTenantSecuritySolution `
                 -SubscriptionId bbbe2e73-fc26-492b-9ef4-adec8560c4fe `
                 -ScanHostRGName TSSolutionRG `
                 -ScanIdentityId '/subscriptions/bbbe2e73-fc26-492b-9ef4-adec8560c4fe/resourceGroups/TenantReaderRG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/TenantReaderUserIdentity' `
@@ -109,20 +116,29 @@ Install-TenantSecuritySolution
                 -Verbose
 ```
 
+**!Important** : In case you see below error during installation, you have to rerun installation command with the same parameter.
 
->**Note:** Completion of this one-time setup activity can take up to 5 minutes and it will look like below.
+``` Error
 
-  ![Resources](../Images/12_TSS_CommandOutput.png)
+"Principal 8651a1145fbe4141bf6d396XXXXX does not exist in the directory e60f12c0-e1dc-4be1-8d86-e979a5XXXX"
+```
 
 
 |Param Name|Purpose|Required?|Default value|Comments|
 |----|----|----|----|----|
 |SubscriptionId|Hosting subscription id where Tenant solution will be deployed |TRUE|None||
 |ScanHostRGName| Name of ResourceGroup where setup resources will be created |TRUE|||
-|ScanIdentityId| Resource id of user managed identity used to scan subscriptions |TRUE|||
+|ScanIdentityId| Resource id of user managed identity used to scan subscriptions.  |TRUE|||
 |Location|Location where all resources will get created||||
 |Verbose| Switch used to output detailed log|FALSE|None||
 |EnableScaleOutRule| Switch used to deploy auto scaling rule for scanning evironment. |FALSE|None||
+
+
+>**Note:** Completion of this one-time setup activity can take up to 5 minutes and it will look like below.
+
+  ![Resources](../Images/12_TSS_CommandOutput.png)
+
+
 
 <TODO: Add known error  details>
 
@@ -134,6 +150,15 @@ Install-TenantSecuritySolution
 **2:** Verify below resources got created. 
 
 ![Resources](../Images/12_TSS_Resource_Group.png)	
+
+|Resource Name|Resorce Type|Description|
+|----|----|----|----|----|
+|AzSKTSLAWorkspace-xxxxx|Log Analytics orkspace||
+|AzSKTSProcessorMI-xxxxx|Managed Identity||
+|AzSKTSServicePlan|App Service Plan||
+|azsktsstoragexxxxx|Storage Account| Used to store the daily results of subscriptions scan.|
+|AzSKTSWorkItemProcessor-xxxxx|App Service||
+|AzSKTSWorkItemScheduler-xxxxx|App Service||
 
 
  **3:** Verify below three jobs got created
@@ -151,21 +176,8 @@ Install-TenantSecuritySolution
 
 [Back to top…](Readme.md#contents)
 ## Tenant Security Solution - how it works (under the covers)
-The Tenant Security Solution feature is about #TODO
+ #TODO
 
-The TSS installation script that sets up Resource Group and the following resources on your subscription:
-
-
-
-- Storage account  (Name : AzSKTSStorage-xxxxx) :- To store the daily results of resource scans. The storage account is named with few characters from the resource group name with prefix (e.g. AzSKStorage-ocomu)
-
-- Azure App Service :- Creates two App Services to schedule the subscriptions and #TBD Named as AzSKTSWorkItemSchedular-xxxxx and AzSKTSWorkItemHandler-xxxxx
-
-- Azure App Service Plan :- Creates App Service Hosting Plan to #TBD, Named as AzSKTSHostingPlan-xxxxx
-
-- Managed Identity :- Creates App Service Hosting Plan to #TBD, Named as AzSKTSProcessorMI-xxxxx
-
-- LA Workspace :- Log Analytics Workspace to generate logs after scanning resources Named as AzSKTSLAWorkspace-xxxxx
 
 # Create security compliance monitoring solutions
 Once you have an org policy setup running smoothly with multiple subscriptions across your org, you will need a solution that provides visibility of security compliance for all the subscriptions across your org. This will help you drive compliance/risk governance initiatives for your organization. 
