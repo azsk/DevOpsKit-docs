@@ -285,9 +285,9 @@ Inventory view:
 
 [a1] Click on "Edit Queries" menu option.
 
-![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_15.PNG)
+![Update AI Connection String](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_9.PNG)
 
-[a2] Copy the value of "AzSKAIConnectionString"
+[a2] Copy the value of "LogAnalyticsConnectionString"
 
 ![Update AI Connection String](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_3.png)
 
