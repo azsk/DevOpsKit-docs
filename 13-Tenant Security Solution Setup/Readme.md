@@ -185,6 +185,7 @@ Install-AzSKTenantSecuritySolution `
 ## Tenant Security Solution - how it works (under the covers)
  #TODO
 
+![Internals](../Images/12_TenantSetupInternals.png)
 
 # Create security compliance monitoring solutions
 Once you have an org policy setup running smoothly with multiple subscriptions across your org, you will need a solution that provides visibility of security compliance for all the subscriptions across your org. This will help you drive compliance/risk governance initiatives for your organization. 
