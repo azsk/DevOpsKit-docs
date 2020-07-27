@@ -285,7 +285,7 @@ Inventory view:
 
 [a1] Click on "Edit Queries" menu option.
 
-![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_15.png)
+![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_15.PNG)
 
 [a2] Copy the value of "AzSKAIConnectionString"
 
@@ -303,11 +303,11 @@ Inventory view:
 
 Click on Publish
 
-![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_18.png)
+![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_18.PNG)
 
 Select destination workspace
 
-![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_19.png)
+![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_19.PNG)
 
 Click on "Open [Report Name] in Power BI" 
 
