@@ -5,7 +5,6 @@
 - [Overview](Readme.md#overview)
 - [Why Tenant Security Solution](Readme.md#setting-up-continuous-assurance---step-by-step)
 - [Setting up Tenant Security Solution - Step by Step](Readme.md#setting-up-continuous-assurance---step-by-step)
-- [Why Tenant Security Solution](Readme.md#setting-up-continuous-assurance---step-by-step)
 - [Tenant Security Solution - how it works (under the covers)](Readme.md#continuous-assurance---how-it-works-under-the-covers)
 - [Create compliance and monitoring solutions](Readme.md#continuous-assurance---how-it-works-under-the-covers)
 - [Feedback](Readme.md#faq)
@@ -14,7 +13,7 @@
 ## Overview 
 The basic idea behind Tenant Security Solution (TSS) is to provide security for all the resources of any subscription. 
 
->## How it is different from DevOpsKit ?
+## Why Tenant Security Solution ?
 TODO
 
 ## Setting up Tenant Security Solution - Step by Step
@@ -35,7 +34,7 @@ To get started, we need the following prerequisites:
  Ensure that you are using Windows OS and have PowerShell version 5.0 or higher by typing **$PSVersionTable** in the PowerShell ISE console window and looking at the PSVersion in the output as shown below.) 
  If the PSVersion is older than 5.0, update PowerShell from [here](https://www.microsoft.com/en-us/download/details.aspx?id=54616).  
 
-   ![PowerShell Version](../Images/00_PS_Version.PNG)   
+   ![PowerShell Version](../Images/00_PS_Version.png)   
 
 **3.** Install Az and Managed Service Identity Powershell Module using below command. For more details of Az installation refer [link](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps)
 
@@ -44,7 +43,7 @@ To get started, we need the following prerequisites:
 Install-Module -Name Az -AllowClobber -Scope CurrentUser
 
 #Install managed identity service module
-Install-Module -Name Az.ManagedServiceIdentity -AlloClobber -Scope CurrentUser
+Install-Module -Name Az.ManagedServiceIdentity -AllowClobber -Scope CurrentUser
 ```
 
 **4.**  Create central scanning user identity and provide reader access to subscriptions on which scan needs to be performed.
@@ -136,7 +135,7 @@ Install-AzSKTenantSecuritySolution `
 |SubscriptionId|Hosting subscription id where Tenant solution will be deployed |TRUE|None||
 |ScanHostRGName| Name of ResourceGroup where setup resources will be created |TRUE|||
 |ScanIdentityId| Resource id of user managed identity used to scan subscriptions.  |TRUE|||
-|Location|Location where all resources will get created||||
+|Location|Location where all resources will get created|True|||
 |Verbose| Switch used to output detailed log|FALSE|None||
 |EnableScaleOutRule| Switch used to deploy auto scaling rule for scanning evironment. |FALSE|None||
 
@@ -156,12 +155,12 @@ Install-AzSKTenantSecuritySolution `
 ![Resources](../Images/12_TSS_Resource_Group.png)	
 
 |Resource Name|Resource Type|Description|
-|----|----|----|----|----|
+|----|----|----|
 |AzSKTSWorkItemProcessor-xxxxx|App Service| Contains inventory and subscription work item processor job. More details [below]() |
-|AzSKTSWorkItemScheduler-xxxxx|App Service| Contains work item (subscription) scheduler job. More details [below]() |
-|AzSKTSLAWorkspace-xxxxx|Log Analytics workspace|Used to store scan events, inventory, subscription scan progress details.|
-|AzSKTSProcessorMI-xxxxx|Managed Identity| Internal MI identity used to access LA workspace and storage for sending scan results|
-|AzSKTSServicePlan|App Service Plan| App service plan used for jobs|
+|AzSKTSWorkItemScheduler-xxxxx|App Service | Contains work item (subscription) scheduler job. More details [below]() |
+|AzSKTSLAWorkspace-xxxxx|Log Analytics workspace| Used to store scan events, inventory, subscription scan progress details.|
+|AzSKTSProcessorMI-xxxxx|Managed Identity | Internal MI identity used to access LA workspace and storage for sending scan results|
+|AzSKTSServicePlan| App Service Plan| App service plan used for jobs|
 |azsktsstoragexxxxx|Storage Account| Used to store the daily results of subscriptions scan.|
 
 
@@ -170,11 +169,11 @@ Install-AzSKTenantSecuritySolution `
 
  **i) InventoryJob:** Use to get subscription list to be scanned and store into LA workspace. Go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.1.Inventory' is scheduled to run once every day.
 	
- ![ProcessorWebjobs](../Images/12_TSS_Processor_Webjobs.PNG)
+ ![ProcessorWebjobs](../Images/12_TSS_Processor_Webjobs.png)
 
  **ii) WorkItemSchedulerJob:** Used to queue subscription for the scan. Go to resource 'AzSKTSWorkItemScheduler-xxxxx' --> 'Webjobs' Properties -->Verify '0.2.JobProcessor' is scheduled to run  once every day.
 	
-![SchedulerWebjobs](../Images/12_TSS_Scheduler_Webjobs.PNG)
+![SchedulerWebjobs](../Images/12_TSS_Scheduler_Webjobs.png)
 
  **iii) WorkItemProcessorJob:** Read subscription list from queue and scan for security controls. Go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.3.WorkItemProcessorJob' is scheduled to run for two hours to scan subscriptions.
 
