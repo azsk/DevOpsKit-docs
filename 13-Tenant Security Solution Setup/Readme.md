@@ -25,12 +25,19 @@ To get started, we need the following prerequisites:
 
 **Prerequisite:**
 
-**1.** We currently support following OS options for installation: 	
+**1.** Installation steps are supported using following OS options: 	
 
 - Windows 10
 - Windows Server 2016
 
-**2.** Install Az and Managed Service Identity Powershell Module using below command. For more details of Az installation refer [link](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps)
+**2.** PowerShell 5.0 or higher
+
+ Ensure that you are using Windows OS and have PowerShell version 5.0 or higher by typing **$PSVersionTable** in the PowerShell ISE console window and looking at the PSVersion in the output as shown below.) 
+ If the PSVersion is older than 5.0, update PowerShell from [here](https://www.microsoft.com/en-us/download/details.aspx?id=54616).  
+
+   ![PowerShell Version](../Images/00_PS_Version.PNG)   
+
+**3.** Install Az and Managed Service Identity Powershell Module using below command. For more details of Az installation refer [link](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps)
 
 ``` Powershell
 # Install Az Modules
@@ -40,7 +47,7 @@ Install-Module -Name Az -AllowClobber -Scope CurrentUser
 Install-Module -Name Az.ManagedServiceIdentity -AlloClobber -Scope CurrentUser
 ```
 
-**3.**  Create central scanning user identity and provide reader access to subscriptions on which scan needs to be performed.
+**4.**  Create central scanning user identity and provide reader access to subscriptions on which scan needs to be performed.
 
 You can create user identity with below PowerShell command or Portal steps [here](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-portal) and assign reader access on subscription to be scanned using steps [here](https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal)
 
@@ -64,11 +71,11 @@ $UserAssignedIdentity.Id
 
 ```
 
-**3.** Owner access on hosting subscription
+**5.** Owner access on hosting subscription
 
 The user setting up Tenant Security Solution needs to have 'Owner' access to the subscription.  
 
-**4.** Download and extract deployment zip content from [here](./TemplateFiles/Deploy.zip) to your local machine.  You may have to unblock the content. Below command will help to unblock files. 
+**6.** Download and extract deployment zip content from [here](./TemplateFiles/Deploy.zip) to your local machine.  You may have to unblock the content. Below command will help to unblock files. 
 
 ``` PowerShell
 Get-ChildItem -Path "<Extracted folder path>" -Recurse |  Unblock-File 
@@ -148,11 +155,11 @@ Install-AzSKTenantSecuritySolution `
 
 ![Resources](../Images/12_TSS_Resource_Group.png)	
 
-|Resource Name|Resorce Type|Description|
+|Resource Name|Resource Type|Description|
 |----|----|----|----|----|
 |AzSKTSWorkItemProcessor-xxxxx|App Service| Contains inventory and subscription work item processor job. More details [below]() |
 |AzSKTSWorkItemScheduler-xxxxx|App Service| Contains work item (subscription) scheduler job. More details [below]() |
-|AzSKTSLAWorkspace-xxxxx|Log Analytics orkspace|Used to store scan events, inventory, subscription scan progress details.|
+|AzSKTSLAWorkspace-xxxxx|Log Analytics workspace|Used to store scan events, inventory, subscription scan progress details.|
 |AzSKTSProcessorMI-xxxxx|Managed Identity| Internal MI identity used to access LA workspace and storage for sending scan results|
 |AzSKTSServicePlan|App Service Plan| App service plan used for jobs|
 |azsktsstoragexxxxx|Storage Account| Used to store the daily results of subscriptions scan.|
@@ -169,7 +176,10 @@ Install-AzSKTenantSecuritySolution `
 	
 ![SchedulerWebjobs](../Images/12_TSS_Scheduler_Webjobs.PNG)
 
- **iii) WorkItemProcessorJob:** Read subscription list from queue and scan for security controls. Go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.1.Inventory' is scheduled to run once every day.
+ **iii) WorkItemProcessorJob:** Read subscription list from queue and scan for security controls. Go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.3.WorkItemProcessorJob' is scheduled to run for two hours to scan subscriptions.
+
+
+**Note:** Jobs are scheduled to run from UTC 00:00 time. You can also run the jobs manually by trigger jobs 01, 02 and 03 in sequence (5 mins interval). After some interval you will start seeing scan results in storage account and LA workspace.  
 
 
 [Back to top…](Readme.md#contents)
