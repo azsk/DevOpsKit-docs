@@ -81,6 +81,7 @@ The user setting up Tenant Security Solution needs to have 'Owner' access to the
 Get-ChildItem -Path "<Extracted folder path>" -Recurse |  Unblock-File 
 ```
 
+[Back to top…](Readme.md#contents)
 
 **Step-1: Setup** 
 
@@ -127,14 +128,14 @@ Install-AzSKTenantSecuritySolution `
 
 **Parameter details:**
 
-|Param Name|Purpose|Required?|Comments|
-|----|----|----|----|
-|SubscriptionId|Hosting subscription id where Tenant solution will be deployed |TRUE||
-|ScanHostRGName| Name of ResourceGroup where setup resources will be created |TRUE||
-|ScanIdentityId| Resource id of user managed identity used to scan subscriptions.  |TRUE||
-|Location|Location where all resources will get created|TRUE||
-|Verbose| Switch used to output detailed log|FALSE||
-|EnableScaleOutRule| Switch used to deploy auto scaling rule for scanning evironment. |FALSE||
+|Param Name|Description|Required?
+|----|----|----|
+|SubscriptionId|Hosting subscription id where Tenant solution will be deployed |TRUE|
+|ScanHostRGName| Name of ResourceGroup where setup resources will be created |TRUE|
+|ScanIdentityId| Resource id of user managed identity used to scan subscriptions.  |TRUE|
+|Location|Location where all resources will get created|TRUE|
+|Verbose| Switch used to output detailed log|FALSE|
+|EnableScaleOutRule| Switch used to deploy auto scaling rule for scanning evironment. |FALSE|
 
 
 >**Note:** Completion of this one-time setup activity can take up to 5 minutes and it will look like below.
@@ -185,6 +186,8 @@ Install-AzSKTenantSecuritySolution `
  #TODO
 
 ![Internals](../Images/12_TenantSetupInternals.png)
+
+[Back to top…](Readme.md#contents)
 
 # Create security compliance monitoring solutions
 Once you have an tenant security setup running smoothly with multiple subscriptions across your org, you will need a solution that provides visibility of security compliance for all the subscriptions across your org. This will help you drive compliance/risk governance initiatives for your organization. 
