@@ -197,9 +197,9 @@ Install-AzSKTenantSecuritySolution `
 [Back to top…](Readme.md#contents)
 
 # Create security compliance monitoring solutions
-Once you have an tenant security setup running smoothly with multiple subscriptions across your org, you will need a solution that provides visibility of security compliance for all the subscriptions across your org. This will help you drive compliance/risk governance initiatives for your organization. 
+Once you have an Tenant Security setup running smoothly with multiple subscriptions across your org, you will need a solution that provides visibility of security compliance for all the subscriptions across your org. This will help you drive compliance/risk governance initiatives for your organization. 
 
-When you setup your tenant security endpoint (i.e. policy server), one of the things that happens is creation of an Log Analytics workspace for your setup. After that, whenever someone performs an TSS scan for a subscription that is configured to use your tenant security, the scan results are sent (as 'security' telemetry) to your org's Log Analytics workspace. Because this workspace receives scan events from all such subscriptions, it can be leveraged to generate aggregate security compliance views for your cloud-based environments. 
+When you setup your Tenant Security endpoint (i.e. policy server), one of the things that happens is creation of an Log Analytics workspace for your setup. After that, whenever someone performs an TSS scan for a subscription that is configured to use your Tenant Security, the scan results are sent (as 'security' telemetry) to your org's Log Analytics workspace. Because this workspace receives scan events from all such subscriptions, it can be leveraged to generate aggregate security compliance views for your cloud-based environments. 
 
 ## Create cloud security compliance report for your org using PowerBI
 We will look at how a PowerBI-based compliance dashboard can be created and deployed in a matter of minutes starting with a template dashboard that ships with the Tenant Security Solution (TSS). All you need apart from the Log Analytics workspace instance is a CSV file that provides a mapping of your organization hierarchy to subscription ids (so that we know which team/service group owns each subscription).
@@ -235,9 +235,9 @@ The table below describes the different columns in the CSV file and their intent
 
 #### Step 2: Upload your mapping to the Log Analytics (LA) workspace
 
-In this step you will import the data above into the LA workspace created during tenant security setup. 
+In this step you will import the data above into the LA workspace created during Tenant Security setup. 
 
- **(a)** Locate the LA resource that was created during tenant security setup in your central subscription. This should be present under tenant security resource group. After selecting the LA resource, copy the Workspace ID from the portal as shown below:
+ **(a)** Locate the LA resource that was created during Tenant Security setup in your central subscription. This should be present under Tenant Security resource group. After selecting the LA resource, copy the Workspace ID from the portal as shown below:
 
  ![capture Workspace ID](../Images/13_TSS_LAWS_AgentManagement.png)
  
@@ -246,7 +246,7 @@ In this step you will import the data above into the LA workspace created during
  > **Note**: Due to limitation of Log Analytics workspace, you will need to repeat this step every 90 days interval. 
 
 #### Step 3: Create a PowerBI report file
-In this section we shall create a PowerBI report locally within PowerBI Desktop using the LA workspace from tenant security subscription as the datasource. We will start with a default (out-of-box) PowerBI template and configure it with settings specific to your environment. 
+In this section we shall create a PowerBI report locally within PowerBI Desktop using the LA workspace from Tenant Security subscription as the datasource. We will start with a default (out-of-box) PowerBI template and configure it with settings specific to your environment. 
 
 > Note: This step assumes you have completed Step-0 above!
 
@@ -260,7 +260,7 @@ In this section we shall create a PowerBI report locally within PowerBI Desktop 
 
 ![capture applicationInsights AppId](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_1.png)
 
-**(d)** PowerBI will prompt you to login to the tenant security subscription at this stage. Authenticate using your user account. (This step basically allows PowerBI to import the data from LA into the PowerBI Desktop workspace.)
+**(d)** PowerBI will prompt you to login to the Tenant Security subscription at this stage. Authenticate using your user account. (This step basically allows PowerBI to import the data from LA into the PowerBI Desktop workspace.)
 ![Login to AI](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_2.png)
 
 Once you have successfully logged in, you will see the Log Analytics data in the PowerBI report along with org mapping as shown below: 
