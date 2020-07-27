@@ -3,9 +3,9 @@
 ## Tenant Security
 ### Contents
 - [Overview](Readme.md#overview)
-- [Why Tenant Security Solution?](Readme.md#why-tenant-security-solution?)
+- [Why Tenant Security Solution?](Readme.md#why-tenant-security-solution)
 - [Setting up Tenant Security Solution - Step by Step](Readme.md#setting-up-tenant-security-solution---step-by-step)
-- [Tenant Security Solution - how it works (under the covers)](Readme.md##tenant-security-solution---how-it-works-under-the-covers)
+- [Tenant Security Solution - how it works (under the covers)](Readme.md#tenant-security-solution---how-it-works-under-the-covers)
 - [Create compliance and monitoring solutions](Readme.md#create-security-compliance-monitoring-solutions)
 - [Feedback](Readme.md#feedback)
 
