@@ -3,9 +3,9 @@
 ## Tenant Security
 ### Contents
 - [Overview](Readme.md#overview)
-- [Why Tenant Security Solution?](Readme.md#why-tenant-security-solution?)
+- [Why Tenant Security Solution?](Readme.md#why-tenant-security-solution)
 - [Setting up Tenant Security Solution - Step by Step](Readme.md#setting-up-tenant-security-solution---step-by-step)
-- [Tenant Security Solution - how it works (under the covers)](Readme.md##tenant-security-solution---how-it-works-under-the-covers)
+- [Tenant Security Solution - how it works (under the covers)](Readme.md#tenant-security-solution---how-it-works-under-the-covers)
 - [Create compliance and monitoring solutions](Readme.md#create-security-compliance-monitoring-solutions)
 - [Feedback](Readme.md#feedback)
 
@@ -81,13 +81,14 @@ The user setting up Tenant Security Solution needs to have 'Owner' access to the
 Get-ChildItem -Path "<Extracted folder path>" -Recurse |  Unblock-File 
 ```
 
+[Back to top…](Readme.md#contents)
 
 **Step-1: Setup** 
 
 1. Open the PowerShell ISE and login to your Azure account (using **Connect-AzAccount**) and Set the context to subscription where solution needs to be installed.
 
 ``` PowerShell
-# Log to Azure 
+# Login to Azure 
 Connect-AzAccount 
 
 # Set the context to hosting subscription
@@ -102,11 +103,13 @@ Set-AzContext -SubscriptionId <SubscriptionId>
 
 CD "<LocalExtractedFolderPath>\Deploy"
 
-. "\AzSKTSSetup.ps1"
+. ".\AzSKTSSetup.ps1"
+
+# Note: Make sure you copy  '.' present at the start of line.
 
 # Step 2: Run installation command. 
 
-Install-AzKSTenantSecuritySolution ` 
+Install-AzSKTenantSecuritySolution ` 
                 -SubscriptionId <SubscriptionId> `
                 -ScanHostRGName <ResourceGroupName> `
                 -ScanIdentityId <ManagedIdentityResourceId> `
@@ -125,22 +128,16 @@ Install-AzSKTenantSecuritySolution `
                 -Verbose
 ```
 
-**!Important** : In case you see below error during installation, you have to rerun installation command with the same parameter.
+**Parameter details:**
 
-``` Error
-
-"Principal 8651a1145fbe4141bf6d396XXXXX does not exist in the directory e60f12c0-e1dc-4be1-8d86-e979a5XXXX"
-```
-
-
-|Param Name|Purpose|Required?|Comments|
-|----|----|----|----|
-|SubscriptionId|Hosting subscription id where Tenant solution will be deployed |TRUE||
-|ScanHostRGName| Name of ResourceGroup where setup resources will be created |TRUE||
-|ScanIdentityId| Resource id of user managed identity used to scan subscriptions.  |TRUE||
-|Location|Location where all resources will get created|TRUE||
-|Verbose| Switch used to output detailed log|FALSE||
-|EnableScaleOutRule| Switch used to deploy auto scaling rule for scanning evironment. |FALSE||
+|Param Name|Description|Required?
+|----|----|----|
+|SubscriptionId|Hosting subscription id where Tenant solution will be deployed |TRUE|
+|ScanHostRGName| Name of ResourceGroup where setup resources will be created |TRUE|
+|ScanIdentityId| Resource id of user managed identity used to scan subscriptions.  |TRUE|
+|Location|Location where all resources will get created|TRUE|
+|Verbose| Switch used to output detailed log|FALSE|
+|EnableScaleOutRule| Switch used to deploy auto scaling rule for scanning evironment. |FALSE|
 
 
 >**Note:** Completion of this one-time setup activity can take up to 5 minutes and it will look like below.
@@ -157,6 +154,8 @@ Install-AzSKTenantSecuritySolution `
 
 ![Resources](../Images/12_TSS_Resource_Group.png)	
 
+**Resources details:**
+
 |Resource Name|Resource Type|Description|
 |----|----|----|
 |AzSKTSWorkItemProcessor-xxxxx|App Service| Contains inventory and subscription work item processor job. More details [below]() |
@@ -170,11 +169,16 @@ Install-AzSKTenantSecuritySolution `
 
  **3:** Verify below three jobs got created
 
- **i) InventoryJob:** Use to get subscription list to be scanned and store into LA workspace. Go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.1.Inventory' is scheduled to run once every day.
-	
- ![ProcessorWebjobs](../Images/12_TSS_Processor_Webjobs.png)
+**i) InventoryJob:** 
 
- **ii) WorkItemSchedulerJob:** Used to queue subscription for the scan. Go to resource 'AzSKTSWorkItemScheduler-xxxxx' --> 'Webjobs' Properties -->Verify '0.2.JobProcessor' is scheduled to run  once every day.
+ Use to get subscription list to be scanned and store into LA workspace. 
+ 
+ To see the job, you can go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.1.Inventory' is scheduled to run once every day.
+	
+ ![ProcessorWebjobs](../Images/12_TSS_Processor_WebJobs.png)
+
+ **ii) WorkItemSchedulerJob:** Used to queue subscription for the scan. 
+ Go to resource 'AzSKTSWorkItemScheduler-xxxxx' --> 'Webjobs' Properties -->Verify '0.2.JobProcessor' is scheduled to run  once every day.
 	
 ![SchedulerWebjobs](../Images/12_TSS_Scheduler_Webjobs.png)
 
@@ -189,6 +193,8 @@ Install-AzSKTenantSecuritySolution `
  #TODO
 
 ![Internals](../Images/12_TenantSetupInternals.png)
+
+[Back to top…](Readme.md#contents)
 
 # Create security compliance monitoring solutions
 Once you have an tenant security setup running smoothly with multiple subscriptions across your org, you will need a solution that provides visibility of security compliance for all the subscriptions across your org. This will help you drive compliance/risk governance initiatives for your organization. 
