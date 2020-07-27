@@ -258,10 +258,10 @@ In this section we shall create a PowerBI report locally within PowerBI Desktop 
 
 **(c)** Open the template (.pbit) file using PowerBI Desktop, provide the LA Workspace ID and click on 'Load' as shown below:
 
-![capture applicationInsights AppId](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_1.png)
+![capture loganalytics AppId](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_1.png)
 
 **(d)** PowerBI will prompt you to login to the Tenant Security subscription at this stage. Authenticate using your user account. (This step basically allows PowerBI to import the data from LA into the PowerBI Desktop workspace.)
-![Login to AI](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_2.png)
+![Login to LA](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_2.png)
 
 Once you have successfully logged in, you will see the Log Analytics data in the PowerBI report along with org mapping as shown below: 
 
@@ -285,15 +285,15 @@ Inventory view:
 
 [a1] Click on "Edit Queries" menu option.
 
-![Update AI Connection String](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_9.PNG)
+![Update LA Connection String](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_9.PNG)
 
 [a2] Copy the value of "LogAnalyticsConnectionString"
 
-![Update AI Connection String](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_3.png)
+![Update LA Connection String](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_3.png)
 
 [a3] Replace the value of "LogAnalyticsConnectionString" with the actual connection string (e.g., LogAnalyticsConnectionString => ""https://api.loganalytics.io/v1/workspaces/[LogAnalyticsWorkspaceID]]/query""). You should retain the "" quotes in the connection string.
 
-![Update AI Connection String](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_4.png)
+![Update LA Connection String](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_4.png)
 
 [a4] Repeat this operation for SubscriptionInv, BaselineControlsInv, ControlResults, ResourceInvInfo, RBAC summary, and SubscriptionComplianceLast7days data tables.
 
