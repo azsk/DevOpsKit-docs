@@ -109,12 +109,12 @@ CD "<LocalExtractedFolderPath>\Deploy"
 
 # Step 2: Run installation command. 
 
-Install-AzSKTenantSecuritySolution ` 
+Install-AzSKTenantSecuritySolution `
                 -SubscriptionId <SubscriptionId> `
                 -ScanHostRGName <ResourceGroupName> `
                 -ScanIdentityId <ManagedIdentityResourceId> `
                 -Location <ResourceLocation> `
-                -Verbose 
+                -Verbose
 
 # For ScanIdentityId parameter, use value created for "$UserAssignedIdentity.Id" from prerequisite section step 4.
 
@@ -158,8 +158,8 @@ Install-AzSKTenantSecuritySolution `
 
 |Resource Name|Resource Type|Description|
 |----|----|----|
-|AzSKTSWorkItemProcessor-xxxxx|App Service| Contains inventory and subscription work item processor job. More details [below]() |
-|AzSKTSWorkItemScheduler-xxxxx|App Service | Contains work item (subscription) scheduler job. More details [below]() |
+|AzSKTSWorkItemProcessor-xxxxx|App Service| Contains inventory and subscription work item processor job. More details [below] |
+|AzSKTSWorkItemScheduler-xxxxx|App Service | Contains work item (subscription) scheduler job. More details [below] |
 |AzSKTSLAWorkspace-xxxxx|Log Analytics workspace| Used to store scan events, inventory, subscription scan progress details.|
 |AzSKTSProcessorMI-xxxxx|Managed Identity | Internal MI identity used to access LA workspace and storage for sending scan results|
 |AzSKTSServicePlan| App Service Plan| App service plan used for jobs|
