@@ -285,7 +285,7 @@ Inventory view:
 
 [a1] Click on "Edit Queries" menu option.
 
-![Update LA Connection String](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_9.PNG)
+![Update LA Connection String](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_9.png)
 
 [a2] Copy the value of "LogAnalyticsConnectionString"
 
