@@ -3,17 +3,17 @@
 ## Tenant Security
 ### Contents
 - [Overview](Readme.md#overview)
-- [Why Tenant Security Solution](Readme.md#setting-up-continuous-assurance---step-by-step)
-- [Setting up Tenant Security Solution - Step by Step](Readme.md#setting-up-continuous-assurance---step-by-step)
-- [Tenant Security Solution - how it works (under the covers)](Readme.md#continuous-assurance---how-it-works-under-the-covers)
-- [Create compliance and monitoring solutions](Readme.md#continuous-assurance---how-it-works-under-the-covers)
-- [Feedback](Readme.md#faq)
+- [Why Tenant Security Solution?](Readme.md#why-tenant-security-solution?)
+- [Setting up Tenant Security Solution - Step by Step](Readme.md#setting-up-tenant-security-solution---step-by-step)
+- [Tenant Security Solution - how it works (under the covers)](Readme.md##tenant-security-solution---how-it-works-under-the-covers)
+- [Create compliance and monitoring solutions](Readme.md#create-security-compliance-monitoring-solutions)
+- [Feedback](Readme.md#feedback)
 
 -----------------------------------------------------------------
 ## Overview 
 The basic idea behind Tenant Security Solution (TSS) is to provide security for all the resources of any subscription. 
 
-## Why Tenant Security Solution ?
+## Why Tenant Security Solution?
 TODO
 
 ## Setting up Tenant Security Solution - Step by Step
@@ -48,7 +48,7 @@ Install-Module -Name Az.ManagedServiceIdentity -AllowClobber -Scope CurrentUser
 
 **4.**  Create central scanning user identity and provide reader access to subscriptions on which scan needs to be performed.
 
-You can create user identity with below PowerShell command or Portal steps [here](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-portal) and assign reader access on subscription to be scanned using steps [here](https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal)
+You can create user identity with below PowerShell command or Portal steps [here](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-portal) and assign reader access on subscriptions to be scanned.
 
 ``` Powershell
 
@@ -58,15 +58,16 @@ Set-AzContext -SubscriptionId <MIHostingSubId>
 # Step 2: Create User Identity 
 $UserAssignedIdentity = New-AzUserAssignedIdentity -ResourceGroupName <MIHostingRG> -Name <USER ASSIGNED IDENTITY NAME>
 
-# Step 3: Assign user identity with reader role on all the subscriptions which needs to be scanned. 
+# Step 3: Keep resource id generated for user identity using below command. This will be used in installation parameter
+
+$UserAssignedIdentity.Id
+
+# Step 4: Assign user identity with reader role on all the subscriptions which needs to be scanned. 
 # Below command help to assign access to single subscription. 
 # You need to repeat below step for all subscription
 
 New-AzRoleAssignment -ApplicationId $UserAssignedIdentity.ClientId -Scope <SubscriptionScope> -RoleDefinitionName "Reader"
 
-# Step 4: Keep resource id generated for user identity using below command. This will be used in installation parameter
-
-$UserAssignedIdentity.Id
 
 ```
 
@@ -103,7 +104,7 @@ CD "<LocalExtractedFolderPath>\Deploy"
 
 . "\AzSKTSSetup.ps1"
 
-# Step 2: Run installation command
+# Step 2: Run installation command. 
 
 Install-AzKSTenantSecuritySolution ` 
                 -SubscriptionId <SubscriptionId> `
@@ -111,6 +112,8 @@ Install-AzKSTenantSecuritySolution `
                 -ScanIdentityId <ManagedIdentityResourceId> `
                 -Location <ResourceLocation> `
                 -Verbose 
+
+# For ScanIdentityId parameter, use value created for "$UserAssignedIdentity.Id" from prerequisite section step 4.
 
 # Example:
 
@@ -130,14 +133,14 @@ Install-AzSKTenantSecuritySolution `
 ```
 
 
-|Param Name|Purpose|Required?|Default value|Comments|
-|----|----|----|----|----|
-|SubscriptionId|Hosting subscription id where Tenant solution will be deployed |TRUE|None||
-|ScanHostRGName| Name of ResourceGroup where setup resources will be created |TRUE|||
-|ScanIdentityId| Resource id of user managed identity used to scan subscriptions.  |TRUE|||
-|Location|Location where all resources will get created|True|||
-|Verbose| Switch used to output detailed log|FALSE|None||
-|EnableScaleOutRule| Switch used to deploy auto scaling rule for scanning evironment. |FALSE|None||
+|Param Name|Purpose|Required?|Comments|
+|----|----|----|----|
+|SubscriptionId|Hosting subscription id where Tenant solution will be deployed |TRUE||
+|ScanHostRGName| Name of ResourceGroup where setup resources will be created |TRUE||
+|ScanIdentityId| Resource id of user managed identity used to scan subscriptions.  |TRUE||
+|Location|Location where all resources will get created|TRUE||
+|Verbose| Switch used to output detailed log|FALSE||
+|EnableScaleOutRule| Switch used to deploy auto scaling rule for scanning evironment. |FALSE||
 
 
 >**Note:** Completion of this one-time setup activity can take up to 5 minutes and it will look like below.
@@ -175,7 +178,7 @@ Install-AzSKTenantSecuritySolution `
 	
 ![SchedulerWebjobs](../Images/12_TSS_Scheduler_Webjobs.png)
 
- **iii) WorkItemProcessorJob:** Read subscription list from queue and scan for security controls. Go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.3.WorkItemProcessorJob' is scheduled to run for two hours to scan subscriptions.
+ **iii) WorkItemProcessorJob:** Read subscription list from queue and scan for security controls. Go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.3.WorkItemProcessorJob' is scheduled to run for two hours to scan subscriptions. (Refer screenshot from Job01)
 
 
 **Note:** Jobs are scheduled to run from UTC 00:00 time. You can also run the jobs manually by trigger jobs 01, 02 and 03 in sequence (5 mins interval). After some interval you will start seeing scan results in storage account and LA workspace.  
@@ -342,4 +345,6 @@ Below is snapshot of the dashboard
 With the help of telemetry events you will be able to monitor resources inventory in the Org. This will give the visibility over all resources along with control failures over all subscriptions. The PowerBI based template will be shared soon
 
 
->### Feedback
+## Feedback
+
+For any feedback contact us at: azsksupext@microsoft.com 
