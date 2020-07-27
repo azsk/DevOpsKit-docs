@@ -140,9 +140,6 @@ Install-AzSKTenantSecuritySolution `
 
 
 
-<TODO: Add known error  details>
-
-
 **Step-2: Verifying that Tenant Security Solution installation is complete**  
 
 **1:** In the Azure portal, Go to Azure Resource Groups and select the resource group ('TSSolutionRG') that has been created during the setup.
@@ -153,12 +150,13 @@ Install-AzSKTenantSecuritySolution `
 
 |Resource Name|Resorce Type|Description|
 |----|----|----|----|----|
-|AzSKTSLAWorkspace-xxxxx|Log Analytics orkspace||
-|AzSKTSProcessorMI-xxxxx|Managed Identity||
-|AzSKTSServicePlan|App Service Plan||
+|AzSKTSWorkItemProcessor-xxxxx|App Service| Contains two jobs `n 1. InventoryJob- Used to get the list of subscription. `n 2. WorkItemProcessorJob- Used to scan the subscription. |
+|AzSKTSWorkItemScheduler-xxxxx|App Service| Used to |
+|AzSKTSLAWorkspace-xxxxx|Log Analytics orkspace|Used to store scan events, inventory, subscription scan progress details.|
+|AzSKTSProcessorMI-xxxxx|Managed Identity| Internal MI identity used to access LA workspace and storage for sending scan results|
+|AzSKTSServicePlan|App Service Plan| App service plan used for jobs|
 |azsktsstoragexxxxx|Storage Account| Used to store the daily results of subscriptions scan.|
-|AzSKTSWorkItemProcessor-xxxxx|App Service||
-|AzSKTSWorkItemScheduler-xxxxx|App Service||
+
 
 
  **3:** Verify below three jobs got created
