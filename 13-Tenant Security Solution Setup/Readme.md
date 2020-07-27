@@ -34,7 +34,7 @@ To get started, we need the following prerequisites:
  Ensure that you are using Windows OS and have PowerShell version 5.0 or higher by typing **$PSVersionTable** in the PowerShell ISE console window and looking at the PSVersion in the output as shown below.) 
  If the PSVersion is older than 5.0, update PowerShell from [here](https://www.microsoft.com/en-us/download/details.aspx?id=54616).  
 
-   ![PowerShell Version](../Images/00_PS_Version.png)   
+   ![PowerShell Version](../Images/00_PS_Version.PNG)   
 
 **3.** Install Az and Managed Service Identity Powershell Module using below command. For more details of Az installation refer [link](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps)
 
@@ -169,7 +169,7 @@ Install-AzSKTenantSecuritySolution `
 
  **i) InventoryJob:** Use to get subscription list to be scanned and store into LA workspace. Go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.1.Inventory' is scheduled to run once every day.
 	
- ![ProcessorWebjobs](../Images/12_TSS_Processor_Webjobs.png)
+ ![ProcessorWebjobs](../Images/12_TSS_Processor_WebJobs.png)
 
  **ii) WorkItemSchedulerJob:** Used to queue subscription for the scan. Go to resource 'AzSKTSWorkItemScheduler-xxxxx' --> 'Webjobs' Properties -->Verify '0.2.JobProcessor' is scheduled to run  once every day.
 	
