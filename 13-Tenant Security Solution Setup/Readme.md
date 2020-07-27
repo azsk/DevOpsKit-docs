@@ -135,7 +135,7 @@ Install-AzSKTenantSecuritySolution `
 |SubscriptionId|Hosting subscription id where Tenant solution will be deployed |TRUE|None||
 |ScanHostRGName| Name of ResourceGroup where setup resources will be created |TRUE|||
 |ScanIdentityId| Resource id of user managed identity used to scan subscriptions.  |TRUE|||
-|Location|Location where all resources will get created|True|||
+|Location|Location where all resources will get created|TRUE|||
 |Verbose| Switch used to output detailed log|FALSE|None||
 |EnableScaleOutRule| Switch used to deploy auto scaling rule for scanning evironment. |FALSE|None||
 
