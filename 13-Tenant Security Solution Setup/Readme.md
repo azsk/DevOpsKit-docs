@@ -261,7 +261,7 @@ Once you have successfully logged in, you will see the Log Analytics data in the
 
 ![Compliance summary](../Images/13_TSS_PBIDashboardComplianceSummary.png)
 
-The report contains 3 tabs. There is an overall/summary view of compliance, a detailed view which can be used to see control 'pass/fail' details for individual subscriptions and inventory view which can be used to see a summary of enterprise resources with its type. This also gives you a summary of RBAC on your subscription. An example of the detailed view and inventory view is shown below:
+The report contains 3 tabs. There is an overall/summary view of compliance, a detailed view which can be used to see control 'pass/fail' details for individual subscriptions and inventory view which will give the visibility over all resources and RBAC in your tenant. An example of the detailed view and inventory view is shown below:
 
 Detailed view:
 
@@ -283,13 +283,13 @@ Inventory view:
 
 [a2] Copy the value of "AzSKAIConnectionString"
 
-![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_16.png)
+![Update AI Connection String](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_3.png)
 
 [a3] Replace the value of "LogAnalyticsConnectionString" with the actual connection string (e.g., LogAnalyticsConnectionString => ""https://api.loganalytics.io/v1/workspaces/[LogAnalyticsWorkspaceID]]/query""). You should retain the "" quotes in the connection string.
 
-![Update AI Connection String](../Images/13_13_TSS_OrgPolicy_PBI_OrgMetadata_LA_3.png)
+![Update AI Connection String](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_4.png)
 
-[a4] Repeat this operation for SubscriptionInv, Subscriptions_AI, and ResourceInventory_AI data tables.
+[a4] Repeat this operation for SubscriptionInv, BaselineControlsInv, ControlResults, ResourceInvInfo, RBAC summary, and SubscriptionComplianceLast7days data tables.
 
 [a5] Click on "Close and Apply".
 
@@ -305,17 +305,17 @@ Select destination workspace
 
 Click on "Open [Report Name] in Power BI" 
 
-![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_21.png)
+![Publish PBIX report](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_5.png)
 
 **(c)** Now report got published successfully. You can schedule refresh for report with below steps
 
-Go to Workspace --> Datasets --> Click on "..." --> Click on "Schedule Refresh"
+Go to Workspace --> Datasets --> Click on "Schedule Refresh" icon.
 
-![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_22.png)
+![Publish PBIX report](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_6.png)
 
 Click on "Edit credentials"
 
-![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_25.png)
+![Publish PBIX report](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_7.png)
 
 Sign in with account with which policy is created
 
@@ -325,25 +325,7 @@ Add refresh scheduling timings and click on "Apply"
 
 > **Note:** You may not see "Schedule refresh" option if step [a3] and [a4] is not completed successfully.
 
-![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_24.png)
-
-
-
-## AzSK org health monitoring dashboard
-
-Monitoring dashboard gets created along with policy setup and it lets you monitor the operations for various DevOps Kit workflows at your org.(e.g. CA issues, anomalous control drifts, evaluation errors, etc.). 
-
-You will be able to see the dashboard at the home page of Azure Portal. If not, you can navigate to the following path to see the dashboard
-
-Go to Azure Portal --> Select "Browse all dashboards" in dashboard dropdown -->  Select type "Shared Dashboard" --> Select subscription where policy is setup -->Select "DevOps Kit Monitoring Dashboard [OrgName]"
-
-Below is snapshot of the dashboard
-<img alt="Effective org Policy Evaluation" src="../Images/07_OrgPolicy_MonitoringDashboard.png" />
-
-## Detail resource inventory dashboard
-
-With the help of telemetry events you will be able to monitor resources inventory in the Org. This will give the visibility over all resources along with control failures over all subscriptions. The PowerBI based template will be shared soon
-
+![Publish PBIX report](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_8.png)
 
 ## Feedback
 
