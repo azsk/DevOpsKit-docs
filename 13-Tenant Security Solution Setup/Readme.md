@@ -150,8 +150,8 @@ Install-AzSKTenantSecuritySolution `
 
 |Resource Name|Resorce Type|Description|
 |----|----|----|----|----|
-|AzSKTSWorkItemProcessor-xxxxx|App Service| Contains two jobs `n 1. InventoryJob- Used to get the list of subscription. `n 2. WorkItemProcessorJob- Used to scan the subscription. |
-|AzSKTSWorkItemScheduler-xxxxx|App Service| Used to |
+|AzSKTSWorkItemProcessor-xxxxx|App Service| Contains inventory and subscription work item processor job. More details [below]() |
+|AzSKTSWorkItemScheduler-xxxxx|App Service| Contains work item (subscription) scheduler job. More details [below]() |
 |AzSKTSLAWorkspace-xxxxx|Log Analytics orkspace|Used to store scan events, inventory, subscription scan progress details.|
 |AzSKTSProcessorMI-xxxxx|Managed Identity| Internal MI identity used to access LA workspace and storage for sending scan results|
 |AzSKTSServicePlan|App Service Plan| App service plan used for jobs|
