@@ -187,12 +187,12 @@ Install-AzSKTenantSecuritySolution `
 ![Internals](../Images/12_TenantSetupInternals.png)
 
 # Create security compliance monitoring solutions
-Once you have an org policy setup running smoothly with multiple subscriptions across your org, you will need a solution that provides visibility of security compliance for all the subscriptions across your org. This will help you drive compliance/risk governance initiatives for your organization. 
+Once you have an tenant security setup running smoothly with multiple subscriptions across your org, you will need a solution that provides visibility of security compliance for all the subscriptions across your org. This will help you drive compliance/risk governance initiatives for your organization. 
 
-When you setup your org policy endpoint (i.e. policy server), one of the things that happens is creation of an Log Analytics workspace for your setup. After that, whenever someone performs an TSS scan for a subscription that is configured to use your org policy, the scan results are sent (as 'security' telemetry) to your org's Log Analytics workspace. Because this workspace receives scan events from all such subscriptions, it can be leveraged to generate aggregate security compliance views for your cloud-based environments. 
+When you setup your tenant security endpoint (i.e. policy server), one of the things that happens is creation of an Log Analytics workspace for your setup. After that, whenever someone performs an TSS scan for a subscription that is configured to use your tenant security, the scan results are sent (as 'security' telemetry) to your org's Log Analytics workspace. Because this workspace receives scan events from all such subscriptions, it can be leveraged to generate aggregate security compliance views for your cloud-based environments. 
 
 ## Create cloud security compliance report for your org using PowerBI
-We will look at how a PowerBI-based compliance dashboard can be created and deployed in a matter of minutes starting with a template dashboard that ships with the TSS. All you need apart from the Log Analytics workspace instance is a CSV file that provides a mapping of your organization hierarchy to subscription ids (so that we know which team/service group owns each subscription).
+We will look at how a PowerBI-based compliance dashboard can be created and deployed in a matter of minutes starting with a template dashboard that ships with the Tenant Security Solution (TSS). All you need apart from the Log Analytics workspace instance is a CSV file that provides a mapping of your organization hierarchy to subscription ids (so that we know which team/service group owns each subscription).
 
 > Note: This is a one-time activity with tremendous leverage as you can use the resulting dashboard (example below) towards driving security governance activities over an extended period at your organization. 
 
@@ -207,7 +207,7 @@ In this step you will prepare the data file which will be fed to the PowerBI das
 
 A sample template for the CSV file is [here](./TemplateFiles/OrgMapping.csv):
 
-![Org-Sub metadata json](../Images/07_OrgPolicy_PBI_OrgMetadata.PNG) 
+![Org-Sub metadata json](../Images/07_OrgPolicy_PBI_OrgMetadata.png) 
 
 The table below describes the different columns in the CSV file and their intent.
 
@@ -223,41 +223,49 @@ The table below describes the different columns in the CSV file and their intent
 > **Note**: Ensure you follow the correct casing for all column names as shown in the table above. The 'out-of-box' PowerBI template is bound to these columns. If you need additional columns to represent your org hierarchy then you may need to modify the template/report as well.
 
 
-#### Step 2: Upload your mapping to the Log Analytics workspace
+#### Step 2: Upload your mapping to the Log Analytics (LA) workspace
 
-In this step you will import the data above into the LA workspace created during org policy setup. 
+In this step you will import the data above into the LA workspace created during tenant security setup. 
 
- **(a)** Locate the LA resource that was created during org policy setup in your central subscription. This should be present under org policy resource group. After selecting the LA resource, copy the Workspace ID.
+ **(a)** Locate the LA resource that was created during tenant security setup in your central subscription. This should be present under tenant security resource group. After selecting the LA resource, copy the Workspace ID from the portal as shown below:
+
+ ![capture Workspace ID](../Images/13_TSS_LAWS_AgentManagement.png)
  
- **(b)** To push org Mapping details, copy and execute the script available [here](./Scripts/OrgPolicyPushOrgMappingEvents.txt).
+ **(b)** To push org Mapping details, copy and execute the script available [here](./Scripts/TSSPushOrgMappingEvents.txt) in Powershell.
 
  > **Note**: Due to limitation of Log Analytics workspace, you will need to repeat this step every 90 days interval. 
 
 #### Step 3: Create a PowerBI report file
-In this section we shall create a PowerBI report locally within PowerBI Desktop using the LA workspace from org policy subscription as the datasource. We will start with a default (out-of-box) PowerBI template and configure it with settings specific to your environment. 
+In this section we shall create a PowerBI report locally within PowerBI Desktop using the LA workspace from tenant security subscription as the datasource. We will start with a default (out-of-box) PowerBI template and configure it with settings specific to your environment. 
 
 > Note: This step assumes you have completed Step-0 above!
 
 **(a)** Get the Workspace ID for your LA workspace from the portal as shown below:
 
-![capture Workspace ID](../Images/12_TSS_LAWS_AgentManagement.png)
+![capture Workspace ID](../Images/13_TSS_LAWS_AgentManagement.png)
 
 **(b)** Download and copy the PowerBI template file from [here](https://github.com/azsk/DevOpsKit-docs/blob/users/TenantSecurityDocument/12-Tenant%20Security%20Solution/TemplateFiles/TenantSecurityReport.pbit) to your local machine.
 
 **(c)** Open the template (.pbit) file using PowerBI Desktop, provide the LA Workspace ID and click on 'Load' as shown below:
 
-![capture applicationInsights AppId](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_11.PNG)
+![capture applicationInsights AppId](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_1.png)
 
-**(d)** PowerBI will prompt you to login to the org policy subscription at this stage. Authenticate using your user account. (This step basically allows PowerBI to import the data from AI into the PowerBI Desktop workspace.)
-![Login to AI](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_12.PNG)
+**(d)** PowerBI will prompt you to login to the tenant security subscription at this stage. Authenticate using your user account. (This step basically allows PowerBI to import the data from LA into the PowerBI Desktop workspace.)
+![Login to AI](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_2.png)
 
-Once you have successfully logged in, you will see the AI data in the PowerBI report along with org mapping as shown below: 
+Once you have successfully logged in, you will see the Log Analytics data in the PowerBI report along with org mapping as shown below: 
 
-![Compliance summary](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_13.PNG)
+![Compliance summary](../Images/13_TSS_PBIDashboardComplianceSummary.png)
 
-The report contains 2 tabs. There is an overall/summary view of compliance and a detailed view which can be used to see control 'pass/fail' details for individual subscriptions. An example of the second view is shown below:
+The report contains 3 tabs. There is an overall/summary view of compliance, a detailed view which can be used to see control 'pass/fail' details for individual subscriptions and inventory view which can be used to see a summary of enterprise resources with its type. This also gives you a summary of RBAC on your subscription. An example of the detailed view and inventory view is shown below:
 
-![Compliance summary](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_14.PNG)
+Detailed view:
+
+![Compliance summary](../Images/13_TSS_PBIDashboardComplianceDetails.png) 
+
+Inventory view:
+
+![Compliance summary](../Images/13_TSS_PBIDashboardInventoryOverview.png)
 
 > TBD: Need to add steps to control access to the detailed view by business group. (Dashboard RBAC.) 
 
@@ -267,17 +275,17 @@ The report contains 2 tabs. There is an overall/summary view of compliance and a
 
 [a1] Click on "Edit Queries" menu option.
 
-![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_15.PNG)
+![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_15.png)
 
 [a2] Copy the value of "AzSKAIConnectionString"
 
-![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_16.PNG)
+![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_16.png)
 
-[a3] Replace the value of "AzSKAIConnectionString" with the actual connection string (e.g., AzSKAIConnectionString => "https://api.applicationinsights.io/v1/apps/[AIAppID]/query"). You should retain the "" quotes in the connection string.
+[a3] Replace the value of "LogAnalyticsConnectionString" with the actual connection string (e.g., LogAnalyticsConnectionString => ""https://api.loganalytics.io/v1/workspaces/[LogAnalyticsWorkspaceID]]/query""). You should retain the "" quotes in the connection string.
 
-![Update AI Connection String](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_17.PNG)
+![Update AI Connection String](../Images/13_13_TSS_OrgPolicy_PBI_OrgMetadata_LA_3.png)
 
-[a4] Repeat this operation for ControlResults_AI, Subscriptions_AI, and ResourceInventory_AI data tables.
+[a4] Repeat this operation for SubscriptionInv, Subscriptions_AI, and ResourceInventory_AI data tables.
 
 [a5] Click on "Close and Apply".
 
@@ -285,11 +293,11 @@ The report contains 2 tabs. There is an overall/summary view of compliance and a
 
 Click on Publish
 
-![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_18.PNG)
+![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_18.png)
 
 Select destination workspace
 
-![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_19.PNG)
+![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_19.png)
 
 Click on "Open [Report Name] in Power BI" 
 
