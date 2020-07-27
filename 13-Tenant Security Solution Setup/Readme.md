@@ -217,7 +217,7 @@ In this step you will prepare the data file which will be fed to the PowerBI das
 
 A sample template for the CSV file is [here](./TemplateFiles/OrgMapping.csv):
 
-![Org-Sub metadata json](../Images/07_OrgPolicy_PBI_OrgMetadata.png) 
+![Org-Sub metadata json](../Images/07_OrgPolicy_PBI_OrgMetadata.PNG) 
 
 The table below describes the different columns in the CSV file and their intent.
 
