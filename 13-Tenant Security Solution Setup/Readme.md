@@ -3,17 +3,17 @@
 ## Tenant Security
 ### Contents
 - [Overview](Readme.md#overview)
-- [Why Tenant Security Solution](Readme.md#setting-up-continuous-assurance---step-by-step)
-- [Setting up Tenant Security Solution - Step by Step](Readme.md#setting-up-continuous-assurance---step-by-step)
-- [Tenant Security Solution - how it works (under the covers)](Readme.md#continuous-assurance---how-it-works-under-the-covers)
-- [Create compliance and monitoring solutions](Readme.md#continuous-assurance---how-it-works-under-the-covers)
+- [Why Tenant Security Solution?](Readme.md#why-tenant-security-solution?)
+- [Setting up Tenant Security Solution - Step by Step](Readme.md#setting-up-tenant-security-solution---step-by-step)
+- [Tenant Security Solution - how it works (under the covers)](Readme.md##tenant-security-solution---how-it-works-under-the-covers)
+- [Create compliance and monitoring solutions](Readme.md#create-security-compliance-monitoring-solutions)
 - [Feedback](Readme.md#faq)
 
 -----------------------------------------------------------------
 ## Overview 
 The basic idea behind Tenant Security Solution (TSS) is to provide security for all the resources of any subscription. 
 
-## Why Tenant Security Solution ?
+## Why Tenant Security Solution?
 TODO
 
 ## Setting up Tenant Security Solution - Step by Step
@@ -175,7 +175,7 @@ Install-AzSKTenantSecuritySolution `
 	
 ![SchedulerWebjobs](../Images/12_TSS_Scheduler_Webjobs.png)
 
- **iii) WorkItemProcessorJob:** Read subscription list from queue and scan for security controls. Go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.3.WorkItemProcessorJob' is scheduled to run for two hours to scan subscriptions.
+ **iii) WorkItemProcessorJob:** Read subscription list from queue and scan for security controls. Go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.3.WorkItemProcessorJob' is scheduled to run for two hours to scan subscriptions. (Refer screenshot from Job01)
 
 
 **Note:** Jobs are scheduled to run from UTC 00:00 time. You can also run the jobs manually by trigger jobs 01, 02 and 03 in sequence (5 mins interval). After some interval you will start seeing scan results in storage account and LA workspace.  
@@ -334,4 +334,6 @@ Below is snapshot of the dashboard
 With the help of telemetry events you will be able to monitor resources inventory in the Org. This will give the visibility over all resources along with control failures over all subscriptions. The PowerBI based template will be shared soon
 
 
->### Feedback
+## Feedback
+
+For any feedback contact us at: azsksupext@microsoft.com 
