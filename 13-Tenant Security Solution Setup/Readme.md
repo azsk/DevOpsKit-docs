@@ -33,8 +33,10 @@ To get started, we need the following prerequisites:
 **2.** Install Az and Managed Service Identity Powershell Module using below command. For more details for Az installation refer [link](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps)
 
 ``` Powershell
+# Install Az Modules
 Install-Module -Name Az -AllowClobber -Scope CurrentUser
 
+#Install managed service 
 Install-Module -Name Az.ManagedServiceIdentity -AlloClobber -Scope CurrentUser
 ```
 
@@ -50,7 +52,8 @@ You can create user identity with below PowerShell command or Portal steps [here
         # Step 2: Create User Identity 
         $UserAssignedIdentity = New-AzUserAssignedIdentity -ResourceGroupName <MIHostingRG> -Name <USER ASSIGNED IDENTITY NAME>
 
-        # Step 3: Assign user identity with reader role on all the subscriptions which needs to be scanned. Below command help to assign access to single subscription. You need to repeat below step for all subscription
+        # Step 3: Assign user identity with reader role on all the subscriptions which needs to be scanned. 
+        # Below command help to assign access to single subscription. You need to repeat below step for all subscription
 
         New-AzRoleAssignment -ApplicationId $UserAssignedIdentity.ClientId -Scope <SubscriptionScope> -RoleDefinitionName "Reader"
 
@@ -60,7 +63,11 @@ You can create user identity with below PowerShell command or Portal steps [here
 
 The user setting up Tenant Security Solution needs to have 'Owner' access to the subscription.  
 
-**4.** Download deployment content from [here](./TemplateFiles/Deploy) to your local machine
+**4.** Download and extract deployment content from [here](./TemplateFiles/Deploy.zip) to your local machine.  You may have to unblock the content. Below command will help to unblock files. 
+
+``` PowerShell
+Get-ChildItem -Path "<Extracted folder path>" -Recurse |  Unblock-File 
+```
 
 
 **Step-1: Setup** 
@@ -107,6 +114,15 @@ Install-TenantSecuritySolution
 
   ![Resources](../Images/12_TSS_CommandOutput.png)
 
+
+|Param Name|Purpose|Required?|Default value|Comments|
+|----|----|----|----|----|
+|SubscriptionId|Hosting subscription id where Tenant solution will be deployed |TRUE|None||
+|ScanHostRGName| Name of ResourceGroup where setup resources will be created |TRUE|||
+|ScanIdentityId| Resource id of user managed identity used to scan subscriptions |TRUE|||
+|Location|Location where all resources will get created||||
+|Verbose| Switch used to output detailed log|FALSE|None||
+|EnableScaleOutRule| Switch used to deploy auto scaling rule for scanning evironment. |FALSE|None||
 
 <TODO: Add known error  details>
 
