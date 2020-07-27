@@ -58,15 +58,16 @@ Set-AzContext -SubscriptionId <MIHostingSubId>
 # Step 2: Create User Identity 
 $UserAssignedIdentity = New-AzUserAssignedIdentity -ResourceGroupName <MIHostingRG> -Name <USER ASSIGNED IDENTITY NAME>
 
-# Step 3: Assign user identity with reader role on all the subscriptions which needs to be scanned. 
+# Step 3: Keep resource id generated for user identity using below command. This will be used in installation parameter
+
+$UserAssignedIdentity.Id
+
+# Step 4: Assign user identity with reader role on all the subscriptions which needs to be scanned. 
 # Below command help to assign access to single subscription. 
 # You need to repeat below step for all subscription
 
 New-AzRoleAssignment -ApplicationId $UserAssignedIdentity.ClientId -Scope <SubscriptionScope> -RoleDefinitionName "Reader"
 
-# Step 4: Keep resource id generated for user identity using below command. This will be used in installation parameter
-
-$UserAssignedIdentity.Id
 
 ```
 
@@ -103,7 +104,7 @@ CD "<LocalExtractedFolderPath>\Deploy"
 
 . "\AzSKTSSetup.ps1"
 
-# Step 2: Run installation command
+# Step 2: Run installation command. 
 
 Install-AzKSTenantSecuritySolution ` 
                 -SubscriptionId <SubscriptionId> `
@@ -111,6 +112,8 @@ Install-AzKSTenantSecuritySolution `
                 -ScanIdentityId <ManagedIdentityResourceId> `
                 -Location <ResourceLocation> `
                 -Verbose 
+
+# For ScanIdentityId parameter, use value created for "$UserAssignedIdentity.Id" from prerequisite section step 4.
 
 # Example:
 
