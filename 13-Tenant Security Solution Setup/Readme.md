@@ -48,7 +48,7 @@ Install-Module -Name Az.ManagedServiceIdentity -AllowClobber -Scope CurrentUser
 
 **4.**  Create central scanning user identity and provide reader access to subscriptions on which scan needs to be performed.
 
-You can create user identity with below PowerShell command or Portal steps [here](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-portal) and assign reader access on subscription to be scanned using steps [here](https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal)
+You can create user identity with below PowerShell command or Portal steps [here](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-portal) and assign reader access on subscriptions to be scanned.
 
 ``` Powershell
 
