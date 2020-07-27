@@ -87,7 +87,7 @@ Get-ChildItem -Path "<Extracted folder path>" -Recurse |  Unblock-File
 1. Open the PowerShell ISE and login to your Azure account (using **Connect-AzAccount**) and Set the context to subscription where solution needs to be installed.
 
 ``` PowerShell
-# Log to Azure 
+# Login to Azure 
 Connect-AzAccount 
 
 # Set the context to hosting subscription
@@ -125,13 +125,7 @@ Install-AzSKTenantSecuritySolution `
                 -Verbose
 ```
 
-**!Important** : In case you see below error during installation, you have to rerun installation command with the same parameter.
-
-``` Error
-
-"Principal 8651a1145fbe4141bf6d396XXXXX does not exist in the directory e60f12c0-e1dc-4be1-8d86-e979a5XXXX"
-```
-
+**Parameter details:**
 
 |Param Name|Purpose|Required?|Comments|
 |----|----|----|----|
@@ -156,6 +150,8 @@ Install-AzSKTenantSecuritySolution `
 **2:** Verify below resources got created. 
 
 ![Resources](../Images/12_TSS_Resource_Group.png)	
+
+**Resources details:**
 
 |Resource Name|Resource Type|Description|
 |----|----|----|
