@@ -114,7 +114,7 @@ Install-AzSKTenantSecuritySolution `
                 -ScanHostRGName <ResourceGroupName> `
                 -ScanIdentityId <ManagedIdentityResourceId> `
                 -Location <ResourceLocation> `
-                -Verbose 
+                -Verbose
 
 # For ScanIdentityId parameter, use value created for "$UserAssignedIdentity.Id" from prerequisite section step 4.
 
