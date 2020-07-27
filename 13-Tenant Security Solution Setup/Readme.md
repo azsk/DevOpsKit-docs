@@ -169,11 +169,16 @@ Install-AzSKTenantSecuritySolution `
 
  **3:** Verify below three jobs got created
 
- **i) InventoryJob:** Use to get subscription list to be scanned and store into LA workspace. Go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.1.Inventory' is scheduled to run once every day.
+**i) InventoryJob:** 
+
+ Use to get subscription list to be scanned and store into LA workspace. 
+ 
+ To see the job, you can go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.1.Inventory' is scheduled to run once every day.
 	
  ![ProcessorWebjobs](../Images/12_TSS_Processor_WebJobs.png)
 
- **ii) WorkItemSchedulerJob:** Used to queue subscription for the scan. Go to resource 'AzSKTSWorkItemScheduler-xxxxx' --> 'Webjobs' Properties -->Verify '0.2.JobProcessor' is scheduled to run  once every day.
+ **ii) WorkItemSchedulerJob:** Used to queue subscription for the scan. 
+ Go to resource 'AzSKTSWorkItemScheduler-xxxxx' --> 'Webjobs' Properties -->Verify '0.2.JobProcessor' is scheduled to run  once every day.
 	
 ![SchedulerWebjobs](../Images/12_TSS_Scheduler_Webjobs.png)
 
