@@ -103,11 +103,13 @@ Set-AzContext -SubscriptionId <SubscriptionId>
 
 CD "<LocalExtractedFolderPath>\Deploy"
 
-. "\AzSKTSSetup.ps1"
+. ".\AzSKTSSetup.ps1"
+
+# Note: Make sure you copy  '.' present at the start of line.
 
 # Step 2: Run installation command. 
 
-Install-AzKSTenantSecuritySolution ` 
+Install-AzSKTenantSecuritySolution ` 
                 -SubscriptionId <SubscriptionId> `
                 -ScanHostRGName <ResourceGroupName> `
                 -ScanIdentityId <ManagedIdentityResourceId> `
