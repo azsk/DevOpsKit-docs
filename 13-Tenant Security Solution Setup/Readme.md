@@ -267,17 +267,17 @@ Once you have successfully logged in, you will see the Log Analytics data in the
 
 ![Compliance summary](../Images/13_TSS_PBIDashboardComplianceSummary.png)
 
-The report contains 3 tabs. There is an overall/summary view of compliance, a detailed view which can be used to see control 'pass/fail' details for individual subscriptions and inventory view which will give the visibility over all resources and RBAC in your tenant. An example of the detailed view and inventory view is shown below:
+The report contains 3 tabs. There is an overall/summary view of compliance, a detailed view which can be used to see control 'pass/fail' details for individual subscriptions and inventory view which shows distribution of resource types and RBAC role memberships across all Azure subscriptions in the organization. An example of the detailed view and inventory view is shown below:
 
-Detailed view:
+###### Detailed view:
 
 ![Compliance summary](../Images/13_TSS_PBIDashboardComplianceDetails.png) 
 
-Inventory view:
+###### Inventory view:
 
 ![Compliance summary](../Images/13_TSS_PBIDashboardInventoryOverview.png)
 
-> TBD: Need to add steps to control access to the detailed view by business group. (Dashboard RBAC.) 
+> Note: You can consider controlling access to the detailed view by business group.
 
 #### Step 4: Publish the PowerBI report to your enterprise PowerBI workspace
 
@@ -295,7 +295,7 @@ Inventory view:
 
 ![Update LA Connection String](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_4.png)
 
-[a4] Repeat this operation for SubscriptionInv, BaselineControlsInv, ControlResults, ResourceInvInfo, RBAC summary, and SubscriptionComplianceLast7days data tables.
+[a4] Repeat this operation for SubscriptionInvLA, SubscriptionComplianceLast7daysLA, BaselineControlsInvLA, ControlResultsLA, ResourceInvInfoLA, and RBACSummaryLA data tables.
 
 [a5] Click on "Close and Apply".
 
