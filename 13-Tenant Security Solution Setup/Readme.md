@@ -134,10 +134,10 @@ Install-AzSKTenantSecuritySolution `
 |----|----|----|
 |SubscriptionId|Hosting subscription id where Tenant solution will be deployed |TRUE|
 |ScanHostRGName| Name of ResourceGroup where setup resources will be created |TRUE|
-|ScanIdentityId| Resource id of user managed identity used to scan subscriptions.  |TRUE|
-|Location|Location where all resources will get created|TRUE|
-|Verbose| Switch used to output detailed log|FALSE|
-|EnableScaleOutRule| Switch used to deploy auto scaling rule for scanning evironment. |FALSE|
+|ScanIdentityId| Resource id of user managed identity used to scan subscriptions  |TRUE|
+|Location|Location where all resources will get created |TRUE|
+|Verbose| Switch used to output detailed log |FALSE|
+|EnableScaleOutRule| Switch used to deploy auto scaling rule for scanning evironment |FALSE|
 
 
 >**Note:** Completion of this one-time setup activity can take up to 5 minutes and it will look like below.
@@ -160,10 +160,10 @@ Install-AzSKTenantSecuritySolution `
 |----|----|----|
 |AzSKTSWorkItemProcessor-xxxxx|App Service| Contains inventory and subscription work item processor job. More details [below] |
 |AzSKTSWorkItemScheduler-xxxxx|App Service | Contains work item (subscription) scheduler job. More details [below] |
-|AzSKTSLAWorkspace-xxxxx|Log Analytics workspace| Used to store scan events, inventory, subscription scan progress details.|
+|AzSKTSLAWorkspace-xxxxx|Log Analytics workspace| Used to store scan events, inventory, subscription scan progress details|
 |AzSKTSProcessorMI-xxxxx|Managed Identity | Internal MI identity used to access LA workspace and storage for sending scan results|
 |AzSKTSServicePlan| App Service Plan| App service plan used for jobs|
-|azsktsstoragexxxxx|Storage Account| Used to store the daily results of subscriptions scan.|
+|azsktsstoragexxxxx|Storage Account| Used to store the daily results of subscriptions scan|
 
 
 
@@ -226,9 +226,9 @@ The table below describes the different columns in the CSV file and their intent
 | BGName | Name of business group (e.g., Finance, HR, Marketing, etc.) within your enterprise | Yes |  This you can consider as level 1 hierarchy for your enterprise | 
 | ServiceGroupName | Name of Service Line/ Business Unit within an organization | Yes |  This you can consider as level 2 hierarchy for your enterprise | 
 | SubscriptionId | Subscription Id belonging to a org/servicegroup | Yes |   | 
-| SubscriptionName | Subscription Name | Yes | This should match the actual subscription name. If it does not, then the actual name will be used.  | 
-| IsActive | Use "Y" for Active Subscription and "N" for Inactive Subscription  | Yes | This will be used to filter active and inactive subscriptions .| 
-| OwnerDetails | List of subscription owners separated by semi-colons (;)  | Yes | These are people accountable for security of the subscription.  | 
+| SubscriptionName | Subscription Name | Yes | This should match the actual subscription name. If it does not, then the actual name will be used  | 
+| IsActive | Use "Y" for Active Subscription and "N" for Inactive Subscription  | Yes | This will be used to filter active and inactive subscriptions | 
+| OwnerDetails | List of subscription owners separated by semi-colons (;)  | Yes | These are people accountable for security of the subscription  | 
 
 > **Note**: Ensure you follow the correct casing for all column names as shown in the table above. The 'out-of-box' PowerBI template is bound to these columns. If you need additional columns to represent your org hierarchy then you may need to modify the template/report as well.
 
