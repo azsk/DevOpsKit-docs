@@ -200,7 +200,7 @@ Install-AzSKTenantSecuritySolution `
  <br /> By default this job is scheduled to run for two hours to scan subscriptions. (Refer screenshot from Job01)
 
 
-**Note:** Jobs are scheduled to run from UTC 00:00 time. You can also run the jobs manually by trigger jobs 01, 02 and 03 in sequence with an interval 10 mins in between. After Job 3 completes processing the messages in the queue, you will start seeing scan results in storage account and LA workspace.  
+> **Note:** Jobs are scheduled to run from UTC 00:00 time. You can also run the jobs manually by trigger jobs 01, 02 and 03 in sequence with an interval 10 mins in between. After Job 3 completes processing the messages in the queue, you will start seeing scan results in storage account and LA workspace.  
 
 
 [Back to top…](Readme.md#contents)
@@ -267,9 +267,7 @@ In this step you will import the data above into the LA workspace created during
  > **Note**: Due to limitation of Log Analytics workspace, you will need to repeat this step every 90 days interval. 
 
 #### Step 3: Create a PowerBI report file
-In this section we shall create a PowerBI report locally within PowerBI Desktop using the LA workspace from Tenant Security subscription as the datasource. We will start with a default (out-of-box) PowerBI template and configure it with settings specific to your environment. 
-
-> Note: This step assumes you have completed Step-0 above!
+In this section we shall create a PowerBI report locally within PowerBI Desktop using the LA workspace from Tenant Security subscription as the datasource. We will start with a default (out-of-box) PowerBI template and configure it with settings specific to your environment.
 
 **(a)** Get the Workspace ID for your LA workspace from the portal as shown below:
 
