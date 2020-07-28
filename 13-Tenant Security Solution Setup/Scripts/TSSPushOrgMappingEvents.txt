@@ -80,4 +80,4 @@ function PushOrgMappingEvents([string] $OrgMappingFilePath, [string] $LogAnaytic
 
 }
 
-PushOrgMappingEvents -OrgMappingFilePath "<OrgMapping.csv File Path>"> -LogAnayticsWorkspaceId "<Workspace Id>" -LogAnalyticsSharedKey "<Workspace Key>"
+PushOrgMappingEvents -OrgMappingFilePath "<OrgMapping.csv File Path>" -LogAnayticsWorkspaceId "<Workspace Id>" -LogAnalyticsSharedKey "<Workspace Key>"
