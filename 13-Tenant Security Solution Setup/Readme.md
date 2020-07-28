@@ -173,18 +173,18 @@ Install-AzSKTenantSecuritySolution `
 
  **3:** Verify below three jobs got created
 
-**i) InventoryJob:** 
+ **i) Inventory Job:** 
 
- Responsible to fetch details about all the subscriptions that has been granted access as Reader using central MI. All these subscriptions will be fetched by the job and persisted into LA. These subscriptions are scanned automatically by the consecutive jobs.
+  Responsible to fetch details about all the subscriptions that has been granted access as Reader using central MI. All these subscriptions will be fetched by the job and persisted into LA. These subscriptions are scanned automatically by the consecutive jobs.
 
+  
+  To see the job, you can go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.1.Inventory' <br />By Default this job is scheduled to run once every day.
+    
+  ![ProcessorWebjobs](../Images/12_TSS_Processor_WebJobs.png)
+
+ **ii) Work Item Scheduler Job:** 
  
- To see the job, you can go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.1.Inventory' <br />By Default this job is scheduled to run once every day.
-	
- ![ProcessorWebjobs](../Images/12_TSS_Processor_WebJobs.png)
-
- **ii) WorkItemSchedulerJob:** 
- 
- Responsible to queue up subscriptions as workitems for scanning. It also reconciles the errored subscriptions through retries in the end. By default it would retry to scan for 5 times for each error subscription. IF there are nothing to process for the day, it would simply ignore the run.
+ Responsible to queue up subscriptions as workitems for scanning. It also reconciles the errored subscriptions through retries in the end. By default it would retry to scan for 5 times for each error subscription. IF there is nothing to process for the day, it would simply ignore the run.
 
 
  Go to resource 'AzSKTSWorkItemScheduler-xxxxx' --> 'Webjobs' Properties -->Verify '0.2.JobProcessor'. 
@@ -192,7 +192,7 @@ Install-AzSKTenantSecuritySolution `
 	
 ![SchedulerWebjobs](../Images/12_TSS_Scheduler_Webjobs.png)
 
- **iii) WorkItemProcessorJob:** 
+ **iii) Work Item Processor Job:** 
  
  Read subscription list from queue and scan for Azure control plane security controls. 
  
@@ -340,15 +340,15 @@ Go to Workspace --> Datasets --> Click on "Schedule Refresh" icon.
 
 ![Publish PBIX report](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_6.png)
 
-Click on "Edit credentials"
+Click on "Edit credentials".
 
 ![Publish PBIX report](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_7.png)
 
-Sign in with account with which policy is created
+Sign in with account which has access to the Log Analytics workspace.
 
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_26.png)
 
-Add refresh scheduling timings and click on "Apply"
+Add refresh scheduling timings and click on "Apply".
 
 > **Note:** You may not see "Schedule refresh" option if step [a3] and [a4] is not completed successfully.
 
