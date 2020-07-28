@@ -134,10 +134,10 @@ Install-AzSKTenantSecuritySolution `
 |----|----|----|
 |SubscriptionId|Hosting subscription id where Tenant solution will be deployed |TRUE|
 |ScanHostRGName| Name of ResourceGroup where setup resources will be created |TRUE|
-|ScanIdentityId| Resource id of user managed identity used to scan subscriptions.  |TRUE|
-|Location|Location where all resources will get created|TRUE|
-|Verbose| Switch used to output detailed log|FALSE|
-|EnableScaleOutRule| Switch used to deploy auto scaling rule for scanning evironment. |FALSE|
+|ScanIdentityId| Resource id of user managed identity used to scan subscriptions  |TRUE|
+|Location|Location where all resources will get created |TRUE|
+|Verbose| Switch used to output detailed log |FALSE|
+|EnableScaleOutRule| Switch used to deploy auto scaling rule for scanning evironment |FALSE|
 
 
 >**Note:** Completion of this one-time setup activity can take up to 5 minutes and it will look like below.
@@ -160,10 +160,10 @@ Install-AzSKTenantSecuritySolution `
 |----|----|----|
 |AzSKTSWorkItemProcessor-xxxxx|App Service| Contains inventory and subscription work item processor job. More details [below] |
 |AzSKTSWorkItemScheduler-xxxxx|App Service | Contains work item (subscription) scheduler job. More details [below] |
-|AzSKTSLAWorkspace-xxxxx|Log Analytics workspace| Used to store scan events, inventory, subscription scan progress details.|
+|AzSKTSLAWorkspace-xxxxx|Log Analytics workspace| Used to store scan events, inventory, subscription scan progress details|
 |AzSKTSProcessorMI-xxxxx|Managed Identity | Internal MI identity used to access LA workspace and storage for sending scan results|
 |AzSKTSServicePlan| App Service Plan| App service plan used for jobs|
-|azsktsstoragexxxxx|Storage Account| Used to store the daily results of subscriptions scan.|
+|azsktsstoragexxxxx|Storage Account| Used to store the daily results of subscriptions scan|
 
 
 
@@ -171,26 +171,43 @@ Install-AzSKTenantSecuritySolution `
 
 **i) InventoryJob:** 
 
- Use to get subscription list to be scanned and store into LA workspace. 
+ Responsible to fetch details about all the subscriptions that has been granted access as Reader using central MI. All these subscriptions will be fetched by the job and persisted into LA. These subscriptions are scanned automatically by the consecutive jobs.
+
  
- To see the job, you can go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.1.Inventory' is scheduled to run once every day.
+ To see the job, you can go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.1.Inventory' <br />By Default this job is scheduled to run once every day.
 	
  ![ProcessorWebjobs](../Images/12_TSS_Processor_WebJobs.png)
 
- **ii) WorkItemSchedulerJob:** Used to queue subscription for the scan. 
- Go to resource 'AzSKTSWorkItemScheduler-xxxxx' --> 'Webjobs' Properties -->Verify '0.2.JobProcessor' is scheduled to run  once every day.
+ **ii) WorkItemSchedulerJob:** 
+ 
+ Responsible to queue up subscriptions as workitems for scanning. It also reconciles the errored subscriptions through retries in the end. By default it would retry to scan for 5 times for each error subscription. IF there are nothing to process for the day, it would simply ignore the run.
+
+
+ Go to resource 'AzSKTSWorkItemScheduler-xxxxx' --> 'Webjobs' Properties -->Verify '0.2.JobProcessor'. 
+ <br/> By default this job is scheduled to run every 30 minutes through out the day.
 	
 ![SchedulerWebjobs](../Images/12_TSS_Scheduler_Webjobs.png)
 
- **iii) WorkItemProcessorJob:** Read subscription list from queue and scan for security controls. Go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.3.WorkItemProcessorJob' is scheduled to run for two hours to scan subscriptions. (Refer screenshot from Job01)
+ **iii) WorkItemProcessorJob:** 
+ 
+ Read subscription list from queue and scan for Azure control plane security controls. 
+ 
+ Go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.3.WorkItemProcessorJob'
+ <br /> By default this job is scheduled to run for two hours to scan subscriptions. (Refer screenshot from Job01)
 
 
-**Note:** Jobs are scheduled to run from UTC 00:00 time. You can also run the jobs manually by trigger jobs 01, 02 and 03 in sequence (10 mins interval). After some interval you will start seeing scan results in storage account and LA workspace.  
+**Note:** Jobs are scheduled to run from UTC 00:00 time. You can also run the jobs manually by trigger jobs 01, 02 and 03 in sequence with an interval 10 mins in between. After Job 3 completes processing the messages in the queue, you will start seeing scan results in storage account and LA workspace.  
 
 
 [Back to top…](Readme.md#contents)
 ## Tenant Security Solution - how it works (under the covers)
- #TODO
+ Tenant Security Solution is built by extending what DevOps Tool Kit has been doing and leveraging the best of Azure native features. It is a hybrid model, which leverages the native Azure security capabilities like ASC, Azure Policies, etc. to evaluate the security contorls and continue to leverage DevOps Kit scanning capabilities to cover the gaps.  
+
+It has been desinged to handle huge scales in highly performant and cost efficient manner. [TODO] should we give some numbers here?
+
+As a central team, you can run the scan at regular intervals and also empower your DevOps Engineers to run the module independelty to address the failures. 
+
+Below diagram depicts a high level overview of the hybrid model.
 
 ![Internals](../Images/12_TenantSetupInternals.png)
 
@@ -226,9 +243,9 @@ The table below describes the different columns in the CSV file and their intent
 | BGName | Name of business group (e.g., Finance, HR, Marketing, etc.) within your enterprise | Yes |  This you can consider as level 1 hierarchy for your enterprise | 
 | ServiceGroupName | Name of Service Line/ Business Unit within an organization | Yes |  This you can consider as level 2 hierarchy for your enterprise | 
 | SubscriptionId | Subscription Id belonging to a org/servicegroup | Yes |   | 
-| SubscriptionName | Subscription Name | Yes | This should match the actual subscription name. If it does not, then the actual name will be used.  | 
-| IsActive | Use "Y" for Active Subscription and "N" for Inactive Subscription  | Yes | This will be used to filter active and inactive subscriptions .| 
-| OwnerDetails | List of subscription owners separated by semi-colons (;)  | Yes | These are people accountable for security of the subscription.  | 
+| SubscriptionName | Subscription Name | Yes | This should match the actual subscription name. If it does not, then the actual name will be used  | 
+| IsActive | Use "Y" for Active Subscription and "N" for Inactive Subscription  | Yes | This will be used to filter active and inactive subscriptions | 
+| OwnerDetails | List of subscription owners separated by semi-colons (;)  | Yes | These are people accountable for security of the subscription  | 
 
 > **Note**: Ensure you follow the correct casing for all column names as shown in the table above. The 'out-of-box' PowerBI template is bound to these columns. If you need additional columns to represent your org hierarchy then you may need to modify the template/report as well.
 
@@ -267,17 +284,17 @@ Once you have successfully logged in, you will see the Log Analytics data in the
 
 ![Compliance summary](../Images/13_TSS_PBIDashboardComplianceSummary.png)
 
-The report contains 3 tabs. There is an overall/summary view of compliance, a detailed view which can be used to see control 'pass/fail' details for individual subscriptions and inventory view which will give the visibility over all resources and RBAC in your tenant. An example of the detailed view and inventory view is shown below:
+The report contains 3 tabs. There is an overall/summary view of compliance, a detailed view which can be used to see control 'pass/fail' details for individual subscriptions and inventory view which shows distribution of resource types and RBAC role memberships across all Azure subscriptions in the organization. An example of the detailed view and inventory view is shown below:
 
-Detailed view:
+###### Detailed view:
 
 ![Compliance summary](../Images/13_TSS_PBIDashboardComplianceDetails.png) 
 
-Inventory view:
+###### Inventory view:
 
 ![Compliance summary](../Images/13_TSS_PBIDashboardInventoryOverview.png)
 
-> TBD: Need to add steps to control access to the detailed view by business group. (Dashboard RBAC.) 
+> Note: You can consider controlling access to the detailed view by business group.
 
 #### Step 4: Publish the PowerBI report to your enterprise PowerBI workspace
 
@@ -291,11 +308,11 @@ Inventory view:
 
 ![Update LA Connection String](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_3.png)
 
-[a3] Replace the value of "LogAnalyticsConnectionString" with the actual connection string (e.g., LogAnalyticsConnectionString => ""https://api.loganalytics.io/v1/workspaces/[LogAnalyticsWorkspaceID]]/query""). You should retain the "" quotes in the connection string.
+[a3] Replace the value of "LogAnalyticsConnectionString" with the actual connection string (e.g., LogAnalyticsConnectionString => "https://api.loganalytics.io/v1/workspaces/[LogAnalyticsWorkspaceID]]/query"). You should retain the "" quotes in the connection string.
 
 ![Update LA Connection String](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_4.png)
 
-[a4] Repeat this operation for SubscriptionInv, BaselineControlsInv, ControlResults, ResourceInvInfo, RBAC summary, and SubscriptionComplianceLast7days data tables.
+[a4] Repeat this operation for SubscriptionInvLA, SubscriptionComplianceLast7daysLA, BaselineControlsInvLA, ControlResultsLA, ResourceInvInfoLA, and RBACSummaryLA data tables.
 
 [a5] Click on "Close and Apply".
 
@@ -332,6 +349,8 @@ Add refresh scheduling timings and click on "Apply"
 > **Note:** You may not see "Schedule refresh" option if step [a3] and [a4] is not completed successfully.
 
 ![Publish PBIX report](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_8.png)
+
+[Back to top…](Readme.md#contents)
 
 ## Feedback
 
