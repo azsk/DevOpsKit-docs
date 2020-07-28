@@ -1,4 +1,4 @@
-# Tenant Security Solution (TSS)
+# Tenant Security Solution (TSS) [In Preview]
 
 ## Tenant Security
 ### Contents
@@ -11,10 +11,14 @@
 
 -----------------------------------------------------------------
 ## Overview 
-The basic idea behind Tenant Security Solution (TSS) is to provide security for all the resources of any subscription. 
+The Tenant Security Solution (TSS) from the AzSK team can be used to obtain visibility to cloud subscriptions and resource configuration across multiple subscriptions in an enterprise environment. The AzSK TSS is a logical progression of DevOps Kit which helps us move closer to an implementation of cloud security compliance solution using native security capabilities in Azure platform that are available today. Functionally, it is similar to running AzSK Continuous Assurance (CA) in central-scan mode.
 
 ## Why Tenant Security Solution?
-TODO
+The Tenant Security Solution was created with the following explicit objectives (some of which were harder to accomplish using the existing Automation-based Continuous Assurance approach):
+ * Ability to scan large number of subscriptions in a central scan model in a cost-effective and time-efficient manner
+ * Being able to scale scanning capability up or down without externally imposed constraints (e.g., runbook memory, runtime limits)
+ * Speeding up our effort to transition to native features (being able to respond to changes in Azure more rapidly and deploy modifications to controls)
+ * Enable incremental transition of our controls from custom code to Azure/ASC policy-based approach (using ASC/policy-based controls where available today and continue to migrate as more controls become available)
 
 ## Setting up Tenant Security Solution - Step by Step
 In this section, we will walk through the steps of setting up Tenant Security Solution 
@@ -200,14 +204,14 @@ Install-AzSKTenantSecuritySolution `
 
 
 [Back to top…](Readme.md#contents)
-## Tenant Security Solution - how it works (under the covers)
- Tenant Security Solution is built by extending what DevOps Tool Kit has been doing and leveraging the best of Azure native features. It is a hybrid model, which leverages the native Azure security capabilities like ASC, Azure Policies, etc. to evaluate the security contorls and continue to leverage DevOps Kit scanning capabilities to cover the gaps.  
+## Tenant Security Solution under the covers (how it works)
+ Tenant Security Solution is built by extending what the DevOps Kit has been doing and leveraging the best of Azure native features. It is a hybrid model, which leverages the native Azure security capabilities like Azure Security Center (ASC), Azure Policies, etc., to evaluate the security controls and continue to leverage DevOps Kit scanning capabilities in the form of custom code controls to address any coverage gaps.  
 
-It has been desinged to handle huge scales in highly performant and cost efficient manner. [TODO] should we give some numbers here?
+It has been desinged to handle huge scales in highly performant and cost efficient manner.
 
-As a central team, you can run the scan at regular intervals and also empower your DevOps Engineers to run the module independelty to address the failures. 
+As a central team, you can run the scan at regular intervals and also empower your DevOps engineers to run the module independently to address control failures. 
 
-Below diagram depicts a high level overview of the hybrid model.
+The diagram below depicts a high level overview of the hybrid solution:
 
 ![Internals](../Images/12_TenantSetupInternals.png)
 
