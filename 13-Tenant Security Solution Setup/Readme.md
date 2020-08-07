@@ -204,11 +204,12 @@ Install-AzSKTenantSecuritySolution `
 
 > **Note:** Jobs are scheduled to run from UTC 00:00 time. You can also run the jobs manually by trigger jobs 01, 02 and 03 in sequence with an interval 10 mins in between. After Job 3 completes processing the messages in the queue, you will start seeing scan results in storage account and LA workspace.  
 
-**4.** Log Analytics Visualization
+**Log Analytics Visualization**
 
 For understanding the collected data, use the querying and visualization capabilities provided by Log Analytics. To start, in your **Log Analytics workspace** left navigation, select **Logs**. The data collected can be viewed under **Custom Logs**.
 
 ![Log Analytics Visualization: View Logs](../Images/13_TSS_LAWS_View_Logs.png)
+
 
 Log Analytics opens with a new query tab in the Query editor where you can run the following query as shown below:
 
@@ -225,11 +226,30 @@ AzSK_ControlResults_CL
 
 The query computes control scan result of the control scanned by the toolkit. There is a filter in the top right, which gives the easy option to select time ranges. This can be done via code as well.
 
+Here is a summary of the data that is captured within each table
+
+| Log Type | Description |
+|----|----|
+| AzSK_APIMetrics_CL | This table contains the metrics for the number of API calls made during the scan |
+| AzSK_BaselineControlsInv_CL | This lists the controls supported by Tenant Security solution |
+| AzSK_ControlResults_CL	| This table contains control scan results for all the subscriptions scanned by the Tenant Security Solution|
+| AzSK_PerformanceMetrics_CL | This table contains performance metrics such as total time taken to scan each subscription, the time taken by individual components etc., |
+| AzSK_PolicyAssignmentsInv_CL | This table contains the list of Azure Policy assignments for all the subscriptions scanned  |
+| AzSK_PolicySummaryInfo_CL	| This table contains the summary of Azure Policy assignment |
+| AzSK_ProcessedSubscriptions_CL | This contains the events sent by the work item processor job to mark subscription scan progress |
+| AzSK_RBAC_CL	| This table contains RBAC role membership details including classic, permanent and PIM assignments |
+| AzSK_ResourceInvInfo_CL	| This table captures the list of resources in a subscription |
+| AzSK_RTExceptions_CL	| This table contains errors/exceptions generated during the Tenant Security scan | 
+| AzSK_SSAssessmentInv_CL	| This table contains Azure Security Centre assessment status |
+| AzSK_SubInventory_CL | This table contains list of subscription scanned by the Tenant Security Solution |
+
+
+
 Few more simple queries to try
 
 #### A. Inventory summary
 
-##### Subscription that are scanned by Tenant Security solution (TSS)
+##### Subscription that are scanned by Tenant Security Solution (TSS)
 
 ``` KQL
 
@@ -261,7 +281,7 @@ AzSK_SSAssessmentInv_CL
 | where StatusCode_s =~ "Unhealthy"
 ```
 
-##### List of controls supported in Tenant Security solution
+##### List of controls supported in Tenant Security Solution
 
 ``` KQL
 AzSK_BaselineControlsInv_CL
@@ -357,6 +377,40 @@ AzSK_ControlResults_CL
 | summarize FailedCount = count() by SubscriptionId
 | order by FailedCount desc 
 | take 10
+```
+
+#### D. Tenant Security scan metrics
+
+##### REST API call metrics: Number of API calls made in last 1 day
+
+``` KQL
+AzSK_APIMetrics_CL
+| where TimeGenerated > ago(1d)
+| extend Key_s = iff(Key_s contains "https://", strcat("***#API#***", parse_url(Key_s).Host), Key_s) 
+| summarize APICount= sum(Value_d) by Key_s
+| order by APICount desc
+```
+
+##### Performance metrics: Get the average time buckets and subs count in each bucket
+
+```KQL
+let JobId = toint(format_datetime(now(), 'yyyyMMdd'));
+// Get count of control scanned for each subscription
+AzSK_ControlResults_CL
+| where TimeGenerated > ago(2d)
+| where JobId_d == JobId
+| summarize arg_max(TimeGenerated, *) by ResourceId,ControlName_s
+| summarize ControlsCount = count() by SubscriptionId
+| join kind= inner (
+    // Check performance metrics for total time taken by each subscription
+    AzSK_PerformanceMetrics_CL
+    | where TimeGenerated > ago(2d)
+    | where JobId_d == JobId
+    | summarize arg_max(TimeGenerated, *) by SubscriptionId
+    | where SubscriptionId != dynamic(null) 
+    | extend SubProcessingTime = iff(totimespan(TotalTimeTaken_s) > totimespan("00:02:00"),">2Min",iff(totimespan(TotalTimeTaken_s) > totimespan("00:01:00"),">1Min","<1Min"))
+) on SubscriptionId 
+| summarize SubscriptionCount = count(), avg(totimespan(TotalTimeTaken_s)) , avg(ControlsCount), max(ControlsCount), min(ControlsCount) by SubProcessingTime 
 ```
 
 
