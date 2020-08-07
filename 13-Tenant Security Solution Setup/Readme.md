@@ -204,6 +204,161 @@ Install-AzSKTenantSecuritySolution `
 
 > **Note:** Jobs are scheduled to run from UTC 00:00 time. You can also run the jobs manually by trigger jobs 01, 02 and 03 in sequence with an interval 10 mins in between. After Job 3 completes processing the messages in the queue, you will start seeing scan results in storage account and LA workspace.  
 
+**4.** Log Analytics Visualization
+
+For understanding the collected data, use the querying and visualization capabilities provided by Log Analytics. To start, in your **Log Analytics workspace** left navigation, select **Logs**. The data collected can be viewed under **Custom Logs**.
+
+![Log Analytics Visualization: View Logs](../Images/13_TSS_LAWS_View_Logs.png)
+
+Log Analytics opens with a new query tab in the Query editor where you can run the following query as shown below:
+
+``` KQL
+
+AzSK_ControlResults_CL
+| where TimeGenerated > ago(2d) and JobId_d == toint(format_datetime(now(), 'yyyyMMdd'))
+| summarize arg_max(TimeGenerated,*) by ControlName_s, ResourceId = tolower(ResourceId)
+| project ControlName_s, ResourceName_s, VerificationResult_s, StatusReason_s
+
+```
+
+![Log Analytics Visualization: Query Logs](../Images/13_TSS_LAWS_Query_Logs.png)
+
+The query computes control scan result of the control scanned by the toolkit. There is a filter in the top right, which gives the easy option to select time ranges. This can be done via code as well.
+
+Few more simple queries to try
+
+#### A. Inventory summary
+
+##### Subscription that are scanned by Tenant Security solution (TSS)
+
+``` KQL
+
+AzSK_SubInventory_CL
+| where TimeGenerated > ago(1d)
+| where JobId_d ==  toint(format_datetime(now(), 'yyyyMMdd'))
+| where State_s != 'Disabled'
+| summarize arg_max(TimeGenerated, *) by SubscriptionId
+| distinct SubscriptionId, Name_s
+
+```
+##### List of resources in a subscription
+
+``` KQL
+AzSK_ResourceInvInfo_CL
+| where TimeGenerated > ago(1d)
+| where JobId_d ==  toint(format_datetime(now(), 'yyyyMMdd'))
+| summarize arg_max(TimeGenerated, *) by ResourceId
+| project OrgTenantId_g, SubscriptionId, ResourceType, Location_s, ResourceId
+```
+
+##### List of unhealthy Security Assessment recommendation in a subscription
+```KQL
+AzSK_SSAssessmentInv_CL
+| where TimeGenerated > ago(1d)
+| where JobId_d ==  toint(format_datetime(now(), 'yyyyMMdd'))
+| summarize arg_max(TimeGenerated, *) by AssessmentId_s
+| project SubscriptionId, RecommendationDisplayName_s, AzureResourceId_s, StatusCode_s, StatusMessage_s
+| where StatusCode_s =~ "Unhealthy"
+```
+
+##### List of controls supported in Tenant Security solution
+
+``` KQL
+AzSK_BaselineControlsInv_CL
+| where TimeGenerated > ago(1d)
+| summarize arg_max(TimeGenerated, *) by ControlId_s
+| project ControlId_s, ResourceType, Description_s, ControlSeverity_s, Tags_s
+```
+
+#### B. Role-based access control (RBAC) summary
+
+##### Service Principal accounts with Owner permission on subscription
+
+``` KQL
+AzSK_RBAC_CL
+| where TimeGenerated > ago(2d) and JobId_d == toint(format_datetime(now(), 'yyyyMMdd')) 
+| summarize arg_max(TimeGenerated, *) by RoleId_g, RoleId_s
+| where AccountType_s == "ServicePrincipal" and RoleDefinitionId_s contains "8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
+| project RoleDefinitionId_s, AccountType_s, IsPIMEligible_b, ObjectId = UserName_g, Scope_s
+```
+
+##### List of Owner/Co-admin in a subscription
+
+```KQL
+// Get list of active subscriptions
+AzSK_SubInventory_CL
+| where TimeGenerated > ago(1d) and JobId_d ==  toint(format_datetime(now(), 'yyyyMMdd'))
+| where State_s != 'Disabled'
+| summarize arg_max(TimeGenerated, *) by SubscriptionId
+| distinct SubscriptionId, Name_s
+| join kind=leftouter (
+    // Get list of Owners in a subscription
+    AzSK_RBAC_CL
+    | where TimeGenerated > ago(2d) and JobId_d == toint(format_datetime(now(), 'yyyyMMdd')) 
+    | where RBACSource_s =~ "Subscription" 
+    | where RoleName_s in ("ServiceAdministrator", "CoAdministrator", "ServiceAdministrator;AccountAdministrator")
+    or RoleDefinitionId_s contains "8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
+    | summarize OwnerCount = count(),
+                PermanentOwnerCount = countif(IsPIMEligible_b == false),
+                ObjectIds = make_set(UserName_g) by SubscriptionId = NameId_g
+) on SubscriptionId
+| extend ObjectIds = iff(SubscriptionId1 == dynamic(null), "RBACNOTFOUND", ObjectIds)
+| project SubscriptionId, OwnerCount, PermanentOwnerCount, ObjectIds
+```
+
+#### C. Control Scan Summary
+
+##### View subscription scan status
+
+``` KQL
+// Filter list of active subscriptions
+AzSK_SubInventory_CL
+| where TimeGenerated > ago(1d)
+| where JobId_d ==  toint(format_datetime(now(), 'yyyyMMdd'))
+| where State_s != 'Disabled'
+| summarize arg_max(TimeGenerated, *) by SubscriptionId
+| project SubscriptionId
+| join kind= leftouter
+(
+   // List of subscriptions where processing has completed
+    AzSK_ProcessedSubscriptions_CL
+    | where TimeGenerated > ago(1d)
+    | where JobId_d ==  toint(format_datetime(now(), 'yyyyMMdd'))
+    | where EventType_s == 'Completed'
+    | summarize arg_max(TimeGenerated, *) by SubscriptionId
+)
+on SubscriptionId
+| extend Type = iff(SubscriptionId1 !=dynamic(null),"Completed", "NotCompleted")
+| summarize count() by Type
+```
+
+##### Top 20 failing controls
+
+``` KQL
+
+AzSK_ControlResults_CL
+| where TimeGenerated > ago(2d) 
+| where JobId_d == toint(format_datetime(now(), 'yyyyMMdd'))
+| summarize arg_max(TimeGenerated, *) by SubId = tolower(SubscriptionId), RId= tolower(ResourceId), ControlName_s
+| summarize TotalControls = count(), FailedControl = countif(VerificationResult_s =~ "Failed") by ControlName_s
+| order by FailedControl desc 
+| take 20
+
+```
+
+##### Top 10 subscription with most failing controls
+
+``` KQL
+AzSK_ControlResults_CL
+| where TimeGenerated > ago(1d)
+| where JobId_d == toint(format_datetime(now(), 'yyyyMMdd'))
+| summarize arg_max(TimeGenerated, *) by SubscriptionId = tolower(SubscriptionId), ResourceId= tolower(ResourceId), ControlName_s
+| where VerificationResult_s =~ "Failed"
+| summarize FailedCount = count() by SubscriptionId
+| order by FailedCount desc 
+| take 10
+```
+
 
 [Back to top…](Readme.md#contents)
 ## Tenant Security Solution under the covers (how it works)
@@ -260,7 +415,7 @@ The table below describes the different columns in the CSV file and their intent
 
 In this step you will import the data above into the LA workspace created during Tenant Security setup. 
 
- **(a)** Locate the LA resource that was created during Tenant Security setup in your central subscription. This should be present under Tenant Security resource group. After selecting the LA resource, copy the Workspace ID from the portal as shown below:
+ **(a)** Locate the LA resource that was created during Tenant Security setup in your subscription. This should be present under Tenant Security resource group. After selecting the LA resource, copy the Workspace ID from the portal as shown below:
 
  ![capture Workspace ID](../Images/13_TSS_LAWS_AgentManagement.png)
  
@@ -322,33 +477,33 @@ The report contains 3 tabs. There is an overall/summary view of compliance, a de
 
 **(b)** You can now publish your PBIX report to your workspace. The PBIX file gets created locally when you click "Publish".
 
-Click on Publish
+[b1] Click on Publish
 
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_18.PNG)
 
-Select destination workspace
+[b2] Select destination workspace
 
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_19.PNG)
 
-Click on "Open [Report Name] in Power BI" 
+[b3] Click on "Open [Report Name] in Power BI" 
 
 ![Publish PBIX report](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_5.png)
 
 **(c)** Now report got published successfully. You can schedule refresh for report with below steps
 
-Go to Workspace --> Datasets --> Click on "Schedule Refresh" icon.
+[c1] Go to Workspace --> Datasets --> Click on "Schedule Refresh" icon.
 
 ![Publish PBIX report](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_6.png)
 
-Click on "Edit credentials".
+[c2] Click on "Edit credentials".
 
 ![Publish PBIX report](../Images/13_TSS_OrgPolicy_PBI_OrgMetadata_LA_7.png)
 
-Sign in with account which has access to the Log Analytics workspace.
+[c3] Sign in with account which has access to the Log Analytics workspace.
 
 ![Publish PBIX report](../Images/07_OrgPolicy_PBI_OrgMetadata_AI_26.png)
 
-Add refresh scheduling timings and click on "Apply".
+[c4] Add refresh scheduling timings and click on "Apply".
 
 > **Note:** You may not see "Schedule refresh" option if step [a3] and [a4] is not completed successfully.
 
