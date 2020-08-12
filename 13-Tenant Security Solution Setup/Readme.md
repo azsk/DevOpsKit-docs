@@ -5,7 +5,7 @@
 - [Overview](Readme.md#overview)
 - [Why Tenant Security Solution?](Readme.md#why-tenant-security-solution)
 - [Setting up Tenant Security Solution - Step by Step](Readme.md#setting-up-tenant-security-solution---step-by-step)
-- [Tenant Security Solution - how it works (under the covers)](Readme.md#tenant-security-solution---how-it-works-under-the-covers)
+- [Tenant Security Solution - under the covers (how it works)](Readme.md#tenant-security-solution---under-the-covers-how-it-works)
 - [Create compliance and monitoring solutions](Readme.md#create-security-compliance-monitoring-solutions)
 - [Feedback](Readme.md#feedback)
 
@@ -44,10 +44,10 @@ To get started, we need the following prerequisites:
 
 ``` Powershell
 # Install Az Modules
-Install-Module -Name Az -AllowClobber -Scope CurrentUser
+Install-Module -Name Az -AllowClobber -Scope CurrentUser -repository PSGallery
 
 #Install managed identity service module
-Install-Module -Name Az.ManagedServiceIdentity -AllowClobber -Scope CurrentUser
+Install-Module -Name Az.ManagedServiceIdentity -AllowClobber -Scope CurrentUser -repository PSGallery
 ```
 
 **4.**  Create central scanning user identity and provide reader access to subscriptions on which scan needs to be performed.
