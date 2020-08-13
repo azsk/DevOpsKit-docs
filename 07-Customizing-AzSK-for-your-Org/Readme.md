@@ -541,7 +541,7 @@ in your org has developed. Let us do this for the Storage.json file. Specificall
   ]
 }
 ```
-> **Note:** The 'Id' field is used for identifying the control for policy merging. We are keeping the 'ControlId'
+> **Note:** The 'Id' field is used for identifying the control for policy merging. We are keeping the 'ControlID'
 > field only because of the readability.
 
  iii) Save the file
@@ -610,7 +610,7 @@ file is already present in your org policy folder.)
 ```
 
 > Notice how, apart from the couple of extra elements at the end, the baseline set is pretty much a list of 'ResourceType'
-and 'ControlIds' for that resource...making it fairly easy to customize/tweak your own org baseline. 
+and 'ControlIDs' for that resource...making it fairly easy to customize/tweak your own org baseline. 
 > Here the name and casing of the resource type name must match that of the policy JSON file for the corresponding resource's JSON file > in the SVT folder and the control ids must match those included in the JSON file. 
 
 > Note: Here we have used a very simple baseline with just a couple of resource types and a very small control set.
@@ -1484,13 +1484,13 @@ i) Copy the Storage.json from the AzSK module to your org-policy folder
 
    Destination location: Policy config folder in local (D:\ContosoPolicies\Config)
 
-ii) Remove everything except the ControlId, the Id and add property "AttestationExpiryPeriodInDays" as shown below. 
+ii) Remove everything except the ControlID, the Id and add property "AttestationExpiryPeriodInDays" as shown below. 
 
    ```
    {
     "Controls": [
      {
-        "ControlId": "Azure_Storage_AuthN_Dont_Allow_Anonymous",
+        "ControlID": "Azure_Storage_AuthN_Dont_Allow_Anonymous",
         "Id": "AzureStorage110",
         "AttestationExpiryPeriodInDays": 45
      }
