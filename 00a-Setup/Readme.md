@@ -3,7 +3,7 @@
 <br>AzSK is not an official Microsoft product – rather an attempt to share Microsoft CSEO's best practices with the community..
 
 # Installation Guide
-> <h4><font color="blue">IMPORTANT:</font></h4> If you are from CSE, please install the AzSK via instructions at https://aka.ms/devopskit/onboarding so that CSE-specific policies are configured for your installation. <u>Do not</u> use the installation instructions on this page.
+> <h4><font color="blue">IMPORTANT:</font></h4> If you are from Microsoft CSE, please install the AzSK via instructions at https://aka.ms/devopskit/onboarding (internal link) so that CSE-specific policies are configured for your installation. <u>Do not</u> use the installation instructions on this page.
 
 
  <!-- **Release Version: AzSDK 2.11.xx <=> AzSK 3.0.x ** -->
@@ -222,3 +222,7 @@ Steps to remediate:
 - Run 'Import-Module' AzSK in a fresh PowerShell session as the first command.
 
 - Use 'Connect-AzAccount' to login to your subscription (if using AzSK v3.11.0). 
+
+### Error Message: "InvalidOperation: Response status code does not indicate success: 404 (Not Found)" or "InvalidOperation: The remote server returned an error: (404) Not Found"
+
+This could indicate an attempt to run `Get-AzSKSubscriptionSecurityStatus` before running `Set-AzSKSubscriptionSecurity`.  See [Provision security for your subscription](../01-Subscription-Security/Readme.md#provision-security-for-your-subscription) for more details.
