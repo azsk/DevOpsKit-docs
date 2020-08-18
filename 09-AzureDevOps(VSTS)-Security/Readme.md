@@ -1375,19 +1375,10 @@ This command provides overall information about the ADO scanner which includes s
 
 ### Control information 
 
-Run below command to get information about Azure DevOps security control(s). Control summary will be displayed on PS console by default. To get control information on PS console use -Verbose argument. Following information 
-- Feature Name
-- ControlID
-- Description
-- ControlSeverity
-- Rationale
-- Recommendation
-- Automated
-- SupportsAutoFix
-- Tags
+Run below command to get information about Azure DevOps security control(s). Control summary will be displayed on PS console by default. To get control information on PS console use -Verbose argument. 
 
 ```PowerShell
-   $orgName = '<name of ADO org>'
+        $orgName = '<name of ADO org>'
 	Get-AzSKADOInfo -OrganizationName $orgName `
                 -InfoType 'ControlInfo' `
                 [-ResourceTypeName <ResourceTypeName>] `
