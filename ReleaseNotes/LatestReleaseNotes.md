@@ -1,20 +1,19 @@
-## 200715 (AzSK v.4.11.0)
+## 200817 (AzSK v.4.12.0)
 
 ### Feature updates
 
-* Management of DevOps Kit-based AAD applications:
-    * Added support for listing all the DevOps Kit-based service principals (used in continuous assurance) that are owned by the user via the Get-AzSKInfo cmd. It will list all such applications that have been actively in use.
-    ```Powershell
-        Get-AzSKInfo –InfoType SPNInfo
-    ```
-
 *	Security scanner for Azure DevOps (ADO)/ADO Security Scanner extension:
     
-    * Introduced capability to log bugs in ADO for control failures of your ADO resources.
-    * Added a dashboard in Log Analytics to support alerting and monitoring for ADO resources across the organization.
-    * Check-pointing behavior has been enhanced to support durable (server-based) checkpoints.
-    * Control attestation workflow has been enhanced so that the updated control status reflects immediately on the extension dashboard/log analytics workspace.
-    * Added soft protection to restrict users from scanning larger number of resources (>1000) in an organization
+    *   Introducing an Azure-based continuous assurance scanning solution for ADO. The scanning infrastructure of this containerized model will be hosted in an Azure resource group.
+    *	Added support for creating workbook-based dashboards in Log Analytics to support alerting and monitoring for ADO resources across the organization.
+    *	Introduced Get-AzSKADOInfo command to provide overall information about the ADO security scanner which includes security controls information (severity, description, rationale, baseline etc.) and host information (ADO scanner settings/configuration, logged-in ADO user context etc.).
+        ```Powershell
+         Get-AzSKADOInfo –InfoType ControlInfo
+         Get-AzSKADOInfo –InfoType HostInfo
+        ```   
+    *	Added support for auto-updating the scanner module whenever a new version is available.
+    *	Added 17 new security controls at organization, project, user, pipeline (build & release), service connection and agent pool scope.
+
 
 * Security Verification Tests (SVTs):
     *	N/A.
@@ -29,11 +28,15 @@
     * N/A.
 
 * Org policy/external user updates (for non-CSEO users):
-    * Added SVT for ‘public IP address’ as a service to optionally treat each public IP address as an individual resource. To enable this behavior, refer the docs here.
-    * Fixed an issue to enable Get-AzSKOrganizationPolicyStatus command to work in Linux-based containers.
-    * Key Vault, CDN and Databricks control JSON files have been sanitized to remove hidden BOM/extended characters. Org policy admins should procure a fresh copy of these files from the module and replicate the overridden changes (if any). 
+    * N/A.
 
 Note: The next few items mention features from recent releases retained for visibility in case you missed those release announcements:
+
+*	Management of DevOps Kit-based AAD applications:
+    *	You can list all the DevOps Kit-based service principals (used in continuous assurance) that are owned by you via the Get-AzSKInfo cmd marking those that are actively used for CA scans.
+    ```Powershell
+        Get-AzSKInfo –InfoType SPNInfo
+    ```
 
 *	Security Scanner for Azure DevOps (ADO) 
     *	You can try the scan cmdlet using:
@@ -79,44 +82,42 @@ Note: The next few items mention features from recent releases retained for visi
 
 ### Other improvements/bug fixes
 * Subscription Security:
-    * The subscription controls below will not be evaluated in local scan mode unless the corresponding control ids are specified explicitly in the command. This is done because these controls require substantial amount of time for evaluation.
+    *	Behavior of subscription control to validate security contacts setup in Azure Security Center (ASC) has been updated to check the following configurations:
+        *	At least one contact email should be configured. 
+        *	Alert notifications should be configured to be sent at least to Owner and Service Admin roles.
+        *	Notifications should be enabled with a minimum severity of medium.
 
-        * Azure_Subscription_Configure_Conditional_Access_for_PIM_RG
-        * Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG
-        * Azure_Subscription_Use_Only_Alt_Credentials
-        ```Powershell
-        gss -s $sub -cid ‘Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG’
-        ```
- 
-    * Results of persistent access (PIM) controls for subscription and resource group scope will not fluctuate in case the underlying API call throws exception.
 
 * Privileged Identity Management (PIM):
-   * Fixed an issue regarding activation of PIM role assignments where previously it was leading to an error if the role was assigned for the same scope for both direct and group assignments.
+   *	-ExtendExpiringAssignments flag in setpim cmdlet has been updated to use -RoleName as the only parameter to specify the role name for which expiring assignments need to be extended. Earlier, -RoleNames was also allowed as a valid parameter in some scenarios.
+        ```Powershell
+         setpim -ExtendExpiringAssignments –SubscriptionId $sub -RoleName Reader -DurationInDays 60 -ExpiringInDays 10
+    
+        setpim -ExtendExpiringAssignments –SubscriptionId $sub -RoleName Reader -DurationInDays 60 -PrincipalNames 'abc@microsoft.com'
+         ```
+
+*	CICD: 
+    *	DevOps Kit CICD SVT extension task will now exclude controls that require either owner access or role-based access control (RBAC) information from its scan by default.
+
 
 * SVTs: 
-   * N/A.
+   * 	Azure Databricks controls will be skipped in local scan mode unless a personal access token (PAT) is provided as described [here](https://aka.ms/azsk/scanadbresource). 
+    *	Fixed an issue related to control attestation where earlier difference in character casing of resource id between attested and current state was causing attestation drift.  
+
     
 * Controls:
-    * States for below controls will not fluctuate if they are scanned with insufficient permissions (leading to manual control state):
+    *	Behavior of Azure_CDN_DP_Enable_Https control has now been enhanced to allow both HTTP and HTTPS protocols for CDN endpoints (via an additional check to configure HTTP to HTTPS redirect rule).
+    *	Fixed a bug to evaluate the diagnostics setting control of automation account correctly when multiple Log Analytics workspaces are configured.
+    *	Disk encryption control will not be evaluated for VMs with ephemeral OS disk (these disks do not support disk encryption).
 
-        * Azure_AppService_DP_Website_Load_Certificates_Not_All
-        * Azure_AppService_DP_Restrict_CORS_Access
-        * Azure_AppService_AuthN_Use_Managed_Service_Identity
-        * Azure_KeyVault_AuthN_Dont_Share_KeyVault_Unless_Trust
-        * Azure_KeyVault_AuthN_Use_Cert_Auth_for_Apps
-
-    * Trimmed state data of public IP address control for VMs which was previously causing unwanted state drift due to data fields unrelated to IP address.
-
-    * Spelling errors in two controls below have been fixed:
-
-        * Azure_DataFactory_AuthN_DataLakeStore_LinkedService
-        * Azure_DataFactory_BCDR_Multiple_Node_DMG
 
 * ARM Template Checker:
     * N/A.
 
 * CA:
-    * Fixed an issue in the CA check-pointing logic in scenarios where previously if a resource type does not have any applicable/enabled controls, CA scans were getting stuck at that resource.
+    *	Added an extra check in Get-AzSKContinuousAssurance command to warn users if the CA certificate is about to expire in seven days. 
+    *	CA will now periodically (every 30 days) purge index entries for resources from the attestation history which do not exist anymore. This done to improve performance and reduce execution time in all scan modes.
+
 
 * In-cluster CA:
     * N/A. 
@@ -124,5 +125,5 @@ Note: The next few items mention features from recent releases retained for visi
 * Log Analytics:
     * N/A.
 
-* Known issues:
-    * N/A.
+* Others:
+    * 	Detailed security data for each evaluated control (SecurityEvaluationData.json) will not be generated by default after scan completion. If organizations wish to generate this file, organization policy owner need to update their server-based control settings by adding GenerateSecurityEvaluationJsonFile flag with its value set to true.
