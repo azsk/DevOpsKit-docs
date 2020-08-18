@@ -669,8 +669,7 @@ Set-Variable 'ADBPatsForAzSK' -Scope Global -Value @{'ADBResourceName' = 'Person
 
 # For multiple ADB workspaces
 Set-Variable 'ADBPatsForAzSK' -Scope Global -Value @{'ADBResourceName1' = 'Personal access token 1';
-'ADBResourceName2' = 'Personal access token 2'
-}
+                                                     'ADBResourceName2' = 'Personal access token 2'}
 
 ```
 Then in the same session please run scan command as follows:
