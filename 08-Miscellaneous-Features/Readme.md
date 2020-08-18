@@ -12,6 +12,7 @@
 - [Attestation information](Readme.md#attestation-information)
 - [Host information](Readme.md#host-information)
 - [User comments](Readme.md#user-comments)
+- [FAQ](Readme.md#faq)
 
 ### [Try AzSK on Power Shell Core](Readme.md#try-azsk-on-powershell-core)
 
@@ -193,6 +194,24 @@ Step 3: Upload edited .CSV file using below cmdlt,
 To read user comments on any controls you just need to run GCS/GSS/GRS cmd  with an extra switch "-IncludeUserComments". Once a scan completes the .CSV file will contain "UserComments" column which will show comments/custom tags.
 
 ![08_Info_UserComments_PS](../Images/08_Info_UserComments_PS.JPG)  
+[Back to top…](Readme.md#contents)
+
+### FAQ
+
+#### Why GSS/GRS or GAI command throws exception on powershell?
+To improve the performance of scanning, AzSK used to cache the frequent data on local machine and one of the possible reason for this issue is caching. Please follow the below steps that can help you to fix such issue.
+1. Open a fresh PowerShell session
+2. Clear the module session state using this command
+   Clear-AzSKSessionState
+3. Login to your account
+   Connect-AzAccount
+4. Load the required subscription
+   Select-AzSubscription -Subscription 'sid'
+5. Import the AzSK module (make sure you have latest AzSK module)
+   Import-Module AzSK
+6. Now run scan command
+   (For ex. GAI -InfoType ControlInfo)
+
 [Back to top…](Readme.md#contents)
 
 ### Try AzSK on PowerShell Core
