@@ -791,6 +791,20 @@ Such controls will be counted as 'failing' by default until you run the scans ma
 
 Also, when running scans manually, make sure you are on the latest version of the kit. That may also cause a discrepancy between a CA scan and a local scan. (CA always runs using the latest version of the kit.)
 
+#### Why GCA command throws exception on powershell
+To improve the performance of scanning, AzSK used to cache the frequent data on local machine and one of the possible reason for this issue is caching. Please follow the below steps that can help you to fix such issue.
+1. Open a fresh PowerShell session
+2. Clear the module session state using this command
+   Clear-AzSKSessionState
+3. Connect your account
+   Connect-AzAccount
+4. Load the required subscription
+   Select-AzSubscription -Subscription '{sid}'
+5. Import the AzSK module (make sure you have latest AzSK module)
+   Import-Module AzSK
+6. Now run scan for you continous assurance
+   GCA -SubscriptionId "{sid}"
+
 #### How much does it cost to setup Continuous Assurance along with the Monitoring solution?
 Using the following ballpark calculations (and service costs as of Q1-FY18), we estimate that a Continuous Assurance
 setup along with a Log Analytics workspace for monitoring will cost a little about $80/year for a typical
