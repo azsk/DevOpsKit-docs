@@ -41,6 +41,11 @@
 - [Auto close bugs](Readme.md#auto-close-bugs) 
 - [Permissions required for bug logging](Readme.md#permissions-required-for-bug-logging) 
 
+### [ADO Scanner information helper command](Readme.md#Overview-4)
+- [Overview](Readme.md#Overview-4)
+- [Control Information](Readme.md#control-information)  
+- [Host Information](Readme.md#host-information)  
+
 Security Scanner for Azure DevOps (ADO) helps you keep your ADO artifacts such as various org/project settings, build/release configurations, service connections, agent pools, etc. configured securely. You can run the ADO Security Scanner standalone in a PowerShell console or in an ADO pipeline via a marketplace extension.
 
 Security Scanner for Azure DevOps (ADO) performs security scanning for core areas of Azure DevOps like Organization, Projects, Users, Pipelines (Build & Release), Connections and Agent Pools. 
@@ -1363,3 +1368,71 @@ Bug logging is supported for organization and project controls only with admin p
 
 [Back to top...](Readme.md#contents)
 
+# ADO Scanner information helper command
+### Overview
+
+This command provides overall information about the ADO scanner which includes security controls information (severity, description, rationale, baseline etc.) and host information (ADO scanner settings/configuration, logged-in ADO user context etc.). 'Get-AzSKADOInfo' command can be used with 'InfoType' parameter to fetch information.
+
+### Control information 
+
+Run below command to get information about Azure DevOps security control(s). Control summary will be displayed on PS console by default. To get control information on PS console use -Verbose argument. Following information 
+- Feature Name
+- ControlID
+- Description
+- ControlSeverity
+- Rationale
+- Recommendation
+- Automated
+- SupportsAutoFix
+- Tags
+
+```PowerShell
+   $orgName = '<name of ADO org>'
+	Get-AzSKADOInfo -OrganizationName $orgName `
+                -InfoType 'ControlInfo' `
+                [-ResourceTypeName <ResourceTypeName>] `
+                [-ControlIds <ControlIds>] `
+                [-UseBaselineControls] `
+				[-UsePreviewBaselineControls] `
+		[-ControlSeverity <ControlSeverity>] `
+		[-ControlIdContains <ControlIdContains>] `
+		[-Verbose]
+```
+
+|Param Name|Purpose|Required?|Default value|
+|----|----|----|----|
+|ResourceTypeName|Friendly name of resource type. E.g., Organization, Project, Build, Release etc.|FALSE|All|
+|ControlIds|Comma-separated list of Control Ids|FALSE|None|
+|UseBaselineControls|The flag used to get details of controls defined in baseline|FALSE|None|
+|UsePreviewBaselineControls|The flag used to get details of controls defined in preview baseline|FALSE|None|
+|ControlSeverity|Filter by severity of control E.g., Critical, High, Medium, Low|FALSE|None|
+|ControlIdContains|Filter by ControlId(s) contains keyword|FALSE|None|
+|Verbose|Get information on PS console|FALSE|None|
+
+
+Below is the sample output:
+
+Output of control details summary
+
+![GADI_ControlInfo_Summary_PS](../Images/GADI_ControlInfo.png)  
+
+
+### Host information  
+
+Run below command to get information about,
+* Loaded PS modules in PS session
+* Logged in user's details
+* AzSK ADO settings
+* AzSK ADO configurations
+* ADO context
+
+```PowerShell
+	$orgName = '<name of ADO org>'
+	Get-AzSKADOInfo -OrganizationName $orgName `
+                -InfoType 'HostInfo'
+```
+
+Below is the sample output:
+
+![GADI_HostInfo_Summary_PS](../Images/GADI_HostInfo.png) 
+[Back to top…](Readme.md#contents)
