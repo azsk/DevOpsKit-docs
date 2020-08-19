@@ -8,8 +8,8 @@
 ### [Overview](Readme.md#Overview)
 
 ### [Continuous Assurance](Readme.md#Continuous-Assurance---Overview)
-  - [Continuous Assurance using containers](Readme.md#Continuous-Assurance-using-containers)
-  - [Continuous Assurance using ADO extension](Readme.md#Continuous-Assurance-using-ADO-extension)
+  - [Automated Scanning using Azure functions](Readme.md#Automated-Scanning-using-Azure-functions)
+  - [Automated Scanning using ADO extensionn](Readme.md#Automated-Scanning-using-ADO-extension)
 
  ### [AzSK.AzureDevOps PowerShell module](Readme.md#azskazuredevops-powershell-module-1)
   -  [Installation Guide](Readme.md#installation-guide)
