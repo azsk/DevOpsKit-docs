@@ -258,6 +258,38 @@ At its core, the Security Scanner for ADO is a PowerShell module. This can be ru
 ```PowerShell
   Install-Module AzSK.AzureDevOps -Scope CurrentUser -AllowClobber -Force
 ```
+------------------------------------------------
+
+### Auto Update
+As Azure DevOps features evolve and add more security controls, "AzSK.AzureDevOps" also evolves every month respecting the latest security features.
+It is always recommended to scan your organization with the latest AzSK.AzureDevOps module, thus ensuring to evaluate latest security controls that are available through the module.
+"AzSK.AzureDevOps" module provides different auto update capabilities w.r.t different stages of devops. More details are below:
+
+**Adhoc Scans:**
+Users running the older version of AzSK.AzureDevOps scan from their local machine will get a warning as shown in the image below.
+It would also provide the user with required instructions to upgrade the module.
+![Install_Autoupdate](../Images/ADO/09_Install_Autoupdate.PNG) 
+
+The users can leverage the auto update feature which has been introduced from the AzSDK.AzureDevOps version 1.15.x.
+As shown in the image above, user can go with update by running the command below:
+
+```PowerShell
+  Set-AzSKPolicySettings -AutoUpdate On|Off
+```
+
+User needs to close and reopen a fresh session once the command is run.
+Going forward, if the latest version of AzSDK.AzureDevOps kit is released, then during execution of any AzSDK.AzureDevOps kit command it would start the auto update workflow automatically 
+as shown in the image below:
+
+![Install_Autoupdate_Workflow](../Images/ADO/09_Install_Autoupdate_Workflow.PNG)
+
+Step 1: It would take user consent before it starts the auto update workflow. (1 in the image above) <br/>
+Step 2: Users need to close all the displayed PS sessions. Typically open PS sessions would lock the module and fail the installation. (2 in the image above) <br/>
+Step 3: Even the current session must be closed. It would again take the user consent before it starts the auto update flow to avoid the loss of any unsaved work. (3 in the image above)
+
+**ADOScanner Extension:**
+No impact to default behavior of ADOScanner extension. It always runs the scan with the latest version available in the PS Gallery. 
+
 
 ## Scan your Azure DevOps resources
 
@@ -322,24 +354,8 @@ Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -Projec
 #Scan resources with severity
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -Severity "High/Medium/Low"
 ```
-AzSK.AzureDevOps also supports individual scan cmdlets for organization, project, build and release.
 
-```PowerShell
-
-#Scan organization
-Get-AzSKAzureDevOpsOrgSecurityStatus -OrganizationName "<OrganizationName>"
-
-#Scan projects
-Get-AzSKAzureDevOpsProjectSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>"
-
-#Scan builds
-Get-AzSKAzureDevOpsBuildSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -BuildNames "*"
-
-#Scan releases
-Get-AzSKAzureDevOpsReleaseSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1,PRJ2,etc>" -ReleaseNames "*"
-```
-
-Similar to Azure AzSK SVT scan, outcome of the analysis is printed on the console during SVT execution and a CSV and LOG files are 
+Similar to Azure AzSK.AzureDevOps SVT scan, outcome of the analysis is printed on the console during SVT execution and a CSV and LOG files are 
 also generated for subsequent use.
 
 The CSV file and LOG file are generated under a org-specific sub-folder in the folder  
@@ -651,34 +667,37 @@ Run the commands below in PS after replacing the various '<>' with
     $lawsId ='<Log Analytics workspace id>'
     $lawsRGName ='<Log Analytics workspace resource group name>'     #RG where the Log Analytics workspace is hosted (See 1-a)
     $ADOViewName = '<unique_name_for_your_AzSK.AzureDevOps_view>' #This will identify the tile for AzSK.AzureDevOps view in Log Analytics workspace. E.g., MyApp-View-1
+    $dashboardType = '<View/Workbook>' #This will identify type view or workbook, by default is view, use type 'Workbook'if you want to deploy workbook 
 
     #This command will deploy the AzSK.AzureDevOps view in the Log Analytics workspace. Happy monitoring!  
-    Install-AzSKMonitoringSolution -LAWSSubscriptionId $lawsSubId `
+    Install-AzSKADOMonitoringSolution -LAWSSubscriptionId $lawsSubId `
                     -LAWSResourceGroup $lawsRGName `
                     -WorkspaceId $lawsId `
-                    -ViewName $ADOViewName
+                    -ViewName $ADOViewName,
+                    -DashboardType $dashboardType
 ```
 
-The table below explains the different parameters used by Install-AzSKMonitoringSolution cmdlet:
+The table below explains the different parameters used by Install-AzSKADOMonitoringSolution cmdlet:
 
 |ParameterName|Comments|
 | ----- | ---- | 
 |LAWSSubscriptionId|Id of the subscription where the Log Analytics workspace is hosted|
 |LAWSResourceGroup|Name of the resource group where the Log Analytics workspace is hosted|
 |WorkspaceId|Workspace ID of the Log Analytics workspace name which will be used for monitoring|
-|ViewName|Name of the AzSK.AzureDevOps Log Analytics Workspace summary (Overview) (unique per Log Analytics workspace)|
+|ViewName|Name of the AzSK.AzureDevOps Log Analytics Workspace summary/workbook (Overview) (unique per Log Analytics workspace)|
+|DashboardType|Type of the view, whether log analytics workspace summary view or workbook|
 
 
 The installation command will display output like the below:
 
 ![09_Install-AzSKMonitoringSolution](../Images/ADO/09_ADO_Install-AzSKMonitoringSolution.png)
-      
+
+**Step-2 (Ops Team): Using the Log Analytics Workspace Summary (Overview) for monitoring**
+
 At this point, assuming that AzSK.AzureDevOps events were already being sent to the Log Analytics workspace, you should start
 seeing a tile such as the one below:
 
 ![09_Workspace_Summary_View](../Images/ADO/09_Workspace_Summary_View.png)
-
-**Step-2 (Ops Team): Using the Log Analytics Workspace Summary (Overview) for monitoring**
 
 **2 (a)** Viewing raw events from AzSK.AzureDevOps (sanity check)
 
@@ -699,9 +718,9 @@ you may need to extend the duration applicable to the queries. (This can be done
 ![09_Log_Analytics_Workspace_Query_Duration](../Images/ADO/09_Log_Analytics_Workspace_Query_Duration.png)
 
 	
-
 **2 (b)** Using the AzSK.AzureDevOps Monitoring Solution
-The solution view contains multiple blades representing alerts, various types of security activity, 
+
+The solution view contains multiple blades representing various types of security activity, 
 security trends, etc. This view shows up when you click on the view tile and looks like the picture
 below:
 
@@ -715,6 +734,27 @@ blade takes a different pivot to show the resource compliance data. The very las
 provides some handy queries that you can use to get started with building your own custom 
 queries for log searches on top of the AzSK.AzureDevOps events in the repository.
 
+**Step-3 (Ops Team): Using the Log Analytics Workbook for monitoring**
+
+You should start seeing a tile such as the one below:
+
+**3 (a)** Workbook 
+
+![09_Log_Analytics_Workbook_View](../Images/ADO/09_Log_Analytics_Workbook_View.png)
+
+**3 (b)** Workbook Overview tiles
+
+The solution workbook contains multiple blades representing various types of security activity, 
+security trends, etc. This view shows up when you click on the view tile and looks like the picture
+below:
+
+![09_Log_Analytics_Workbook_Overview](../Images/ADO/09_Log_Analytics_Workbook_Overview.png)
+
+The "Help" (Summary) blade provides complete instructions on how to interpret the different
+blades in this view. These blades cover the complete picture of baseline security compliance
+for your organization and resources. It starts with a couple of blades that display organization
+level security issues. The subsequent blades display project level security queries - each 
+blade takes a different pivot to show the resource compliance data. 
 
 ## Appendix ##
 
