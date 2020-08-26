@@ -658,4 +658,25 @@ Set-AzResource @params -Force
 }
 ```
 
+#### Many of the Azure Databricks control goes to manual state from both CA and local scan. What should I do to evaluate Azure Databricks resources properly?
+
+Some of the controls of Azure Databricks (ADB) can not be scanned properly from CA as they need ADB workspace's personal access token (PAT) with admin privileges. In local scan also by default such controls will go to manual state as it requires PAT to evaluate these controls and DevOps Kit will not prompt for PAT (instead it will try to read PAT via session variable) as it will result in halting the scan progress untill PAT is provided. 
+So, to evaluate ADB controls properly from local scan mode, please set a session variable named 'ADBPatsForAzSK' with required value as shown in example below:
+
+```
+# For a single ADB workspace
+Set-Variable 'ADBPatsForAzSK' -Scope Global -Value @{'ADBResourceName' = 'Personal access token'}
+
+# For multiple ADB workspaces
+Set-Variable 'ADBPatsForAzSK' -Scope Global -Value @{'ADBResourceName1' = 'Personal access token 1';
+                                                     'ADBResourceName2' = 'Personal access token 2'}
+
+```
+Then in the same session please run scan command as follows:
+
+``` 
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ResourceTypeName Databricks -ResourceNames <Databricks Resource Name> 
+
+```
+
 [Back to top...](Readme.md#contents)
