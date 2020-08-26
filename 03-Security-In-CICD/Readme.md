@@ -510,6 +510,9 @@ ARM Template checker covers Baseline controls for following services:
 | ContainerInstances |Microsoft.ContainerInstance/containerGroups|
 | HDInsight |Microsoft.HDInsight/clusters|
 | APIManagement |Microsoft.ApiManagement/service|
+| PostgreSQL |Microsoft.DBforPostgreSQL/servers|
+| MySQL |Microsoft.DBforMySQL/servers|
+| Analysis Services |Microsoft.AnalysisServices/servers|
 
 ARM Templates for reference are available [here](../ARMTemplates).
 

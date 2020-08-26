@@ -1,0 +1,91 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "servers_mysqldbserver_name": {
+            "defaultValue": "mysqldbserver",
+            "type": "String"
+        },
+        "MySQL_Location": {
+            "defaultValue": "Enter MySQL Database location",
+            "type": "String"
+        },
+        "sku_name": {
+            "defaultValue": "Enter sku name",
+            "type": "String"
+        },
+        "sku_tier": {
+            "defaultValue": "Enter sku tier",
+            "type": "String"
+        },
+        "sku_generation": {
+            "defaultValue": "Enter sku generation",
+            "type": "String"
+        },
+        "storageMB": {
+            "defaultValue": "Enter storageMB",
+            "type": "int"
+        },
+        "version": {
+            "defaultValue": "Enter version",
+            "type": "int"
+        },
+        "start_IP": {
+            "defaultValue": "Enter start_IP", 
+            "type": "String"
+        },
+        "end_IP": {
+            "defaultValue": "Enter end_IP",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.DBforMySQL/servers",
+            "apiVersion": "2017-12-01",
+            "name": "[parameters('servers_mysqldbserver_name')]",
+            "location": "[parameters('MySQL_Location')]",
+            "sku": {
+                "name": "[parameters('sku_name')]",
+                "tier": "[parameters('sku_tier')]",
+                "family": "[parameters('sku_generation')]",
+                "capacity": 2
+            },
+            "properties": {
+                "storageProfile": {
+                    "storageMB": "[parameters('storageMB')]",
+                    "backupRetentionDays": 7,
+                    "geoRedundantBackup": "Disabled",
+                    "storageAutoGrow": "Disabled"
+                },
+                "version": "[parameters('version')]",
+                "sslEnforcement": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.DBforMySQL/servers/firewallRules",
+            "apiVersion": "2017-12-01",
+            "name": "[concat(parameters('servers_mysqldbserver_name'), '/AllowAll')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DBforMySQL/servers', parameters('servers_mysqldbserver_name'))]"
+            ],
+            "properties": {
+                "startIpAddress": "[parameters('start_IP')]", // start and end IP address should not be Any-to-Any i.e 0.0.0.0-255.255.255.255
+                "endIpAddress": "[parameters('end_IP')]"
+            }
+        },
+        {
+            "type": "Microsoft.DBforMySQL/servers/firewallRules",
+            "apiVersion": "2017-12-01",
+            "name": "[concat(parameters('servers_mysqldbserver_name'), '/AllowAllWindowsAzureIps')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DBforMySQL/servers', parameters('servers_mysqldbserver_name'))]"
+            ],
+            "properties": {
+                "startIpAddress": "0.0.0.0", // If startIpAddress and endIpAddress is 0.0.0.0 that means AllowAllWindowsAzureIps turned on. 
+                "endIpAddress": "0.0.0.0"
+            }
+        }
+    ]
+}
