@@ -1555,6 +1555,72 @@ v) Override ControlSettings.json in ServerConfigMetaData.json as shown below:
 
 vi) Rerun the policy update or setup command (the same command you ran for the first-time setup).
 
+### How can we treat each public IP address as an individual resource?
+   Org policy admins can enable public IP address as an individual resource by making following org policy settings:
+
+i) Copy the ControlSettings.json from the AzSK installation to your org-policy folder.
+
+   a) If you already have a overridden ControlSettings.json, add the following new settings to it.
+   ```JSON
+"PublicIpAddress": {
+    "EnablePublicIpResource": false
+   },
+```
+
+ii) Update the EnablePublicIpResource setting to true.
+```JSON
+"PublicIpAddress": {
+    "EnablePublicIpResource": true
+   },
+```
+
+iii) Save the file.
+
+iv)  Edit the ServerConfigMetadata.json file in your local org-policy folder and create an entry for "ControlSettings.json" as below:
+
+```JSON
+   {
+    "OnlinePolicyList" : [
+        {
+            "Name" : "AzSK.json"
+        }, 
+        {
+            "Name" : "ControlSettings.json",
+        }, 
+    ]
+}
+```
+v) If you are using an already overridden ControlSettings.json, edit the ServerConfigMetadata.json file as follows:
+
+```JSON
+   {
+    "OnlinePolicyList" : [
+        {
+            "Name" : "AzSK.json"
+        }, 
+        {
+            "Name" : "ControlSettings.json",
+            "OverrideOffline" : true
+        }, 
+    ]
+}
+```
+
+vi) Rerun the policy update or setup command (the same command you ran for the first-time setup).
+
+vii) Command that will be helpful in scanning a public IP address resource:
+
+```PowerShell
+ $subscriptionId = <Your SubscriptionId>
+$resourceGroupName = <ResourceGroup Name>
+$resourceName = <ResourceName>
+$ControlId = 'Azure_PublicIpAddress_Justify_PublicIp'
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId `
+                -ResourceGroupNames $resourceGroupName `
+                -ResourceName $resourceName `
+                -ControlId $ControlId
+   ```
+
 
 
 
