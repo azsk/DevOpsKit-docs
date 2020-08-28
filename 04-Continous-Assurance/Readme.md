@@ -384,7 +384,7 @@ The table below lists only the parameters that are mandatory or have specific ne
 
 ##### 1.2 Updating/modifying Central Scan mode CA (single Automation account option)
 
-In case you want to add/edit subscriptions covered via central scanning mode you can use Update-AzSKContinuousAssurance as shown below. (All other CA configuration settings can also be updated as described in Update-AzSKContinuousAssurance earlier in this document.)
+In case you want to add subscriptions covered via central scanning mode you can use Update-AzSKContinuousAssurance as shown below. (All other CA configuration settings can also be updated as described in Update-AzSKContinuousAssurance earlier in this document.)
 
 ```PowerShell
 $SubscriptionId = '<subscriptionId>'
