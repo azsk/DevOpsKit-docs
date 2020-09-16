@@ -275,7 +275,8 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
     [-FixRuntimeAccount] ` 
     [-NewRuntimeAccount] `
     [-FixModules] `
-    [-RenewCertificate]`
+    [-RenewCertificate] `
+    [-SkipCertificateCleanup]`
     [-Remove <LogAnalyticsSettings/AltLogAnalyticsSettings/WebhookSettings/ScanOnDeployment"]
 ```
 
@@ -295,7 +296,8 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 |FixRuntimeAccount|Use this switch to fix CA runtime account in case of below issues.<ol><li>Runtime account deleted<br>(Permissions required: Subscription owner)</li><li>Runtime account permissions missing<br>(Permissions required: Subscription owner and AD App owner)</li><li>Certificate deleted/expired<br>(Permissions required: Subscription owner and AD App owner)</li></ol>|FALSE|None||
 |NewRuntimeAccount|Use this switch to setup new runtime account and the person running the command will become new SPN owner.This feature is helpful in case when CA certificate is expired but the SPN owner who had setup CA is not available and certificate can't be renewed. |FALSE|None||
 |FixModules|Use this switch in case Az.Automation/Az.Accounts module(s) extraction fails in CA Automation Account.|FALSE|None||
-|RenewCertificate|Renews certificate credential of CA SPN if the caller is Owner of the AAD Application (SPN). If the caller is not Owner, a new application is created with a corresponding SPN and a certificate owned by the caller. CA uses the updated credential going forward.|FALSE|None||
+|RenewCertificate|Renews certificate credential of CA SPN if the caller is Owner of the AAD Application (SPN). If the caller is not Owner, a new application is created with a corresponding SPN and a certificate owned by the caller. CA uses the updated credential going forward.<br>It will offer workflow  to delete existing old credentials|FALSE|None||
+|SkipCertificateCleanup|This switch may be used to skip deletion of older certificates associated with CA SPN.|FALSE|None||
 |ScanOnDeployment|CA scan can be auto-triggered upon resource deployment.Updating CA with this flag will make sure that the Resource Group in which resource is deployed will be scanned.|FALSE|None||
 |Remove|Use this switch to clear previously set LogAnalytics, AltLogAnalytics,Webhook settings from CA Automation Account or to unregister from scan on deployment mode|False|None||
 
