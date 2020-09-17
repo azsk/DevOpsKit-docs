@@ -109,7 +109,7 @@ Here are few basic examples of continuous assurance setup command:
                                     -ExtendedCommand <ExtendedCommand> 
 ```
 
-<b>Example 2:</b> Install CA in a custom resource group and create log analytics workspace in the same resource group and trigger scan every 2 hours
+<b>Example 2:</b> Install CA in a custom resource group and create log analytics workspace in the same resource group
 ```PowerShell
 	Install-AzSKADOContinuousAssurance -SubscriptionId <SubscriptionId> `
                                     -ResourceGroupName <ResourceGroupName> `
@@ -117,7 +117,6 @@ Here are few basic examples of continuous assurance setup command:
                                     -ProjectName <ProjectName> `
                                     -PATToken <SecureStringPATToken> `
                                     -Location <Location> `
-                                    -ScanIntervalInHours <ScanIntervalInHours> `
                                     -CreateLAWorkspace
 
 ```
