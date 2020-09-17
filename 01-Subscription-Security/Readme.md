@@ -730,7 +730,7 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
                                -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
                                -RoleName "Owner" `
       ```
-      <b>Example 2: </b> List role settings for 'Contributor' PIM role at Resource level.
+      <b>Example 2: </b> List role settings for 'Contributor' PIM role at resource level.
 
       ```PowerShell
       Get-AzSKPIMConfiguration -ListRoleSettings `
@@ -964,26 +964,37 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
  6. <h4> Extend PIM assignments for expiring assignments (-ExtendExpiringAssignments) </h4>
 	 Use this command to extend PIM eligible assignments that are about to expire in n days
+
     <b>Example 1: </b>Extend Owner PIM roles that are to be expired in 10 days. This command runs in an interactive manner in order to verify the assignments being extended.
 
       ```PowerShell
       Set-AzSKPIMConfiguration -ExtendExpiringAssignments `
                               -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
-                              -RoleNames "Owner" `
+                              -RoleName "Owner" `
                               -ExpiringInDays 10
 			      -DurationInDays 30 # The duration in days for expiration to be extended by
                               -DoNotOpenOutputFolder
       ```
       
-      <b>Example 1: </b> Use *'-Force'* parameter to run the command in non-interactive mode. This command will extend expiry of  'Owner' PIM roles that are about to be expired in 10 days by skipping the verification step.
+      <b>Example 2: </b> Use *'-Force'* parameter to run the command in non-interactive mode. This command will extend expiry of  'Owner' PIM roles that are about to be expired in 10 days by skipping the verification step.
 
       ```PowerShell
       Set-AzSKPIMConfiguration -ExtendExpiringAssignments `
                               -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
-                              -RoleNames "Owner" `
+                              -RoleName "Owner" `
                               -ExpiringInDays 10
 			      -DurationInDays 30 # The duration in days for expiration to be extended by
                               -Force
+    
+     <b>Example 3: </b> Extend Owner PIM roles that are to be expired in 10 days specific to principal names.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -ExtendExpiringAssignments `
+                              -SubscriptionId "65be5555-34ee-43a0-ddee-23fbbccdee45" `
+                              -RoleName "Owner" `
+                              -ExpiringInDays 10
+			                  -PrincipalNames "abc@microsoft.com,def@microsoft.com"  
+                             
 
 7. <h4>Configure role settings for role on an Azure resource (-ConfigureRoleSettings)  </h4>
 	 Use this command to configure a  PIM role settings like maximum role assignment duration on a resource, mfa requirement upon activation etc.
@@ -1304,27 +1315,39 @@ AzSK now supports the Privileged Identity Management (PIM) helper cmdlets. This 
 
  6. <h4> Extend PIM assignments for expiring assignments (-ExtendExpiringAssignments) </h4>
 	 Use this command to extend PIM eligible assignments that are about to expire in n days
+
     <b>Example 1: </b>Extend Owner PIM roles that are to be expired in 10 days. This command runs in an interactive manner in order to verify the assignments being extended.
 
       ```PowerShell
       Set-AzSKPIMConfiguration -ExtendExpiringAssignments `
                               -ManagementGroupId <ManagementGroupId> `
-                              -RoleNames "Owner" `
+                              -RoleName "Owner" `
                               -ExpiringInDays 10
 			                  -DurationInDays 30 # The duration in days for expiration to be extended by
                               -DoNotOpenOutputFolder
       ```
       
-      <b>Example 1: </b> Use *'-Force'* parameter to run the command in non-interactive mode. This command will extend expiry of  'Owner' PIM roles that are about to be expired in 10 days by skipping the verification step.
+      <b>Example 2: </b> Use *'-Force'* parameter to run the command in non-interactive mode. This command will extend expiry of  'Owner' PIM roles that are about to be expired in 10 days by skipping the verification step.
 
       ```PowerShell
       Set-AzSKPIMConfiguration -ExtendExpiringAssignments `
                               -ManagementGroupId <ManagementGroupId> `
-                              -RoleNames "Owner" `
+                              -RoleName "Owner" `
                               -ExpiringInDays 10
 			                  -DurationInDays 30 # The duration in days for expiration to be extended by
                               -Force
       ```
+
+       <b>Example 3: </b> Extend Owner PIM roles that are to be expired in 10 days specific to principal names.
+
+      ```PowerShell
+      Set-AzSKPIMConfiguration -ExtendExpiringAssignments `
+                              -ManagementGroupId <ManagementGroupId> `
+                              -RoleName "Owner" `
+                              -ExpiringInDays 10
+			                  -PrincipalNames "abc@microsoft.com,def@microsoft.com"  
+      ```
+
 7. <h4> Configure role settings for role on an Azure resource (-ConfigureRoleSettings) </h4>
 	Use this command to configure a  PIM role settings like maximum role assignment duration on a resource, mfa requirement upon activation etc.
     

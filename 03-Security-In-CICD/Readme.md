@@ -291,6 +291,8 @@ that are supported by the VSTS task:
 |ExtendedCommand| Enables you to provide other switches supported by the Get-AzSKAzureServicesSecurityStatus command to perform focused scanning in the CICD pipeline | e.g. -ControlIds "Azure_Storage_DP_Encrypt_In_Transit,</br>Azure_Storage_DP_Encrypt_At_Rest_Blob" or -UseBaselineControls. More switches that can be used with ExtendedCommand can be found [here](../02-Secure-Development/Readme.md#security-verification-tests-svt). |
 |ExtendedCommandGSS| This variable is applicable when "Also scan subscription controls" option is enabled. It will enable you to provide additional parameters supported by the Get-AzSKSubscriptionSecurityStatus command to perform focused scanning in the CICD pipeline. ( Default implementation of GSS command in the task uses -ExcludeTags "OwnerAccess, GraphRead")| e.g. -FilterTags "AuthZ, BCDR" or -ControlIds "Azure_Subscription_Config_Azure_Security_Center". More switches that can be used with ExtendedCommandGSS can be found [here](../01-Subscription-Security/Readme.md#target-specific-controls-during-a-subscription-health-scan). |
 |TreatAsPassed| This variable is to provide users with more control over behavior of the SVT extension in case of various control statuses other than ‘Passed’ or ‘Failed’. For e.g., using this, one may choose to have the extension treat statuses such as 'Verify','Manual','Exception' or 'Remediate' as 'Passed'.|e.g. The value of the variable TreatAsPassed can be passed as Verify,Manual to skip Verify and Manual controls|
+|ScanOwnerAccessControlsGRS|This variable is to provide users with more control over scanning controls that need owner priviledges. With latest CICD task version 4.0.4, such controls are excluded from service controls scanby default.This behaviour can be overwritten by setting ScanOwnerAccessControlsGRS value to True. However, it is recommended not to give owner permissions to SPN over a subscription .| e.g. true 
+
 
 
 [Back to top...](Readme.md#contents)
@@ -508,6 +510,9 @@ ARM Template checker covers Baseline controls for following services:
 | ContainerInstances |Microsoft.ContainerInstance/containerGroups|
 | HDInsight |Microsoft.HDInsight/clusters|
 | APIManagement |Microsoft.ApiManagement/service|
+| PostgreSQL |Microsoft.DBforPostgreSQL/servers|
+| MySQL |Microsoft.DBforMySQL/servers|
+| Analysis Services |Microsoft.AnalysisServices/servers|
 
 ARM Templates for reference are available [here](../ARMTemplates).
 

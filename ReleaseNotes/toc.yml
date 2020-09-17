@@ -1,5 +1,9 @@
 - name: Latest Release Notes
   href: LatestReleaseNotes.md
+- name: 200915
+  href: RN200915.md
+- name: 200817
+  href: RN200817.md
 - name: 200715
   href: RN200715.md
 - name: 200615
