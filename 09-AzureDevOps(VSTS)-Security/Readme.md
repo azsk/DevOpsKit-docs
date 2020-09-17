@@ -136,6 +136,7 @@ Note:
 |LAWSSharedKey|(Optional) Shared key of Log Analytics workspace which will be used to monitor security scan results|FALSE|None|
 |AltLAWSId|(Optional) Alternate workspace ID of Log Analytics workspace which will be used to monitor security scan results|FALSE|None|
 |AltLAWSSharedKey|(Optional) Alternate shared key of Log Analytics workspace which will be used to monitor security scan results|FALSE|None|
+|ExtendedCommand|(Optional) Extended command to narrow down the target scan|TRUE|FALSE|
 |ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value.|FALSE|24|
 |CreateLAWorkspace|(Optional) Switch to create and map new Log Analytics workspace with CA setup|TRUE|FALSE|
 
