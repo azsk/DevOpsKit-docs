@@ -268,19 +268,19 @@ To manage attestation flow effectively, 4 options are provided for the *Controls
 |All|Attest all controls which can be attested (including those that have past attestations).|
 |None|N/A.|
 
-The attestation feature internally stores attestation details in a repository called 'ADOScanner_Attestation', if repository not present in the project then it require to create the repository with same name as 'ADOScanner_Attestation' otherwise attestation will fail. Project, build, release, service connection and agent pool attestation data stores in the 'ADOScanner_Attestation' repository of that particular project.    
+The attestation feature internally stores attestation details in a repository called 'ADOScanner_Attestation'. As a prerequisite, you need to create a repository with the same name. Attestation details of projects, builds, releases, service connections, agent pools and variable groups will be stored in the 'ADOScanner_Attestation' repository of the project these resources belong to.    
 
-To attest organization specific controls, it required to setup a project which will store the attestation details for organization specific controls.
-> **Note**: Administror needs to setup the attestation host project name to store organization spesific control attestation details. It can be set usign the parameter 'AttestetionHostProjectName'. Attestation host project can set only once and can not change latter.
+To attest organization specific controls, you need to setup a similar repository in the host project which will store the attestation details for organization specific controls.
+> **Note**: Administrator needs to setup the attestation host project name to store organization spesific control attestation details. It can be set using the parameter 'AttestationHostProjectName'. Attestation host project can be set only once and can not be update later.
 Run below command to set attestation host project:
 For example: 
 ```PowerShell  
 #Set attestation host project and attest organization controls:
 $orgName = '<Organization name>'
 $attHotProjectName = '<Project name>'
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName $orgName -AttestationHostProjectName $attHotProjectName -ControlsToAttest NotAttested -ResourceTypeName Organization  
+Get-AzSKADOSecurityStatus -OrganizationName $orgName -AttestationHostProjectName $attHotProjectName -ControlsToAttest NotAttested -ResourceTypeName Organization  
 ```
-Attestaiton can be performed for orgnization, project, build, release, service connection and agent pool using the the below commands: 
+Attestation can be performed for orgnization, project, build, release, service connection and agent pool using the the below commands: 
 
 For example: 
 ```PowerShell  
