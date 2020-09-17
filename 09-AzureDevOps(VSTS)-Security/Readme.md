@@ -534,8 +534,8 @@ To scan large number of project component (more then 1000 resources default valu
 ```PowerShell
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "<PRJ1, PRJ2,...etc.>" -AllowLongRunningScan
 ```
-Allowing scan for more then 1000 resources can be configured through the organization policy by updating IsAllowLongRunningScan and LongRunningScanCheckPoint properties in the controlsettings.json file. 
-If IsAllowLongRunningScan is set to true then, by using -AllowLongRunningScan swich parameter, AzSK.AzureDevOps allows scan for resources count which is set in LongRunningScanCheckPoint. If IsAllowLongRunningScan value is set to false it does not allow scan for more then resources count set in LongRunningScanCheckPoint. 
+Allowing scan for more then 1000 resources can be configured through the organization policy by updating 'IsAllowLongRunningSca'n and 'LongRunningScanCheckPoint' properties in the ControlSettings.json file. 
+If 'IsAllowLongRunningScan' is set to true, then by using '-AllowLongRunningScan' switch parameter, AzSK.AzureDevOps allows scan for resources count which is set in 'LongRunningScanCheckPoint'. If 'IsAllowLongRunningScan' value is set to false it does not allow scan for more then resources count set in 'LongRunningScanCheckPoint'. 
 
 # Control Attestation
 
@@ -843,7 +843,7 @@ Any control with evaluation result as not passed and,
 ## Monitoring Solution for AzSK.AzureDevOps (ADO Scanner)
 
  ### Overview: 
-The Monitoring features of AzSK.AzureDevOps empower dev ops teams with the following capabilities:
+The monitoring features of AzSK.AzureDevOps empower dev ops teams with the following capabilities:
 - a single pane of glass view of devops security.
 - visibility to control status for their DevOps organizations.
 
@@ -884,7 +884,7 @@ Run the commands below in PS after replacing the various '<>' with
     $lawsId ='<Log Analytics workspace id>'
     $lawsRGName ='<Log Analytics workspace resource group name>'     #RG where the Log Analytics workspace is hosted (See 1-a)
     $ADOViewName = '<unique_name_for_your_AzSK.AzureDevOps_view>' #This will identify the tile for AzSK.AzureDevOps view in Log Analytics workspace. E.g., MyApp-View-1
-    $dashboardType = '<View/Workbook>' #This will identify type view or workbook, by default is view, use type 'Workbook'if you want to deploy workbook 
+    $dashboardType = '<View/Workbook>' #Type of dashboard you want to deploy in log analytics workspace. 
 
     #This command will deploy the AzSK.AzureDevOps view in the Log Analytics workspace. Happy monitoring!  
     Install-AzSKADOMonitoringSolution -LAWSSubscriptionId $lawsSubId `
