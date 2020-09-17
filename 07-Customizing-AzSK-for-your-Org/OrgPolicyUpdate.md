@@ -21,6 +21,16 @@ Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
    -StorageAccountName "contosoitsa" `
    -PolicyFolderPath "D:\ContosoPolicies" -OverrideBaseConfig OrgAzSKVersion
 ```
+# AzSK v.4.11.0
+
+* Added SVT for ‘public IP address’ as a service to optionally treat each public IP address as an individual resource. Org policy admins can enable this behavior by following [these steps](https://github.com/azsk/DevOpsKit-docs/tree/master/07-Customizing-AzSK-for-your-Org#How-can-we-treat-each-public-IP-address-as-an-individual-resource)
+
+# AzSK v.4.10.0
+
+* Added support for configuring non-AAD identity providers for app service. Refer [here](
+https://github.com/azsk/DevOpsKit-docs/tree/master/07-Customizing-AzSK-for-your-Org#how-to-configure-non-aad-identity-providers-for-appservice) for more information.
+* Fixed an issue in SVT extension framework wherein extended class were not being correctly applied across resources of the same type.
+
 # AzSK v.4.4.0
 
 * Added capabilities to setup AzSK to scan subscriptions across multiple tenants. Instructions are available [here](https://aka.ms/devopskit/crosstenant).

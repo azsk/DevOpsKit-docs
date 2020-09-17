@@ -4,7 +4,7 @@
    "IsMaintenanceMode": false,
   "Controls": [
     {
-      "ControlId": "Azure_Subscription_AuthZ_Limit_Admin_Owner_Count",
+      "ControlID": "Azure_Subscription_AuthZ_Limit_Admin_Owner_Count",
       "Description": "You *must* minimize the number of admins/owners",
       "ControlSeverity": "High",
       "Id": "SubscriptionCore110"

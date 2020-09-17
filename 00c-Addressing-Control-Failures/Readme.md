@@ -221,6 +221,7 @@ As shown in the images, the command enters 'attest' mode after completing a scan
 2. The user gets to choose whether they want to attest the control
 3. If the user chooses to attest, attestation details (attest status, justification, etc.) are captured
 4. This is repeated for all attestable controls and each resource.
+5. After attestation workflow is completed, another scan is triggered for controls attested within the last 24 hrs so that the backend will get the latest control status.
 
  Sample attestation workflow in progress:
  ![02_SVT_Attest_1](../Images/02_SVT_Attest_1.PNG) 
@@ -228,7 +229,10 @@ As shown in the images, the command enters 'attest' mode after completing a scan
  Sample summary of attestation after workflow is completed:
  ![02_SVT_Attest_2](../Images/02_SVT_Attest_2.PNG) 
 
-Attestation details corresponding to each control (e.g., justification, user name, etc.) are also captured in the CSV file as shown below:
+ Sample summary of scan of attested controls:
+ ![02_SVT_Attest_4](../Images/02_SVT_Attest_4.PNG) 
+
+Attestation details corresponding to each control (e.g., justification, user name, etc.) are also captured in the CSV file in next scan as shown below:
  ![02_SVT_Attest_3](../Images/02_SVT_Attest_3.PNG) 
 
 The attestation process for application resources is similar to that for subscriptions. For example, the command below shows how to 
@@ -588,7 +592,8 @@ You may come across a scenario where you get multiple API connections in the sca
 
 #### How do I remediate failing control Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG?
 
-The time taken to evaluate control Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG, is directly proportional to the number of resource groups you have in your subscription AND total number of identities that have access on those resource groups. As a result, the GSS scan may take up significant time to complete, depending upon the above numbers. If this control is failing, it can be evaluated locally now with the help of below command: 
+The time taken to evaluate control Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG, is directly proportional to the number of resource groups you have in your subscription AND total number of identities that have access on those resource groups. As a result, the GSS scan may take significant amount of time to complete for subscriptions with multiple resource groups. Hence, we have enabled this control only in CA mode. In manual mode, we skip the actual control scan and instruct the user to see the evaluation details about this control in the CA job scans.
+If you have addressed the causes for control failure and you need to manually scan the control, you can override the current behavior by explicitly specifying the controlId in the scan cmdlet as shown below.
 
 ``` 
 Import-Module AzSK
@@ -656,6 +661,27 @@ Get-AzResource -ResourceType Microsoft.Web/sites -ResourceGroupName $ResourceGro
 
 Set-AzResource @params -Force
 }
+```
+
+#### Many of the Azure Databricks control goes to manual state from both CA and local scan. What should I do to evaluate Azure Databricks resources properly?
+
+Some of the controls of Azure Databricks (ADB) can not be scanned properly from CA as they need ADB workspace's personal access token (PAT) with admin privileges. In local scan also by default such controls will go to manual state as it requires PAT to evaluate these controls and DevOps Kit will not prompt for PAT (instead it will try to read PAT via session variable) as it will result in halting the scan progress untill PAT is provided. 
+So, to evaluate ADB controls properly from local scan mode, please set a session variable named 'ADBPatsForAzSK' with required value as shown in example below:
+
+```
+# For a single ADB workspace
+Set-Variable 'ADBPatsForAzSK' -Scope Global -Value @{'ADBResourceName' = 'Personal access token'}
+
+# For multiple ADB workspaces
+Set-Variable 'ADBPatsForAzSK' -Scope Global -Value @{'ADBResourceName1' = 'Personal access token 1';
+                                                     'ADBResourceName2' = 'Personal access token 2'}
+
+```
+Then in the same session please run scan command as follows:
+
+``` 
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId <SubscriptionId> -ResourceTypeName Databricks -ResourceNames <Databricks Resource Name> 
+
 ```
 
 [Back to top...](Readme.md#contents)

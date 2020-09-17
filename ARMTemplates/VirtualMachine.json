@@ -184,6 +184,9 @@
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[parameters('vmName')]",
       "location": "[resourceGroup().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountName'))]",
         "[concat('Microsoft.Network/networkInterfaces/', parameters('nicName'))]"
@@ -286,6 +289,22 @@
         },
         "protectedSettings": null
       }
+
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions", //Azure_VirtualMachine_SI_Deploy_GuestConfig_Extension
+      "name": "[concat(parameters('vmName'), '/GuestConfigForWindows')]",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-05-01-preview",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
+      ],
+      "properties": {
+          "publisher": "Microsoft.GuestConfiguration",
+          "type": "ConfigurationForWindows",
+          "typeHandlerVersion": "1.11",
+          "autoUpgradeMinorVersion": true
+       }
 
     }
   ]

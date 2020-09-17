@@ -76,6 +76,7 @@
     - [How do I remediate failing control Azure_Subscription_AuthZ_Dont_Grant_Persistent_Access_RG?](../00c-Addressing-Control-Failures/Readme.md#how-do-i-remediate-failing-control-azure_subscription_authz_dont_grant_persistent_access_rg)
     - [How do I remediate failing control Azure_APIManagement_DP_Use_Secure_TLS_Version?](../00c-Addressing-Control-Failures/Readme.md#how-do-i-remediate-failing-control-azure_apimanagement_dp_use_secure_tls_version)
     - [How do I remediate failing control Azure_AppService_DP_Use_Secure_TLS_Version?](../00c-Addressing-Control-Failures/Readme.md#how-do-i-remediate-failing-control-azure_appservice_dp_use_secure_tls_version)
+    - [Many of the Azure Databricks control goes to manual state from both CA and local scan. What should I do to evaluate Azure Databricks resources properly?](../00c-Addressing-Control-Failures/Readme.md#many-of-the-azure-databricks-control-goes-to-manual-state-from-both-ca-and-local-scan-what-should-i-do-to-evaluate-azure-databricks-resources-properly)
 
 
 - ### Org Policy

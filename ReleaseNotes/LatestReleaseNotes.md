@@ -1,61 +1,45 @@
-## 200515 (AzSK v.4.9.0)
+## 200915 (AzSK v.4.13.0)
 
 ### Feature updates
 
-* Privileged Identity Management (PIM):
-    *	Earlier, role settings could be configured only for eligible assignments via the setpim cmdlet. We have now expanded support to configure role settings for active assignments at subscription and management group scope by adding new parameters in the setpim cmdlet.
-        ```Powershell
-        setpim -ConfigureRoleSettings –SubscriptionId $sub -RoleName AcrPull -ExpireActiveAssignmentsInDays 11 -RequireJustificationOnActiveAssignment $true -RequireMFAOnActiveAssignment $true 
+*   CA SPN old credentials cleanup:
 
-        setpim -ConfigureRoleSettings –ManagementGroupId $MGID -RoleName AcrPull -ExpireActiveAssignmentsInDays 11 -RequireJustificationOnActiveAssignment $true -RequireMFAOnActiveAssignment $true
-        ```
-   
+    *	When the below command is run to renew CA certificate, a new workflow will offer to delete existing old credentials:
+    ```Powershell
+    Update-AzSKContinuousAssurance –sid $sub -RenewCertificate
+    ```
 
-*	AzSK module for Azure DevOps (ADO):
+    *   The ```-SkipCertificateCleanup``` switch may be used to skip deletion of older certificates.
+
+
+*	Security scanner for Azure DevOps (ADO)/ADO Security Scanner extension:
     
-    * Introduced custom organization policy feature for central security team of an organization to customize the behavior of various functions and security controls checked by the ADO scanner. This enables project admins to create a policy store and other required components to host and maintain a set of policy files that allow customization of the ADO scanner controls and feature behavior.
-    
-    * Revamped attestation feature to leverage repos in Azure DevOps for storing control attestation details. 
-      * Introduced a new switch -AttestationHostProjectName to specify the project name for storing attestation details for organization-specific controls.
-      * Implemented via switch -ControlsToAttest which can be specified in any of the standard security scan cmdlets of the scanner. 
-      * Added support for attestation of build, release, service connection and agent pool controls.
-      * Organization and project controls can now also be attested via their individual scan cmdlets Get-AzSKAzureDevOpsOrgSecurityStatus and Get-AzSKAzureDevOpsProjectSecurityStatus respectively.
-        * Note that attestation for organization and project controls can only be performed with admin privileges on organization and project, respectively
-      * Currently, attestation can be performed only via PowerShell session in local machine, but the scan results will be honored in both local as well as extension scan. 
-    * Added aliases for individual scan cmdlets for organization, project, build, release, service connection and agent pool.  
-     ```Powershell
-    gadso -oz "MicrosoftIT" #Organization-specific controls scan
-
-    gadsp -oz "MicrosoftIT" -pn "OneITVSO" #Project-specific controls scan
-
-     ```
-    * Updated the resource link for user-specific controls.
-
-    
-*	ADO Security Scanner extension::
-    
-    * Build and release parameters are no more mandatory to run the extension in pipeline.
-    * ‘Exception’ status will now be represented in widgets for build, release, service connection and agent pool controls.
-    * Note: Security scanner for ADO is also available as a native ADO extension that can be used for Continuous Assurance for ADO security. This also includes widgets to visualize the scan results for various stakeholders (such as org admin, project owners, build/release owners etc.).
-
-
+    *	The key highlights for the Azure DevOps (ADO) security scanner release are (a) durable check-pointing for Azure hosted continuous assurance scans, (b) interfacing bug logging feature with service tree data and (c) renaming the module/extension/cmdlets/controls/features etc. from ‘AzureDevOps’ to ‘ADO’. With this release, ADO scanner is ready for CSEO-wide deployment.
+    *   [Click here](https://idwebelements/GroupManagement.aspx?Group=azskadop&Operation=join) to subscribe to get detailed feature updates of ADO security scanner.
 
 
 * Security Verification Tests (SVTs):
     *	N/A.
-* In-cluster security scans for ADB, AKS, HDI Spark:
-    * N/A.
+
 
 * Log Analytics:
     * N/A.
 
+
 * ARM Template Checker:
     * N/A.
+
 
 * Org policy/external user updates (for non-CSEO users):
     * N/A.
 
 Note: The next few items mention features from recent releases retained for visibility in case you missed those release announcements:
+
+*	Management of DevOps Kit-based AAD applications:
+    *	You can list all the DevOps Kit-based service principals (used in continuous assurance) that are owned by you via the Get-AzSKInfo cmd marking those that are actively used for CA scans.
+    ```Powershell
+        Get-AzSKInfo –InfoType SPNInfo
+    ```
 
 *	Security Scanner for Azure DevOps (ADO) 
     *	You can try the scan cmdlet using:
@@ -79,7 +63,7 @@ Note: The next few items mention features from recent releases retained for visi
     * ```Get-AzSKPIMConfiguration``` (alias ```getpim```) for querying various PIM settings/status
     * Activating your PIM role is now as simple as this:
     
-    ``` setpim -ActivateMyRole -SubscriptionId $sub -RoleName Owner -DurationInHours 8 -Justification 'ad hoc test'  ```
+      ``` setpim -ActivateMyRole -SubscriptionId $sub -RoleName Owner -DurationInHours 8 -Justification 'ad hoc test'  ```
     * See docs [here](https://github.com/azsk/DevOpsKit-docs/blob/master/01-Subscription-Security/Readme.md#azsk-privileged-identity-management-pim-helper-cmdlets-1) for more.
 
 *	(Preview) Security Scan for Azure Active Directory (AAD)
@@ -101,45 +85,65 @@ Note: The next few items mention features from recent releases retained for visi
 
 ### Other improvements/bug fixes
 * Subscription Security:
-    * Fixed an issue in the Set-AzSKARMPolicies cmdlet which was previously not able to create policy assignment if its definition was already present in the subscription.
+    *   Added support for configuring standard pricing tiers for all the resource types supported in Azure Security Center (ASC) via the ```-SetASCTier``` switch in the Set-AzSKAzureSecurityCenterPolicies cmd.
+    ```Powershell
+    Set-AzSKAzureSecurityCenterPolicies -SubscriptionId $sub -SetASCTier
+    ```
 
-* Privileged Identity Management (PIM):
-   * N/A.
+*	Added four controls to strengthen the subscription RBAC hygiene:
+    *	```Azure_Subscription_Cleanup_Deleted_Object_Access``` control checks for deleted identities having access on subscription.
+    *	```Azure_Subscription_Remove_Access_For_Orphaned_Applications``` control checks for orphaned applications (without any owner) having access on subscription.
+    *	```Azure_Subscription_Check_Indirect_Access_Via_Applications``` control checks for applications with privileged roles but their owners do not have any access in subscription.
+    *	```Azure_Subscription_Review_Inactive_Identities``` control checks for identities that have been inactive in the subscription over the past 90 days.
+    
+    Note: These controls require owner access to subscription and will not be evaluated via continuous assurance.
 
 * SVTs: 
-   * Fixed a bug in bulk attestation workflow where previously all the targeted controls were being attested with the same status and justification. Now, -ControlIds parameter is made mandatory and only one control can be bulk attested across resources at a time.
-    
-
+    *	In keeping with the change in frequency of SDL cycle, attestation expiry period of the below controls has been updated to 180 days. 
+        *	Azure_APIManagement_AuthN_Verify_Delegated_Authentication
+        *	Azure_AppService_AuthN_Use_AAD_for_Client_AuthN
+        *	Azure_Automation_DP_Use_Encrypted_Variables
+        *	Azure_APIManagement_DP_Dont_Checkin_Secrets_In_Source
+        *	Azure_CloudService_AuthN_Use_AAD_for_Client_AuthN
+        *	Azure_ContainerInstances_AuthZ_Container_Segregation
+        *   Azure_KeyVault_AuthN_Dont_Share_KeyVault_Unless_Trust
+        *   Azure_LoadBalancer_NetSec_Justify_PublicIPs
+        *	Azure_NotificationHub_AuthZ_Dont_Use_Manage_Access_Permission
+        *	Azure_VirtualMachine_NetSec_Justify_PublicIPs  
+    *	Fixed an issue in attestation feature where, for some controls, attestation drift was occurring if the current state of the control was a subset of the attested state.
 
 * Controls:
-    * Resolved an issue in the subscription ARM policy control to emit failed status if the ARM policy assignment is disabled in the subscription.
-    * Added a new control Azure_AppService_AuthN_Redirect_To_Login_Page to check whether authentication is configured at root page of an app service.
-    * Virtual machine guest policy health control has been updated to check for compliance of guest policies and initiatives as configured via organization policy. Previously, the control used to check compliance for all health policies deployed on the machine.
+    *	Fixed an issue in the AAD authentication control for APIM which was resulting in error state due to a recent change in the underlying PG API.
+    *	Control to check for resource locks on ExpressRoute-connected virtual network RG will now pass if either ‘read-only’ or ‘do-not-delete’ lock is configured. Earlier, the control used to check for only the read-only lock.
+    *   AAD authentication control for AKS will also support the new AKS-managed authentication.
+    *	Management port control for AKS will now check for open ports in both VM and VMSS-based backend pools.
+    *	The Azure_CDN_DP_Enable_Http control has been updated to check for both temporary and permanent redirect rules.
+    *	Antimalware and vulnerability solution controls for VM will now pass if the equivalent ASC assessment is ‘NotApplicable’.
+    *	AAD authentication control for Linux-based function apps will pass if no HTTP trigger-based functions are defined in the app.
+
+
+* Privileged Identity Management (PIM):
+   *	N/A.
+         
+
+*	CICD: 
+    *	N/A.
+
 
 * ARM Template Checker:
     * N/A.
 
 * CA:
-    * N/A.
+    *	Fixed an issue in the Get-AzSKContinuousAssurance which was previously throwing an exception when scanned with reader permissions on the subscription. 
+
 
 * In-cluster CA:
     * N/A. 
 
-* Security scanner for Azure DevOps (ADO):
-
-    * Control for installed extensions in an organization will filter out built-in extensions from scans.
-    * Project visibility control will now pass when either ‘Private’ or ‘Enterprise’ visibility is enabled for the project.
-    * Fixed an issue in the control AzureDevOps_Build_AuthZ_Disable_Inherited_Permissions which was earlier reporting failed state even when the inherited permissions on the pipeline were disabled.
-    * Trimmed state data for organization and project baseline controls without impacting its meaning.
-    * Fixed a bug where previously attestation drift was not being detected in a scenario in some stateful controls.
-    * Rectified tags for organization and project controls.
-    * Control settings file has been trimmed to make it relevant only to the ADO scanner (removed Azure-specific residues).
-    * Fixed an issue in Get-AzSKAzureDevOpsProjectSecurityStatus cmdlet to make the -ProjectNames parameter mandatory.
-
 * Log Analytics:
     * N/A.
 
-* Known issues:
-    * Late in the test pass, we found that below Cosmos DB controls are resulting into error due to recent API changes:
-      * Azure_CosmosDB_AuthZ_Enable_Firewall
-      * Azure_CosmosDB_AuthZ_Verify_IP_Range
+* Others:
+    *   Fixed bugs in: 
+        (a) Get-AzSKInfo -InfoType ControlInfo and
+        (b) Get-AzSKControlStatus -FilterTags which was previously resulting into error due to internal caching of policy files.

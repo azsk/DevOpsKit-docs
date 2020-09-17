@@ -460,7 +460,39 @@ image below:
 This change will be effective across your organization immediately. Anyone running AzSK commands (in fresh PS sessions)
 should see the new message. 
 
-##### b) Changing a control setting for specific controls 
+##### b) Customize output folder for my org
+Usually, when we run AzSK command the results go to the default folder i.e.  
+C:\Users\<UserName>\AppData\Local\Microsoft\AzSKLogs\Sub_[yourSubscriptionName]\20170331_142819. 
+The default location for log storage can be customized in a custom org policy setup. Post customization the scan results will be stored in that particular location.
+
+###### Steps:
+
+i) Open the AzSk.json from your local org-policy folder that you have downloaded using.
+
+```PowerShell
+Get-AzSKOrganizationPolicyStatus -SubscriptionId <SubscriptionId> `
+         -OrgName "Contoso" `
+         -DepartmentName "IT" `
+         -DownloadPolicy `
+         -PolicyFolderPath "D:\ContosoPolicies"
+```
+
+ii) Add a new property 'OutputFolderPath' and provide the required destination path where you want to store the scan results. 
+E.g.
+```PowerShell
+     "OutputFolderPath":  "<Path>" # D:\AzSKLogs
+```
+iii) Save the AzSK.json file and rerun the policy update or setup command (the same command you ran for the first-time setup)
+
+###### Testing: 
+
+You can validate the changes by running ‘gai -infotype hostinfo’. 
+![Validate-OutputFolderPath](../Images/07_Custom_Policy_Output_Folder_path.PNG) 
+
+Now if anyone in your org starts a fresh PS session and runs AzSK scan, the results will be stored in the location defined in the OutputFolderPath property added in step ii.
+![Store Log-Given path](../Images/07_Custom_Policy_Scan_Result.PNG) 
+
+##### c) Changing a control setting for specific controls 
 Let us now change some numeric setting for a control. A typical setting you may want to tweak is the maximum number of
 owners/admins allowed for your org's subscriptions.  It is verified in one of the subscription security controls. (The default value is 5.)
 
@@ -496,7 +528,7 @@ Anyone in your org can now start a fresh PS console and the result of the evalua
 the subscription security scan (Get-AzSKSubscriptionSecurityStatus) should reflect that the new setting is in 
 effect. (E.g., if you change the max count to 3 and they had 4 owners/admins in their subscription, then the result for control (Azure_Subscription_AuthZ_Limit_Admin_Owner_Count) will change from 'Passed' to 'Failed'.)
 
-##### c) Customizing specific controls for a service 
+##### d) Customizing specific controls for a service 
 
 In this example, we will make a slightly more involved change in the context of a specific SVT (Storage). 
 
@@ -541,7 +573,7 @@ in your org has developed. Let us do this for the Storage.json file. Specificall
   ]
 }
 ```
-> **Note:** The 'Id' field is used for identifying the control for policy merging. We are keeping the 'ControlId'
+> **Note:** The 'Id' field is used for identifying the control for policy merging. We are keeping the 'ControlID'
 > field only because of the readability.
 
  iii) Save the file
@@ -558,7 +590,7 @@ Likewise, even after you run the scan without the `-UseBaselineControls` paramet
 appear in the resulting CSV file. 
 
 
-##### d) Creating a custom control 'baseline' for your org
+##### e) Creating a custom control 'baseline' for your org
 A powerful capability of AzSK is the ability for an org to define a baseline control set on the policy server
 that can be leveraged by all individuals in the org (and in other AzSK scenarios like CICD, CA, etc.) via the "-UseBaselineControls" parameter
 during scan commands. 
@@ -610,7 +642,7 @@ file is already present in your org policy folder.)
 ```
 
 > Notice how, apart from the couple of extra elements at the end, the baseline set is pretty much a list of 'ResourceType'
-and 'ControlIds' for that resource...making it fairly easy to customize/tweak your own org baseline. 
+and 'ControlIDs' for that resource...making it fairly easy to customize/tweak your own org baseline. 
 > Here the name and casing of the resource type name must match that of the policy JSON file for the corresponding resource's JSON file > in the SVT folder and the control ids must match those included in the JSON file. 
 
 > Note: Here we have used a very simple baseline with just a couple of resource types and a very small control set.
@@ -633,7 +665,7 @@ and, even for those, only the baseline controls get evaluated.
 > **Note:** Similar to baseline control, you can also define preview baseline set with the help of similar property "PreviewBaselineControls" in ControlSettings.json. This preview set gets scanned using parameter `-UsePreviewBaselineControls` with scan commands.
 
 
-##### e) Customizing Severity labels 
+##### f) Customizing Severity labels 
 Ability to customize naming of severity levels of controls (e.g., instead of High/Medium, etc. one can now have Important/Moderate, etc.) with the changes reflecting in all avenues (manual scan results/CSV, Log Analytics workspace, compliance summaries, dashboards, etc.)
 
 ###### Steps: 
@@ -1484,13 +1516,13 @@ i) Copy the Storage.json from the AzSK module to your org-policy folder
 
    Destination location: Policy config folder in local (D:\ContosoPolicies\Config)
 
-ii) Remove everything except the ControlId, the Id and add property "AttestationExpiryPeriodInDays" as shown below. 
+ii) Remove everything except the ControlID, the Id and add property "AttestationExpiryPeriodInDays" as shown below. 
 
    ```
    {
     "Controls": [
      {
-        "ControlId": "Azure_Storage_AuthN_Dont_Allow_Anonymous",
+        "ControlID": "Azure_Storage_AuthN_Dont_Allow_Anonymous",
         "Id": "AzureStorage110",
         "AttestationExpiryPeriodInDays": 45
      }
@@ -1507,6 +1539,122 @@ iii) Update org policy with the help of UOP cmdlet with required parameters.
 ##### Testing:
 
    For testing follow same steps mentioned above for [scenario 1](./#testing-7)
+
+### How to configure non-AAD identity providers for AppService?
+   You will be able to configure non-AAD identity providers and external redirect URLs using below settings:
+
+i)Copy the ControlSettings.json from the AzSK installation to your org-policy folder.
+
+ii)Update required values in below tags under AppService:
+```JSON
+"AllowedAuthenticationProviders": [
+  ],
+"AllowedExternalRedirectURLs": [
+   ]
+```
+
+iii)Make sure identity providers from AllowedAuthenticationProviders are removed from NonAADAuthProperties.
+```JSON
+"NonAADAuthProperties": [
+	   "googleClientId",
+      "facebookAppId"
+      "twitterConsumerKey",
+      "microsoftAccountClientId"
+    ]
+```
+
+iv) Save the file.
+
+v) Override ControlSettings.json in ServerConfigMetaData.json as shown below:
+
+```JSON
+   {
+    "OnlinePolicyList" : [
+        {
+            "Name" : "AzSK.json"
+        }, 
+        {
+            "Name" : "ControlSettings.json",
+			   "OverrideOffline" :true
+        }, 
+        {
+            "Name" : "ServerConfigMetadata.json",
+			   "OverrideOffline" : true
+        }
+    ]
+}
+```
+
+vi) Rerun the policy update or setup command (the same command you ran for the first-time setup).
+
+### How can we treat each public IP address as an individual resource?
+   Org policy admins can enable public IP address as an individual resource by making following org policy settings:
+
+i) Copy the ControlSettings.json from the AzSK installation to your org-policy folder.
+
+   a) If you already have a overridden ControlSettings.json, add the following new settings to it.
+   ```JSON
+"PublicIpAddress": {
+    "EnablePublicIpResource": false
+   },
+```
+
+ii) Update the EnablePublicIpResource setting to true.
+```JSON
+"PublicIpAddress": {
+    "EnablePublicIpResource": true
+   },
+```
+
+iii) Save the file.
+
+iv)  Edit the ServerConfigMetadata.json file in your local org-policy folder and create an entry for "ControlSettings.json" as below:
+
+```JSON
+   {
+    "OnlinePolicyList" : [
+        {
+            "Name" : "AzSK.json"
+        }, 
+        {
+            "Name" : "ControlSettings.json",
+        }, 
+    ]
+}
+```
+v) If you are using an already overridden ControlSettings.json, edit the ServerConfigMetadata.json file as follows:
+
+```JSON
+   {
+    "OnlinePolicyList" : [
+        {
+            "Name" : "AzSK.json"
+        }, 
+        {
+            "Name" : "ControlSettings.json",
+            "OverrideOffline" : true
+        }, 
+    ]
+}
+```
+
+vi) Rerun the policy update or setup command (the same command you ran for the first-time setup).
+
+vii) Command that will be helpful in scanning a public IP address resource:
+
+```PowerShell
+ $subscriptionId = <Your SubscriptionId>
+$resourceGroupName = <ResourceGroup Name>
+$resourceName = <ResourceName>
+$ControlId = 'Azure_PublicIpAddress_Justify_PublicIp'
+Get-AzSKAzureServicesSecurityStatus -SubscriptionId $subscriptionId `
+                -ResourceGroupNames $resourceGroupName `
+                -ResourceName $resourceName `
+                -ControlId $ControlId
+   ```
+
+
+
 
 
 
