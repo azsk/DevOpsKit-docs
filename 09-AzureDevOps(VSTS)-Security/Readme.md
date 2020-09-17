@@ -79,14 +79,19 @@ To get started, we need the following:
 	Install-AzSKADOContinuousAssurance -SubscriptionId <SubscriptionId> `
                                     [-ResourceGroupName <ResourceGroupName>] `
                                     -OrganizationName <OrganizationName> `
+                                    -ProjectName <ProjectName> `
                                     -PATToken <SecureStringPATToken> `
                                     [-Location <Location>] `
                                     [-LAWSId <WorkspaceId>] `
                                     [-LAWSSharedKey <SharedKey>] `
-                                    [-ProjectNames <ProjectNames>] `
+                                    [-AltLAWSId <WorkspaceId>] `
+                                    [-AltLAWSSharedKey <SharedKey>] `
                                     [-ExtendedCommand <ExtendedCommand>] `
+                                    [-ScanIntervalInHours <ScanIntervalInHours>] `
                                     [-CreateLAWorkspace]
 ```
+Note: 
+Updating ExtendedCommand overrides the default '-ScanAllArtifacts' behavior of CA. If you need that, please specify '-saa' switch in CA '-ExtendedCommand'
 
 Here are few basic examples of continuous assurance setup command:
 
@@ -98,17 +103,21 @@ Here are few basic examples of continuous assurance setup command:
                                     -Location <Location> `
                                     -LAWSId <WorkspaceId> `
                                     -LAWSSharedKey <SharedKey> `
-                                    -ProjectNames <ProjectNames> `
+                                    -AltLAWSId <WorkspaceId> `
+                                    -AltLAWSSharedKey <SharedKey> `
+                                    -ProjectName <ProjectName> `
                                     -ExtendedCommand <ExtendedCommand> 
 ```
 
-<b>Example 2:</b> Install CA in a custom resource group and create log analytics workspace in the same resource group
+<b>Example 2:</b> Install CA in a custom resource group and create log analytics workspace in the same resource group and trigger scan every 2 hours
 ```PowerShell
 	Install-AzSKADOContinuousAssurance -SubscriptionId <SubscriptionId> `
                                     -ResourceGroupName <ResourceGroupName> `
                                     -OrganizationName <OrganizationName> `
+                                    -ProjectName <ProjectName> `
                                     -PATToken <SecureStringPATToken> `
                                     -Location <Location> `
+                                    -ScanIntervalInHours <ScanIntervalInHours> `
                                     -CreateLAWorkspace
 
 ```
@@ -121,13 +130,15 @@ Note:
 |SubscriptionId|Subscription ID of the host subscription in which Continuous Assurance setup will be done |TRUE|None|
 |ResourceGroupName|(Optional) Name of resource group where Function app will be installed|FALSE|ADOScannerRG|
 |OrganizationName|Organization name for which scan will be performed|TRUE|None|
+|ProjectName|Project to be scanned|TRUE|None|
 |PATToken|PAT token secure string for organization to be scanned|TRUE|None|
 |Location|Location in which all resources need to be setup|FALSE|East US|
 |LAWSId|(Optional) Workspace ID of Log Analytics workspace which will be used to monitor security scan results|FALSE|None|
 |LAWSSharedKey|(Optional) Shared key of Log Analytics workspace which will be used to monitor security scan results|FALSE|None|
-|ProjectNames|(Optional) Project names to be scanned within the organization. If not provided then all projects will be scanned.|FALSE|*|
-|ExtendedCommand|(Optional) Extended command to narrow down the target scan|TRUE|FALSE|
-|CreateLAWorkspace|(Optional)S witch to create and map new Log Analytics workspace with CA setup|TRUE|FALSE|
+|AltLAWSId|(Optional) Alternate workspace ID of Log Analytics workspace which will be used to monitor security scan results|FALSE|None|
+|AltLAWSSharedKey|(Optional) Alternate shared key of Log Analytics workspace which will be used to monitor security scan results|FALSE|None|
+|ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value.|FALSE|24|
+|CreateLAWorkspace|(Optional) Switch to create and map new Log Analytics workspace with CA setup|TRUE|FALSE|
 
 
 **Step-2: Verifying that CA Setup is complete**  
@@ -185,11 +196,34 @@ Update-AzSKADOContinuousAssurance -SubscriptionId <SubscriptionId> `
                                   [-ResourceGroupName <ResourceGroupName>] `
                                   [-LAWSId <WorkspaceId>] `
                                   [-LAWSSharedKey <SharedKey>] `
+                                  [-AltLAWSId <WorkspaceId>] `
+                                  [-AltLAWSSharedKey <SharedKey>] `
                                   [-PATToken <PATToken>] `
-                                  [-ProjectNames <ProjectNames>] `
-                                  [-ExtendedCommand <ExtendedCommand>] 
+                                  [-ProjectName <ProjectName>] `
+                                  [-ExtendedCommand <ExtendedCommand>] `
+                                  [-ScanIntervalInHours <ScanIntervalInHours>] `
+                                  [-RsrcTimeStamp <RsrcTimeStamp>] `
+                                  [-ClearExtendedCommand]
 
 ```
+
+## Getting details about a Continuous Assurance setup
+
+Run the 'Get-AzSKADOContinuousAssurance' command as below.
+Result will display the current status of CA in your subscription. If CA is not working as expected, it will display remediation steps else it will display a message indicating CA is in healthy state.
+Once you follow the remediation steps, run the command again to check if anything is still missing in CA setup. Follow the remediation steps accordingly until the CA state becomes healthy.
+
+Command:
+1. Open the PowerShell ISE and login to your Azure account (using **Connect-AzAccount**).  
+2. Run the '**Get-AzSKADOContinuousAssurance**' command with required parameters given in below table. 
+
+```PowerShell
+Get-AzSKADOContinuousAssurance  -SubscriptionId <SubscriptionId> `
+                                -OrganizationName <OrganizationName> `
+                                [-ResourceGroupName <ResourceGroupName>] `
+                                [-FunctionAppName <FunctionAppName>]
+```
+
 
 ## Continuous Assurance using containers - how it works (under the covers)
 The CA feature is about tracking configuration drift. This is achieved by enabling support for running AzSK.AzureDevOps periodically.
@@ -510,6 +544,11 @@ C:\Users\UserName\AppData\Local\Microsoft\Azure.DevOpsLogs\Org_[yourOrganization
 
 Refer [doc](../02-Secure-Development#understand-the-scan-reports) for understanding the scan report and [link](./ControlCoverage) for current control coverage for Azure DevOps
 
+
+### Execute SVTs using "-UsePartialCommits" switch
+
+The Get-AzSKADOReleaseSecurityStatus command now supports checkpointing via a "-UsePartialCommits" switch. When this switch is used, the command periodically persists scan progress to disk. That way, if the scan is interrupted or an error occurs, a future retry can resume from the last saved state. This capability also helps in Continuous Assurance scans if scan gets suspended due to any unforeseen reason.The cmdlet below checks security control state via a "-UsePartialCommits" switch:
+Get-AzSKADOReleaseSecurityStatus-OrganizationName "<OrganizationName>" -ScanAllArtifacts -UsePartialCommits
 
 # Control Attestation
 
