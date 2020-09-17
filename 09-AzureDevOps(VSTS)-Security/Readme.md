@@ -795,8 +795,8 @@ Run a few AzSK.AzureDevOps cmdlets to generate events for the Log Analytics repo
 For example, you can run one or both of the following:
 
 ```PowerShell
- Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "OrgName" 
- Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "OrgName" -ProjectNames "PrjName"
+ Get-AzSKADOSecurityStatus -OrganizationName "OrgName" 
+ Get-AzSKADOSecurityStatus -OrganizationName "OrgName" -ProjectNames "PrjName"
 ```
 
 After the above scans finish, if we go into Log Analytics workspace Logs and search for 'AzSK_ADO_CL', it should show 
@@ -875,7 +875,7 @@ Running scan with custom org policy is supported from both avenues of AzSK.Azure
 
 ```PowerShell
 #Run scan cmdlet and validate if it is running with org policy
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<Organization name>" -ProjectNames "<Project name where the org policy is configured>"
+Get-AzSKADOSecurityStatus -OrganizationName "<Organization name>" -ProjectNames "<Project name where the org policy is configured>"
 ```
 
 ### 2. Using ADO security scanner extension with custom org policy
@@ -940,7 +940,7 @@ The updated policy is now on the policy server. You can ask another person to te
 
 ```PowerShell
 #Run scan cmdlet and validate if it is running with org policy
-Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "<Organization name>" -ProjectNames "<Project name where the org policy is configured>"
+Get-AzSKADOSecurityStatus -OrganizationName "<Organization name>" -ProjectNames "<Project name where the org policy is configured>"
 ```
  When the command starts, it will show an updated message as in the 
 image below:
