@@ -640,7 +640,9 @@ For example:
 #Set attestation host project and attest organization controls:
 $orgName = '<Organization name>'
 $attHotProjectName = '<Project name>'
-Get-AzSKADOSecurityStatus -OrganizationName $orgName -AttestationHostProjectName $attHotProjectName -ControlsToAttest NotAttested -ResourceTypeName Organization  
+Get-AzSKADOSecurityStatus -OrganizationName $orgName -AttestationHostProjectName $attHotProjectName -ControlsToAttest NotAttested -ResourceTypeName Organization    
+
+```
 
 ### How is the control attestation information stored and managed?
 
@@ -674,9 +676,15 @@ Get-AzSKAzureDevOpsSecurityStatus -OrganizationName $orgName -AttestationHostPro
 
 ```
 Attestation can be performed for orgnization, project, build, release, service connection and agent pool using the the below commands: 
+> **Note**: Using PolicyProject parameter you can specify the name of the project to read and write attestation details and fetch organization policy for organization.
 
 For example: 
 ```PowerShell  
+#Using PolicyProject parameter
+$orgName = '<Organization name>'
+$policyProject = '<Name of the project hosting organization policy with which the scan should run.>'
+Get-AzSKADOSecurityStatus -OrganizationName $orgName -PolicyProject $policyProject -ControlsToAttest NotAttested -ResourceTypeName Organization
+
 #To attest organization controls, run the command below:
 $orgName = '<Organization name>'
 Get-AzSKAzureDevOpsSecurityStatus -OrganizationName $orgName -ControlsToAttest NotAttested -ResourceTypeName Organization  
@@ -1132,7 +1140,12 @@ Running scan with custom org policy is supported from both avenues of AzSK.Azure
 ```PowerShell
 #Run scan cmdlet and validate if it is running with org policy
 Get-AzSKADOSecurityStatus -OrganizationName "<Organization name>" -ProjectNames "<Project name where the org policy is configured>"
+
+#Using 'PolicyProject' parameter
+Get-AzSKADOSecurityStatus -OrganizationName "<Organization name>" -PolicyProject "<Name of the project hosting organization policy with which the scan should run.>"
+
 ```
+> **Note**: Using PolicyProject parameter you can specify the name of the project hosting organization policy with which the scan should run.
 
 ### 2. Using ADO security scanner extension with custom org policy
 
