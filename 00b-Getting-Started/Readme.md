@@ -33,6 +33,11 @@ in the table below:
 
 ## Complete list of AzSK commands
 
+> **Note**: Most of the AzSK cmdlets support 3 letter acronyms (e.g., GRS, ICA, UCA, etc.). You can invoke cmdlets using these *after* AzSK has been imported in the session. So, to use any of these aliases, make sure you run 'ipmo AzSK' as the first thing in a new PS/ISE console window ('ipmo' itself is an alias for 'import-module'). Apart from cmdlets, parameters also have associated aliases. Those are documented in the individual cmdlet documentation. 
+
+> For a quick reference on aliases, you can run 'get-alias | findstr -i AzSk' within a PS/ISE console after running 'ipmo AzSK'.
+
+
 | Command (alias) | What it does |	Required Permission |
 |----|----|-----|
 |Clear-AzSKSessionState (CSS)|Command to clear AzSK session object|NA|
