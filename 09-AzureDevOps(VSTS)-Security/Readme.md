@@ -1,6 +1,6 @@
 
 > Security Scanner for Azure DevOps (ADO) was created by the Core Services Engineering & Operations (CSEO) division at Microsoft. We have shared the scanner and its documentation with the community to provide guidance for rapidly scanning, deploying and operationalizing ADO resources, across the different stages of DevOps, while maintaining controls on security and governance.
-<br>This is not an official Microsoft product – rather an attempt to share Microsoft CSEO's best practices with the community..
+<br>This is not an official Microsoft product - rather an attempt to share Microsoft CSEO's best practices with the community..
 # Azure DevOps (ADO) Security Scanner -Preview
 
 ### Contents
@@ -135,9 +135,9 @@ Note:
 |ProjectName|Project to be scanned|TRUE|None|
 |PATToken|PAT token secure string for organization to be scanned|TRUE|None|
 |Location|Location in which all resources need to be setup|FALSE|East US|
-|LAWSId|(Optional) Workspace ID of Log Analytics workspace which will be used to monitor security scan results|FALSE|None|
+|LAWSId|(Optional) Workspace ID of Log Analytics workspace which will be used to monitor security scan results|FALSE|None|
 |LAWSSharedKey|(Optional) Shared key of Log Analytics workspace which will be used to monitor security scan results|FALSE|None|
-|AltLAWSId|(Optional) Alternate workspace ID of Log Analytics workspace which will be used to monitor security scan results|FALSE|None|
+|AltLAWSId|(Optional) Alternate workspace ID of Log Analytics workspace which will be used to monitor security scan results|FALSE|None|
 |AltLAWSSharedKey|(Optional) Alternate shared key of Log Analytics workspace which will be used to monitor security scan results|FALSE|None|
 |ExtendedCommand|(Optional) Extended command to narrow down the target scan|TRUE|FALSE|
 |ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value.|FALSE|24|
@@ -244,11 +244,11 @@ To host all the Continuous Assurance artifacts
 ## Automated Scanning using ADO extension
 
 
-Security Scanner for ADO is also available as a native ADO extension that can be set up to scan your ADO artifacts periodically so as to achieve “continuous assurance”. The extension also comes packaged with widgets that you can use to visualize scan results by relevance to stakeholder groups (such as org admin, project owners, build/release owners etc.) in dashboards.
+Security Scanner for ADO is also available as a native ADO extension that can be set up to scan your ADO artifacts periodically so as to achieve "continuous assurance". The extension also comes packaged with widgets that you can use to visualize scan results by relevance to stakeholder groups (such as org admin, project owners, build/release owners etc.) in dashboards.
 
 The basic idea behind Continuous Assurance (CA) is to setup periodic security scan and if new, more secure options become available for a feature, it should be possible to detect so that an application or solution can benefit from them and notify/alert the owners concerned.
 
-Scan is performed via security scanner task in the pipeline and results can be visualized via dashboard by adding ADO security scanner widgets into the Azure DevOps project’s dashboard. Pipeline can be setup with the trigger to run periodically and provide continuous assurance.
+Scan is performed via security scanner task in the pipeline and results can be visualized via dashboard by adding ADO security scanner widgets into the Azure DevOps project's dashboard. Pipeline can be setup with the trigger to run periodically and provide continuous assurance.
 
 ### Setting up Continuous Assurance - Step by Step
 
@@ -260,18 +260,18 @@ __Prerequisite:__
 - ADO organization and project 
 - "Project Collection Administrator" or "Owner" permission to perform below task:
 
-    •	Install "ADO Security Scanner" extension
+  * Install "ADO Security Scanner" extension
 
-    •	Setup pipeline with scanner task.
+  * Setup pipeline with scanner task.
     
-    •	Create dashboard to visualize scan results
+  * Create dashboard to visualize scan results
 
 
 
-#### Install “ADO Security Scanner” extension for your Azure DevOps Organization
+#### Install "ADO Security Scanner" extension for your Azure DevOps Organization
 
 
-Extension has been published to the Visual Studio marketplace gallery under “Azure DevOps > Azure Pipeline” category. You can now install this extension from the Marketplace directly (https://marketplace.visualstudio.com/items?itemName=azsdktm.ADOSecurityScanner).
+Extension has been published to the Visual Studio marketplace gallery under "Azure DevOps > Azure Pipeline" category. You can now install this extension from the Marketplace directly (https://marketplace.visualstudio.com/items?itemName=azsdktm.ADOSecurityScanner).
 
 Refer doc [here](https://docs.microsoft.com/en-us/azure/devops/marketplace/install-extension?view=azure-devops&tabs=browser) for more about installing extensions for org
 
@@ -284,7 +284,7 @@ This part assumes that you are familiar with Azure DevOps build tasks and pipeli
 
 __Step-1__: Create a build pipeline or open an existing one.
 
-__Step-2__: Add “ADO Security Scanner” task to the pipeline
+__Step-2__: Add "ADO Security Scanner" task to the pipeline
 
 Click on "Add Tasks" and select "Azure DevOps (ADO) Security Verification".
 
@@ -384,7 +384,7 @@ __! Important__ : Make sure you **DO NOT** select  checkbox for "Grant access pe
 > **Note**: ADO Security Scanner extension enables you to leverage some of the advanced capabilities of scanner while running in adhoc mode. You could scan for only preview baseline controls in your build pipeline, or you could just scan for controls with specific severity etc. These advanced features are available to customers through ADO variables. For example, use *ExtendedCommand* variable in the pipeline with its value as *-Severity 'High'* to scan controls with high severity.
 
 
-__Step-4__: Click “Save & queue”
+__Step-4__: Click "Save & queue"
 
 ![Add Service connection](../Images/09_ADO_TriggerPipeline.png)
 
@@ -409,9 +409,9 @@ Once scan is completed as part of pipeline, results can be visualized with the h
 
 Extension mainly provides two widgets that can be added as part of dashboard
 
-__•	Org Level Security Scan Summary__: Displays org level security control evaluation summary. This dashboard helps org owners to take action based on control failures.
+__* Org Level Security Scan Summary__: Displays org level security control evaluation summary. This dashboard helps org owners to take action based on control failures.
 
-__•	Project Component Security Scan Summary__: Displays project components (Build/Release/Connections) security control evaluation summary.
+__* Project Component Security Scan Summary__: Displays project components (Build/Release/Connections) security control evaluation summary.
 
 __Steps__:
 
@@ -419,7 +419,7 @@ __Steps__:
 
     ![Create Dashboard](../Images/09_ADO_AddDashboard.png)
 
-2. Click edit or add widget > Search for “__Org Level Security Scan Summary__” > Click ‘Add’ followed by “Done Editing”
+2. Click edit or add widget > Search for "__Org Level Security Scan Summary__" > Click 'Add' followed by "Done Editing"
 
     ![Configure Widget](../Images/09_ADO_AddOrgSummaryWidget.png)
 
@@ -427,7 +427,7 @@ __Steps__:
 
     ![org Level Summary](../Images/09_ADO_OrgLevelDashboard.png)
 
-Step 1,2 & 3 needs to be repeated to add “__Project Component Security Scan Summary__”
+Step 1,2 & 3 needs to be repeated to add "__Project Component Security Scan Summary__"
 
 ![Schedule Trigger](../Images/09_ADO_ProjectComponentLevl.png)
 
@@ -808,13 +808,13 @@ The columns are described as under:
 |Verify |None |Verify |No | -NA- |User has to ratify based on manual examination of AzSK.ADO evaluation log. E.g., Project Collection Service Account list.|
 |Verify |NotAnIssue |Passed |Yes | 90 |User has to ratify based manual examination that finding does not apply as the control has been implemented in another way.|
 |Verify |WillNotFix |Exception |Yes | Based on the control severity table below|Valid security issue but a fix cannot be implemented immediately.|
-|Failed |None |Failed |No | -NA- | Control has failed but has not been attested. Perhaps a fix is in the works...|	 
+|Failed |None |Failed |No | -NA- | Control has failed but has not been attested. Perhaps a fix is in the works...|
 |Failed |NotAnIssue |Passed |Yes | 90 |Control has failed. However, the finding does not apply as the control has been implemented in another way.|
 |Failed |WillNotFix |Exception |Yes | Based on the control severity table below| Control has failed. The issue is not benign, but the user has some other constraint and cannot fix it.|
 |Error |None |Error |No | -NA- | There was an error during evaluation. Manual verification is needed and is still pending.|
 |Error |NotAnIssue |Passed |Yes | 90| There was an error during evaluation. Manual verification by user indicates that the finding does not apply as the control has been implemented in another way.|
 |Error |WillNotFix |Exception |Yes | Based on the control severity table below| There was an error during evaluation. Manually verification by the user indicates a valid security issue.|
-|Manual |None |Manual |No | -NA-| The control is not automated and has to be manually verified. Verification is still pending.| 
+|Manual |None |Manual |No | -NA-| The control is not automated and has to be manually verified. Verification is still pending.|
 |Manual |NotAnIssue |Passed |Yes | 90| The control is not automated and has to be manually verified. User has reviewed the security concern and implemented the fix in another way.|
 |Manual |WillNotFix |Exception |Yes | Based on the control severity table below| The control is not automated and has to be manually verified. User has reviewed and found a security issue to be fixed.|
 
@@ -925,7 +925,7 @@ Run the commands below in PS after replacing the various '<>' with
     $ADOViewName = '<unique_name_for_your_AzSK.ADO_view>' #This will identify the tile for AzSK.ADO view in Log Analytics workspace. E.g., MyApp-View-1
     $dashboardType = '<View/Workbook>' #Type of dashboard you want to deploy in log analytics workspace. 
 
-    #This command will deploy the AzSK.ADO view in the Log Analytics workspace. Happy monitoring!  
+    #This command will deploy the AzSK.ADO view in the Log Analytics workspace. Happy monitoring!
     Install-AzSKADOMonitoringSolution -LAWSSubscriptionId $lawsSubId `
 			-LAWSResourceGroup $lawsRGName `
 			-WorkspaceId $lawsId `
@@ -1452,7 +1452,7 @@ Below is the typical schema for each control inside the feature json
         "AuthZ"
     ], // You can decorate your control with different set of tags, that can be used as filters in scan commands.
     "Enabled": true ,  //Defines whether the control is enabled or not.
-    "Rationale": "This ensures pipeline execution happens using a token scoped to the current project abiding with principle of least privilege." //Provides the intent of this control.
+    "Rationale": "This ensures pipeline execution happens using a token scoped to the current project abiding with principle of least privilege." //Provides the intent of this control.
 }
  ```  
     
@@ -1516,7 +1516,7 @@ class SubscriptionCore: SVTBase
 	{
 	  ProjectExt([string] $subscriptionId, [SVTResource] $svtResource): Base($subscriptionId, $svtResource) 
 	  {
- 
+
 	  }
 	}
    ```
@@ -1675,7 +1675,7 @@ The switch *-AutoBugLog*  takes up three values that specify which subset of con
 
 ## Setting up host project for organization specific controls
 
-All organization control failures are logged in the work items of the host project. This host project is the same one which is used in the attestation process. If you haven't configured host project during attestation, you can do it during bug logging as well using the flag *–AttestationHostProjectName*. Read about attestation [here](Readme.md#control-attestation-1).
+All organization control failures are logged in the work items of the host project. This host project is the same one which is used in the attestation process. If you haven't configured host project during attestation, you can do it during bug logging as well using the flag *-AttestationHostProjectName*. Read about attestation [here](Readme.md#control-attestation-1).
 > **Note:** Attestation host project can only be set once, so this project will be used for both attestation and bug logging and can't be updated later.
 
 ```Powershell
@@ -1706,7 +1706,7 @@ Get-AzSKADOSecurityStatus -OrganizationName "<OrganizationName>" -ProjectNames "
 
 The user can control the area and iteration paths, where the bugs are to be logged, using two methods:
 
- 1. **Specifying paths using scan parameters :** *-AreaPath* and *–IterationPath* are the two scan parameters to identify area and iteration paths respectively. These can be used along with the *-AutoBugLog* switch in a scan command.
+ 1. **Specifying paths using scan parameters :** *-AreaPath* and *-IterationPath* are the two scan parameters to identify area and iteration paths respectively. These can be used along with the *-AutoBugLog* switch in a scan command.
   See the following examples:
 ```Powershell
 #Specifying area and iteration paths
@@ -1877,4 +1877,4 @@ Run below command to get information about,
 Below is the sample output:
 
 ![GADI_HostInfo_Summary_PS](../Images/GADI_HostInfo.png) 
-[Back to top…](Readme.md#contents)
+[Back to top_](Readme.md#contents)
