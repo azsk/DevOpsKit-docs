@@ -11,7 +11,7 @@
   - [Automated Scanning using Azure functions](Readme.md#Automated-Scanning-using-Azure-functions)
   - [Automated Scanning using ADO extensionn](Readme.md#Automated-Scanning-using-ADO-extension)
 
- ### [AzSK.AzureDevOps PowerShell module](Readme.md#azskazuredevops-powershell-module-1)
+ ### [AzSK.ADO PowerShell module](Readme.md#azskazuredevops-powershell-module-1)
   -  [Installation Guide](Readme.md#installation-guide)
   -  [Scan your Azure DevOps resources](Readme.md#scan-your-azure-devops-resources)
  
@@ -23,12 +23,12 @@
 - [Permissions required for attesting controls](Readme.md#permissions-required-for-attesting-controls) 
 - [Attestation expiry](Readme.md#attestation-expiry)  
 
-### [Customizing AzSK.AzureDevOps for your project](Readme.md#customizing-azskazuredevops-for-your-project-1)
+### [Customizing AzSK.ADO for your project](Readme.md#customizing-azskazuredevops-for-your-project-1)
 - [Overview](Readme.md#Overview-2)
 - [Setting up org policy](Readme.md#setting-up-org-policy)  
 - [Consuming custom org policy](Readme.md#consuming-custom-org-policy)  
 - [Modifying and customizing org policy](Readme.md#modifying-and-customizing-org-policy)  
-- [Advanced usage of org policy (extending AzSK.AzureDevOps)](Readme.md#advanced-usage-of-org-policy-extending-azskazuredevops) 
+- [Advanced usage of org policy (extending AzSK.ADO)](Readme.md#advanced-usage-of-org-policy-extending-azskazuredevops) 
 - [Frequently Asked Questions](Readme.md#frequently-asked-questions)  
 
 ### [Auto Bug Logging](Readme.md#Overview-3)
