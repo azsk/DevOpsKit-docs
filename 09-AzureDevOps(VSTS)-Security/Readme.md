@@ -324,12 +324,12 @@ Entitlements
 </td><td>Read</tr>
 
 <tr><td>
-Extensions
-</td><td>Read</tr>
-
-<tr><td>
 Extension Data
 </td><td>Read & write</tr>
+
+<tr><td>
+Extensions
+</td><td>Read</tr>
 
 <tr><td>
 Graph
