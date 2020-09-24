@@ -302,9 +302,11 @@ The "ADO Security Scanner" task starts showing in the "Run on Agent" list and di
 <head>
 
 </head><body>
-<H2> Customizing your PAT with minimum required privileges for Azure DevOps Connection</H2><table><tr><th>Scope</th><th>Privilege</th></tr>
+<H2> Customizing your PAT with minimum required privileges for Azure DevOps Connection</H2>
 
 Here is a scope-wise list of minimum privileges that needs to be assigned to your PAT to ensure a smooth experience of the security scan.
+
+<table><tr><th>Scope</th><th>Privilege</th></tr>
 <tr><td>
 Agent Pools
 </td><td>Read</tr>
