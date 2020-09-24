@@ -358,6 +358,10 @@ Secure Files
 Service Connections
 </td><td>Read</tr>
 
+tr><td>
+Task Groups
+</td><td>Read</tr>
+
 <tr><td>
 Tokens
 </td><td>Read & manage</tr>
@@ -369,6 +373,10 @@ User Profile
 <tr><td>
 Variable Groups
 </td><td>Read</tr>
+
+<tr><td>
+Work Items
+</td><td>Read & Write</tr>
 
 </table>
 <table>
