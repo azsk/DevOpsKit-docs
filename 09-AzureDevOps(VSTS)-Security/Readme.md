@@ -376,7 +376,7 @@ Variable Groups
 
 <tr><td>
 Work Items
-</td><td>Read & Write</tr>
+</td><td>Read & write</tr>
 
 </table>
 <table>
