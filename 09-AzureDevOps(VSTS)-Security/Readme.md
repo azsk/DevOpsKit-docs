@@ -483,7 +483,7 @@ The users can leverage the auto update feature which has been introduced from th
 As shown in the image above, user can go with update by running the command below:
 
 ```PowerShell
-  Set-AzSKPolicySettings -AutoUpdate On|Off
+  Set-AzSKADOPolicySettings -AutoUpdate On|Off
 ```
 
 User needs to close and reopen a fresh session once the command is run.
@@ -1056,7 +1056,7 @@ Run the below in a PS session (this assumes that you have the latest AzSK.ADO in
  $wsID = 'workspace_ID_here'       #See pictures in [A] above for how to get wsId and shrKey
  $shrKey = 'workspace_PrimaryKey_here'
 	
- Set-AzSKMonitoringSettings -WorkspaceID $wsID -SharedKey $shrKey
+ Set-AzSKADOMonitoringSettings -WorkspaceID $wsID -SharedKey $shrKey
 ```
 Close the current PS window and start a new one. (This is required for the new settings to take effect.)
 After this, all AzSK.ADO cmdlets, SVTs, etc. run on the local machine will start sending events (outcomes of 
