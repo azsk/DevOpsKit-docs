@@ -1903,4 +1903,5 @@ Below is the sample output:
 
 ### Support
 - For any other issues or feedback please drop a mail to <a href="mailto:azskadosup@microsoft.com">ADO Scanner Support</a>
+
 [Back to top_](Readme.md#contents)
