@@ -1,21 +1,21 @@
-## 200915 (AzSK v.4.13.0)
+## 201015 (AzSK v.4.14.0)
 
 ### Feature updates
 
 *   CA SPN old credentials cleanup:
 
-    *	When the below command is run to renew CA certificate, a new workflow will offer to delete existing old credentials:
+    *	In the previous sprint, we had added support for deleting older certificate credentials when renewing the certificate for AzSK CA SPN. To allow users to request just deletion of older credentials (without necessarily renewing the current credential), we have added the -DeleteOldCredentials switch as under:
+    
     ```Powershell
-    Update-AzSKContinuousAssurance –sid $sub -RenewCertificate
+        Update-AzSKContinuousAssurance –sid $sub -DeleteOldCredentials
     ```
-
-    *   The ```-SkipCertificateCleanup``` switch may be used to skip deletion of older certificates.
 
 
 *	Security scanner for Azure DevOps (ADO)/ADO Security Scanner extension:
     
-    *	The key highlights for the Azure DevOps (ADO) security scanner release are (a) durable check-pointing for Azure hosted continuous assurance scans, (b) interfacing bug logging feature with service tree data and (c) renaming the module/extension/cmdlets/controls/features etc. from ‘AzureDevOps’ to ‘ADO’. With this release, ADO scanner is ready for CSEO-wide deployment.
+    *	The key highlights for the Azure DevOps (ADO) security scanner release are support for (a) setting up Azure-hosted continuous assurance scans with Owner access only at the target RG level, (b) scanning all resources associated with a specific service and (c) various admin control improvements. This release has been deployed for CSEO-wide consumption and a dashboard is available at https://aka.ms/adoscanner/dashboard.
     *   [Click here](https://idwebelements/GroupManagement.aspx?Group=azskadop&Operation=join) to subscribe to get detailed feature updates of ADO security scanner.
+
 
 
 * Security Verification Tests (SVTs):
@@ -31,26 +31,42 @@
 
 
 * Org policy/external user updates (for non-CSEO users):
-    * N/A.
+    *   Added support to enable/disable anonymous usage telemetry for CA and CICD scans.
+    *   For CA, this can be done by using -UsageTelemetryLevel flag as below:  
+        
+        ```Powershell
+        Update-AzSKContinuousAssurance –sid $sub -UsageTelemetryLevel None
+        ```
+
+    *	For CICD, a ‘UsageTelemetryLevel’ pipeline variable can be set to ‘None’ in the pipeline         definition.
+    *	For either case, the value Anonymous can be used to re-enable usage telemetry.
+
+    *	Note that, in local usage mode, this facility was always available via the command below:
+    
+        ```Powershell
+        Set-AzSKUsageTelemetryLevel -Level None
+         ```
 
 Note: The next few items mention features from recent releases retained for visibility in case you missed those release announcements:
 
 *	Management of DevOps Kit-based AAD applications:
     *	You can list all the DevOps Kit-based service principals (used in continuous assurance) that are owned by you via the Get-AzSKInfo cmd marking those that are actively used for CA scans.
-    ```Powershell
-        Get-AzSKInfo –InfoType SPNInfo
-    ```
+    
+        ```Powershell
+         Get-AzSKInfo –InfoType SPNInfo
+          ```
 
 *	Security Scanner for Azure DevOps (ADO) 
     *	You can try the scan cmdlet using:
-    ```Powershell
-    #ADO scan cmdlet is in a separate module called AzSK.AzureDevOps!
-    Install-Module AzSK.AzureDevOps -Scope CurrentUser -AllowClobber    
-    Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "MicrosoftIT"`
+
+        ```Powershell
+        #ADO scan cmdlet is in a separate module called AzSK.AzureDevOps!
+        Install-Module AzSK.AzureDevOps -Scope CurrentUser -AllowClobber    
+        Get-AzSKAzureDevOpsSecurityStatus -OrganizationName "MicrosoftIT"`
                                         -ProjectNames "OneITVSO"`
                                         -BuildNames "build_name_here"`
                                         -ReleaseNames "release_name_here"  
-    ```
+         ```
 
 *	Credential Hygiene helper cmdlets  
     * ```New-AzSKTrackedCredential``` to onboard a credential for tracking via DevOps Kit. You can set the reminder period (in days) for the credential.
@@ -69,13 +85,14 @@ Note: The next few items mention features from recent releases retained for visi
 *	(Preview) Security Scan for Azure Active Directory (AAD)
     *	You can scan security controls for your AAD tenant (as either an admin or even as a regular user) using the DevOps Kit AAD Security Scan module.
     *	Use following steps:
-        ```Powershell
-        # AAD scan cmdlets are packaged as a separate module (AzSK.AAD)
-        Install-Module AzSK.AAD -Scope CurrentUser -AllowClobber
-        Import-Module AzSK.AAD
-        Get-AzSKAADSecurityStatusTenant    # check the tenant (admin)
-        Get-AzSKAADSecurityStatusUser      # check objects you own (user)
-        ``` 
+
+            ```Powershell
+            # AAD scan cmdlets are packaged as a separate module (AzSK.AAD)
+            Install-Module AzSK.AAD -Scope CurrentUser -AllowClobber
+            Import-Module AzSK.AAD
+            Get-AzSKAADSecurityStatusTenant    # check the tenant (admin)
+            Get-AzSKAADSecurityStatusUser      # check objects you own (user)
+            ``` 
     *	Caveats: 
         * Do not run these in the same PS session as AzSK. Start a new PS console.
         * Az- modules require .Net Framework v4.7.2.
@@ -85,65 +102,36 @@ Note: The next few items mention features from recent releases retained for visi
 
 ### Other improvements/bug fixes
 * Subscription Security:
-    *   Added support for configuring standard pricing tiers for all the resource types supported in Azure Security Center (ASC) via the ```-SetASCTier``` switch in the Set-AzSKAzureSecurityCenterPolicies cmd.
-    ```Powershell
-    Set-AzSKAzureSecurityCenterPolicies -SubscriptionId $sub -SetASCTier
-    ```
-
-*	Added four controls to strengthen the subscription RBAC hygiene:
-    *	```Azure_Subscription_Cleanup_Deleted_Object_Access``` control checks for deleted identities having access on subscription.
-    *	```Azure_Subscription_Remove_Access_For_Orphaned_Applications``` control checks for orphaned applications (without any owner) having access on subscription.
-    *	```Azure_Subscription_Check_Indirect_Access_Via_Applications``` control checks for applications with privileged roles but their owners do not have any access in subscription.
-    *	```Azure_Subscription_Review_Inactive_Identities``` control checks for identities that have been inactive in the subscription over the past 90 days.
+    *   NA
     
-    Note: These controls require owner access to subscription and will not be evaluated via continuous assurance.
-
 * SVTs: 
-    *	In keeping with the change in frequency of SDL cycle, attestation expiry period of the below controls has been updated to 180 days. 
-        *	Azure_APIManagement_AuthN_Verify_Delegated_Authentication
-        *	Azure_AppService_AuthN_Use_AAD_for_Client_AuthN
-        *	Azure_Automation_DP_Use_Encrypted_Variables
-        *	Azure_APIManagement_DP_Dont_Checkin_Secrets_In_Source
-        *	Azure_CloudService_AuthN_Use_AAD_for_Client_AuthN
-        *	Azure_ContainerInstances_AuthZ_Container_Segregation
-        *   Azure_KeyVault_AuthN_Dont_Share_KeyVault_Unless_Trust
-        *   Azure_LoadBalancer_NetSec_Justify_PublicIPs
-        *	Azure_NotificationHub_AuthZ_Dont_Use_Manage_Access_Permission
-        *	Azure_VirtualMachine_NetSec_Justify_PublicIPs  
-    *	Fixed an issue in attestation feature where, for some controls, attestation drift was occurring if the current state of the control was a subset of the attested state.
+    *	Going forward, control attestation using older modules will be blocked in non-SAW environments.
 
 * Controls:
-    *	Fixed an issue in the AAD authentication control for APIM which was resulting in error state due to a recent change in the underlying PG API.
-    *	Control to check for resource locks on ExpressRoute-connected virtual network RG will now pass if either ‘read-only’ or ‘do-not-delete’ lock is configured. Earlier, the control used to check for only the read-only lock.
-    *   AAD authentication control for AKS will also support the new AKS-managed authentication.
-    *	Management port control for AKS will now check for open ports in both VM and VMSS-based backend pools.
-    *	The Azure_CDN_DP_Enable_Http control has been updated to check for both temporary and permanent redirect rules.
-    *	Antimalware and vulnerability solution controls for VM will now pass if the equivalent ASC assessment is ‘NotApplicable’.
-    *	AAD authentication control for Linux-based function apps will pass if no HTTP trigger-based functions are defined in the app.
-
+    *	Fixed an issue in the TLS control for APIM which was earlier reporting incorrect result for resources in consumption tier.
+    *   Fixed an issue in Azure_CDN_DP_Enable_HTTPS control which was earlier resulting into error state for ‘Verizon’ and ‘Akamai’ options.
 
 * Privileged Identity Management (PIM):
    *	N/A.
          
-
 *	CICD: 
     *	N/A.
 
-
 * ARM Template Checker:
-    * N/A.
+    *    N/A.
 
 * CA:
-    *	Fixed an issue in the Get-AzSKContinuousAssurance which was previously throwing an exception when scanned with reader permissions on the subscription. 
-
+    *	Added support to display the currently in-use service principal name in the output of ```Get-AzSKContinuousAssurance``` command.
 
 * In-cluster CA:
-    * N/A. 
+    *    N/A. 
 
 * Log Analytics:
-    * N/A.
+    *   Added support for the -Force switch so that Log Analytics based monitoring solution can be installed using ```Install-AzSKMonitoringSolution``` without user interaction/consent if a view with the same name already exists.
 
 * Others:
-    *   Fixed bugs in: 
-        (a) Get-AzSKInfo -InfoType ControlInfo and
-        (b) Get-AzSKControlStatus -FilterTags which was previously resulting into error due to internal caching of policy files.
+    *   Fixed a bug in ```Get-AzSKInfo -InfoType ControlInfo``` when run with -UseBaselineControls/-UsePreviewBaselineControls/-FilterTags flags was previously resulting into error due to internal caching of policy files.
+    *   Behavior of ```Get-AzSKInfo -InfoType ControlInfo``` has been rectified to report information of public IP address controls only when an org has enabled their evaluation.
+    *   Fixed an issue in credential hygiene cmdlets where alerts for credentials nearing expiry were not triggered due to change in the underlying product API.
+    *   ```Get-AzSKExpressRouteNetworkSecurityStatus``` command will not throw exception even if no control ids are specified.
+
