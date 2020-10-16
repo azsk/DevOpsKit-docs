@@ -1,7 +1,10 @@
 
-> Security Scanner for Azure DevOps (ADO) was created by the Core Services Engineering & Operations (CSEO) division at Microsoft. We have shared the scanner and its documentation with the community to provide guidance for rapidly scanning, deploying and operationalizing ADO resources, across the different stages of DevOps, while maintaining controls on security and governance.
+> Security Scanner for Azure DevOps (ADO) was created by the Core Services Engineering & Operations (CSEO) division at Microsoft. We have shared the scanner and its documentation with the community to provide guidance for rapidly scanning, deploying and operationalizing ADO resources, across the different stages of DevOps, while maintaining visibility of security and help drive governance.
 <br>This is not an official Microsoft product - rather an attempt to share Microsoft CSEO's best practices with the community..
-# Azure DevOps (ADO) Security Scanner -Preview
+
+> **Important** If you are from Microsoft CSEO, please make sure you review instructions on using ADO Scanner at https://aka.ms/adoscanner/cseo first.
+
+# Azure DevOps (ADO) Security Scanner
 
 ### Contents
 
@@ -48,6 +51,7 @@
 
 ### [Support](Readme.md#Support-1)
 
+## Overview
 Security Scanner for Azure DevOps (ADO) helps you keep your ADO artifacts such as various org/project settings, build/release configurations, service connections, agent pools, etc. configured securely. You can run the ADO Security Scanner standalone in a PowerShell console or in an ADO pipeline via a marketplace extension.
 
 Security Scanner for Azure DevOps (ADO) performs security scanning for core areas of Azure DevOps like Organization, Projects, Users, Pipelines (Build & Release), Connections and Agent Pools. 
