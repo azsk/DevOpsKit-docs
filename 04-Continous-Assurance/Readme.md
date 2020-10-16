@@ -277,6 +277,7 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
     [-FixModules] `
     [-RenewCertificate] `
     [-SkipCertificateCleanup]`
+    [-DeleteOldCredentials]`
     [-Remove <LogAnalyticsSettings/AltLogAnalyticsSettings/WebhookSettings/ScanOnDeployment"]
 ```
 
@@ -298,6 +299,7 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 |FixModules|Use this switch in case Az.Automation/Az.Accounts module(s) extraction fails in CA Automation Account.|FALSE|None||
 |RenewCertificate|Renews certificate credential of CA SPN if the caller is Owner of the AAD Application (SPN). If the caller is not Owner, a new application is created with a corresponding SPN and a certificate owned by the caller. CA uses the updated credential going forward.<br>It will offer workflow  to delete existing old credentials|FALSE|None||
 |SkipCertificateCleanup|This switch may be used to skip deletion of older certificates associated with CA SPN.|FALSE|None||
+|-DeleteOldCredentials|This switch may be used for deletion of older certificates associated with CA SPN without renewing a certificate.|FALSE|None||
 |ScanOnDeployment|CA scan can be auto-triggered upon resource deployment.Updating CA with this flag will make sure that the Resource Group in which resource is deployed will be scanned.|FALSE|None||
 |Remove|Use this switch to clear previously set LogAnalytics, AltLogAnalytics,Webhook settings from CA Automation Account or to unregister from scan on deployment mode|False|None||
 
