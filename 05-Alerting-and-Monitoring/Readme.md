@@ -125,8 +125,7 @@ Run the commands below in PS after replacing the various '<>' with
     Install-AzSKMonitoringSolution -LAWSSubscriptionId $lawsSubId `
                     -LAWSResourceGroup $lawsRGName `
                     -WorkspaceId $lawsId `
-                    -ViewName $azSkViewName `
-					[-Force]
+                    -ViewName $azSkViewName [-Force]
 ```
 
 The table below explains the different parameters used by Install-AzSKMonitoringSolution cmdlet:
