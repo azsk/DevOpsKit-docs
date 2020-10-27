@@ -164,7 +164,7 @@ Install-AzSKTenantSecuritySolution `
 
 |Resource Name|Resource Type|Description|
 |----|----|----|
-|AzSK-AzTS-MetadataAggregator-xxxxx|Function App| Contains functions to gets inventory of subscription, baseline controls, RBAC and queue subscription for scan |
+|AzSK-AzTS-MetadataAggregator-xxxxx|Function App| Contains functions to get inventory (subscription, baseline controls and RBAC) and queue subscription for scan |
 |AzSK-AzTS-WorkItemProcessor-xxxxx|Function App | Contains function to scan subscription with baseline control |
 |AzSK-AzTS-LAWorkspace-xxxxx|Log Analytics workspace| Used to store scan events, inventory, subscription scan progress details|
 |AzSK-AzTS-InternalMI|Managed Identity | Internal MI identity used to access LA workspace and storage for sending scan results|
@@ -174,7 +174,7 @@ Install-AzSKTenantSecuritySolution `
 
 
 
- **3:** Verify below three Functions got created
+ **3:** Verify below Functions got created
 
  **i) MetadataAggregator Functions:** 
 
@@ -197,8 +197,6 @@ Install-AzSKTenantSecuritySolution `
  
  Read subscription list from queue and scan for Azure control plane security controls.
 
- Go to resource 'AzSKTSWorkItemScheduler-xxxxx' --> 'Webjobs' Properties -->Verify '0.2.JobProcessor'. 
- <br/> By default this job is scheduled to run every 30 minutes through out the day.
 	
 ![SchedulerWebjobs](../Images/12_TSS_Scheduler_Webjobs.png)
 
