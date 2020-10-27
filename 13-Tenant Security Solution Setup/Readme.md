@@ -1,27 +1,27 @@
-# Tenant Security Solution (TSS) [In Preview]
+# Azure Tenant Security Solution (AzTS) [In Preview]
 
-## Tenant Security
+## Azure Tenant Security
 ### Contents
 - [Overview](Readme.md#overview)
-- [Why Tenant Security Solution?](Readme.md#why-tenant-security-solution)
-- [Setting up Tenant Security Solution - Step by Step](Readme.md#setting-up-tenant-security-solution---step-by-step)
+- [Why Azure Tenant Security Solution?](Readme.md#why-tenant-security-solution)
+- [Setting up Azure Tenant Security Solution - Step by Step](Readme.md#setting-up-tenant-security-solution---step-by-step)
 - [Tenant Security Solution - under the covers (how it works)](Readme.md#tenant-security-solution---under-the-covers-how-it-works)
 - [Create compliance and monitoring solutions](Readme.md#create-security-compliance-monitoring-solutions)
 - [Feedback](Readme.md#feedback)
 
 -----------------------------------------------------------------
 ## Overview 
-The Tenant Security Solution (TSS) from the AzSK team can be used to obtain visibility to cloud subscriptions and resource configuration across multiple subscriptions in an enterprise environment. The AzSK TSS is a logical progression of DevOps Kit which helps us move closer to an implementation of cloud security compliance solution using native security capabilities in Azure platform that are available today. Functionally, it is similar to running AzSK Continuous Assurance (CA) in central-scan mode.
+The Azure Tenant Security Solution (AzTS) from the AzSK team can be used to obtain visibility to cloud subscriptions and resource configuration across multiple subscriptions in an enterprise environment. The AzTS is a logical progression of DevOps Kit which helps us move closer to an implementation of cloud security compliance solution using native security capabilities in Azure platform that are available today. Functionally, it is similar to running AzSK Continuous Assurance (CA) in central-scan mode.
 
-## Why Tenant Security Solution?
-The Tenant Security Solution was created with the following explicit objectives (some of which were harder to accomplish using the existing Automation-based Continuous Assurance approach):
+## Why Azure Tenant Security Solution?
+The AzTS Solution was created with the following explicit objectives (some of which were harder to accomplish using the existing Automation-based Continuous Assurance approach):
  * Ability to scan large number of subscriptions in a central scan model in a cost-effective and time-efficient manner
  * Being able to scale scanning capability up or down without externally imposed constraints (e.g., runbook memory, runtime limits)
  * Speeding up our effort to transition to native features (being able to respond to changes in Azure more rapidly and deploy modifications to controls)
  * Enable incremental transition of our controls from custom code to Azure/ASC policy-based approach (using ASC/policy-based controls where available today and continue to migrate as more controls become available)
 
-## Setting up Tenant Security Solution - Step by Step
-In this section, we will walk through the steps of setting up Tenant Security Solution 
+## Setting up Azure Tenant Security Solution - Step by Step
+In this section, we will walk through the steps of setting up AzTS Solution
 
 To get started, we need the following prerequisites:
 
@@ -50,7 +50,7 @@ Install-Module -Name Az -AllowClobber -Scope CurrentUser -repository PSGallery
 Install-Module -Name Az.ManagedServiceIdentity -AllowClobber -Scope CurrentUser -repository PSGallery
 ```
 
-**4.**  Create central scanning user identity and provide reader access to subscriptions on which scan needs to be performed.
+**4.**  Create central scanning user-assigned managed identity and provide reader access to subscriptions on which scan needs to be performed.
 
 i) You can create user identity with below PowerShell command or Portal steps [here](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-portal)
 
@@ -58,19 +58,19 @@ ii) Assign reader access on subscriptions to be scanned. If subscriptions are or
 
 ``` Powershell
 
-# Step 1: Set context to subscription where central scan identity needs to be created
+# Step 1: Set context to subscription where central scan user-assigned managed identity needs to be created
 Set-AzContext -SubscriptionId <MIHostingSubId>
 
 # Step 2: Create User Identity 
 $UserAssignedIdentity = New-AzUserAssignedIdentity -ResourceGroupName <MIHostingRG> -Name <USER ASSIGNED IDENTITY NAME>
 
-# Step 3: Keep resource id generated for user identity using below command. This will be used in installation parameter
+# Step 3: Keep resource id generated for user identity using below command. This will be used in AzTS Soln installation
 
 $UserAssignedIdentity.Id
 
 # Step 4: Assign user identity with reader role on all the subscriptions which needs to be scanned. 
-# Below command help to assign access to single subscription. 
-# You need to repeat below step for all subscription
+# Below command help to assign access to single subscription or MG. 
+# You need to repeat below step for all subscription or assign role at MG level
 
 New-AzRoleAssignment -ApplicationId $UserAssignedIdentity.ClientId -Scope <SubscriptionScope or ManagedGroupScope> -RoleDefinitionName "Reader"
 
@@ -79,7 +79,7 @@ New-AzRoleAssignment -ApplicationId $UserAssignedIdentity.ClientId -Scope <Subsc
 
 **5.** Owner access on hosting subscription
 
-The user setting up Tenant Security Solution needs to have 'Owner' access to the subscription.  
+The user setting up Tenant Security Solution needs to have 'Owner' access to the subscription.
 
 **6.** Download and extract deployment zip content from [here](./TemplateFiles/Deploy.zip) to your local machine.  You may have to unblock the content. Below command will help to unblock files. 
 
@@ -109,7 +109,7 @@ Set-AzContext -SubscriptionId <SubscriptionId>
 
 CD "<LocalExtractedFolderPath>\Deploy"
 
-. ".\AzSKTSSetup.ps1"
+. ".\AzTSSetup.ps1"
 
 # Note: Make sure you copy  '.' present at the start of line.
 
