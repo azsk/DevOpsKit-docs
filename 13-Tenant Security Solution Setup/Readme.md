@@ -138,12 +138,12 @@ Install-AzSKTenantSecuritySolution `
 
 |Param Name|Description|Required?
 |----|----|----|
-|SubscriptionId|Hosting subscription id where Tenant solution will be deployed |TRUE|
+|SubscriptionId|Hosting subscription id where Azure Tenant solution will be deployed |TRUE|
 |ScanHostRGName| Name of ResourceGroup where setup resources will be created |TRUE|
 |ScanIdentityId| Resource id of user managed identity used to scan subscriptions  |TRUE|
 |Location|Location where all resources will get created |TRUE|
 |Verbose| Switch used to output detailed log |FALSE|
-|EnableScaleOutRule| Switch used to deploy auto scaling rule for scanning evironment |FALSE|
+
 
 
 >**Note:** Completion of this one-time setup activity can take up to 5 minutes and it will look like below.
@@ -164,92 +164,58 @@ Install-AzSKTenantSecuritySolution `
 
 |Resource Name|Resource Type|Description|
 |----|----|----|
-|AzSKTSWorkItemProcessor-xxxxx|App Service| Contains inventory and subscription work item processor job. More details [below] |
-|AzSKTSWorkItemScheduler-xxxxx|App Service | Contains work item (subscription) scheduler job. More details [below] |
-|AzSKTSLAWorkspace-xxxxx|Log Analytics workspace| Used to store scan events, inventory, subscription scan progress details|
-|AzSKTSProcessorMI-xxxxx|Managed Identity | Internal MI identity used to access LA workspace and storage for sending scan results|
-|AzSKTSServicePlan| App Service Plan| App service plan used for jobs|
+|AzSK-AzTS-MetadataAggregator-xxxxx|Function App| Contains functions to gets inventory of subscription, baseline controls, RBAC and queue subscription for scan |
+|AzSK-AzTS-WorkItemProcessor-xxxxx|Function App | Contains function to scan subscription with baseline control |
+|AzSK-AzTS-LAWorkspace-xxxxx|Log Analytics workspace| Used to store scan events, inventory, subscription scan progress details|
+|AzSK-AzTS-InternalMI|Managed Identity | Internal MI identity used to access LA workspace and storage for sending scan results|
+|AzSK-AzTS-AppServicePlan | Function App Service Plan| Function app service plan|
 |azsktsstoragexxxxx|Storage Account| Used to store the daily results of subscriptions scan|
+|AzSK-AzTS-AppInsights |App Insight| Used to collect telemetry logs from functions |
 
 
 
- **3:** Verify below three jobs got created
+ **3:** Verify below three Functions got created
 
- **i) Inventory Job:** 
+ **i) MetadataAggregator Functions:** 
 
+![ProcessorWebjobs](../Images/12_TSS_Processor_WebJobs.png)
+
+
+  **a)** ATS_1_SubscriptionInvProcessor:
   Responsible to fetch details about all the subscriptions that has been granted access as Reader using central MI. All these subscriptions will be fetched by the job and persisted into LA. These subscriptions are scanned automatically by the consecutive jobs.
 
-  
-  To see the job, you can go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.1.Inventory' <br />By Default this job is scheduled to run once every day.
+  **b)** ATS_2_BaselineControlsInvProcessor:
+  Responsible to push baseline controls metadata to LA and storage account
     
-  ![ProcessorWebjobs](../Images/12_TSS_Processor_WebJobs.png)
-
- **ii) Work Item Scheduler Job:** 
- 
+  **c)** ATS_3_SubscriptionRBACProcessor
+  Collects RBAC details of subscription to be scanned. RBAC collected used to scan the control like "Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities" 
+  
+   **d)** ATS_4_WorkItemScheduler: 
  Responsible to queue up subscriptions as workitems for scanning. It also reconciles the errored subscriptions through retries in the end. By default it would retry to scan for 5 times for each error subscription. IF there is nothing to process for the day, it would simply ignore the run.
 
+ **ii) WorkItemProcessor Functions:** 
+ 
+ Read subscription list from queue and scan for Azure control plane security controls.
 
  Go to resource 'AzSKTSWorkItemScheduler-xxxxx' --> 'Webjobs' Properties -->Verify '0.2.JobProcessor'. 
  <br/> By default this job is scheduled to run every 30 minutes through out the day.
 	
 ![SchedulerWebjobs](../Images/12_TSS_Scheduler_Webjobs.png)
 
- **iii) Work Item Processor Job:** 
- 
- Read subscription list from queue and scan for Azure control plane security controls. 
- 
- Go to resource 'AzSKTSWorkItemProcessor-xxxxx' --> 'Webjobs' Properties --> Verify '0.3.WorkItemProcessorJob'
- <br /> By default this job is scheduled to run for two hours to scan subscriptions. (Refer screenshot from Job01)
 
-
-> **Note:** Jobs are scheduled to run from UTC 00:00 time. You can also run the jobs manually by trigger jobs 01, 02 and 03 in sequence with an interval 10 mins in between. After Job 3 completes processing the messages in the queue, you will start seeing scan results in storage account and LA workspace.  
+> **Note:** Functions are scheduled to run from UTC 00:00 time. You can also run the functions manually by triggering ATS_1_SubscriptionInvProcessor, ATS_2_BaselineControlsInvProcessor, ATS_3_SubscriptionRBACProcessor and ATS_4_WorkItemScheduler in sequence with an interval 10 mins in between. After work item scheduler completes pushing the messages in the queue, WorkItemProcessor will get autotrigged start processing scan and push scan results in storage account and LA workspace.  
 
 **Log Analytics Visualization**
 
-For understanding the collected data, use the querying and visualization capabilities provided by Log Analytics. To start, in your **Log Analytics workspace** left navigation, select **Logs**. The data collected can be viewed under **Custom Logs**.
-
-![Log Analytics Visualization: View Logs](../Images/13_TSS_LAWS_View_Logs.png)
-
-
-Log Analytics opens with a new query tab in the Query editor where you can run the following query as shown below:
-
-``` KQL
-
-AzSK_ControlResults_CL
-| where TimeGenerated > ago(2d) and JobId_d == toint(format_datetime(now(), 'yyyyMMdd'))
-| summarize arg_max(TimeGenerated,*) by ControlName_s, ResourceId = tolower(ResourceId)
-| project ControlName_s, ResourceName_s, VerificationResult_s, StatusReason_s
-
-```
-
-![Log Analytics Visualization: Query Logs](../Images/13_TSS_LAWS_Query_Logs.png)
-
-The query computes control scan result of the control scanned by the toolkit. There is a filter in the top right, which gives the easy option to select time ranges. This can be done via code as well.
-
-Here is a summary of the data that is captured within each table
-
-| Log Type | Description |
-|----|----|
-| AzSK_APIMetrics_CL | This table contains the metrics for the number of API calls made during the scan |
-| AzSK_BaselineControlsInv_CL | This lists the controls supported by Tenant Security solution |
-| AzSK_ControlResults_CL	| This table contains control scan results for all the subscriptions scanned by the Tenant Security Solution|
-| AzSK_PerformanceMetrics_CL | This table contains performance metrics such as total time taken to scan each subscription, the time taken by individual components etc., |
-| AzSK_PolicyAssignmentsInv_CL | This table contains the list of Azure Policy assignments for all the subscriptions scanned  |
-| AzSK_PolicySummaryInfo_CL	| This table contains the summary of Azure Policy assignment |
-| AzSK_ProcessedSubscriptions_CL | This contains the events sent by the work item processor job to mark subscription scan progress |
-| AzSK_RBAC_CL	| This table contains RBAC role membership details including classic, permanent and PIM assignments |
-| AzSK_ResourceInvInfo_CL	| This table captures the list of resources in a subscription |
-| AzSK_RTExceptions_CL	| This table contains errors/exceptions generated during the Tenant Security scan | 
-| AzSK_SSAssessmentInv_CL	| This table contains Azure Security Centre assessment status |
-| AzSK_SubInventory_CL | This table contains list of subscription scanned by the Tenant Security Solution |
-
+For understanding the collected data, use the querying and visualization capabilities provided by Log Analytics. 
+To start, go to **Log Analytics workspace** created during setup --> Select **Logs**. 
 
 
 Few more simple queries to try
 
 #### A. Inventory summary
 
-##### Subscription that are scanned by Tenant Security Solution (TSS)
+##### Subscription Inventory 
 
 ``` KQL
 
@@ -261,27 +227,8 @@ AzSK_SubInventory_CL
 | distinct SubscriptionId, Name_s
 
 ```
-##### List of resources in a subscription
 
-``` KQL
-AzSK_ResourceInvInfo_CL
-| where TimeGenerated > ago(1d)
-| where JobId_d ==  toint(format_datetime(now(), 'yyyyMMdd'))
-| summarize arg_max(TimeGenerated, *) by ResourceId
-| project OrgTenantId_g, SubscriptionId, ResourceType, Location_s, ResourceId
-```
-
-##### List of unhealthy Security Assessment recommendation in a subscription
-```KQL
-AzSK_SSAssessmentInv_CL
-| where TimeGenerated > ago(1d)
-| where JobId_d ==  toint(format_datetime(now(), 'yyyyMMdd'))
-| summarize arg_max(TimeGenerated, *) by AssessmentId_s
-| project SubscriptionId, RecommendationDisplayName_s, AzureResourceId_s, StatusCode_s, StatusMessage_s
-| where StatusCode_s =~ "Unhealthy"
-```
-
-##### List of controls supported in Tenant Security Solution
+##### Baseline control list supported by AzTS Scan
 
 ``` KQL
 AzSK_BaselineControlsInv_CL
@@ -290,67 +237,18 @@ AzSK_BaselineControlsInv_CL
 | project ControlId_s, ResourceType, Description_s, ControlSeverity_s, Tags_s
 ```
 
-#### B. Role-based access control (RBAC) summary
-
-##### Service Principal accounts with Owner permission on subscription
+#### Role-based access control (RBAC) summary
 
 ``` KQL
 AzSK_RBAC_CL
-| where TimeGenerated > ago(2d) and JobId_d == toint(format_datetime(now(), 'yyyyMMdd')) 
+| where TimeGenerated > ago(1d) and JobId_d == toint(format_datetime(now(), 'yyyyMMdd')) 
 | summarize arg_max(TimeGenerated, *) by RoleId_g, RoleId_s
-| where AccountType_s == "ServicePrincipal" and RoleDefinitionId_s contains "8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
 | project RoleDefinitionId_s, AccountType_s, IsPIMEligible_b, ObjectId = UserName_g, Scope_s
 ```
 
-##### List of Owner/Co-admin in a subscription
 
-```KQL
-// Get list of active subscriptions
-AzSK_SubInventory_CL
-| where TimeGenerated > ago(1d) and JobId_d ==  toint(format_datetime(now(), 'yyyyMMdd'))
-| where State_s != 'Disabled'
-| summarize arg_max(TimeGenerated, *) by SubscriptionId
-| distinct SubscriptionId, Name_s
-| join kind=leftouter (
-    // Get list of Owners in a subscription
-    AzSK_RBAC_CL
-    | where TimeGenerated > ago(2d) and JobId_d == toint(format_datetime(now(), 'yyyyMMdd')) 
-    | where RBACSource_s =~ "Subscription" 
-    | where RoleName_s in ("ServiceAdministrator", "CoAdministrator", "ServiceAdministrator;AccountAdministrator")
-    or RoleDefinitionId_s contains "8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
-    | summarize OwnerCount = count(),
-                PermanentOwnerCount = countif(IsPIMEligible_b == false),
-                ObjectIds = make_set(UserName_g) by SubscriptionId = NameId_g
-) on SubscriptionId
-| extend ObjectIds = iff(SubscriptionId1 == dynamic(null), "RBACNOTFOUND", ObjectIds)
-| project SubscriptionId, OwnerCount, PermanentOwnerCount, ObjectIds
-```
+#### B. Control Scan Summary
 
-#### C. Control Scan Summary
-
-##### View subscription scan status
-
-``` KQL
-// Filter list of active subscriptions
-AzSK_SubInventory_CL
-| where TimeGenerated > ago(1d)
-| where JobId_d ==  toint(format_datetime(now(), 'yyyyMMdd'))
-| where State_s != 'Disabled'
-| summarize arg_max(TimeGenerated, *) by SubscriptionId
-| project SubscriptionId
-| join kind= leftouter
-(
-   // List of subscriptions where processing has completed
-    AzSK_ProcessedSubscriptions_CL
-    | where TimeGenerated > ago(1d)
-    | where JobId_d ==  toint(format_datetime(now(), 'yyyyMMdd'))
-    | where EventType_s == 'Completed'
-    | summarize arg_max(TimeGenerated, *) by SubscriptionId
-)
-on SubscriptionId
-| extend Type = iff(SubscriptionId1 !=dynamic(null),"Completed", "NotCompleted")
-| summarize count() by Type
-```
 
 ##### Top 20 failing controls
 
@@ -379,40 +277,6 @@ AzSK_ControlResults_CL
 | take 10
 ```
 
-#### D. Tenant Security scan metrics
-
-##### REST API call metrics: Number of API calls made in last 1 day
-
-``` KQL
-AzSK_APIMetrics_CL
-| where TimeGenerated > ago(1d)
-| extend Key_s = iff(Key_s contains "https://", strcat("***#API#***", parse_url(Key_s).Host), Key_s) 
-| summarize APICount= sum(Value_d) by Key_s
-| order by APICount desc
-```
-
-##### Performance metrics: Get the average time buckets and subs count in each bucket
-
-```KQL
-let JobId = toint(format_datetime(now(), 'yyyyMMdd'));
-// Get count of control scanned for each subscription
-AzSK_ControlResults_CL
-| where TimeGenerated > ago(2d)
-| where JobId_d == JobId
-| summarize arg_max(TimeGenerated, *) by ResourceId,ControlName_s
-| summarize ControlsCount = count() by SubscriptionId
-| join kind= inner (
-    // Check performance metrics for total time taken by each subscription
-    AzSK_PerformanceMetrics_CL
-    | where TimeGenerated > ago(2d)
-    | where JobId_d == JobId
-    | summarize arg_max(TimeGenerated, *) by SubscriptionId
-    | where SubscriptionId != dynamic(null) 
-    | extend SubProcessingTime = iff(totimespan(TotalTimeTaken_s) > totimespan("00:02:00"),">2Min",iff(totimespan(TotalTimeTaken_s) > totimespan("00:01:00"),">1Min","<1Min"))
-) on SubscriptionId 
-| summarize SubscriptionCount = count(), avg(totimespan(TotalTimeTaken_s)) , avg(ControlsCount), max(ControlsCount), min(ControlsCount) by SubProcessingTime 
-```
-
 
 [Back to top…](Readme.md#contents)
 ## Tenant Security Solution - under the covers (how it works)
@@ -431,10 +295,10 @@ The diagram below depicts a high level overview of the hybrid solution:
 # Create security compliance monitoring solutions
 Once you have an Tenant Security setup running smoothly with multiple subscriptions across your org, you will need a solution that provides visibility of security compliance for all the subscriptions across your org. This will help you drive compliance/risk governance initiatives for your organization. 
 
-When you setup your Tenant Security endpoint (i.e. policy server), one of the things that happens is creation of an Log Analytics workspace for your setup. After that, whenever someone performs an TSS scan for a subscription that is configured to use your Tenant Security, the scan results are sent (as 'security' telemetry) to your org's Log Analytics workspace. Because this workspace receives scan events from all such subscriptions, it can be leveraged to generate aggregate security compliance views for your cloud-based environments. 
+When you setup your Tenant Security endpoint (i.e. policy server), one of the things that happens is creation of an Log Analytics workspace for your setup. After that, whenever someone performs an AzTS scan for a subscription that is configured to use your Tenant Security, the scan results are sent (as 'security' telemetry) to your org's Log Analytics workspace. Because this workspace receives scan events from all such subscriptions, it can be leveraged to generate aggregate security compliance views for your cloud-based environments. 
 
 ## Create cloud security compliance report for your org using PowerBI
-We will look at how a PowerBI-based compliance dashboard can be created and deployed in a matter of minutes starting with a template dashboard that ships with the Tenant Security Solution (TSS). All you need apart from the Log Analytics workspace instance is a CSV file that provides a mapping of your organization hierarchy to subscription ids (so that we know which team/service group owns each subscription).
+We will look at how a PowerBI-based compliance dashboard can be created and deployed in a matter of minutes starting with a template dashboard that ships with the Tenant Security Solution (AzTS). All you need apart from the Log Analytics workspace instance is a CSV file that provides a mapping of your organization hierarchy to subscription ids (so that we know which team/service group owns each subscription).
 
 > Note: This is a one-time activity with tremendous leverage as you can use the resulting dashboard (example below) towards driving security governance activities over an extended period at your organization. 
 
