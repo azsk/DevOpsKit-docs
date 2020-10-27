@@ -241,7 +241,7 @@ AzSK_BaselineControlsInv_CL
 AzSK_RBAC_CL
 | where TimeGenerated > ago(1d) and JobId_d == toint(format_datetime(now(), 'yyyyMMdd')) 
 | summarize arg_max(TimeGenerated, *) by RoleId_g, RoleId_s
-| project RoleDefinitionId_s, AccountType_s, IsPIMEligible_b, ObjectId = UserName_g, Scope_s
+| project ObjectId = UserName_g, AccountType_s,RoleName_s, IsPIMEligible_b, Scope_s
 ```
 
 
