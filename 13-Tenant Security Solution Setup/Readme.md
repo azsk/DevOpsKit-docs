@@ -23,10 +23,13 @@ The AzTS Solution was created with the following explicit objectives (some of wh
 ## Setting up Azure Tenant Security Solution - Step by Step
 In this section, we will walk through the steps of setting up AzTS Solution
 
+
 To get started, we need the following prerequisites:
 
 
 **Prerequisite:**
+
+**Note:** You can download execution script present [here](./Scripts/ExecutionScript.ps1) which has all commands mentioned in below steps
 
 **1.** Installation steps are supported using following OS options: 	
 
