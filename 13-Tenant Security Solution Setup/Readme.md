@@ -42,14 +42,14 @@ Setup is divided into five steps:
   Ensure that you are using Windows OS and have PowerShell version 5.0 or higher by typing **$PSVersionTable** in the PowerShell ISE console window and looking at the PSVersion in the output as shown below.) 
   If the PSVersion is older than 5.0, update PowerShell from [here](https://www.microsoft.com/en-us/download/details.aspx?id=54616).  
 
-    ![PowerShell Version](../Images/00_PS_Version.PNG)   
+  ![PowerShell Version](../Images/00_PS_Version.PNG)   
 
 
 **2. Installing Az Modules:**
 
-Az modules contains cmdlet to deploy Azure resources. This is used to create AzTS scan solution resources with the help of ARM template.
+Az modules contains cmdlet to deploy Azure resources. These cmdlets is used to create AzTS scan solution resources with the help of ARM template.
 Install Az Powershell Modules using below command. 
-For more details of Az Modules installation refer [link](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps)
+For more details of Az Modules refer [link](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps)
 
 ``` Powershell
 # Install Az Modules
@@ -61,8 +61,8 @@ Install-Module -Name Az.ManagedServiceIdentity -AllowClobber -Scope CurrentUser 
 
 **3. Setting up scanning identity**  
 
-The AzTS setup basically provisions your subscription with the ability to do daily scans and sends the scan results to your Log Analytics workspace.
-To do the scanning, the setup process requires a [User-assigned Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) (central scanning identity owned by you) and 'Reader' access to target subscriptions on which scan needs to be performed. 
+The AzTS setup basically provisions your subscriptions with the ability to do daily scans for security controls.
+To do the scanning, it requires a [User-assigned Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) (central scanning identity owned by you) and 'Reader' access to target subscriptions on which scan needs to be performed. 
 
 
 i) You can create user-assigned managed identity with below PowerShell command or Portal steps [here](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-portal)
@@ -78,13 +78,13 @@ New-AzResourceGroup -Name <MIHostingRGName> -Location <Location>
 # Step 3: Create user-assigned managed identity 
 $UserAssignedIdentity = New-AzUserAssignedIdentity -ResourceGroupName <MIHostingRGName> -Name <USER ASSIGNED IDENTITY NAME>
 
-# Step 3: Save resource id generated for user identity using below command. This will be used in AzTS Soln installation. 
+# Step 4: Save resource id generated for user identity using below command. This will be used in AzTS Soln installation. 
 
 $UserAssignedIdentity.Id
 
 ```
 
-ii) Assign reader access to user-assigned managed identity on target subscriptions to be scanned. 
+ii) Assign reader access to user-assigned managed identity on target subscriptions needs to be scanned. 
 
 
 ``` Powershell
@@ -98,11 +98,13 @@ New-AzRoleAssignment -ApplicationId $UserAssignedIdentity.ClientId -Scope "/subs
 
 ```
 
-  **Note:** If subscriptions are organized under [Management Groups](https://docs.microsoft.com/en-us/azure/governance/management-groups/overview) (MG), you can assign reader role for user identity using MG role assignment. You need to be 'Owner' on target subscription to perform role assignment.  
+  **Note:** If subscriptions are organized under [Management Groups](https://docs.microsoft.com/en-us/azure/governance/management-groups/overview) (MG), you can assign reader role for user-assigned identity using MG role assignment. You need to be 'Owner' on target subscription to perform role assignment.  
 
-**4.Download and extract deployment package**
+**4. Download and extract deployment package**
  
- Deployment packages mainly contains ARM template with resource configuration details to be created for AzSKTS solution and deployment setup script which provides the cmdlet to run installation. 
+ Deployment packages mainly contains 
+ ARM template: Contains resource configuration details that needs to be created as part of setup
+ Deployment setup script: Provides the cmdlet to run installation. 
 
 i) Download deployment package zip from [here](https://github.com/azsk/DevOpsKit-docs/raw/users/TenantSecurity/13-Tenant%20Security%20Solution%20Setup/TemplateFiles/Deploy.zip) to your local machine.  
 
@@ -131,7 +133,10 @@ CD "<LocalExtractedFolderPath>\Deploy"
 
 **5. Run Setup Command** 
 
-This is the last step. You need to run install command with host subscription id (sub where scanning infra resources will get created). This is one-time setup activity and can take up to 5 minutes.
+This is the last step. You need to run install command present as part setup scription with host subscription id (sub where scanning infra resources will get created). 
+Setup will create infra resources and schedule daily security control scan on target subscriptions.
+
+**Note:** Setup may take upto 5 minutes to complete.
 
     ``` PowerShell
 
@@ -181,11 +186,11 @@ This is the last step. You need to run install command with host subscription id
 
 ## Verifying that Tenant Security Solution installation is complete
 
-Below steps will help you to understand different resources and functions created as part of setup along with purpose of each component. 
+Below steps will help you to verify and understand different resources and functions created as part of setup along with purpose. 
 
 **1: Verify resources created as part of setup** 
 
-i) In the Azure portal, Go to hosting subscription, select the scan host resource group ('AzSK-AzTS-Solution-RG' from example) that has been created during the setup.
+i) In the Azure portal, Go to hosting subscription, select the scan host resource group that has been created during the setup.
 
 **2:** Verify below resources got created. 
 
@@ -209,8 +214,8 @@ i) In the Azure portal, Go to hosting subscription, select the scan host resourc
 
  **i) MetadataAggregator Functions:** 
 
-Metadata aggregator function performs mainly two tasks, 
-1. Collects inventory required for scanning (Target subscription list to be scanned, baseline controls list and Subscription RBAC details)
+Metadata aggregator function performs two tasks: 
+1. Collects inventory required for scanning (Target subscription list to be scanned, baseline controls list and subscription RBAC details)
 2. Queue subscriptions for scanning
 
 Click on 'AzSK-AzTS-MetadataAggregator-xxxxx' function app present in scan hosting RG --> Click on 'Functions' tab in left menu
@@ -231,7 +236,21 @@ Click on 'AzSK-AzTS-MetadataAggregator-xxxxx' function app present in scan hosti
 ![SchedulerWebjobs](../Images/12_TSS_Scheduler_Webjobs.png)
 
 
-> **Note:** Functions are scheduled to run from UTC 00:00 time. You can also run the functions manually by triggering ATS_1_SubscriptionInvProcessor, ATS_2_BaselineControlsInvProcessor, ATS_3_SubscriptionRBACProcessor and ATS_4_WorkItemScheduler in sequence with an interval 10 mins in between. After work item scheduler completes pushing the messages in the queue, WorkItemProcessor will get autotrigged start processing scan and push scan results in storage account and LA workspace.  
+> **Note:** Functions are scheduled to run from UTC 00:00 time. You can also run the functions manually in sequence with an internval of 10 mins in each function trigger
+
+Steps to trigger the functions
+
+Click on 'AzSK-AzTS-MetadataAggregator-xxxxx' function app present in scan hosting RG --> Click on 'Functions' tab --> Select 'ATS_1_SubscriptionInvProcessor' --> Click on 'Code + Test' --> Click 'Test/Run' --> Click 'Run'
+
+Similarly, you can trigger below functions with 10 mins internval.
+
+ * ATS_2_BaselineControlsInvProcessor
+
+ * ATS_3_SubscriptionRBACProcessor 
+ 
+ * ATS_4_WorkItemScheduler 
+
+After ATS_4_WorkItemScheduler completes pushing the messages in the queue, WorkItemProcessor will get autotrigged, start processing scan and push scan results in storage account and LA workspace. 
 
 
 
@@ -276,6 +295,14 @@ AzSK_RBAC_CL
 | project ObjectId = UserName_g, AccountType_s,RoleName_s, IsPIMEligible_b, Scope_s
 ```
 
+#### Subscription scanned today
+
+``` KQL
+AzSK_ProcessedSubscriptions_CL
+|  where TimeGenerated > ago(1d) and JobId_d == toint(format_datetime(now(), 'yyyyMMdd')) and EventType_s =~"Completed"
+| summarize arg_max(TimeGenerated,*) by SubscriptionId
+| project ScanTimeInUTC = TimeGenerated, SubscriptionId 
+```
 
 #### B. Control Scan Summary
 
@@ -341,7 +368,7 @@ In this step you will prepare the data file which will be fed to the PowerBI das
 
 > Note: You may want to create a small CSV file with just a few subscriptions for a trial pass and then update it with the full subscription list for your org after getting everything working end-to-end.
 
-A sample template for the CSV file is [here](./TemplateFiles/OrgMapping.csv):
+A sample template for the CSV file is [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/users/TenantSecurity/13-Tenant%20Security%20Solution%20Setup/TemplateFiles/OrgMapping.csv):
 
 ![Org-Sub metadata json](../Images/07_OrgPolicy_PBI_OrgMetadata.PNG) 
 
@@ -367,7 +394,7 @@ In this step you will import the data above into the LA workspace created during
 
  ![capture Workspace ID](../Images/13_TSS_LAWS_AgentManagement.png)
  
- **(b)** To push org Mapping details, copy and execute the script available [here](./Scripts/TSSPushOrgMappingEvents.txt) in Powershell.
+ **(b)** To push org Mapping details, copy and execute the script available [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/users/TenantSecurity/13-Tenant%20Security%20Solution%20Setup/Scripts/AzTSPushOrgMappingEvents.ps1) in Powershell.
 
  > **Note**: Due to limitation of Log Analytics workspace, you will need to repeat this step every 90 days interval. 
 
@@ -378,7 +405,7 @@ In this section we shall create a PowerBI report locally within PowerBI Desktop 
 
 ![capture Workspace ID](../Images/13_TSS_LAWS_AgentManagement.png)
 
-**(b)** Download and copy the PowerBI template file from [here](https://github.com/azsk/DevOpsKit-docs/blob/users/TenantSecurityDocument/12-Tenant%20Security%20Solution/TemplateFiles/TenantSecurityReport.pbit) to your local machine.
+**(b)** Download and copy the PowerBI template file from [here](https://github.com/azsk/DevOpsKit-docs/raw/users/TenantSecurityDocument/12-Tenant%20Security%20Solution/TemplateFiles/TenantSecurityReport.pbit) to your local machine.
 
 **(c)** Open the template (.pbit) file using PowerBI Desktop, provide the LA Workspace ID and click on 'Load' as shown below:
 

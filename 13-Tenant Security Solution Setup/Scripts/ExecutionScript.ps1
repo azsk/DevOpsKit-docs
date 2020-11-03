@@ -1,36 +1,42 @@
 ﻿
 #****************** Prerequisite *****************
 
-# *** 1. Install required modules ***
+# *** 1. Validate prerequisites on machine
+    #Ensure that you are using Windows OS and have PowerShell version 5.0 or higher
 
+    $PSVersionTable
+
+# *** 2. Installing Az Modules
     # Install Az Modules
-    Install-Module -Name Az -AllowClobber -Scope CurrentUser -repository PSGallery
-
-    # Install managed identity service module
+    Install-Module -Name Az.Accounts -AllowClobber -Scope CurrentUser -repository PSGallery
+    Install-Module -Name Az.Resources -AllowClobber -Scope CurrentUser -repository PSGallery
+    Install-Module -Name Az.Storage -AllowClobber -Scope CurrentUser -repository PSGallery
     Install-Module -Name Az.ManagedServiceIdentity -AllowClobber -Scope CurrentUser -repository PSGallery
 
-# *** 2. Create central scanning identity and assign reader role to subscriptions on which scan needs to be performed   
+# *** 3. Setting up scanning identity   
 
-    # Step 1: Set context to subscription where central scan user-assigned managed identity needs to be created
-    # Login to Azure  
-    Connect-AzAccount
-    
-    Set-AzContext -SubscriptionId  "<MIHostingSubId>"
+    # i) You can create user-assigned managed identity with below PowerShell command 
+            # Step 1: Set context to subscription where user-assigned managed identity needs to be created
+            Set-AzContext -SubscriptionId "<MIHostingSubId>"
 
-    # Step 2: Create User Identity 
-    $UserAssignedIdentity = New-AzUserAssignedIdentity -ResourceGroupName "<MIHostingRG>" -Name "<USER ASSIGNED IDENTITY NAME>"
+            # Step 2: Create resource group where user-assigned MI resource will be created. 
+            New-AzResourceGroup -Name "<MIHostingRGName>" -Location "<Location>"
 
-    # Step 3: Keep resource id generated for user identity using below command. This will be used in AzTS Soln installation
+            # Step 3: Create user-assigned managed identity 
+            $UserAssignedIdentity = New-AzUserAssignedIdentity -ResourceGroupName "<MIHostingRGName>" -Name "<USER ASSIGNED IDENTITY NAME>"
 
-    $UserAssignedIdentity.Id
+            # Step 4: Save resource id generated for user identity using below command. This will be used in AzTS Soln installation. 
 
-    # Step 4: Assign user identity with reader role on all the subscriptions which needs to be scanned. 
-    # Below command help to assign access to single subscription or MG. 
-    # You need to repeat below step for all subscription or assign role at MG level
+            $UserAssignedIdentity.Id
 
-    New-AzRoleAssignment -ApplicationId $UserAssignedIdentity.ClientId `
-    -Scope "<SubscriptionScope or ManagedGroupScope>" `
-    -RoleDefinitionName "Reader"
+    # ii) Assign reader access to user-assigned managed identity on target subscriptions to be scanned.
+
+            # Add target subscriptionds in place of <SubIdx>
+            $TargetSubscriptionIds = @("<SubId1>","<SubId2>","<SubId3>")
+
+            $TargetSubscriptionIds | % {
+            New-AzRoleAssignment -ApplicationId $UserAssignedIdentity.ClientId -Scope "/subscriptions/$_" -RoleDefinitionName "Reader"
+            }
 
 
 # *** 3. Set context and validate you have 'Owner' access on subscrption where solution needs to be installed ****
@@ -46,42 +52,40 @@
 
 # **** 4. Download and extract deployment template
 
-    # Download deployment from link: https://aka.ms/DevOpsKit/AzTS/DeploymentTemplate
+    # i) Download deployment package zip from link (https://aka.ms/DevOpsKit/AzTS/DeploymentTemplate) to your local machine. 
     
-    # Extract zip into local folder 
+    # ii) Extract zip to local folder location
+
+    # iii) Unblock the content. Below command will help to unblock files.
+
+        # Set extracted folder path
+        $DeploymentTemplateFolderPath = "<ExtractedFolderPath>"
+
+        # Unblock files
+        Get-ChildItem -Path $DeploymentTemplateFolderPath -Recurse |  Unblock-File 
+
+    # iv) Point current path to deployment folder and load AzTS setup script
+
+        # Point current path to extracted folder location and load setup script from deploy folder 
+
+            CD "$DeploymentTemplateFolderPath"
+
+        # Load AzTS Setup script in session
+
+            . ".\AzTSSetup.ps1"
 
 
-    # Set extracted folder path
-    $DeploymentTemplateFolderPath = "<ExtractedFolderPath>"
+# **** 5. Run Setup Command
 
-    # Unblock files
-    Get-ChildItem -Path $DeploymentTemplateFolderPath -Recurse |  Unblock-File 
-
-
-#****************** Prerequisite Completed ***************** 
-   
-
-
-#****************** Setup Start *****************
-
-
-# ****1. Point current path to extracted folder location and load setup script from deploy folder 
-
-    CD "$DeploymentTemplateFolderPath"
-
-    . ".\AzTSSetup.ps1"
-
-
-# ****2. Run installation command. 
 
     # Provide resource group name where resources will be created
-    $ResourceGroupName = "<ResourceGroupName>"  #Provider 
+    $ScanHostRGName = "<ResourceGroupName>"  #Provider 
     $Location = "<ResourceLocation>"  # eg. EastUS2
 
     # Run install solution command 
     Install-AzSKTenantSecuritySolution `
                     -SubscriptionId $HostSubscriptionId `
-                    -ScanHostRGName $ResourceGroupName `
+                    -ScanHostRGName $ScanHostRGName `
                     -ScanIdentityId $UserAssignedIdentity.Id `
                     -Location $Location `
                     -Verbose
