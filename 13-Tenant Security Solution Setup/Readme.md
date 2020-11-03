@@ -24,24 +24,25 @@ The AzTS Solution was created with the following explicit objectives (some of wh
 In this section, we will walk through the steps of setting up AzTS Solution.
 
 
-**Note:** You can download execution script present [here](./Scripts/ExecutionScript.ps1) which has all commands mentioned in below steps
+**Note:** You can download execution script present [here](https://github.com/azsk/DevOpsKit-docs/raw/users/TenantSecurity/13-Tenant%20Security%20Solution%20Setup/Scripts/ExecutionScript.ps1) which has all commands mentioned in below steps
 
 
 Setup is divided into five steps:
 
-**1.**  Validate prerequisites on machine 
+**1. Validate prerequisites on machine**  
 
- i) Installation steps are supported using following OS options: 	
+  i) Installation steps are supported using following OS options: 	
 
-- Windows 10
-- Windows Server 2019
+  - Windows 10
+  - Windows Server 2019
 
-ii) PowerShell 5.0 or higher
+  ii) PowerShell 5.0 or higher
 
-Ensure that you are using Windows OS and have PowerShell version 5.0 or higher by typing **$PSVersionTable** in the PowerShell ISE console window and looking at the PSVersion in the output as shown below.) 
- If the PSVersion is older than 5.0, update PowerShell from [here](https://www.microsoft.com/en-us/download/details.aspx?id=54616).  
+  All setup steps will be performed with the help of PowerShell ISE console. If you are unaware of PowerShell ISE, refer [link](http://aka.ms/devOpsKit/PStips) to get basic understanding.
+  Ensure that you are using Windows OS and have PowerShell version 5.0 or higher by typing **$PSVersionTable** in the PowerShell ISE console window and looking at the PSVersion in the output as shown below.) 
+  If the PSVersion is older than 5.0, update PowerShell from [here](https://www.microsoft.com/en-us/download/details.aspx?id=54616).  
 
-   ![PowerShell Version](../Images/00_PS_Version.PNG)   
+    ![PowerShell Version](../Images/00_PS_Version.PNG)   
 
 
 **2. Installing Az Modules:**
@@ -58,7 +59,7 @@ Install-Module -Name Az.Storage -AllowClobber -Scope CurrentUser -repository PSG
 Install-Module -Name Az.ManagedServiceIdentity -AllowClobber -Scope CurrentUser -repository PSGallery
 ```
 
-**3.**  Setting up scanning identity
+**3. Setting up scanning identity**  
 
 The AzTS setup basically provisions your subscription with the ability to do daily scans and sends the scan results to your Log Analytics workspace.
 To do the scanning, the setup process requires a [User-assigned Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) (central scanning identity owned by you) and 'Reader' access to target subscriptions on which scan needs to be performed. 
@@ -83,7 +84,7 @@ $UserAssignedIdentity.Id
 
 ```
 
-ii) Assign reader access to user-assigned managed identity on target subscriptions to be scanned. If subscriptions are organized under [Management Groups](https://docs.microsoft.com/en-us/azure/governance/management-groups/overview) (MG), you can assign reader role for user identity using MG role assignment. You need to be 'Owner' on target subscription to perform role assignment for managed identity.  
+ii) Assign reader access to user-assigned managed identity on target subscriptions to be scanned. 
 
 
 ``` Powershell
@@ -97,9 +98,13 @@ New-AzRoleAssignment -ApplicationId $UserAssignedIdentity.ClientId -Scope "/subs
 
 ```
 
-**4.** Download and extract deployment package 
+  **Note:** If subscriptions are organized under [Management Groups](https://docs.microsoft.com/en-us/azure/governance/management-groups/overview) (MG), you can assign reader role for user identity using MG role assignment. You need to be 'Owner' on target subscription to perform role assignment.  
+
+**4.Download and extract deployment package**
  
-i) Download deployment package zip from [here](./TemplateFiles/Deploy.zip) to your local machine.  
+ Deployment packages mainly contains ARM template with resource configuration details to be created for AzSKTS solution and deployment setup script which provides the cmdlet to run installation. 
+
+i) Download deployment package zip from [here](https://github.com/azsk/DevOpsKit-docs/raw/users/TenantSecurity/13-Tenant%20Security%20Solution%20Setup/TemplateFiles/Deploy.zip) to your local machine.  
 
 ii) Extract zip to local folder location
 
@@ -126,7 +131,7 @@ CD "<LocalExtractedFolderPath>\Deploy"
 
 **5. Run Setup Command** 
 
-This is the last step. You need to run install setup command with host subscription id (sub where scanning infra resources will get created). This is one-time setup activity and can take up to 5 minutes.
+This is the last step. You need to run install command with host subscription id (sub where scanning infra resources will get created). This is one-time setup activity and can take up to 5 minutes.
 
     ``` PowerShell
 
@@ -205,10 +210,10 @@ i) In the Azure portal, Go to hosting subscription, select the scan host resourc
  **i) MetadataAggregator Functions:** 
 
 Metadata aggregator function performs mainly two tasks, 
-1. Collects inventory required for scanning (Subscription list, baseline control and RBAC details)
+1. Collects inventory required for scanning (Target subscription list to be scanned, baseline controls list and Subscription RBAC details)
 2. Queue subscriptions for scanning
 
-Click on 'AzSK-AzTS-MetadataAggregator-xxxxx' function app present in scan hosting RG, Click on 'Functions' tab in left menu
+Click on 'AzSK-AzTS-MetadataAggregator-xxxxx' function app present in scan hosting RG --> Click on 'Functions' tab in left menu
 
 ![ProcessorWebjobs](../Images/12_TSS_Processor_WebJobs.png)
 
