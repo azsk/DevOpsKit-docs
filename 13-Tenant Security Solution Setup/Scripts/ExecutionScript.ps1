@@ -46,9 +46,6 @@
 
     Set-AzContext -SubscriptionId  $HostSubscriptionId
 
-    # Validate your id is listed as Owner on subscription 
-    Get-AzRoleAssignment | Where-Object {$_.RoleDefinitionName -eq "Owner" -and $_.Scope -eq "/subscriptions/$HostSubscriptionId" } `
-    | select DisplayName, SignInName
 
 # **** 4. Download and extract deployment template
 
@@ -76,10 +73,12 @@
 
 
 # **** 5. Run Setup Command
+    # Set the context to hosting subscription
+        Set-AzContext -SubscriptionId "<HostingSubId>"
 
 
     # Provide resource group name where resources will be created
-    $ScanHostRGName = "<ResourceGroupName>"  #Provider 
+    $ScanHostRGName = "<ResourceGroupName>"  #RG name where  
     $Location = "<ResourceLocation>"  # eg. EastUS2
 
     # Run install solution command 
