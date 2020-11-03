@@ -21,121 +21,146 @@ The AzTS Solution was created with the following explicit objectives (some of wh
  * Enable incremental transition of our controls from custom code to Azure/ASC policy-based approach (using ASC/policy-based controls where available today and continue to migrate as more controls become available)
 
 ## Setting up Azure Tenant Security Solution - Step by Step
-In this section, we will walk through the steps of setting up AzTS Solution
+In this section, we will walk through the steps of setting up AzTS Solution.
 
-
-To get started, we need the following prerequisites:
-
-
-**Prerequisite:**
 
 **Note:** You can download execution script present [here](./Scripts/ExecutionScript.ps1) which has all commands mentioned in below steps
 
-**1.** Installation steps are supported using following OS options: 	
+
+Setup is divided into five steps:
+
+**1.**  Validate prerequisites on machine 
+
+ i) Installation steps are supported using following OS options: 	
 
 - Windows 10
-- Windows Server 2016
+- Windows Server 2019
 
-**2.** PowerShell 5.0 or higher
+ii) PowerShell 5.0 or higher
 
- Ensure that you are using Windows OS and have PowerShell version 5.0 or higher by typing **$PSVersionTable** in the PowerShell ISE console window and looking at the PSVersion in the output as shown below.) 
+Ensure that you are using Windows OS and have PowerShell version 5.0 or higher by typing **$PSVersionTable** in the PowerShell ISE console window and looking at the PSVersion in the output as shown below.) 
  If the PSVersion is older than 5.0, update PowerShell from [here](https://www.microsoft.com/en-us/download/details.aspx?id=54616).  
 
    ![PowerShell Version](../Images/00_PS_Version.PNG)   
 
-**3.** Install Az and Managed Service Identity Powershell Module using below command. For more details of Az installation refer [link](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps)
+
+**2. Installing Az Modules:**
+
+Az modules contains cmdlet to deploy Azure resources. This is used to create AzTS scan solution resources with the help of ARM template.
+Install Az Powershell Modules using below command. 
+For more details of Az Modules installation refer [link](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps)
 
 ``` Powershell
 # Install Az Modules
-Install-Module -Name Az -AllowClobber -Scope CurrentUser -repository PSGallery
-
-#Install managed identity service module
+Install-Module -Name Az.Accounts -AllowClobber -Scope CurrentUser -repository PSGallery
+Install-Module -Name Az.Resources -AllowClobber -Scope CurrentUser -repository PSGallery
+Install-Module -Name Az.Storage -AllowClobber -Scope CurrentUser -repository PSGallery
 Install-Module -Name Az.ManagedServiceIdentity -AllowClobber -Scope CurrentUser -repository PSGallery
 ```
 
-**4.**  Create central scanning user-assigned managed identity and provide reader access to subscriptions on which scan needs to be performed.
+**3.**  Setting up scanning identity
 
-i) You can create user identity with below PowerShell command or Portal steps [here](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-portal)
+The AzTS setup basically provisions your subscription with the ability to do daily scans and sends the scan results to your Log Analytics workspace.
+To do the scanning, the setup process requires a [User-assigned Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) (central scanning identity owned by you) and 'Reader' access to target subscriptions on which scan needs to be performed. 
 
-ii) Assign reader access on subscriptions to be scanned. If subscriptions are organized under [Management Groups](https://docs.microsoft.com/en-us/azure/governance/management-groups/overview) (MG), you can assign reader role for user identity using MG role assignment.
+
+i) You can create user-assigned managed identity with below PowerShell command or Portal steps [here](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-portal)
 
 ``` Powershell
 
-# Step 1: Set context to subscription where central scan user-assigned managed identity needs to be created
+# Step 1: Set context to subscription where user-assigned managed identity needs to be created
 Set-AzContext -SubscriptionId <MIHostingSubId>
 
-# Step 2: Create User Identity 
-$UserAssignedIdentity = New-AzUserAssignedIdentity -ResourceGroupName <MIHostingRG> -Name <USER ASSIGNED IDENTITY NAME>
+# Step 2: Create resource group where user-assigned MI resource will be created. 
+New-AzResourceGroup -Name <MIHostingRGName> -Location <Location> 
 
-# Step 3: Keep resource id generated for user identity using below command. This will be used in AzTS Soln installation
+# Step 3: Create user-assigned managed identity 
+$UserAssignedIdentity = New-AzUserAssignedIdentity -ResourceGroupName <MIHostingRGName> -Name <USER ASSIGNED IDENTITY NAME>
+
+# Step 3: Save resource id generated for user identity using below command. This will be used in AzTS Soln installation. 
 
 $UserAssignedIdentity.Id
 
-# Step 4: Assign user identity with reader role on all the subscriptions which needs to be scanned. 
-# Below command help to assign access to single subscription or MG. 
-# You need to repeat below step for all subscription or assign role at MG level
+```
 
-New-AzRoleAssignment -ApplicationId $UserAssignedIdentity.ClientId -Scope <SubscriptionScope or ManagedGroupScope> -RoleDefinitionName "Reader"
+ii) Assign reader access to user-assigned managed identity on target subscriptions to be scanned. If subscriptions are organized under [Management Groups](https://docs.microsoft.com/en-us/azure/governance/management-groups/overview) (MG), you can assign reader role for user identity using MG role assignment. You need to be 'Owner' on target subscription to perform role assignment for managed identity.  
 
+
+``` Powershell
+
+# Add target subscriptionds in place of <SubIdx>
+$TargetSubscriptionIds = @("<SubId1>","<SubId2>","<SubId3>")
+
+$TargetSubscriptionIds | % {
+New-AzRoleAssignment -ApplicationId $UserAssignedIdentity.ClientId -Scope "/subscriptions/$_" -RoleDefinitionName "Reader"
+}
 
 ```
 
-**5.** Owner access on hosting subscription
+**4.** Download and extract deployment package 
+ 
+i) Download deployment package zip from [here](./TemplateFiles/Deploy.zip) to your local machine.  
 
-The user setting up Tenant Security Solution needs to have 'Owner' access to the subscription.
+ii) Extract zip to local folder location
 
-**6.** Download and extract deployment zip content from [here](./TemplateFiles/Deploy.zip) to your local machine.  You may have to unblock the content. Below command will help to unblock files. 
+iii) Unblock the content. Below command will help to unblock files. 
 
 ``` PowerShell
 Get-ChildItem -Path "<Extracted folder path>" -Recurse |  Unblock-File 
 ```
 
-[Back to top…](Readme.md#contents)
-
-**Step-1: Setup** 
-
-1. Open the PowerShell ISE and login to your Azure account (using **Connect-AzAccount**) and Set the context to subscription where solution needs to be installed.
-
+iv) Point current path to deployment folder and load AzTS setup script
 ``` PowerShell
-# Login to Azure 
-Connect-AzAccount 
-
-# Set the context to hosting subscription
-Set-AzContext -SubscriptionId <SubscriptionId>
-```
-
-2. Run installation command with required parameters given. 
-
-``` PowerShell
-
-# Step 1: Point current path to extracted folder location and load setup script from deploy folder 
+# Point current path to extracted folder location and load setup script from deploy folder 
 
 CD "<LocalExtractedFolderPath>\Deploy"
 
+# Load AzTS Setup script in session
 . ".\AzTSSetup.ps1"
 
 # Note: Make sure you copy  '.' present at the start of line.
 
-# Step 2: Run installation command. 
-
-Install-AzSKTenantSecuritySolution `
-                -SubscriptionId <SubscriptionId> `
-                -ScanHostRGName <ResourceGroupName> `
-                -ScanIdentityId <ManagedIdentityResourceId> `
-                -Location <ResourceLocation> `
-                -Verbose
-
-# For ScanIdentityId parameter, use value created for "$UserAssignedIdentity.Id" from prerequisite section step 4.
-
-# Example:
-
-Install-AzSKTenantSecuritySolution `
-                -SubscriptionId bbbe2e73-fc26-492b-9ef4-adec8560c4fe `
-                -ScanHostRGName TSSolutionRG `
-                -ScanIdentityId '/subscriptions/bbbe2e73-fc26-492b-9ef4-adec8560c4fe/resourceGroups/TenantReaderRG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/TenantReaderUserIdentity' `
-                -Location EastUS2 `
-                -Verbose
 ```
+
+[Back to top…](Readme.md#contents)
+
+**5. Run Setup Command** 
+
+This is the last step. You need to run install setup command with host subscription id (sub where scanning infra resources will get created). This is one-time setup activity and can take up to 5 minutes.
+
+    ``` PowerShell
+
+    # Set the context to hosting subscription
+    Set-AzContext -SubscriptionId <HostingSubId>
+
+
+    2. Run installation command with required parameters given. 
+
+    # Step 2: Run installation command. 
+
+    Install-AzSKTenantSecuritySolution `
+                    -SubscriptionId <HostingSubId> `
+                    -ScanHostRGName <HostingResourceGroupName> `
+                    -ScanIdentityId <ManagedIdentityResourceId> `
+                    -Location <ResourceLocation> `
+                    -Verbose
+
+    # For ScanIdentityId parameter, use value created for "$UserAssignedIdentity.Id" from prerequisite section step 3 or you can get this resources id by going into Azure Portal --> Subscription where user-assigned MI resource created --> MIHostingRG --> Click on MI resource --> Properties --> Copy ResourceId. 
+
+    # Example:
+
+    Install-AzSKTenantSecuritySolution `
+                    -SubscriptionId bbbe2e73-fc26-492b-9ef4-adec8560c4fe `
+                    -ScanHostRGName AzSK-AzTS-Solution-RG `
+                    -ScanIdentityId '/subscriptions/bbbe2e73-fc26-492b-9ef4-adec8560c4fe/resourceGroups/TenantReaderRG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/TenantReaderUserIdentity' `
+                    -Location EastUS2 `
+                    -Verbose
+    ```
+  Output looks like below
+
+  ![Resources](../Images/12_TSS_CommandOutput.png)
+
+
 
 **Parameter details:**
 
@@ -149,15 +174,13 @@ Install-AzSKTenantSecuritySolution `
 
 
 
->**Note:** Completion of this one-time setup activity can take up to 5 minutes and it will look like below.
+## Verifying that Tenant Security Solution installation is complete
 
-  ![Resources](../Images/12_TSS_CommandOutput.png)
+Below steps will help you to understand different resources and functions created as part of setup along with purpose of each component. 
 
+**1: Verify resources created as part of setup** 
 
-
-**Step-2: Verifying that Tenant Security Solution installation is complete**  
-
-**1:** In the Azure portal, Go to Azure Resource Groups and select the resource group ('TSSolutionRG') that has been created during the setup.
+i) In the Azure portal, Go to hosting subscription, select the scan host resource group ('AzSK-AzTS-Solution-RG' from example) that has been created during the setup.
 
 **2:** Verify below resources got created. 
 
@@ -181,32 +204,33 @@ Install-AzSKTenantSecuritySolution `
 
  **i) MetadataAggregator Functions:** 
 
+Metadata aggregator function performs mainly two tasks, 
+1. Collects inventory required for scanning (Subscription list, baseline control and RBAC details)
+2. Queue subscriptions for scanning
+
+Click on 'AzSK-AzTS-MetadataAggregator-xxxxx' function app present in scan hosting RG, Click on 'Functions' tab in left menu
+
 ![ProcessorWebjobs](../Images/12_TSS_Processor_WebJobs.png)
 
-
-  **a)** ATS_1_SubscriptionInvProcessor:
-  Responsible to fetch details about all the subscriptions that has been granted access as Reader using central MI. All these subscriptions will be fetched by the job and persisted into LA. These subscriptions are scanned automatically by the consecutive jobs.
-
-  **b)** ATS_2_BaselineControlsInvProcessor:
-  Responsible to push baseline controls metadata to LA and storage account
-    
-  **c)** ATS_3_SubscriptionRBACProcessor
-  Collects RBAC details of subscription to be scanned. RBAC collected used to scan the control like "Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities" 
-  
-   **d)** ATS_4_WorkItemScheduler: 
- Responsible to queue up subscriptions as workitems for scanning. It also reconciles the errored subscriptions through retries in the end. By default it would retry to scan for 5 times for each error subscription. IF there is nothing to process for the day, it would simply ignore the run.
+|Function Name|Description|
+|----|----|
+|ATS_1_SubscriptionInvProcessor| Responsible to fetch details about all the subscriptions that has been granted access as Reader using central MI. All these subscriptions will be fetched by the job and persisted into LA. These subscriptions are scanned automatically by the consecutive jobs.
+|ATS_2_BaselineControlsInvProcessor| Responsible to push baseline controls metadata to LA and storage account
+|ATS_3_SubscriptionRBACProcessor| Collects RBAC details of subscription to be scanned. RBAC collected used to scan the control like "Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities" 
+|ATS_4_WorkItemScheduler|  Responsible to queue up subscriptions as workitems for scanning. It also reconciles the errored subscriptions through retries in the end. By default it would retry to scan for 5 times for each error subscription. IF there is nothing to process for the day, it would simply ignore the run.
 
  **ii) WorkItemProcessor Functions:** 
  
- Read subscription list from queue and scan for Azure control plane security controls.
+ Read subscription list from queue and scan for baseline controls.
 
-	
 ![SchedulerWebjobs](../Images/12_TSS_Scheduler_Webjobs.png)
 
 
 > **Note:** Functions are scheduled to run from UTC 00:00 time. You can also run the functions manually by triggering ATS_1_SubscriptionInvProcessor, ATS_2_BaselineControlsInvProcessor, ATS_3_SubscriptionRBACProcessor and ATS_4_WorkItemScheduler in sequence with an interval 10 mins in between. After work item scheduler completes pushing the messages in the queue, WorkItemProcessor will get autotrigged start processing scan and push scan results in storage account and LA workspace.  
 
-**Log Analytics Visualization**
+
+
+## Log Analytics Visualization
 
 For understanding the collected data, use the querying and visualization capabilities provided by Log Analytics. 
 To start, go to **Log Analytics workspace** created during setup --> Select **Logs**. 
