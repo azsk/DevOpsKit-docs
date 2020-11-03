@@ -138,34 +138,34 @@ Setup will create infra resources and schedule daily security control scan on ta
 
 **Note:** Setup may take upto 5 minutes to complete.
 
-    ``` PowerShell
+  ``` PowerShell
 
-    # Set the context to hosting subscription
-    Set-AzContext -SubscriptionId <HostingSubId>
+  # Set the context to hosting subscription
+  Set-AzContext -SubscriptionId <HostingSubId>
 
 
-    2. Run installation command with required parameters given. 
+  2. Run installation command with required parameters given. 
 
-    # Step 2: Run installation command. 
+  # Step 2: Run installation command. 
 
-    Install-AzSKTenantSecuritySolution `
-                    -SubscriptionId <HostingSubId> `
-                    -ScanHostRGName <HostingResourceGroupName> `
-                    -ScanIdentityId <ManagedIdentityResourceId> `
-                    -Location <ResourceLocation> `
-                    -Verbose
+  Install-AzSKTenantSecuritySolution `
+                  -SubscriptionId <HostingSubId> `
+                  -ScanHostRGName <HostingResourceGroupName> `
+                  -ScanIdentityId <ManagedIdentityResourceId> `
+                  -Location <ResourceLocation> `
+                  -Verbose
 
-    # For ScanIdentityId parameter, use value created for "$UserAssignedIdentity.Id" from prerequisite section step 3 or you can get this resources id by going into Azure Portal --> Subscription where user-assigned MI resource created --> MIHostingRG --> Click on MI resource --> Properties --> Copy ResourceId. 
+  # For ScanIdentityId parameter, use value created for "$UserAssignedIdentity.Id" from prerequisite section step 3 or you can get this resources id by going into Azure Portal --> Subscription where user-assigned MI resource created --> MIHostingRG --> Click on MI resource --> Properties --> Copy ResourceId. 
 
-    # Example:
+  # Example:
 
-    Install-AzSKTenantSecuritySolution `
-                    -SubscriptionId bbbe2e73-fc26-492b-9ef4-adec8560c4fe `
-                    -ScanHostRGName AzSK-AzTS-Solution-RG `
-                    -ScanIdentityId '/subscriptions/bbbe2e73-fc26-492b-9ef4-adec8560c4fe/resourceGroups/TenantReaderRG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/TenantReaderUserIdentity' `
-                    -Location EastUS2 `
-                    -Verbose
-    ```
+  Install-AzSKTenantSecuritySolution `
+                  -SubscriptionId bbbe2e73-fc26-492b-9ef4-adec8560c4fe `
+                  -ScanHostRGName AzSK-AzTS-Solution-RG `
+                  -ScanIdentityId '/subscriptions/bbbe2e73-fc26-492b-9ef4-adec8560c4fe/resourceGroups/TenantReaderRG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/TenantReaderUserIdentity' `
+                  -Location EastUS2 `
+                  -Verbose
+  ```
   Output looks like below
 
   ![Resources](../Images/12_TSS_CommandOutput.png)
