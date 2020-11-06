@@ -125,7 +125,7 @@ Run the commands below in PS after replacing the various '<>' with
     Install-AzSKMonitoringSolution -LAWSSubscriptionId $lawsSubId `
                     -LAWSResourceGroup $lawsRGName `
                     -WorkspaceId $lawsId `
-                    -ViewName $azSkViewName
+                    -ViewName $azSkViewName [-Force]
 ```
 
 The table below explains the different parameters used by Install-AzSKMonitoringSolution cmdlet:
@@ -136,6 +136,7 @@ The table below explains the different parameters used by Install-AzSKMonitoring
 |LAWSResourceGroup|Name of the resource group where the Log Analytics workspace is hosted|
 |WorkspaceId|Workspace ID of the Log Analytics workspace name which will be used for monitoring|
 |ViewName|Name of the AzSK Log Analytics Workspace summary (Overview) (unique per Log Analytics workspace)|
+|Force|Provide this switch to force deployment without further user consent (Optional)|
 
 > Note: A resource group name such as 'mms-xxx' is used by default by the Monitoring setup process (where 'xxx' can 
 be 'eus' or 'sea' etc. based on the region). If you specified a custom resource group name when creating 
