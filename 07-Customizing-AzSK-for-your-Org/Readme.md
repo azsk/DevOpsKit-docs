@@ -1164,15 +1164,24 @@ Get-AzProviderOperation | FT
         }
     },
     "securityContacts" : {
-        "id": "/subscriptions/{0}/providers/Microsoft.Security/securityContacts/default1",
-        "name": "default1",
-        "type": "Microsoft.Security/securityContacts",
+        "id": "/subscriptions/{0}/providers//Microsoft.Security/securityContact/default",
+        "name": "default",
+        "type": "Microsoft.Security/securityContact",
         "properties": {
-        "email": "{1}",
-        "phone": "{2}",
-        "alertNotifications": "On",
-        "alertsToAdmins": "On"
-        }
+            "alertNotifications": {
+               "state": "On",
+               "minimalSeverity": "Medium"
+            },
+            "emails": "{1}",
+            "notificationsByRole": {
+               "state": "On",
+               "roles": [
+                  "Owner",
+                  "ServiceAdmin"
+               ]
+            },
+            "phone": "{2}"
+         }
     },
     "policySettings" : {
         "properties": {
