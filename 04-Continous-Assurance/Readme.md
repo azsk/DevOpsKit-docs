@@ -131,6 +131,7 @@ For Azure environments other than Azure Cloud, don't forget to provide Automatio
 |ScanIntervalInHours|(Optional) Overrides the default scan interval (24hrs) with the custom provided value |FALSE|None||
 |AzureADAppName|(Optional) Name for the Azure Active Directory(AD) Application that will be created in the subscription for running the runbooks. |FALSE|None||
 |ScanOnDeployment|(Optional) CA scan can be auto-triggered upon resource deployment.Installing CA with this flag will make sure that the Resource Group in which resource is deployed will be scanned. |FALSE|None||
+|UsageTelemetryLevel|(Optional) CA scan evets get captured at AzSK side using anonymous telemetry.Installing CA with this flag with value as None will disable scan telemetry being captured at AzSk side. |FALSE|Anonymous||
 
 > <b>NOTE:</b>  
 > You can use **"*"** to cover all resource groups in the subscription. If **"*"** is specified, CA will automatically cover new resource groups that are added. Thus **"*"** might be a preferred option in enterprise-wide compliance/visibility initiatives based on CA.
@@ -298,6 +299,7 @@ Update-AzSKContinuousAssurance -SubscriptionId <SubscriptionId> `
 |RenewCertificate|Renews certificate credential of CA SPN if the caller is Owner of the AAD Application (SPN). If the caller is not Owner, a new application is created with a corresponding SPN and a certificate owned by the caller. CA uses the updated credential going forward.|FALSE|None||
 |ScanOnDeployment|CA scan can be auto-triggered upon resource deployment.Updating CA with this flag will make sure that the Resource Group in which resource is deployed will be scanned.|FALSE|None||
 |Remove|Use this switch to clear previously set LogAnalytics, AltLogAnalytics,Webhook settings from CA Automation Account or to unregister from scan on deployment mode|False|None||
+|UsageTelemetryLevel|Use this switch to stop anonymous telemetry capture at AzSK side.|False|Anonymous||
 
 [Back to top…](Readme.md#contents)
 ## Removing a Continuous Assurance setup
@@ -374,6 +376,7 @@ The table below lists only the parameters that are mandatory or have specific ne
 |LoggingOption| "IndividualSubs/CentralSub". This provides the capability to users to store the CA scan logs on central subscription or on individual subscriptions| False |CentralSub |
 |SkipTargetSubscriptionConfig| (Optional) Use this switch if you dont have the owner permission on the target sub. This option assumes you have already done all the required configuration on the target sub. Check the note below| False| |
 |CentralScanMode| Mandatory switch to specify in central scan mode| True | |
+|UsageTelemetryLevel| Optional paramater to turn off anonymous telemetry at AzSK side if value set as None| False | Anonymous |
 
 </br>
 
