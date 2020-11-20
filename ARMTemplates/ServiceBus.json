@@ -19,7 +19,7 @@
       "metadata": {
         "description": "Name of the Storage account for storing logs"
       }
-    },
+    }
   },
   "variables": {
     "sbVersion": "2015-08-01"
@@ -90,9 +90,6 @@
             ]
           }
         }
-      
-
-
       ]
     }
   ],
