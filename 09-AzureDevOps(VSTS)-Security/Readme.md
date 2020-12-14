@@ -1,3 +1,4 @@
 # Azure DevOps (ADO) Security Scanner
 
-Please follow the [link](https://github.com/azsk/ADOScanner-docs) for ADO Security Scanner Documentation.
+Documentation for ADO Security Scanner have been moved to a new location. Please follow this [link](https://github.com/azsk/ADOScanner-docs) to access the docs.
+
