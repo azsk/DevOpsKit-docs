@@ -59,6 +59,11 @@ Install-Module -Name Az.Storage -AllowClobber -Scope CurrentUser -repository PSG
 Install-Module -Name Az.ManagedServiceIdentity -AllowClobber -Scope CurrentUser -repository PSGallery
 ```
 
+``` Powershell
+# Install AzureAd 
+Install-Module -Name AzureAD -AllowClobber -Scope CurrentUser -repository PSGallery
+```
+
 **3. Setting up scanning identity**  
 
 The AzTS setup basically provisions your subscriptions with the ability to do daily scans for security controls.
