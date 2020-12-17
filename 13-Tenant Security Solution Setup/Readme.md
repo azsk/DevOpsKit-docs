@@ -69,6 +69,13 @@ Install-Module -Name AzureAD -AllowClobber -Scope CurrentUser -repository PSGall
 The AzTS setup basically provisions your subscriptions with the ability to do daily scans for security controls.
 To do the scanning, it requires a [User-assigned Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) (central scanning identity owned by you) and 'Reader' access to target subscriptions on which scan needs to be performed. 
 
+Before creating user-assigned managed identity, please connect to AzureAD and AzAccount with the tenant Id where you want to use AzTS solution.
+
+
+``` Powershell
+Connect-AzAccount -Tenant <TenantId>
+Connect-AzureAD -TenantId <TenantId>
+```
 
 i) You can create user-assigned managed identity with below PowerShell command or Portal steps [here](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-portal)
 
@@ -207,13 +214,15 @@ i) In the Azure portal, Go to hosting subscription, select the scan host resourc
 |----|----|----|
 |AzSK-AzTS-MetadataAggregator-xxxxx|Function App| Contains functions to get inventory (subscription, baseline controls and RBAC) and queue subscription for scan |
 |AzSK-AzTS-WorkItemProcessor-xxxxx|Function App | Contains function to scan subscription with baseline control |
+|AzSK-AzTS-AutoUpdater-xxxxx|Function App | Contains function to scan automatically updater function apps and web service apps |
 |AzSK-AzTS-LAWorkspace-xxxxx|Log Analytics workspace| Used to store scan events, inventory, subscription scan progress details|
 |AzSK-AzTS-InternalMI|Managed Identity | Internal MI identity used to access LA workspace and storage for sending scan results|
 |AzSK-AzTS-AppServicePlan | Function App Service Plan| Function app service plan|
+|AzSK-AzTS-API-AppServicePlan | Web App Service Plan| Web app service plan|
 |azsktsstoragexxxxx|Storage Account| Used to store the daily results of subscriptions scan|
 |AzSK-AzTS-AppInsights |App Insight| Used to collect telemetry logs from functions |
-
-
+|AzSK-AzTS-WebApp-xxxxx | Azure web app servicen| UI to easily monitor control compliance details and perform adhoc scan|
+|AzSK-AzTS-WebApi-xxxxx | Azure web app service| Backend API to support UI|
 
  **3:** Verify below Functions got created
 
