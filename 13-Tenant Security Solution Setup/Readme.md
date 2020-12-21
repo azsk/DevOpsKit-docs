@@ -266,6 +266,11 @@ Similarly, you can trigger below functions with 10 mins internval.
 
 After ATS_4_WorkItemScheduler completes pushing the messages in the queue, WorkItemProcessor will get autotrigged, start processing scan and push scan results in storage account and LA workspace. 
 
+ **iii) AutoUpdater Functions:** 
+ 
+ Timer based function app to automatically update other function apps(Metadataaggregator and WorkItemProcessor) and azure web service app(UI and API). User has the option to configure AutoUpdater settings like isAutoUpdateOn(user wants to auto update with new releases), VersionType(user wants to install the latest release/stable release/specific version).
+
+> **Note:** If you want specific version to be installed, you have to change **isAutoUpdateOn** to **false** after installing the required version through the app settings configuration. Our AutoUpdater is robust enough to handle different configuration for each function apps or web service app.
 
 
 ## Log Analytics Visualization
