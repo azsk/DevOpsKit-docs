@@ -269,8 +269,23 @@ After ATS_4_WorkItemScheduler completes pushing the messages in the queue, WorkI
  **iii) AutoUpdater Functions:** 
  
  Timer based function app to automatically update other function apps(Metadataaggregator and WorkItemProcessor) and azure web service app(UI and API). User has the option to configure AutoUpdater settings like isAutoUpdateOn(user wants to auto update with new releases), VersionType(user wants to install the latest release/stable release/specific version).
+ 
+ AutoUpdater is a cron job which runs every 5 hrs automatically to check for new release to update the apps. You can also manually trigger the AutoUpdater function if needed.
+ Our AutoUpdater is robust enough to handle different configuration for each function apps or web service apps.
 
-> **Note:** If you want specific version to be installed, you have to change **isAutoUpdateOn** to **false** after installing the required version through the app settings configuration. Our AutoUpdater is robust enough to handle different configuration for each function apps or web service app.
+> **Note:** If you want to install specific version for each different apps(or a specific version for all) follow the below steps,
+(i) Change the VersionType from **"stable/latest"** to the required version number eg., **"x.y.z"**,
+(ii) Manually trigger the AutoUpdate function app. You can view the console/monitor logs to see appropriate status of AutoUpdater function.
+(iii) After AutoUpdater function execution gets complete, you need to change **isAutoUpdateOn** to **false** through the app configuration setting for the apps where you want to keep custom version installed.
+
+
+### AzSK-AzTS-WebApp-xxxxx
+UI to support scanning of subscription controls, compact/detailed view of compliance status of controls, attestation and exception logging. 
+
+### AzSK-AzTS-WebApi-xxxxx
+Backend API to support frontend UI.
+
+
 
 
 ## Log Analytics Visualization
