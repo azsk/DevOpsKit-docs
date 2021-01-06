@@ -218,11 +218,8 @@ i) In the Azure portal, Go to hosting subscription, select the scan host resourc
 |AzSK-AzTS-LAWorkspace-xxxxx|Log Analytics workspace| Used to store scan events, inventory, subscription scan progress details|
 |AzSK-AzTS-InternalMI|Managed Identity | Internal MI identity used to access LA workspace and storage for sending scan results|
 |AzSK-AzTS-AppServicePlan | Function App Service Plan| Function app service plan|
-|AzSK-AzTS-API-AppServicePlan | Web App Service Plan| Web app service plan|
 |azsktsstoragexxxxx|Storage Account| Used to store the daily results of subscriptions scan|
 |AzSK-AzTS-AppInsights |App Insight| Used to collect telemetry logs from functions |
-|AzSK-AzTS-WebApp-xxxxx | Azure web app servicen| UI to easily monitor control compliance details and perform adhoc scan|
-|AzSK-AzTS-WebApi-xxxxx | Azure web app service| Backend API to support UI|
 
  **3:** Verify below Functions got created
 
@@ -277,16 +274,6 @@ After ATS_4_WorkItemScheduler completes pushing the messages in the queue, WorkI
 (i) Change the VersionType from **"stable/latest"** to the required version number eg., **"x.y.z"**,
 (ii) Manually trigger the AutoUpdate function app. You can view the console/monitor logs to see appropriate status of AutoUpdater function.
 (iii) After AutoUpdater function execution gets complete, you need to change **isAutoUpdateOn** to **false** through the app configuration setting for the apps where you want to keep custom version installed.
-
-
-### AzSK-AzTS-WebApp-xxxxx
-UI to support scanning of subscription controls, compact/detailed view of compliance status of controls, attestation and exception logging. 
-
-### AzSK-AzTS-WebApi-xxxxx
-Backend API to support frontend UI.
-
-
-
 
 ## Log Analytics Visualization
 
