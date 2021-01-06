@@ -14,6 +14,9 @@
     Install-Module -Name Az.ManagedServiceIdentity -AllowClobber -Scope CurrentUser -repository PSGallery
 
 # *** 3. Setting up scanning identity   
+        #Before creating user-assigned managed identity, please connect to AzureAD and AzAccount with the tenant Id where you want to use AzTS solution.
+        Connect-AzAccount -Tenant <TenantId>
+        Connect-AzureAD -TenantId <TenantId>
 
     # i) You can create user-assigned managed identity with below PowerShell command 
             # Step 1: Set context to subscription where user-assigned managed identity needs to be created
