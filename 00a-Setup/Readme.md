@@ -1,5 +1,5 @@
 > <h4><font color="blue">IMPORTANT:</font></h4> 
- >[AzSK Sunset Notice](https://github.com/azsk/DevOpsKit-docs/blob/users/v-himkam/SunsetNotice/ReleaseNotes/AzSKSunsetNotice.md)
+- [AzSK Sunset Notice](https://github.com/azsk/DevOpsKit-docs/blob/users/v-himkam/SunsetNotice/ReleaseNotes/AzSKSunsetNotice.md)
 
 	
 > The Secure DevOps Kit for Azure (AzSK) was created by the Core Services Engineering & Operations (CSEO) division at Microsoft, to help accelerate Microsoft IT's adoption of Azure. We have shared AzSK and its documentation with the community to provide guidance for rapidly scanning, deploying and operationalizing cloud resources, across the different stages of DevOps, while maintaining controls on security and governance.
