@@ -1,6 +1,3 @@
-> <h4><font color="blue">IMPORTANT:</font></h4> 
-- [AzSK Sunset Notice](https://github.com/azsk/DevOpsKit-docs/blob/users/v-himkam/SunsetNotice/ReleaseNotes/AzSKSunsetNotice.md)
-
 ## IMPORTANT:  [AzSK Sunset Notice](https://github.com/azsk/DevOpsKit-docs/blob/users/v-himkam/SunsetNotice/ReleaseNotes/AzSKSunsetNotice.md)
 
 	
