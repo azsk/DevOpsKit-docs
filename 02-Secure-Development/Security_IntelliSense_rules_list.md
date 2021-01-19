@@ -1,4 +1,7 @@
-﻿## **Security IntelliSense Rule List**
+## IMPORTANT: DevOps Kit (AzSK) is being sunset by end of FY21. More details [here](../ReleaseNotes/AzSKSunsetNotice.md)
+----------------------------------------------
+
+## **Security IntelliSense Rule List**
 
 
 ### **Rule - appsec_xml_doc_dtdprocessing_parse**

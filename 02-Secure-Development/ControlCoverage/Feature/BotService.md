@@ -1,4 +1,7 @@
-﻿<html>
+## IMPORTANT: DevOps Kit (AzSK) is being sunset by end of FY21. More details [here](/ReleaseNotes/AzSKSunsetNotice.md)
+----------------------------------------------
+
+<html>
 <head>
 
 </head><body>

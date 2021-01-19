@@ -1,4 +1,7 @@
-﻿<H2>AzSK Alerts List </H2>
+## IMPORTANT: DevOps Kit (AzSK) is being sunset by end of FY21. More details [here](/ReleaseNotes/AzSKSunsetNotice.md)
+----------------------------------------------
+
+<H2>AzSK Alerts List </H2>
 <H2> Mandatory Alerts </H2>
 <table>
     <tr>
