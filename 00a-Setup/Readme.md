@@ -2,7 +2,7 @@
 ------------------------------------------------
 
 ```diff
-- text in red
+- text in navy blue
 + text in green
 ! text in orange
 # text in gray
