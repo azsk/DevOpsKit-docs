@@ -1,3 +1,6 @@
+## IMPORTANT: DevOps Kit (AzSK) is being sunset by end of FY21. More details [here](/ReleaseNotes/AzSKSunsetNotice.md)
+----------------------------------------------
+
 # Getting started with "The Secure DevOps Kit for Azure" Video Library!
 <div class="videoContainer">
     <div class="videoContent">
