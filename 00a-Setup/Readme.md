@@ -2,7 +2,8 @@
 ------------------------------------------------
 
 ```diff
-- IMPORTANT:``` DevOps Kit (AzSK) is being sunset by end of FY21. More details [here](../ReleaseNotes/AzSKSunsetNotice.md)
+- IMPORTANT:
+``` DevOps Kit (AzSK) is being sunset by end of FY21. More details [here](../ReleaseNotes/AzSKSunsetNotice.md)
 
 ```diff
 + IMPORTANT:``` DevOps Kit (AzSK) is being sunset by end of FY21. More details [here](../ReleaseNotes/AzSKSunsetNotice.md)
