@@ -116,7 +116,6 @@ Note: The next few items mention features from recent releases retained for visi
     *   N/A
 
 * Others:
-    *  	SLA for status drift scenarios : 
-            If a control for an existing resource has transitioned from 'Passed' to 'Failed' state, S360 will now provide an SLA of 7 days to fix the control i.e. due date would be 'Date on which control transitioned to 'Failed' state + 7 days'. This will avoid controls for existing resources going 'Out of SLA' immediately.
+    *  	N/A
 
 
