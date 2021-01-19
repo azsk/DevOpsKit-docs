@@ -1,7 +1,7 @@
 ## [IMPORTANT: DevOps Kit (AzSK) is being sunset by end of FY21.](https://github.com/azsk/DevOpsKit-docs/blob/users/v-himkam/SunsetNotice/ReleaseNotes/AzSKSunsetNotice.md)
 ------------------------------------------------
 
-! This is an info message.
+:exclamation: This is an info message.
 
 !v This is a success message.
 
