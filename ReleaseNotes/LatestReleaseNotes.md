@@ -1,22 +1,13 @@
-## 201015 (AzSK v.4.14.0)
+## 210115 (AzSK v.4.15.0)
 
 ### Feature updates
 
-*   CA SPN old credentials cleanup:
-
-    *	In the previous sprint, we had added support for deleting older certificate credentials when renewing the certificate for AzSK CA SPN. To allow users to request just deletion of older credentials (without necessarily renewing the current credential), we have added the -DeleteOldCredentials switch as under:
+*	Default TLS 1.2 setting for AzSK storage account:
     
+    * The storage account created under AzSKRG while installing CA using Install-AzSKContinuousAssurance command,will now be set up with ‘TLS version 1.2’ and ‘Allow Blob public access’ set to ‘Disabled’ by default.In order to apply these settings to your existing AzSK storage accounts, you’ll need to run following command:
     ```Powershell
-        Update-AzSKContinuousAssurance –sid $sub -DeleteOldCredentials
+       Update-AzSKContinuousAssurance -SubscriptionId $SubscriptionId 
     ```
-
-
-*	Security scanner for Azure DevOps (ADO)/ADO Security Scanner extension:
-    
-    *	The key highlights for the Azure DevOps (ADO) security scanner release are support for (a) setting up Azure-hosted continuous assurance scans with Owner access only at the target RG level, (b) scanning all resources associated with a specific service and (c) various admin control improvements. This release has been deployed for CSEO-wide consumption and a dashboard is available at https://aka.ms/adoscanner/dashboard.
-    *   [Click here](https://idwebelements/GroupManagement.aspx?Group=azskadop&Operation=join) to subscribe to get detailed feature updates of ADO security scanner.
-
-
 
 * Security Verification Tests (SVTs):
     *	N/A.
@@ -31,21 +22,14 @@
 
 
 * Org policy/external user updates (for non-CSEO users):
-    *   Added support to enable/disable anonymous usage telemetry for CA and CICD scans.
-    *   For CA, this can be done by using -UsageTelemetryLevel flag as below:  
-        
-        ```Powershell
-        Update-AzSKContinuousAssurance –sid $sub -UsageTelemetryLevel None
-        ```
+    *   Storage account created as part of Org policy setup via Install-AzSKOrganizationPolicy command will now be set up with TLS version 1.2 by default.To apply this setting for your existing org policy storage accounts, you just need to run following command:        
+    ```Powershell
+             Update-AzSKOrganizationPolicy -SubscriptionId <SubscriptionId> `
+                                      -OrgName "Contoso" `
+                                      -DepartmentName "IT" `
+                                      -PolicyFolderPath "D:\ContosoPolicies" 
 
-    *	For CICD, a ‘UsageTelemetryLevel’ pipeline variable can be set to ‘None’ in the pipeline         definition.
-    *	For either case, the value Anonymous can be used to re-enable usage telemetry.
-
-    *	Note that, in local usage mode, this facility was always available via the command below:
-    
-        ```Powershell
-        Set-AzSKUsageTelemetryLevel -Level None
-         ```
+    ```
 
 Note: The next few items mention features from recent releases retained for visibility in case you missed those release announcements:
 
@@ -74,7 +58,7 @@ Note: The next few items mention features from recent releases retained for visi
     * ```Update-AzSKTrackedCredential``` to update the credential settings and reset the last updated timestamp.
     * ```Remove-AzSKTrackedCredential``` to deboard a credential from AzSK tracking.
 
-*	Privileged Identity Management (PIM) helper cmdlets (from last sprint)  
+*	Privileged Identity Management (PIM) helper cmdlets (from earlier sprint)  
     * ```Set-AzSKPIMConfiguration``` (alias ```setpim```) for configuring/changing PIM settings
     * ```Get-AzSKPIMConfiguration``` (alias ```getpim```) for querying various PIM settings/status
     * Activating your PIM role is now as simple as this:
@@ -102,14 +86,16 @@ Note: The next few items mention features from recent releases retained for visi
 
 ### Other improvements/bug fixes
 * Subscription Security:
-    *   NA
+    *   N/A
     
 * SVTs: 
-    *	Going forward, control attestation using older modules will be blocked in non-SAW environments.
+    *	N/A
 
 * Controls:
-    *	Fixed an issue in the TLS control for APIM which was earlier reporting incorrect result for resources in consumption tier.
-    *   Fixed an issue in Azure_CDN_DP_Enable_HTTPS control which was earlier resulting into error state for ‘Verizon’ and ‘Akamai’ options.
+   *	Fixed a bug in control ‘Azure_Subscription_AuthZ_Limit_ClassicAdmin_Count’. It will now fail in case there is an account having multiple classic admin roles e.g. account having both CoAdministrator and AccountAdministrator role 
+   *   Fixed a bug in control 'Azure_Subscription_Configure_Conditional_Access_for_PIM. The Control will flag roles that have conditional accesss policy configured but do not have required acrs tag. Expected tags are  {"acrsRequired":true,"acrs":"urn:microsoft:req1"}.
+   *	Fixed a bug in control Azure_SQLDatabase_DP_Enable_TDE. Now the control will pass if email notifications to either admins or to specific recipients are configured.
+
 
 * Privileged Identity Management (PIM):
    *	N/A.
@@ -121,17 +107,16 @@ Note: The next few items mention features from recent releases retained for visi
     *    N/A.
 
 * CA:
-    *	Added support to display the currently in-use service principal name in the output of ```Get-AzSKContinuousAssurance``` command.
+    *	N/A
 
 * In-cluster CA:
     *    N/A. 
 
 * Log Analytics:
-    *   Added support for the -Force switch so that Log Analytics based monitoring solution can be installed using ```Install-AzSKMonitoringSolution``` without user interaction/consent if a view with the same name already exists.
+    *   N/A
 
 * Others:
-    *   Fixed a bug in ```Get-AzSKInfo -InfoType ControlInfo``` when run with -UseBaselineControls/-UsePreviewBaselineControls/-FilterTags flags was previously resulting into error due to internal caching of policy files.
-    *   Behavior of ```Get-AzSKInfo -InfoType ControlInfo``` has been rectified to report information of public IP address controls only when an org has enabled their evaluation.
-    *   Fixed an issue in credential hygiene cmdlets where alerts for credentials nearing expiry were not triggered due to change in the underlying product API.
-    *   ```Get-AzSKExpressRouteNetworkSecurityStatus``` command will not throw exception even if no control ids are specified.
+    *  	SLA for status drift scenarios : 
+            If a control for an existing resource has transitioned from 'Passed' to 'Failed' state, S360 will now provide an SLA of 7 days to fix the control i.e. due date would be 'Date on which control transitioned to 'Failed' state + 7 days'. This will avoid controls for existing resources going 'Out of SLA' immediately.
+
 
