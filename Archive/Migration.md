@@ -1,3 +1,6 @@
+## IMPORTANT: DevOps Kit (AzSK) is being sunset by end of FY21. More details [here](/ReleaseNotes/AzSKSunsetNotice.md)
+----------------------------------------------
+
 ## Migrating from 'AzSDK' to 'AzSK'
 
 <h4><font color="blue">IMPORTANT:</font></h4> 
