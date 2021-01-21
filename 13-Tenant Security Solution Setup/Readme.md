@@ -59,11 +59,23 @@ Install-Module -Name Az.Storage -AllowClobber -Scope CurrentUser -repository PSG
 Install-Module -Name Az.ManagedServiceIdentity -AllowClobber -Scope CurrentUser -repository PSGallery
 ```
 
+``` Powershell
+# Install AzureAd 
+Install-Module -Name AzureAD -AllowClobber -Scope CurrentUser -repository PSGallery
+```
+
 **3. Setting up scanning identity**  
 
 The AzTS setup basically provisions your subscriptions with the ability to do daily scans for security controls.
 To do the scanning, it requires a [User-assigned Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) (central scanning identity owned by you) and 'Reader' access to target subscriptions on which scan needs to be performed. 
 
+Before creating user-assigned managed identity, please connect to AzureAD and AzAccount with the tenant Id where you want to use AzTS solution.
+
+
+``` Powershell
+Connect-AzAccount -Tenant <TenantId>
+Connect-AzureAD -TenantId <TenantId>
+```
 
 i) You can create user-assigned managed identity with below PowerShell command or Portal steps [here](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-portal)
 
@@ -202,13 +214,12 @@ i) In the Azure portal, Go to hosting subscription, select the scan host resourc
 |----|----|----|
 |AzSK-AzTS-MetadataAggregator-xxxxx|Function App| Contains functions to get inventory (subscription, baseline controls and RBAC) and queue subscription for scan |
 |AzSK-AzTS-WorkItemProcessor-xxxxx|Function App | Contains function to scan subscription with baseline control |
+|AzSK-AzTS-AutoUpdater-xxxxx|Function App | Contains function to scan automatically updater function apps and web service apps |
 |AzSK-AzTS-LAWorkspace-xxxxx|Log Analytics workspace| Used to store scan events, inventory, subscription scan progress details|
 |AzSK-AzTS-InternalMI|Managed Identity | Internal MI identity used to access LA workspace and storage for sending scan results|
 |AzSK-AzTS-AppServicePlan | Function App Service Plan| Function app service plan|
 |azsktsstoragexxxxx|Storage Account| Used to store the daily results of subscriptions scan|
 |AzSK-AzTS-AppInsights |App Insight| Used to collect telemetry logs from functions |
-
-
 
  **3:** Verify below Functions got created
 
@@ -252,7 +263,17 @@ Similarly, you can trigger below functions with 10 mins internval.
 
 After ATS_4_WorkItemScheduler completes pushing the messages in the queue, WorkItemProcessor will get autotrigged, start processing scan and push scan results in storage account and LA workspace. 
 
+ **iii) AutoUpdater Functions:** 
+ 
+ Timer based function app to automatically update other function apps(Metadataaggregator and WorkItemProcessor) and azure web service app(UI and API). User has the option to configure AutoUpdater settings like isAutoUpdateOn(user wants to auto update with new releases), VersionType(user wants to install the latest release/stable release/specific version).
+ 
+ AutoUpdater is a cron job which runs every 5 hrs automatically to check for new release to update the apps. You can also manually trigger the AutoUpdater function if needed.
+ Our AutoUpdater is robust enough to handle different configuration for each function apps or web service apps.
 
+> **Note:** If you want to install specific version for each different apps(or a specific version for all) follow the below steps,
+(i) Change the VersionType from **"stable/latest"** to the required version number eg., **"x.y.z"**,
+(ii) Manually trigger the AutoUpdate function app. You can view the console/monitor logs to see appropriate status of AutoUpdater function.
+(iii) After AutoUpdater function execution gets complete, you need to change **isAutoUpdateOn** to **false** through the app configuration setting for the apps where you want to keep custom version installed.
 
 ## Log Analytics Visualization
 
