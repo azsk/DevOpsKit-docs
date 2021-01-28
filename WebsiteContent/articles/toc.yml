@@ -166,22 +166,6 @@
   href: ../../08-Miscellaneous-Features/Readme.md
 - name: Secure Azure DevOps (VSTS) -Preview
   href: ../../09-AzureDevOps(VSTS)-Security/Readme.md
-  items: 
-    - name: Control Coverage
-      href: ../../09-AzureDevOps(VSTS)-Security/ControlCoverage/README.md
-      items:
-        - name: Build
-          href: ../../09-AzureDevOps(VSTS)-Security/ControlCoverage/Feature/Build.md
-        - name: Organization
-          href: ../../09-AzureDevOps(VSTS)-Security/ControlCoverage/Feature/Organization.md
-        - name: Project
-          href: ../../09-AzureDevOps(VSTS)-Security/ControlCoverage/Feature/Project.md
-        - name: Release
-          href: ../../09-AzureDevOps(VSTS)-Security/ControlCoverage/Feature/Release.md
-        - name: Service Connection
-          href: ../../09-AzureDevOps(VSTS)-Security/ControlCoverage/Feature/ServiceConnection.md
-        - name: User
-          href: ../../09-AzureDevOps(VSTS)-Security/ControlCoverage/Feature/User.md   
 - name: Continuous-Assurance-for-in-Cluster
   href: ../../10-Continuous-Assurance-for-in-Cluster/Readme.md
 - name: ARM Templates
