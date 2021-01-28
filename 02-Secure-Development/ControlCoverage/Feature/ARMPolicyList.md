@@ -1,4 +1,4 @@
-## IMPORTANT: DevOps Kit (AzSK) is being sunset by end of FY21. More details [here](/ReleaseNotes/AzSKSunsetNotice.md)
+## IMPORTANT: DevOps Kit (AzSK) is being sunset by end of FY21. More details [here](../../../ReleaseNotes/AzSKSunsetNotice.md)
 ----------------------------------------------
 
 <H2>AzSK ARM Policies List </H2><table><tr><th align="left">Policy Name</th><th align="left">Description</th></tr><tr><td>AzSK_ARMPol_Deny_Classic_Resource_Create</td> <td>Policy to deny upon creation of classic/v1 (i.e., ASM-based) resources</td></tr></table>
