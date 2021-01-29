@@ -5,3 +5,9 @@
 - The new solution, AzTS, is available at https://aka.ms/devopskit/AzTS. This was developed by the same team that built AzSK and we have been using it to scan close to 100,000 Azure subscriptions daily for baseline control compliance across our environment over the last several months.  
 - As promised to all internal and external users of AzSK, we will continue to share CSEO's internal approach for cloud security and compliance and our migration path towards exclusively using native security capabilities in Azure. We believe AzTS takes us a big step closer to that. If you have a dependency on AzSK, please consider either migrating to AzTS or switching to using an approach based on native capabilities such as Azure Policy, Management Groups, Security Center, etc.
 
+## About our other scan modules (AAD, ADO, etc.)
+The points above are about the AzSK module which is Azure-specific. For the other modules (AAD scanner, ADO scanner), we have the following guidance:
+
+- ADO Scanner module (AzSK.ADO) will continue to be updated and maintained by our team. It is being actively used for surfacing security risks and remediating issues in our development environments. You can directly access the ADO Scanner project at https://aka.ms/adoscanner.
+- The AAD Scanner (AzSK.AAD) has been in preview mode. We have not done further development on it and there are no plans to resume work at present.
+
