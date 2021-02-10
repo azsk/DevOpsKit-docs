@@ -415,7 +415,7 @@ In this step you will import the data above into the LA workspace created during
 
  ![capture Workspace ID](../Images/13_TSS_LAWS_AgentManagement.png)
  
- **(b)** To push org Mapping details, copy and execute the script available [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/users/TenantSecurity/13-Tenant%20Security%20Solution%20Setup/Scripts/AzTSPushOrgMappingEvents.ps1) in Powershell.
+ **(b)** To push org Mapping details, copy and execute the script available [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/13-Tenant%20Security%20Solution%20Setup/Scripts/AzTSPushOrgMappingEvents.ps1) (for Gov subs use script [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/13-Tenant%20Security%20Solution%20Setup/Scripts/AzTSPushOrgMappingEvents.Gov.ps1)) in Powershell.
 
  > **Note**: Due to limitation of Log Analytics workspace, you will need to repeat this step every 90 days interval. 
 
@@ -426,7 +426,7 @@ In this section we shall create a PowerBI report locally within PowerBI Desktop 
 
 ![capture Workspace ID](../Images/13_TSS_LAWS_AgentManagement.png)
 
-**(b)** Download and copy the PowerBI template file from [here](https://github.com/azsk/DevOpsKit-docs/raw/master/13-Tenant%20Security%20Solution%20Setup/TemplateFiles/TenantSecurityReport.pbit) to your local machine.
+**(b)** Download and copy the PowerBI template file from [here](https://github.com/azsk/DevOpsKit-docs/raw/master/13-Tenant%20Security%20Solution%20Setup/TemplateFiles/TenantSecurityReport.pbit) (for Gov subs use template from [here](https://github.com/azsk/DevOpsKit-docs/raw/master/13-Tenant%20Security%20Solution%20Setup/TemplateFiles/TenantSecurityReport.Gov.pbit)) to your local machine.
 
 **(c)** Open the template (.pbit) file using PowerBI Desktop, provide the LA Workspace ID and click on 'Load' as shown below:
 
