@@ -110,7 +110,36 @@ New-AzRoleAssignment -ApplicationId $UserAssignedIdentity.ClientId -Scope "/subs
 
 ```
 
-  **Note:** If subscriptions are organized under [Management Groups](https://docs.microsoft.com/en-us/azure/governance/management-groups/overview) (MG), you can assign reader role for user-assigned identity using MG role assignment. You need to be 'Owner' on target subscription to perform role assignment.  
+
+  **Note:** If subscriptions are organized under [Management Groups](https://docs.microsoft.com/en-us/azure/governance/management-groups/overview) (MG), you can assign reader role for user-assigned identity using MG role assignment. You need to be 'Owner' on target subscription to perform role assignment.
+
+
+iii) Grant user-assigned managed identity Graph API permission to your tenant to read privileged access to Azure resources. Since this permission requires admin consent, the signed-in user must be a member of one of the following administrator roles: Global Administrator, Security Administrator, Security Reader or User Administrator.
+
+``` Powershell
+
+# Grant Graph Permission to the user-assigned managed identity.
+# Required Permission: Global Administrator, Security Administrator, Security Reader or User Administrator.
+
+# Get Graph Permission Id
+$graph = Get-AzureADServicePrincipal -Filter "AppId eq '00000003-0000-0000-c000-000000000000'"
+
+# Select the permission to be granted
+$groupReadPermission = $graph.AppRoles | where Value -Like "PrivilegedAccess.Read.AzureResources" | Select-Object -First 1
+
+# Get user-assigned managed identity SPN details
+$msi = Get-AzureADServicePrincipal -ObjectId $UserAssignedIdentity.PrincipalId
+
+# Grant Graph permission      
+New-AzureADServiceAppRoleAssignment `
+        -Id $groupReadPermission.Id `
+        -ObjectId $msi.ObjectId `
+        -PrincipalId $msi.ObjectId `
+        -ResourceId $graph.ObjectId
+
+```
+
+ **Note:** Graph permission is required for evaluation of 'Role-based access control' (RBAC) controls in the scanning framework. If you do not have the permission to grant graph access, you can choose to skip the controls dependent on Graph API (details mentioned in the steps below).
 
 **4. Download and extract deployment package**
  
@@ -165,6 +194,8 @@ Setup will create infra resources and schedule daily security control scan on ta
                   -ScanHostRGName <HostingResourceGroupName> `
                   -ScanIdentityId <ManagedIdentityResourceId> `
                   -Location <ResourceLocation> `
+                  -SendUsageTelemetry:$true `
+                  -ScanIdentityHasGraphPermission:$true `
                   -Verbose
 
   # For ScanIdentityId parameter, use value created for "$UserAssignedIdentity.Id" from prerequisite section step 3 or you can get this resources id by going into Azure Portal --> Subscription where user-assigned MI resource created --> MIHostingRG --> Click on MI resource --> Properties --> Copy ResourceId. 
@@ -176,8 +207,13 @@ Setup will create infra resources and schedule daily security control scan on ta
                   -ScanHostRGName AzSK-AzTS-Solution-RG `
                   -ScanIdentityId '/subscriptions/bbbe2e73-fc26-492b-9ef4-adec8560c4fe/resourceGroups/TenantReaderRG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/TenantReaderUserIdentity' `
                   -Location EastUS2 `
+                  -SendUsageTelemetry:$true `
+                  -ScanIdentityHasGraphPermission:$true `
                   -Verbose
   ```
+
+**Note:** Tenant Security Solution does not support customization of app service name.
+
   Output looks like below
 
   ![Resources](../Images/12_TSS_CommandOutput.png)
@@ -192,9 +228,11 @@ Setup will create infra resources and schedule daily security control scan on ta
 |ScanHostRGName| Name of ResourceGroup where setup resources will be created |TRUE|
 |ScanIdentityId| Resource id of user managed identity used to scan subscriptions  |TRUE|
 |Location|Location where all resources will get created |TRUE|
+|SendUsageTelemetry| Permit application to send usage telemetry to Microsoft server. Usage telemetry captures anonymous usage data and sends it to Microsoft servers. This will help in improving the product quality and prioritize meaning fully on the highly used features.|FALSE|
+|ScanIdentityHasGraphPermission|Switch to exlcude controls dependent on Microsoft Graph API from the scan. Set this to false if user-assigned managed identity does not have Graph permission. |FALSE|
 |Verbose| Switch used to output detailed log |FALSE|
 
-
+<br/>
 
 ## Verifying that Tenant Security Solution installation is complete
 
@@ -214,12 +252,18 @@ i) In the Azure portal, Go to hosting subscription, select the scan host resourc
 |----|----|----|
 |AzSK-AzTS-MetadataAggregator-xxxxx|Function App| Contains functions to get inventory (subscription, baseline controls and RBAC) and queue subscription for scan |
 |AzSK-AzTS-WorkItemProcessor-xxxxx|Function App | Contains function to scan subscription with baseline control |
+|AzSK-AzTS-WebApi-xxxxx|App Service| Contains API consumed by the AzTS user interface |
+|AzSK-AzTS-WebApp-xxxxx|App Service| Contains AzTS user interface which can used to view the scan result |
+|AzSK-AzTS-WebApp-xxxxx/Staging-xxxxx| App service slot| Staging slot created to prevent UI downtime during auto-update|
 |AzSK-AzTS-AutoUpdater-xxxxx|Function App | Contains function to scan automatically updater function apps and web service apps |
 |AzSK-AzTS-LAWorkspace-xxxxx|Log Analytics workspace| Used to store scan events, inventory, subscription scan progress details|
 |AzSK-AzTS-InternalMI|Managed Identity | Internal MI identity used to access LA workspace and storage for sending scan results|
-|AzSK-AzTS-AppServicePlan | Function App Service Plan| Function app service plan|
+|AzSK-AzTS-AppServicePlan | Web App Service Plan| Web app service plan|
+|AzSK-AzTS-API-AppServicePlan | Function App Service Plan| Function app service plan|
 |azsktsstoragexxxxx|Storage Account| Used to store the daily results of subscriptions scan|
 |AzSK-AzTS-AppInsights |App Insight| Used to collect telemetry logs from functions |
+
+<br/>
 
  **3:** Verify below Functions got created
 
@@ -265,7 +309,7 @@ After ATS_4_WorkItemScheduler completes pushing the messages in the queue, WorkI
 
  **iii) AutoUpdater Functions:** 
  
- Timer based function app to automatically update other function apps(Metadataaggregator and WorkItemProcessor) and azure web service app(UI and API). User has the option to configure AutoUpdater settings like isAutoUpdateOn(user wants to auto update with new releases), VersionType(user wants to install the latest release/stable release/specific version).
+ Timer based function app to automatically update other function apps (Metadataaggregator and WorkItemProcessor) and azure web service app(UI and API). User has the option to configure AutoUpdater settings like isAutoUpdateOn (user wants to auto update with new releases), VersionType (user wants to install the latest release/stable release/specific version).
  
  AutoUpdater is a cron job which runs every 5 hrs automatically to check for new release to update the apps. You can also manually trigger the AutoUpdater function if needed.
  Our AutoUpdater is robust enough to handle different configuration for each function apps or web service apps.
@@ -274,6 +318,19 @@ After ATS_4_WorkItemScheduler completes pushing the messages in the queue, WorkI
 (i) Change the VersionType from **"stable/latest"** to the required version number eg., **"x.y.z"**,
 (ii) Manually trigger the AutoUpdate function app. You can view the console/monitor logs to see appropriate status of AutoUpdater function.
 (iii) After AutoUpdater function execution gets complete, you need to change **isAutoUpdateOn** to **false** through the app configuration setting for the apps where you want to keep custom version installed.
+
+<br/>
+
+## AzTS UI
+
+Tenant reader solution provides a user interface which can be used to view the scan result. To view the portal, go to https://azsk-azts-webapp-xxxxx.azurewebsites.net. We recommend that you create a custom domain name for your UI. For steps to create custom domain, refer [link](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain).
+
+![UI](../Images/13_TSS_UIOverview.png)
+
+
+TODO: Add UI walk through video.
+
+<br/>
 
 ## Log Analytics Visualization
 
@@ -354,7 +411,6 @@ AzSK_ControlResults_CL
 | order by FailedCount desc 
 | take 10
 ```
-
 
 [Back to top…](Readme.md#contents)
 ## Tenant Security Solution - under the covers (how it works)
