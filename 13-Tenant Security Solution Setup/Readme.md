@@ -323,12 +323,53 @@ After ATS_4_WorkItemScheduler completes pushing the messages in the queue, WorkI
 
 ## AzTS UI
 
-Tenant reader solution provides a user interface which can be used to view the scan result. To view the portal, go to https://azsk-azts-webapp-xxxxx.azurewebsites.net. We recommend that you create a custom domain name for your UI. For steps to create custom domain, refer [link](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain).
+Tenant reader solution provides a UI-based tool that can be used to submit "ad hoc" scan requests to AzTS. This tool leverages you current subscription permissions to show you subscriptions that you have the ability to request scans for. (Note: Currently it checks for PIM eligible or permanent memberships for the following roles: ['Owner','Contributor','ServiceAdministrator','CoAdministrator','AccountAdministrator','Security Reader','Security Admin'].)
+The UI is fairly self-explanatory and also has a "Guided Tour" feature that should show you the basic usage workflow. To view AzTS UI, go to https://azsk-azts-webapp-xxxxx.azurewebsites.net. We recommend that you create a custom domain name for your UI. For steps to create custom domain, refer [link](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain).
 
 ![UI](../Images/13_TSS_UIOverview.png)
 
-
 TODO: Add UI walk through video.
+
+**Add org-subscription mapping for your subscription(s)**:
+
+By default, there is no service mapping for your subscription. Therefore, you see the 'Unknown' value is the Service Filter dropdown. To add service mapping, follow the steps below:
+
+#### Step 1: Prepare your org-subscription mapping
+In this step you will prepare the data file with the mapping from subscription ids to the org hierarchy within your environment. The file is in a simple CSV form and should appear like the one below. 
+
+> Note: You may want to create a small CSV file with just a few subscriptions for a trial pass and then update it with the full subscription list for your org after getting everything working end-to-end.
+
+A sample template for the CSV file is [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/users/TenantSecurity/13-Tenant%20Security%20Solution%20Setup/TemplateFiles/OrgMapping.csv):
+
+![Org-Sub metadata json](../Images/13_TSS_OrgMappingCSV.PNG) 
+
+The table below describes the different columns in the CSV file and their intent.
+
+| ColumnName  | Description |
+| ---- | ---- |
+| OrganizationName | Name of organization within your enterprise |
+| DivisionName | Name of division within your organization |
+| ServiceName | Name of service within your organization |
+| ServiceGroupName | Name of Service Line/ Business Unit within an organization |
+| TeamGroupName | Name of teams within an organization |
+| SubscriptionId | Subscription Id belonging to a org/servicegroup |
+| SubscriptionName | Subscription Name |
+
+
+> **Note**: Ensure you follow the correct casing for all column names as shown in the table above.
+
+
+#### Step 2: Upload your mapping to the Log Analytics (LA) workspace
+
+In this step you will import the data above into the LA workspace created during Tenant Security setup. 
+
+ **(a)** Locate the LA resource that was created during Tenant Security setup in your subscription. This should be present under Tenant Security resource group. After selecting the LA resource, copy the Workspace ID from the portal as shown below:
+
+ ![capture Workspace ID](../Images/13_TSS_LAWS_AgentManagement.png)
+ 
+ **(b)** To push org Mapping details, copy and execute the script available [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/13-Tenant%20Security%20Solution%20Setup/Scripts/AzTSPushOrgMappingEvents.ps1) (for Gov subs use script [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/13-Tenant%20Security%20Solution%20Setup/Scripts/AzTSPushOrgMappingEvents.Gov.ps1)) in Powershell.
+
+ > **Note**: Due to limitation of Log Analytics workspace, you will need to repeat this step every 90 days interval.
 
 <br/>
 
