@@ -276,14 +276,16 @@ Metadata aggregator function performs two tasks:
 
 Click on 'AzSK-AzTS-MetadataAggregator-xxxxx' function app present in scan hosting RG --> Click on 'Functions' tab in left menu
 
-![ProcessorWebjobs](../Images/12_TSS_Processor_WebJobs.png)
+![ProcessorWebjobs](../Images/12_TSS_Processor_WebJobs_1.png)
 
 |Function Name|Description|
 |----|----|
-|ATS_1_SubscriptionInvProcessor| Responsible to fetch details about all the subscriptions that has been granted access as Reader using central MI. All these subscriptions will be fetched by the job and persisted into LA. These subscriptions are scanned automatically by the consecutive jobs.
-|ATS_2_BaselineControlsInvProcessor| Responsible to push baseline controls metadata to LA and storage account
-|ATS_3_SubscriptionRBACProcessor| Collects RBAC details of subscription to be scanned. RBAC collected used to scan the control like "Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities" 
-|ATS_4_WorkItemScheduler|  Responsible to queue up subscriptions as workitems for scanning. It also reconciles the errored subscriptions through retries in the end. By default it would retry to scan for 5 times for each error subscription. IF there is nothing to process for the day, it would simply ignore the run.
+|ATS_1_MGTreeProcessor| Responsible to fetch details about all the management group that has been granted access as Reader using central MI. All these management group will be fetched by the job and persisted into LA. This function is disabled by default. To enable this function, you need to add ``` FeatureManagement__ManagementGroups : true ``` to the Application settings on Azure Portal. To update application settings in the app service, go to Configuration --> New application settings --> Save after adding/updating the setting.
+|ATS_2_SubscriptionInvProcessor| Responsible to fetch details about all the subscriptions that has been granted access as Reader using central MI. All these subscriptions will be fetched by the job and persisted into LA. These subscriptions are scanned automatically by the consecutive jobs.
+|ATS_3_BaselineControlsInvProcessor| Responsible to push baseline controls metadata to LA and storage account
+|ATS_4_PolicyDefinitionProcessor| Responsible to fetch policy definition details and push it to LA. This function is disabled by default. To enable this function, you need to add ``` FeatureManagement__PolicyDefinitions : true ``` to the Application settings on Azure Portal.  To update application settings in the app service, go to Configuration --> New application settings --> Save after adding/updating the setting.
+|ATS_5_SubscriptionRBACProcessor| Collects RBAC details of subscription to be scanned. RBAC collected used to scan the control like "Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities" 
+|ATS_6_WorkItemScheduler|  Responsible to queue up subscriptions as workitems for scanning. It also reconciles the errored subscriptions through retries in the end. By default it would retry to scan for 5 times for each error subscription. IF there is nothing to process for the day, it would simply ignore the run.
 
  **ii) WorkItemProcessor Functions:** 
  
