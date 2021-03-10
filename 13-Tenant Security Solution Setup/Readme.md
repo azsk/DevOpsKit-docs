@@ -312,7 +312,7 @@ After ATS_4_WorkItemScheduler completes pushing the messages in the queue, WorkI
  
  Timer based function app to automatically update other function apps (Metadataaggregator and WorkItemProcessor) and azure web service app(UI and API). User has the option to configure AutoUpdater settings like isAutoUpdateOn (user wants to auto update with new releases), VersionType (user wants to install the latest release/stable release/specific version).
  
- AutoUpdater is a cron job which runs every 5 hrs automatically to check for new release to update the apps. You can also manually trigger the AutoUpdater function if needed.
+ AutoUpdater is a cron job which runs twice a day at 02:00 PM and 04:00 PM (UTC) to check for new release to update the apps. You can also manually trigger the AutoUpdater function if needed.
  Our AutoUpdater is robust enough to handle different configuration for each function apps or web service apps.
 
 > **Note:** If you want to install specific version for each different apps(or a specific version for all) follow the below steps,
