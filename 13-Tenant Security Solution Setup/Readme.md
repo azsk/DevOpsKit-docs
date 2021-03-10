@@ -147,7 +147,7 @@ New-AzureADServiceAppRoleAssignment `
  ARM template: Contains resource configuration details that needs to be created as part of setup
  Deployment setup script: Provides the cmdlet to run installation. 
 
-i) Download deployment package zip from [here](https://github.com/azsk/DevOpsKit-docs/raw/users/TenantSecurity/13-Tenant%20Security%20Solution%20Setup/TemplateFiles/DeploymentFiles.zip) to your local machine.  
+i) Download deployment package zip from [here](TemplateFiles/DeploymentFiles.zip) to your local machine. 
 
 ii) Extract zip to local folder location
 
@@ -161,7 +161,7 @@ iv) Point current path to deployment folder and load AzTS setup script
 ``` PowerShell
 # Point current path to extracted folder location and load setup script from deploy folder 
 
-CD "<LocalExtractedFolderPath>\Deploy"
+CD "<LocalExtractedFolderPath>\DeploymentFiles"
 
 # Load AzTS Setup script in session
 . ".\AzTSSetup.ps1"
@@ -244,7 +244,8 @@ i) In the Azure portal, Go to hosting subscription, select the scan host resourc
 
 **2:** Verify below resources got created. 
 
-![Resources](../Images/12_TSS_Resource_Group.png)	
+![Resources](../Images/12_TSS_Resource_Group_1.png)	
+![Resources](../Images/12_TSS_Resource_Group_2.png)	
 
 **Resources details:**
 
@@ -339,7 +340,7 @@ In this step you will prepare the data file with the mapping from subscription i
 
 > Note: You may want to create a small CSV file with just a few subscriptions for a trial pass and then update it with the full subscription list for your org after getting everything working end-to-end.
 
-A sample template for the CSV file is [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/users/TenantSecurity/13-Tenant%20Security%20Solution%20Setup/TemplateFiles/OrgMapping.csv):
+A sample template for the CSV file is [here](TemplateFiles/OrgMapping.csv):
 
 ![Org-Sub metadata json](../Images/13_TSS_OrgMappingCSV.PNG) 
 
@@ -363,11 +364,11 @@ The table below describes the different columns in the CSV file and their intent
 
 In this step you will import the data above into the LA workspace created during Tenant Security setup. 
 
- **(a)** Locate the LA resource that was created during Tenant Security setup in your subscription. This should be present under Tenant Security resource group. After selecting the LA resource, copy the Workspace ID from the portal as shown below:
+ **(a)** Locate the LA resource that was created during Tenant Security setup in your subscription. This should be present under Tenant Security resource group. After selecting the LA resource, copy the Workspace ID and primary key from the portal as shown below:
 
  ![capture Workspace ID](../Images/13_TSS_LAWS_AgentManagement.png)
  
- **(b)** To push org Mapping details, copy and execute the script available [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/13-Tenant%20Security%20Solution%20Setup/Scripts/AzTSPushOrgMappingEvents.ps1) (for Gov subs use script [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/13-Tenant%20Security%20Solution%20Setup/Scripts/AzTSPushOrgMappingEvents.Gov.ps1)) in Powershell.
+ **(b)** To push org Mapping details, copy and execute the script available [here](Scripts/AzTSPushOrgMappingEvents.ps1) (for Gov subs use script [here](Scripts/AzTSPushOrgMappingEvents.Gov.ps1)) in Powershell. You will need to replace the CSV path, Workspace ID, and primary key with its approriate value in this PowerShell script.
 
  > **Note**: Due to limitation of Log Analytics workspace, you will need to repeat this step every 90 days interval.
 
@@ -486,20 +487,23 @@ In this step you will prepare the data file which will be fed to the PowerBI das
 
 > Note: You may want to create a small CSV file with just a few subscriptions for a trial pass and then update it with the full subscription list for your org after getting everything working end-to-end.
 
-A sample template for the CSV file is [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/users/TenantSecurity/13-Tenant%20Security%20Solution%20Setup/TemplateFiles/OrgMapping.csv):
+A sample template for the CSV file is [here](TemplateFiles/OrgMapping.csv):
 
-![Org-Sub metadata json](../Images/07_OrgPolicy_PBI_OrgMetadata.PNG) 
+![Org-Sub metadata json](../Images/13_TSS_OrgMappingCSV.PNG) 
 
 The table below describes the different columns in the CSV file and their intent.
 
-| ColumnName  | Description | Required? | Comments |
-| ---- | ---- | ---- |---- |
-| BGName | Name of business group (e.g., Finance, HR, Marketing, etc.) within your enterprise | Yes |  This you can consider as level 1 hierarchy for your enterprise | 
-| ServiceGroupName | Name of Service Line/ Business Unit within an organization | Yes |  This you can consider as level 2 hierarchy for your enterprise | 
-| SubscriptionId | Subscription Id belonging to a org/servicegroup | Yes |   | 
-| SubscriptionName | Subscription Name | Yes | This should match the actual subscription name. If it does not, then the actual name will be used  | 
-| IsActive | Use "Y" for Active Subscription and "N" for Inactive Subscription  | Yes | This will be used to filter active and inactive subscriptions | 
-| OwnerDetails | List of subscription owners separated by semi-colons (;)  | Yes | These are people accountable for security of the subscription  | 
+| ColumnName  | Description |
+| ---- | ---- |
+| OrganizationName | Name of organization within your enterprise |
+| DivisionName | Name of division within your organization |
+| ServiceName | Name of service within your organization |
+| ServiceGroupName | Name of Service Line/ Business Unit within an organization |
+| TeamGroupName | Name of teams within an organization |
+| SubscriptionId | Subscription Id belonging to a org/servicegroup |
+| SubscriptionName | Subscription Name |
+
+<br/>
 
 > **Note**: Ensure you follow the correct casing for all column names as shown in the table above. The 'out-of-box' PowerBI template is bound to these columns. If you need additional columns to represent your org hierarchy then you may need to modify the template/report as well.
 
@@ -508,11 +512,11 @@ The table below describes the different columns in the CSV file and their intent
 
 In this step you will import the data above into the LA workspace created during Tenant Security setup. 
 
- **(a)** Locate the LA resource that was created during Tenant Security setup in your subscription. This should be present under Tenant Security resource group. After selecting the LA resource, copy the Workspace ID from the portal as shown below:
+ **(a)** Locate the LA resource that was created during Tenant Security setup in your subscription. This should be present under Tenant Security resource group. After selecting the LA resource, copy the Workspace ID and primary key from the portal as shown below:
 
  ![capture Workspace ID](../Images/13_TSS_LAWS_AgentManagement.png)
  
- **(b)** To push org Mapping details, copy and execute the script available [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/13-Tenant%20Security%20Solution%20Setup/Scripts/AzTSPushOrgMappingEvents.ps1) (for Gov subs use script [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/13-Tenant%20Security%20Solution%20Setup/Scripts/AzTSPushOrgMappingEvents.Gov.ps1)) in Powershell.
+ **(b)** To push org Mapping details, copy and execute the script available [here](Scripts/AzTSPushOrgMappingEvents.ps1) (for Gov subs use script [here](Scripts/AzTSPushOrgMappingEvents.Gov.ps1)) in Powershell. You will need to replace the CSV path, Workspace ID, and primary key with its approriate value in this PowerShell script.
 
  > **Note**: Due to limitation of Log Analytics workspace, you will need to repeat this step every 90 days interval. 
 

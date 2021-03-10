@@ -40,7 +40,27 @@
             $TargetSubscriptionIds | % {
             New-AzRoleAssignment -ApplicationId $UserAssignedIdentity.ClientId -Scope "/subscriptions/$_" -RoleDefinitionName "Reader"
             }
+    # iii) Grant user-assigned managed identity Graph API permission to your tenant to read privileged access to Azure resources. 
+    #      Since this permission requires admin consent, the signed-in user must be a member of one of the following administrator roles: Global Administrator, Security Administrator, Security Reader or User Administrator.
 
+            # Grant Graph Permission to the user-assigned managed identity.
+            # Get Graph Permission Id
+            $graph = Get-AzureADServicePrincipal -Filter "AppId eq '00000003-0000-0000-c000-000000000000'"
+            
+            # Select the permission to be granted
+            $groupReadPermission = $graph.AppRoles | where Value -Like "PrivilegedAccess.Read.AzureResources" | Select-Object -First 1
+            
+            # Get user-assigned managed identity SPN details
+            $msi = Get-AzureADServicePrincipal -ObjectId $UserAssignedIdentity.PrincipalId
+            
+            # Grant Graph permission      
+            New-AzureADServiceAppRoleAssignment `
+                    -Id $groupReadPermission.Id `
+                    -ObjectId $msi.ObjectId `
+                    -PrincipalId $msi.ObjectId `
+                    -ResourceId $graph.ObjectId
+     # NOTE: Note: Graph permission is required for evaluation of 'Role-based access control' (RBAC) controls in the scanning framework.
+     # If you do not have the permission to grant graph access, you can choose to skip the controls dependent on Graph API during the setup (details mentioned in the steps below).
 
 # *** 3. Set context and validate you have 'Owner' access on subscrption where solution needs to be installed ****
 
@@ -90,4 +110,6 @@
                     -ScanHostRGName $ScanHostRGName `
                     -ScanIdentityId $UserAssignedIdentity.Id `
                     -Location $Location `
+                    -SendUsageTelemetry:$true `
+                    -ScanIdentityHasGraphPermission:$true `
                     -Verbose
