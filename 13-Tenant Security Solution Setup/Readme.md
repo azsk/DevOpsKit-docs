@@ -342,7 +342,7 @@ In this step you will prepare the data file with the mapping from subscription i
 
 A sample template for the CSV file is [here](TemplateFiles/OrgMapping.csv):
 
-![Org-Sub metadata json](../Images/13_TSS_OrgMappingCSV.PNG) 
+![Org-Sub metadata json](../Images/13_TSS_OrgMappingCSV.png) 
 
 The table below describes the different columns in the CSV file and their intent.
 
@@ -489,7 +489,7 @@ In this step you will prepare the data file which will be fed to the PowerBI das
 
 A sample template for the CSV file is [here](TemplateFiles/OrgMapping.csv):
 
-![Org-Sub metadata json](../Images/13_TSS_OrgMappingCSV.PNG) 
+![Org-Sub metadata json](../Images/13_TSS_OrgMappingCSV.png) 
 
 The table below describes the different columns in the CSV file and their intent.
 
