@@ -328,7 +328,6 @@ After ATS_4_WorkItemScheduler completes pushing the messages in the queue, WorkI
 ## AzTS UI
 
 Tenant reader solution provides a UI-based tool that can be used to submit "ad hoc" scan requests to AzTS. This tool leverages you current subscription permissions to show you subscriptions that you have the ability to request scans for. (Note: Currently it checks for PIM eligible or permanent memberships for the following roles: ['Owner','Contributor','ServiceAdministrator','CoAdministrator','AccountAdministrator','Security Reader','Security Admin'].)
-The UI is fairly self-explanatory and also has a "Guided Tour" feature that should show you the basic usage workflow.
 
 
 **Steps to load AzTS UI:**
@@ -356,7 +355,7 @@ The UI is fairly self-explanatory and also has a "Guided Tour" feature that shou
       AzSK_ControlResults_CL
     ```
 
-2. Go to https://azsk-azts-webapp-xxxxx.azurewebsites.net. We recommend that you create a custom domain name for your UI. For steps to create custom domain, refer [link](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain).
+2. Go to https://azsk-azts-webapp-xxxxx.azurewebsites.net. The UI is fairly self-explanatory and also has a "Guided Tour" feature that should show you the basic usage workflow. We recommend that you create a custom domain name for your UI. For steps to create custom domain, refer [link](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain).
 
 &nbsp;&nbsp;![UI](../Images/13_TSS_UIOverview.png) 
 

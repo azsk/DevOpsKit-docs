@@ -60,9 +60,9 @@ function PushOrgMappingEvents([string] $OrgMappingFilePath, [string] $LogAnaytic
                 $OrgMappingList+= @{
                     "OrganizationName"	= $_.OrganizationName  ;
                     "DivisionName"	    = $_.DivisionName      ;
-                    "ServiceName"	    = $_.ServiceName       ;
                     "ServiceGroupName"	= $_.ServiceGroupName  ;
                     "TeamGroupName"	    = $_.TeamGroupName     ;
+                    "ServiceName"	    = $_.ServiceName       ;
                     "SubscriptionId"	= $_.SubscriptionId    ;
                     "SubscriptionName"	= $_.SubscriptionName  ;
                  }
