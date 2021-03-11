@@ -229,7 +229,7 @@ Setup will create infra resources and schedule daily security control scan on ta
 |ScanIdentityId| Resource id of user managed identity used to scan subscriptions  |TRUE|
 |Location|Location where all resources will get created |TRUE|
 |SendUsageTelemetry| Permit application to send usage telemetry to Microsoft server. Usage telemetry captures anonymous usage data and sends it to Microsoft servers. This will help in improving the product quality and prioritize meaning fully on the highly used features.|FALSE|
-|ScanIdentityHasGraphPermission|Switch to exlcude controls dependent on Microsoft Graph API from the scan. Set this to false if user-assigned managed identity does not have Graph permission. |FALSE|
+|ScanIdentityHasGraphPermission|Switch to exclude controls dependent on Microsoft Graph API from the scan. Set this to false if user-assigned managed identity does not have Graph permission. |FALSE|
 |Verbose| Switch used to output detailed log |FALSE|
 
 <br/>
