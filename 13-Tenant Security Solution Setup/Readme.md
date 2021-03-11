@@ -352,9 +352,9 @@ The table below describes the different columns in the CSV file and their intent
 | ---- | ---- |
 | OrganizationName | Name of organization within your enterprise |
 | DivisionName | Name of division within your organization |
-| ServiceName | Name of service within your organization |
 | ServiceGroupName | Name of Service Line/ Business Unit within an organization |
 | TeamGroupName | Name of teams within an organization |
+| ServiceName | Name of service within your organization |
 | SubscriptionId | Subscription Id belonging to a org/servicegroup |
 | SubscriptionName | Subscription Name |
 
