@@ -378,11 +378,11 @@ The table below describes the different columns in the CSV file and their intent
 
 | ColumnName  | Description | Required?	|Comments|
 | ---- | ---- | ---- | ---- |
-| OrganizationName | Name of Organization(s) within your enterprise | No | This you can consider as level 1 hierarchy for your enterprise |
-| DivisionName | Name of Division(s) within your organization | No | This you can consider as level 2 hierarchy for your enterprise |
-| ServiceGroupName | Name of Service Line/ Business Unit within an organization | No | This you can consider as level 3 hierarchy for your enterprise |
-| TeamGroupName | Name of Team(s) within an organization | No | This you can consider as level 4 hierarchy for your enterprise |
-| ServiceName | Name of Service(s) within your organization | No | This you can consider as level 5 hierarchy for your enterprise |
+| OrganizationName | Name of Organization(s) within your enterprise | Yes | This you can consider as level 1 hierarchy for your enterprise |
+| DivisionName | Name of Division(s) within your organization | Yes | This you can consider as level 2 hierarchy for your enterprise |
+| ServiceGroupName | Name of Service Line/ Business Unit within an organization | Yes | This you can consider as level 3 hierarchy for your enterprise |
+| TeamGroupName | Name of Team(s) within an organization | Yes | This you can consider as level 4 hierarchy for your enterprise |
+| ServiceName | Name of Service(s) within your organization | Yes | This you can consider as level 5 hierarchy for your enterprise |
 | SubscriptionId | Subscription Id belonging to a org/servicegroup | Yes |
 | SubscriptionName | Subscription Name | Yes |
 
@@ -527,15 +527,15 @@ A sample template for the CSV file is [here](TemplateFiles/OrgMapping.csv):
 
 The table below describes the different columns in the CSV file and their intent.
 
-| ColumnName  | Description |
-| ---- | ---- |
-| OrganizationName | Name of organization within your enterprise |
-| DivisionName | Name of division within your organization |
-| ServiceName | Name of service within your organization |
-| ServiceGroupName | Name of Service Line/ Business Unit within an organization |
-| TeamGroupName | Name of teams within an organization |
-| SubscriptionId | Subscription Id belonging to a org/servicegroup |
-| SubscriptionName | Subscription Name |
+| ColumnName  | Description | Required?	|Comments|
+| ---- | ---- | ---- | ---- |
+| OrganizationName | Name of Organization(s) within your enterprise | Yes | This you can consider as level 1 hierarchy for your enterprise |
+| DivisionName | Name of Division(s) within your organization | Yes | This you can consider as level 2 hierarchy for your enterprise |
+| ServiceGroupName | Name of Service Line/ Business Unit within an organization | Yes | This you can consider as level 3 hierarchy for your enterprise |
+| TeamGroupName | Name of Team(s) within an organization | Yes | This you can consider as level 4 hierarchy for your enterprise |
+| ServiceName | Name of Service(s) within your organization | Yes | This you can consider as level 5 hierarchy for your enterprise |
+| SubscriptionId | Subscription Id belonging to a org/servicegroup | Yes |
+| SubscriptionName | Subscription Name | Yes |
 
 <br/>
 
