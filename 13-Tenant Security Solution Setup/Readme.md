@@ -238,14 +238,14 @@ Setup will create infra resources and schedule daily security control scan on ta
 
 Below steps will help you to verify and understand different resources and functions created as part of setup along with purpose. 
 
-**1: Verify resources created as part of setup** 
+**1: Verify resources created as part of setup**
 
 i) In the Azure portal, Go to hosting subscription, select the scan host resource group that has been created during the setup.
 
-**2:** Verify below resources got created. 
+ii) Verify below resources got created.
 
-![Resources](../Images/12_TSS_Resource_Group_1.png)	
-![Resources](../Images/12_TSS_Resource_Group_2.png)	
+  ![Resources](../Images/12_TSS_Resource_Group_1.png)	
+  ![Resources](../Images/12_TSS_Resource_Group_2.png)	
 
 **Resources details:**
 
