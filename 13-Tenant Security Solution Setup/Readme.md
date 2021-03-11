@@ -266,26 +266,27 @@ ii) Verify below resources got created.
 
 <br/>
 
- **3:** Verify below Functions got created
+ **2: Verify below Functions got created**
 
- **i) MetadataAggregator Functions:** 
+&nbsp;&nbsp;**i) MetadataAggregator Functions:** 
 
-Metadata aggregator function performs two tasks: 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Metadata aggregator function performs two tasks: 
 1. Collects inventory required for scanning (Target subscription list to be scanned, baseline controls list and subscription RBAC details)
 2. Queue subscriptions for scanning
+<br/>
 
-Click on 'AzSK-AzTS-MetadataAggregator-xxxxx' function app present in scan hosting RG --> Click on 'Functions' tab in left menu
+&nbsp;&nbsp;&nbsp;Click on 'AzSK-AzTS-MetadataAggregator-xxxxx' function app present in scan hosting RG --> Click on 'Functions' tab in left menu
 
-![ProcessorWebjobs](../Images/12_TSS_Processor_WebJobs_1.png)
+&nbsp;&nbsp;&nbsp;&nbsp;![ProcessorWebjobs](../Images/12_TSS_Processor_WebJobs_1.png)
 
 |Function Name|Description|
 |----|----|
-|ATS_1_MGTreeProcessor| Responsible to fetch details about all the management group that has been granted access as Reader using central MI. All these management group will be fetched by the job and persisted into LA. This function is disabled by default. To enable this function, you need to add ``` FeatureManagement__ManagementGroups : true ``` to the Application settings on Azure Portal. To update application settings in the app service, go to Configuration --> New application settings --> Save after adding/updating the setting.
-|ATS_2_SubscriptionInvProcessor| Responsible to fetch details about all the subscriptions that has been granted access as Reader using central MI. All these subscriptions will be fetched by the job and persisted into LA. These subscriptions are scanned automatically by the consecutive jobs.
-|ATS_3_BaselineControlsInvProcessor| Responsible to push baseline controls metadata to LA and storage account
-|ATS_4_PolicyDefinitionProcessor| Responsible to fetch policy definition details and push it to LA. This function is disabled by default. To enable this function, you need to add ``` FeatureManagement__PolicyDefinitions : true ``` to the Application settings on Azure Portal.  To update application settings in the app service, go to Configuration --> New application settings --> Save after adding/updating the setting.
-|ATS_5_SubscriptionRBACProcessor| Collects RBAC details of subscription to be scanned. RBAC collected used to scan the control like "Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities" 
-|ATS_6_WorkItemScheduler|  Responsible to queue up subscriptions as workitems for scanning. It also reconciles the errored subscriptions through retries in the end. By default it would retry to scan for 5 times for each error subscription. IF there is nothing to process for the day, it would simply ignore the run.
+|ATS_1_SubscriptionInvProcessor| Responsible to fetch details about all the subscriptions that has been granted access as Reader using central MI. All these subscriptions will be fetched by the job and persisted into LA. These subscriptions are scanned automatically by the consecutive jobs.
+|ATS_2_BaselineControlsInvProcessor| Responsible to push baseline controls metadata to LA and storage account
+|ATS_3_SubscriptionRBACProcessor| Collects RBAC details of subscription to be scanned. RBAC collected used to scan the control like "Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities" 
+|ATS_4_WorkItemScheduler|  Responsible to queue up subscriptions as workitems for scanning. It also reconciles the errored subscriptions through retries in the end. By default it would retry to scan for 5 times for each error subscription. IF there is nothing to process for the day, it would simply ignore the run.
+|ATS_5_MGTreeProcessor| Responsible to fetch details about all the management group that has been granted access as Reader using central MI. All these management group will be fetched by the job and persisted into LA. This function is disabled by default. To enable this function, you need to add ``` FeatureManagement__ManagementGroups : true ``` to the Application settings on Azure Portal. To update application settings in the app service, go to Configuration --> New application settings --> Save after adding/updating the setting.
+|ATS_6_PolicyDefinitionProcessor| Responsible to fetch policy definition details and push it to LA. This function is disabled by default. To enable this function, you need to add ``` FeatureManagement__PolicyDefinitions : true ``` to the Application settings on Azure Portal.  To update application settings in the app service, go to Configuration --> New application settings --> Save after adding/updating the setting.
 
  **ii) WorkItemProcessor Functions:** 
  
@@ -327,9 +328,37 @@ After ATS_4_WorkItemScheduler completes pushing the messages in the queue, WorkI
 ## AzTS UI
 
 Tenant reader solution provides a UI-based tool that can be used to submit "ad hoc" scan requests to AzTS. This tool leverages you current subscription permissions to show you subscriptions that you have the ability to request scans for. (Note: Currently it checks for PIM eligible or permanent memberships for the following roles: ['Owner','Contributor','ServiceAdministrator','CoAdministrator','AccountAdministrator','Security Reader','Security Admin'].)
-The UI is fairly self-explanatory and also has a "Guided Tour" feature that should show you the basic usage workflow. To view AzTS UI, go to https://azsk-azts-webapp-xxxxx.azurewebsites.net. We recommend that you create a custom domain name for your UI. For steps to create custom domain, refer [link](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain).
+The UI is fairly self-explanatory and also has a "Guided Tour" feature that should show you the basic usage workflow.
 
-![UI](../Images/13_TSS_UIOverview.png)
+
+**Steps to load AzTS UI:**
+
+1. Validate that the scan has completed. To validate the scan result, Go to AzSK-AzTS-LAWorkspace-xxxxx Log Analytics workspace --> Logs --> Run the following queries.
+
+    i) List subscription(s) that user-managed identity has access to.
+    ```kql
+      AzSK_SubInventory_CL
+      | distinct SubscriptionId, Name_s
+    ```
+
+    ii) List controls supported by Tenant Security solution.
+    ```kql
+      AzSK_BaselineControlsInv_CL
+      | distinct ControlId_s, DisplayName_s
+    ```
+    iii) List role-based access control (RBAC) inventory.
+    ```kql
+      AzSK_RBAC_CL
+    ```
+
+    iv) List control scan result.
+    ```kql
+      AzSK_ControlResults_CL
+    ```
+
+2. Go to https://azsk-azts-webapp-xxxxx.azurewebsites.net. We recommend that you create a custom domain name for your UI. For steps to create custom domain, refer [link](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain).
+
+&nbsp;&nbsp;![UI](../Images/13_TSS_UIOverview.png) 
 
 TODO: Add UI walk through video.
 
@@ -348,19 +377,21 @@ A sample template for the CSV file is [here](TemplateFiles/OrgMapping.csv):
 
 The table below describes the different columns in the CSV file and their intent.
 
-| ColumnName  | Description |
-| ---- | ---- |
-| OrganizationName | Name of organization within your enterprise |
-| DivisionName | Name of division within your organization |
-| ServiceGroupName | Name of Service Line/ Business Unit within an organization |
-| TeamGroupName | Name of teams within an organization |
-| ServiceName | Name of service within your organization |
-| SubscriptionId | Subscription Id belonging to a org/servicegroup |
-| SubscriptionName | Subscription Name |
+| ColumnName  | Description | Required?	|Comments|
+| ---- | ---- | ---- | ---- |
+| OrganizationName | Name of Organization(s) within your enterprise | No | This you can consider as level 1 hierarchy for your enterprise |
+| DivisionName | Name of Division(s) within your organization | No | This you can consider as level 2 hierarchy for your enterprise |
+| ServiceGroupName | Name of Service Line/ Business Unit within an organization | No | This you can consider as level 3 hierarchy for your enterprise |
+| TeamGroupName | Name of Team(s) within an organization | No | This you can consider as level 4 hierarchy for your enterprise |
+| ServiceName | Name of Service(s) within your organization | No | This you can consider as level 5 hierarchy for your enterprise |
+| SubscriptionId | Subscription Id belonging to a org/servicegroup | Yes |
+| SubscriptionName | Subscription Name | Yes |
 
+<br/>
 
 > **Note**: Ensure you follow the correct casing for all column names as shown in the table above.
 
+<br/>
 
 #### Step 2: Upload your mapping to the Log Analytics (LA) workspace
 
@@ -371,6 +402,8 @@ In this step you will import the data above into the LA workspace created during
  ![capture Workspace ID](../Images/13_TSS_LAWS_AgentManagement.png)
  
  **(b)** To push org Mapping details, copy and execute the script available [here](Scripts/AzTSPushOrgMappingEvents.ps1) (for Gov subs use script [here](Scripts/AzTSPushOrgMappingEvents.Gov.ps1)) in Powershell. You will need to replace the CSV path, Workspace ID, and primary key with its approriate value in this PowerShell script.
+
+<br/>
 
  > **Note**: Due to limitation of Log Analytics workspace, you will need to repeat this step every 90 days interval.
 
