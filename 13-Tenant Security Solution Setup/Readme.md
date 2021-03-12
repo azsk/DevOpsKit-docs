@@ -360,8 +360,12 @@ After ATS_4_WorkItemScheduler completes pushing the messages in the queue, WorkI
 
 ## 1. AzTS UI
 
-Tenant reader solution provides a UI-based tool that can be used to submit "ad hoc" scan requests to AzTS. This tool leverages you current subscription permissions to show you subscriptions that you have the ability to request scans for. (Note: Currently it checks for PIM eligible or permanent memberships for the following roles: ['Owner','Contributor','ServiceAdministrator','CoAdministrator','AccountAdministrator','Security Reader','Security Admin'].)
+Tenant reader solution provides a UI-based tool that can be used to submit "ad hoc" scan requests to AzTS. This tool leverages you current subscription permissions to show you subscriptions that you have the ability to request scans for.
 
+**Note:**
+1.  Currently AzTS UI checks for PIM eligible or permanent memberships for the following roles: ['Owner','Contributor','ServiceAdministrator','CoAdministrator','AccountAdministrator','Security Reader','Security Admin'].)
+
+2. If you have been recently granted access, you either need to wait for the next scheduled scan to read the latest RBAC data or you can manually trigger the ATS_3_SubscriptionRBACProcessor function.
 
 **Steps to load AzTS UI:**
 
