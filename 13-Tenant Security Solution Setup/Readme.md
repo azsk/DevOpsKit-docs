@@ -20,9 +20,20 @@ The AzTS Solution was created with the following explicit objectives (some of wh
  * Speeding up our effort to transition to native features (being able to respond to changes in Azure more rapidly and deploy modifications to controls)
  * Enable incremental transition of our controls from custom code to Azure/ASC policy-based approach (using ASC/policy-based controls where available today and continue to migrate as more controls become available)
 
-## Setting up Azure Tenant Security Solution - Step by Step
-In this section, we will walk through the steps of setting up AzTS Solution.
+This document has been categorized as follows:
 
+1. **Installation**
+2. **Validation**
+3. **Visualization**
+
+
+# 1. Installation
+
+ ![ProgressBar](../Images/12_TSS_ProgressBar1.png)
+
+## Setting up Azure Tenant Security Solution - Step by Step
+
+In this section, we will walk through the steps of setting up AzTS Solution. This setup can take up to 15 minutes.
 
 **Note:** You can download execution script present [here](https://github.com/azsk/DevOpsKit-docs/raw/users/TenantSecurity/13-Tenant%20Security%20Solution%20Setup/Scripts/ExecutionScript.ps1) which has all commands mentioned in below steps
 
@@ -71,8 +82,15 @@ To do the scanning, it requires a [User-assigned Managed Identity](https://docs.
 
 Before creating user-assigned managed identity, please connect to AzureAD and AzAccount with the tenant Id where you want to use AzTS solution.
 
-
 ``` Powershell
+
+# Clear existing login, if any
+
+Disconnect-AzAccount
+Disconnect-AzureAD
+
+# Connect to AzureAD and AzAccount
+
 Connect-AzAccount -Tenant <TenantId>
 Connect-AzureAD -TenantId <TenantId>
 ```
@@ -212,6 +230,8 @@ Setup will create infra resources and schedule daily security control scan on ta
                   -Verbose
   ```
 
+With this step the installation is complete. The following step will walk you through the validation steps.
+
 **Note:** Tenant Security Solution does not support customization of app service name.
 
   Output looks like below
@@ -233,6 +253,14 @@ Setup will create infra resources and schedule daily security control scan on ta
 |Verbose| Switch used to output detailed log |FALSE|
 
 <br/>
+
+[Back to top…](Readme.md#contents)
+
+<br/>
+
+# 2. Validation
+
+ ![ProgressBar](../Images/12_TSS_ProgressBar2.png)
 
 ## Verifying that Tenant Security Solution installation is complete
 
@@ -324,7 +352,13 @@ After ATS_4_WorkItemScheduler completes pushing the messages in the queue, WorkI
 
 <br/>
 
-## AzTS UI
+[Back to top…](Readme.md#contents)
+
+# 3. Visualization
+
+ ![ProgressBar](../Images/12_TSS_ProgressBar3.png)
+
+## 1. AzTS UI
 
 Tenant reader solution provides a UI-based tool that can be used to submit "ad hoc" scan requests to AzTS. This tool leverages you current subscription permissions to show you subscriptions that you have the ability to request scans for. (Note: Currently it checks for PIM eligible or permanent memberships for the following roles: ['Owner','Contributor','ServiceAdministrator','CoAdministrator','AccountAdministrator','Security Reader','Security Admin'].)
 
@@ -407,7 +441,7 @@ In this step you will import the data above into the LA workspace created during
 
 <br/>
 
-## Log Analytics Visualization
+## 2. Log Analytics Visualization
 
 For understanding the collected data, use the querying and visualization capabilities provided by Log Analytics. 
 To start, go to **Log Analytics workspace** created during setup --> Select **Logs**. 
@@ -488,6 +522,7 @@ AzSK_ControlResults_CL
 ```
 
 [Back to top…](Readme.md#contents)
+
 ## Tenant Security Solution - under the covers (how it works)
  Tenant Security Solution is built by extending what the DevOps Kit has been doing and leveraging the best of Azure native features. It is a hybrid model, which leverages the native Azure security capabilities like Azure Security Center (ASC), Azure Policies, etc., to evaluate the security controls and continue to leverage DevOps Kit scanning capabilities in the form of custom code controls to address any coverage gaps.  
 
