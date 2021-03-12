@@ -264,7 +264,7 @@ With this step the installation is complete. The following step will walk you th
 
 ## Verifying that Tenant Security Solution installation is complete
 
-Below steps will help you to verify and understand different resources and functions created as part of setup along with purpose. 
+Below steps will help you to verify and understand different resources and functions created as part of setup along with purpose. This step can take up to 30 minutes. 
 
 **1: Verify resources created as part of setup**
 
