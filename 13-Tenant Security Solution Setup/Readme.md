@@ -20,22 +20,16 @@ The AzTS Solution was created with the following explicit objectives (some of wh
  * Speeding up our effort to transition to native features (being able to respond to changes in Azure more rapidly and deploy modifications to controls)
  * Enable incremental transition of our controls from custom code to Azure/ASC policy-based approach (using ASC/policy-based controls where available today and continue to migrate as more controls become available)
 
-This document has been categorized as follows:
-
-1. **Installation**
-2. **Validation**
-3. **Visualization**
-
-
-# 1. Installation
+## Setting up Azure Tenant Security Solution - Step by Step
 
  ![ProgressBar](../Images/12_TSS_ProgressBar1.png)
 
-## Setting up Azure Tenant Security Solution - Step by Step
+
+## 1. Installation
 
 In this section, we will walk through the steps of setting up AzTS Solution. This setup can take up to 15 minutes.
 
-**Note:** You can download execution script present [here](https://github.com/azsk/DevOpsKit-docs/raw/users/TenantSecurity/13-Tenant%20Security%20Solution%20Setup/Scripts/ExecutionScript.ps1) which has all commands mentioned in below steps
+**Note:** You can download execution script present [here](Scripts/ExecutionScript.ps1?raw=1) which has all commands mentioned in below steps
 
 
 Setup is divided into five steps:
