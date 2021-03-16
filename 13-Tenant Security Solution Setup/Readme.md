@@ -390,7 +390,7 @@ Tenant reader solution provides a UI-based tool that can be used to submit "ad h
 
 **Step 2 of 2:** Go to link provided at the end of ```Install-AzSKTenantSecuritySolution``` command (as shown below).
 
-// TODO: add screenshot
+&nbsp;&nbsp;![UI](../Images/13_TSS_UIUrlPrintMessageInPSOutput.png) 
 
 The UI is fairly self-explanatory and also has a "Guided Tour" feature that should show you the basic usage workflow. We recommend that you create a custom domain name for your UI. For steps to create custom domain, refer [link](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain).
 
