@@ -34,7 +34,7 @@ In this section, we will walk through the steps of setting up AzTS Solution. Thi
 
 Setup is divided into five steps:
 
-**1. Validate prerequisites on machine**  
+**Step 1 of 5. Validate prerequisites on machine**  
 
   i) Installation steps are supported using following OS options: 	
 
@@ -50,7 +50,7 @@ Setup is divided into five steps:
   ![PowerShell Version](../Images/00_PS_Version.PNG)   
 
 
-**2. Installing Az Modules:**
+**Step 2 of 5. Installing Az Modules:**
 
 Az modules contains cmdlet to deploy Azure resources. These cmdlets is used to create AzTS scan solution resources with the help of ARM template.
 Install Az Powershell Modules using below command. 
@@ -69,7 +69,7 @@ Install-Module -Name Az.ManagedServiceIdentity -AllowClobber -Scope CurrentUser 
 Install-Module -Name AzureAD -AllowClobber -Scope CurrentUser -repository PSGallery
 ```
 
-**3. Setting up scanning identity**  
+**Step 3 of 5. Setting up scanning identity**  
 
 The AzTS setup basically provisions your subscriptions with the ability to do daily scans for security controls.
 To do the scanning, it requires a [User-assigned Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) (central scanning identity owned by you) and 'Reader' access to target subscriptions on which scan needs to be performed. 
@@ -107,6 +107,8 @@ $UserAssignedIdentity = New-AzUserAssignedIdentity -ResourceGroupName <MIHosting
 $UserAssignedIdentity.Id
 
 ```
+
+**Note:** For better performance, we recommend using one location of user-assigned MI and resource hosting AzTS setup.
 
 ii) Assign reader access to user-assigned managed identity on target subscriptions needs to be scanned. 
 
@@ -153,7 +155,7 @@ New-AzureADServiceAppRoleAssignment `
 
  **Note:** Graph permission is required for evaluation of 'Role-based access control' (RBAC) controls in the scanning framework. If you do not have the permission to grant graph access, you can choose to skip the controls dependent on Graph API (details mentioned in the steps below).
 
-**4. Download and extract deployment package**
+**Step 4 of 5. Download and extract deployment package**
  
  Deployment packages mainly contains 
  ARM template: Contains resource configuration details that needs to be created as part of setup
@@ -184,7 +186,7 @@ CD "<LocalExtractedFolderPath>\DeploymentFiles"
 
 [Back to top…](Readme.md#contents)
 
-**5. Run Setup Command** 
+**Step 5 of 5. Run Setup Command** 
 
 This is the last step. You need to run install command present as part setup scription with host subscription id (sub where scanning infra resources will get created). 
 Setup will create infra resources and schedule daily security control scan on target subscriptions.
@@ -224,7 +226,7 @@ Setup will create infra resources and schedule daily security control scan on ta
                   -Verbose
   ```
 
-With this step the installation is complete. The following step will walk you through the validation steps.
+With this step the installation is complete. The following step will walk you through the steps to validate setup.
 
 **Note:** Tenant Security Solution does not support customization of app service name.
 
@@ -260,7 +262,7 @@ With this step the installation is complete. The following step will walk you th
 
 Below steps will help you to verify and understand different resources and functions created as part of setup along with purpose. This step can take up to 30 minutes. 
 
-**1: Verify resources created as part of setup**
+**Step 1 of 2: Verify resources created as part of setup**
 
 i) In the Azure portal, Go to hosting subscription, select the scan host resource group that has been created during the setup.
 
@@ -288,11 +290,11 @@ ii) Verify below resources got created.
 
 <br/>
 
- **2: Verify below Functions got created**
+ **Step 2 of 2: Verify below Functions got created**
 
-&nbsp;&nbsp;**i) MetadataAggregator Functions:** 
+**i) MetadataAggregator Functions:** 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Metadata aggregator function performs two tasks: 
+&nbsp;&nbsp;&nbsp;Metadata aggregator function performs two tasks: 
 1. Collects inventory required for scanning (Target subscription list to be scanned, baseline controls list and subscription RBAC details)
 2. Queue subscriptions for scanning
 <br/>
@@ -363,7 +365,7 @@ Tenant reader solution provides a UI-based tool that can be used to submit "ad h
 
 **Steps to load AzTS UI:**
 
-1. Validate that the scan has completed. To validate the scan result, Go to AzSK-AzTS-LAWorkspace-xxxxx Log Analytics workspace --> Logs --> Run the following queries.
+ **Step 1 of 2:** Validate that the scan has completed. To validate the scan result, Go to AzSK-AzTS-LAWorkspace-xxxxx Log Analytics workspace --> Logs --> Run the following queries.
 
     i) List subscription(s) that user-managed identity has access to.
     ```kql
@@ -386,7 +388,11 @@ Tenant reader solution provides a UI-based tool that can be used to submit "ad h
       AzSK_ControlResults_CL
     ```
 
-2. Go to https://azsk-azts-webapp-xxxxx.azurewebsites.net. The UI is fairly self-explanatory and also has a "Guided Tour" feature that should show you the basic usage workflow. We recommend that you create a custom domain name for your UI. For steps to create custom domain, refer [link](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain).
+**Step 2 of 2:** Go to link provided at the end of ```Install-AzSKTenantSecuritySolution``` command (as shown below).
+
+// TODO: add screenshot
+
+The UI is fairly self-explanatory and also has a "Guided Tour" feature that should show you the basic usage workflow. We recommend that you create a custom domain name for your UI. For steps to create custom domain, refer [link](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain).
 
 &nbsp;&nbsp;![UI](../Images/13_TSS_UIOverview.png) 
 
