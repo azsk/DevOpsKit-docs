@@ -1,11 +1,11 @@
-## Security controls covered by the Azure Tenant Security( AzTS )
+## Security controls covered by Azure Tenant Security (AzTS)
 
-This page displays security controls that are automated via DevOps kit Controls have an API which is used to fetch required property for control evaluation. 
+This page displays security controls that are automated via DevOps Kit. Controls have an API which is used to fetch required properties for control evaluation. 
 ### Azure Services supported by AzTS
 
-Below resource types can be checked for validating the security controls.
+Below resource types can be checked for validating the security controls:
 
-|FeatureName|Resource Type|
+|Feature Name|Resource Type|
 |---|---|
 |[Storage](Feature/Storage.md)|Microsoft.Storage/storageAccounts|
 |[VirtualMachine](Feature/VirtualMachine.md)|Microsoft.Compute/virtualMachines|
