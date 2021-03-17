@@ -1,4 +1,4 @@
-## Security controls covered by the Azure Tenant Seurity( AzTS )
+## Security controls covered by the Azure Tenant Security( AzTS )
 
 This page displays security controls that are automated via DevOps kit Controls have an API which is used to fetch required property for control evaluation. 
 ### Azure Services supported by AzTS
