@@ -228,7 +228,11 @@ Setup will create infra resources and schedule daily security control scan on ta
 
 With this step the installation is complete. The following step will walk you through the steps to validate setup.
 
-**Note:** Tenant Security Solution does not support customization of app service name.
+**Note:** 
+
+1. Tenant Security Solution does not support customization of app service name.
+
+2. By default function app is configured to use Basic App service plan which has max timeout limit of 10 minute. This can be modified based on requirement of your orgnization. To increase function timeout, you can upgrade to a higher App Service plan and use ``` AzureFunctionsJobHost__functionTimeout ``` app setting in App service to set the timeout value.
 
   Output looks like below
 
