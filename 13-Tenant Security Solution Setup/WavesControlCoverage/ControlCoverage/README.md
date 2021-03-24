@@ -8,6 +8,7 @@ Below resource types can be checked for validating the security controls:
 |Feature Name|Resource Type|
 |---|---|
 |[Storage](Feature/Storage.md)|Microsoft.Storage/storageAccounts|
+|[Subscription](Feature/SubscriptionCore.md)|
 |[VirtualMachine](Feature/VirtualMachine.md)|Microsoft.Compute/virtualMachines|
 
 
