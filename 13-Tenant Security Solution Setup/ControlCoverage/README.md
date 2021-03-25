@@ -1,9 +1,9 @@
 ## Security controls covered by Azure Tenant Security (AzTS)
 
-This page displays security controls that are automated via AzTS. Controls table listed under feature has following details:
+This page displays security controls that are automated via AzTS. Controls table listed under provide following details:
 - ControlId and Description
-- Used API(s) and Properties
-- Logic
+- Dependent Azure API(s) and Properties
+- Control spec-let
 
 ### Azure Services supported by AzTS
 
