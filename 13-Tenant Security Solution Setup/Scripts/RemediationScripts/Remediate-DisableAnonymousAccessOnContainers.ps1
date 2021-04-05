@@ -183,4 +183,4 @@ function Remediate-DisableAnonymousAccessOnContainers
 # ***************************************************** #
 
 # Function calling with parameters.
-Remediate-DisableAnonymousAccessOnContainers -ControlFilePath "D:\GitHub_Repo\BulkRemediationScript\FailedControlDetails.json"
+Remediate-DisableAnonymousAccessOnContainers -ControlFilePath "Enter Json file which containing failed control detail"
