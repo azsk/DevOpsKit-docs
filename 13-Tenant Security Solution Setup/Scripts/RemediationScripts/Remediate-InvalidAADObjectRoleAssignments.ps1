@@ -243,7 +243,7 @@ function Remove-AzTSInvalidAADAccounts
     Write-Host "Step 5 of 5: Clean up invalid object guids for Subscription [$($SubscriptionId)]..."
     # Start deletion of all Invalid AAD ObjectGuids.
     Write-Host "Starting to delete invalid AAD object guid role assignments..." -ForegroundColor Cyan
-    #$invalidAADObjectRoleAssignments | Remove-AzRoleAssignment -Verbose
+    $invalidAADObjectRoleAssignments | Remove-AzRoleAssignment -Verbose
     Write-Host "Completed deleting Invalid AAD ObjectGuids role assignments." -ForegroundColor Green    
 }
 
@@ -260,8 +260,7 @@ function Restore-AzTSInvalidAADAccounts
     Write-Host "======================================================"
     Write-Host "Starting with removal of invalid AAD object guids from subscriptions..."
     Write-Host "------------------------------------------------------"
-
-    # Connect to AzAccount
+    
     $isContextSet = Get-AzContext
     if ([string]::IsNullOrEmpty($isContextSet))
     {       
@@ -311,8 +310,7 @@ function Restore-AzTSInvalidAADAccounts
     $backedUpRoleAssingments | ForEach-Object {
         $roleAssignment = $_;
         New-AzRoleAssignment -ObjectId $roleAssignment.ObjectId -Scope $roleAssignment.Scope -RoleDefinitionName $roleAssignment.RoleDefinitionName -ErrorAction SilentlyContinue | Out-Null;
-    }
-    #$invalidAADObjectRoleAssignments | Remove-AzRoleAssignment -Verbose
+    }    
     Write-Host "Completed restoring role assignments." -ForegroundColor Green
 }
 
