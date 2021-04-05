@@ -183,4 +183,4 @@ function Remediate-DisableAnonymousAccessOnContainers
 # ***************************************************** #
 
 # Function calling with parameters.
-Remediate-DisableAnonymousAccessOnContainers -ControlFilePath ""
+Remediate-DisableAnonymousAccessOnContainers -ControlFilePath "Enter json file containing failed storage accounts for remediation"
