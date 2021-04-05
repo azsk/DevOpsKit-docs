@@ -1,6 +1,6 @@
 ﻿﻿function Pre_requisites
 {
-    Write-Host "Required modules are: Az.Resources, Az.Account" -ForegroundColor Cyan
+    Write-Host "Required modules are: Az.Account, Az.Resources, Az.Storage" -ForegroundColor Cyan
     Write-Host "Checking for required modules..."
     $availableModules = $(Get-Module -ListAvailable Az.Resources, Az.Accounts)
     
@@ -12,7 +12,18 @@
     }
     else
     {
-        Write-Host "Az.Resources module is available." -ForegroundColor Green
+        Write-Host "Az.Accounts module is available." -ForegroundColor Green
+    }
+    
+    # Checking if 'Az.Storage' module is available or not.
+    if($availableModules.Name -notcontains 'Az.Storage')
+    {
+        Write-Host "Installing module Az.Storage..." -ForegroundColor Yellow
+        Install-Module -Name Az.Storage -Scope CurrentUser
+    }
+    else
+    {
+        Write-Host "Az.Storage module is available." -ForegroundColor Green
     }
 
     # Checking if 'Az.Resources' module is available or not.
