@@ -1,4 +1,4 @@
-﻿function Pre_requisites
+function Pre_requisites
 {
     Write-Host "Required modules are: Az.Resources, AzureAD, Az.Account" -ForegroundColor Cyan
     Write-Host "Checking for required modules..."
@@ -39,7 +39,7 @@
 }
 
 
-function RemoveInvalidAADAccounts
+function Remove-AzTSInvalidAADAccounts
 {
     param (
         [string]
@@ -64,6 +64,15 @@ function RemoveInvalidAADAccounts
        Write-Host "Checking for pre-requisites..."
        Pre_requisites
        Write-Host "------------------------------------------------------"
+    }
+
+    # Connect to AzAccount
+    $isContextSet = Get-AzContext
+    if ([string]::IsNullOrEmpty($isContextSet))
+    {       
+        Write-Host "Connecting to AzAccount..."
+        Connect-AzAccount
+        Write-Host "Connected to AzAccount" -ForegroundColor Green
     }
 
     # Setting context for current subscription.
@@ -94,7 +103,7 @@ function RemoveInvalidAADAccounts
         exit;
     }
 
-    #  Safe Check: saving the current login user object id to ensure we dont remove this during the actual removal
+    # Safe Check: saving the current login user object id to ensure we dont remove this during the actual removal
     $currentLoginUserObjectIdArray = @()
     $currentLoginUserObjectId = "";
     $currentLoginUserObjectIdArray += $currentLoginRoleAssignments | select ObjectId -Unique
@@ -107,21 +116,46 @@ function RemoveInvalidAADAccounts
 
     #  Getting all role assignments of subscription.
     $currentRoleAssignmentList = Get-AzRoleAssignment -IncludeClassicAdministrators  
+    # filter-out classic admins
+    $currentRoleAssignmentList = $currentRoleAssignmentList | where {$_.ObjectId -ne [Guid]::Empty};
     $distinctObjectIds = @();
 
+    # adding one valid object guid, so that even if graph call works, it has to get atleast 1. If we dont get any, means Graph API failed.
+    $distinctObjectIds += $currentLoginUserObjectId;
+
+    
     if(($ObjectIds | Measure-Object).Count -eq 0)
     {
-        $currentRoleAssignmentList | select -Unique -Property 'ObjectId' | ForEach-Object { $distinctObjectIds += $_.ObjectId}
+        $currentRoleAssignmentList | select -Unique -Property 'ObjectId' | ForEach-Object { $distinctObjectIds += $_.ObjectId }
     }
     else
     {
-        $distinctObjectIds += $ObjectIds
-    }
-
+        $ObjectIds | Foreach-Object {
+          $objectId = $_;
+           if(![string]::IsNullOrWhiteSpace($objectId))
+            {
+                $distinctObjectIds += $objectId
+            }
+            else
+            {
+                Write-Host "Warning: Dont pass empty string array in the ObjectIds param. If you dont want to use the param, just remove while executing the command" -ForegroundColor Yellow
+                exit;
+            }  
+        }
+    }        
+    
     Write-Host "Step 3 of 6: Resolving all the AAD ObjectGuids against Tenant. Number of distinctObjectGuids [$($distinctObjectIds.Count)]..."
     # Connect to Azure Active Directory.
-    Write-Host "Connecting to Azure AD..."
-    Connect-AzureAD
+    try
+    {
+        # Check if Connect-AzureAD session is already active 
+        Get-AzureADUser -ObjectId $currentLoginUserObjectId | Out-Null
+    }
+    catch
+    {
+        Write-Host "Connecting to Azure AD..."
+        Connect-AzureAD
+    }   
 
     # Batching object ids in count of 900.
     $activeIdentities = @();
@@ -147,36 +181,47 @@ function RemoveInvalidAADAccounts
             Write-Host "Warning: Graph API hasnt returned any active account. Current principal dont have access to Graph or Graph API is throwing error. Aborting the operation. Reach out to aztssup@microsoft.com" -ForegroundColor Yellow
             exit;
         }
+
         $activeIdentities += $subActiveIdentities.ObjectId
     } 
 
     $folderPath = [Environment]::GetFolderPath("MyDocuments") 
     if (Test-Path -Path $folderPath)
     {
-        New-Item -ItemType Directory -Path $folderPath -Name 'InvalidAADAccounts\Subscriptions'
-        $folderPath += '\InvalidAADAccounts\Subscriptions\'
+        $folderPath += "\AzTS\Remediation\Subscriptions\$($subscriptionid.replace("-","_"))\$((Get-Date).ToString('yyyyMMdd_hhmm'))\InvalidAADAccounts\"
+        New-Item -ItemType Directory -Path $folderPath | Out-Null
     }
-    Write-Host "Step 4 of 6: Taking backup of current role assignments at [$($folderPath)]..."
-    # Safe Check: Taking backup of active identities    
-    if ($activeIdentities.Length -gt 0)
-    {
-        $activeIdentities | ConvertTo-Json | Out-File "$($folderPath)\RoleAssignments_$($SubscriptionId.Replace("-","_")).json"
-        Write-Host "Following identities are present in Azure Active Directory: "
-        $activeIdentities | Select SignInName, DisplayName, RoleDefinitionName, ObjectType, ObjectId, Scope | FT | Out-String
-        Write-Host "Excluding above active identities from invalid AAD account identities..." -ForegroundColor "Yellow"
-    }
+
+    Write-Host "Step 4 of 6: Taking backup of current role assignments at [$($folderPath)]..."    
 
     $invalidAADObjectIds = $distinctObjectIds | Where-Object { $_ -notin $activeIdentities}
 
     # Get list of all invalidAADObject guid assignments followed by object ids.
     $invalidAADObjectRoleAssignments = $currentRoleAssignmentList | Where-Object {  $invalidAADObjectIds -contains $_.ObjectId}
+    
+    # Safe Check: Check whether the current user accountId is part of Invalid AAD ObjectGuids List 
+    if(($invalidAADObjectRoleAssignments | where { $_.ObjectId -eq $currentLoginUserObjectId} | Measure-Object).Count -gt 0)
+    {
+        Write-Host "Warning: Current User account is found as part of the Invalid AAD ObjectGuids collection. This is not expected behaviour. This can happen typically during Graph API failures. Aborting the operation. Reach out to aztssup@microsoft.com" -ForegroundColor Yellow
+        exit;
+    }
 
-    #checking the RBAC permissions for current user. Current users need to be Owner/UAA/Co-admin to delete role assignments.
-    $currentRole = @()
-    $currentRole = $currentRoleAssignmentList | Where-Object { $_.SignInName -eq $currentSub.Account -and $_.Scope -eq "/subscriptions/$($SubscriptionId)"} | Select-Object RoleDefinitionName
+    if(($invalidAADObjectRoleAssignments | Measure-Object).Count -le 0)
+    {
+        Write-Host "No invalid accounts found for the subscription [$($SubscriptionId)]. Exiting the process." -ForegroundColor Cyan
+        exit;
+    }
+    else
+    {
+        Write-Host "Found [$(($invalidAADObjectRoleAssignments | Measure-Object).Count)] invalid roleassingments against invalid AAD objectGuids for the subscription [$($SubscriptionId)]" -ForegroundColor Cyan
+    }    
 
-    Write-Host "List of invalid AAD Object Guid accounts:" -ForegroundColor Cyan
-    $invalidAADObjectRoleAssignments | Select SignInName, DisplayName, RoleDefinitionName, ObjectType, ObjectId, Scope | FT | Out-String
+    # Safe Check: Taking backup of active identities    
+    if ($invalidAADObjectRoleAssignments.length -gt 0)
+    {
+        Write-Host "Taking backup of account that needs to be removed..." -ForegroundColor Cyan
+        $invalidAADObjectRoleAssignments | ConvertTo-json | out-file "$($folderpath)\InvalidRoleAssignments.json"       
+    }
 
     if(-not $Force)
     {
@@ -188,25 +233,19 @@ function RemoveInvalidAADAccounts
             exit;
         }
     }
-
-    # Safe Check: Check whether the current user accountId is part of Invalid AAD ObjectGuids List 
-    if(($invalidAADObjectIds | where { $_.ObjectId -eq $currentLoginUserObjectId} | Measure-Object).Count -gt 0)
-    {
-        Write-Host "Warning: Current User account is found as part of the Invalid AAD ObjectGuids collection. This is not expected behaviour. This can happen typically during Graph API failures. Aborting the operation. Reach out to aztssup@microsoft.com" -ForegroundColor Yellow
-        exit;
-    }
+   
     Write-Host "Step 5 of 6: Clean up invalid object guids for Subscription [$($SubscriptionId)]..."
     # Start deletion of all Invalid AAD ObjectGuids.
     Write-Host "Starting to delete invalid AAD object guid role assignments..." -ForegroundColor Cyan
-    $invalidAADObjectRoleAssignments | Remove-AzRoleAssignment -Verbose
+    #$invalidAADObjectRoleAssignments | Remove-AzRoleAssignment -Verbose
     Write-Host "Completed deleting Invalid AAD ObjectGuids role assignments." -ForegroundColor Green
-
+    
     Write-Host "Step 6 of 6: Generating the log file with all the cleaned up invalid object guids for Subscription [$($SubscriptionId)]..."
-        # Safe Check: Taking backup of Invalid AAD ObjectGuids Roleassignments 
-    $invalidAADObjectRoleAssignments | ConvertTo-Json | Out-File "$($folderPath)\InvalidAADObjectRoleAssignments_$($SubscriptionId.Replace("-","_")).json"
 }
 
 # ***************************************************** #
 
 # Function calling with parameters.
-RemoveInvalidAADAccounts -SubscriptionId '<Sub Id>' -ObjectIds @('<List of obj ids>')  -Force:$false 
+Remove-AzTSInvalidAADAccounts -SubscriptionId '<Sub_Id>' -ObjectIds @('<Object_Ids>')  -Force:$false -PerformPreReqCheck: $true
+
+
