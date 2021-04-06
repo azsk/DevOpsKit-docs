@@ -51,7 +51,7 @@ function Remediate-DisableAnonymousAccessOnContainers
     )
 
     Write-Host "======================================================"
-    Write-Host "Starting to disable anonymous access on containers of storage account for subscription: [$($SubscriptionId)]..."
+    Write-Host "Starting to disable anonymous access on containers of storage account for subscription."
     Write-Host "------------------------------------------------------"
 
     if($PerformPreReqCheck)
@@ -59,6 +59,15 @@ function Remediate-DisableAnonymousAccessOnContainers
        Write-Host "Checking for pre-requisites..."
        Pre_requisites
        Write-Host "------------------------------------------------------"
+    }
+
+    # Connect to AzAccount
+    $isContextSet = Get-AzContext
+    if ([string]::IsNullOrEmpty($isContextSet))
+    {       
+        Write-Host "Connecting to AzAccount..."
+        Connect-AzAccount
+        Write-Host "Connected to AzAccount" -ForegroundColor Green
     }
 
     # Fetching failed controls details from given json file.
@@ -87,14 +96,20 @@ function Remediate-DisableAnonymousAccessOnContainers
         Write-Host "Disabling anonymous access on all containers on storage...";
         Write-Host "------------------------------------------------------"
         $controls = $controlForRemediation.FailedControlSet
-        $resourceDetails = $controls | Where-Object { $ControlIds -eq $controls.ControlId};
+        $resourceDetails = $controls | Where-Object { $ControlIds -eq $_.ControlId};
+
+        if(($resourceDetails | Measure-Object).Count -eq 0)
+        {
+            Write-Host "No control found in input json file for remedition." -ForegroundColor Red
+            exit;
+        }
         $resourceContext = @()
         $resourceDetails.ResourceDetails | ForEach-Object { 
                               $resourceContext += Get-AzStorageAccount -Name $_.ResourceName -ResourceGroupName $_.ResourceGroupName    
                         }
 
 
-        # Remediating
+        # Performing remediation
 
         try{
         if($resourceContext)
@@ -128,8 +143,10 @@ function Remediate-DisableAnonymousAccessOnContainers
                     {
                         Write-Host "Anonymous access has been disabled on all containers on storage [Name]: [$($_.StorageAccountName)] [ResourceGroupName]: [$($_.ResourceGroupName)]";
                         $item =  New-Object psobject -Property @{  
+                            SubscriptionId = $SubscriptionId
                             ResourceGroupName = $_.ResourceGroupName
                             StorageAccountName = $_.StorageAccountName
+                            ResourceId = $_.id
                         }
 
                         $ContainersWithDisableAnonymousAccessOnStorage += $item
@@ -137,9 +154,11 @@ function Remediate-DisableAnonymousAccessOnContainers
                     else
                     {
                     # Unable to disable containers anonymous access may be because of insufficient permission over storage account
-                        $item =  New-Object psobject -Property @{  
+                        $item =  New-Object psobject -Property @{
+                            SubscriptionId = $SubscriptionId  
                             StorageAccountName = $_.StorageAccountName
                             ResourceGroupName = $_.ResourceGroupName
+                            ResourceId = $_.id
                         }
 
                         $ContainersWithAnonymousAccessOnStorage += $item
@@ -166,24 +185,24 @@ function Remediate-DisableAnonymousAccessOnContainers
     $folderPath = [Environment]::GetFolderPath("MyDocuments") 
     if (Test-Path -Path $folderPath)
     {
-        New-Item -ItemType Directory -Path $folderPath -Name 'DisableAnonymousAccessOnContainers\Subscriptions' | Out-Null
-        $folderPath += '\DisableAnonymousAccessOnContainers\Subscriptions\'
+        $folderPath += "\AzTS\Remediation\Subscriptions\$($subscriptionid.replace("-","_"))\$((Get-Date).ToString('yyyyMMdd_hhmm'))\DisableAnonymousAccessOnContainers"
+        New-Item -ItemType Directory -Path $folderPath | Out-Null
     }
 
     Write-Host "------------------------------------------------------"
     if(($ContainersWithDisableAnonymousAccessOnStorage | Measure-Object).Count -ge 1)
       {
          Write-Host "Generating the log file containing details of all the storage account with disabled anonymous access on containers for Subscription: [$($SubscriptionId)]..."
-         $ContainersWithDisableAnonymousAccessOnStorage | ConvertTo-Json | Out-File "$($folderPath)\ContainersWithDisableAnonymousAccessOnStorage_$($SubscriptionId.Replace("-","_")).json"
-         Write-Host "Path: $($folderPath)ContainersWithDisableAnonymousAccessOnStorage_$($SubscriptionId.Replace("-","_")).json"
+         $ContainersWithDisableAnonymousAccessOnStorage | ConvertTo-Json | Out-File "$($folderPath)\ContainersWithDisableAnonymousAccessOnStorage.json"
+         Write-Host "Path: $($folderPath)\ContainersWithDisableAnonymousAccessOnStorage.json"
       }
 
     if(($ContainersWithAnonymousAccessOnStorage | Measure-Object).Count -ge 1)
       {
          Write-Host "`n"
          Write-Host "Generating the log file containing details of all the storage account in which remediating script unable to disable containers anonymous access due to in sufficient permission over storage account for Subscription: [$($SubscriptionId)]..."
-         $ContainersWithAnonymousAccessOnStorage | ConvertTo-Json | Out-File "$($folderPath)\ContainersWithAnonymousAccessOnStorage_$($SubscriptionId.Replace("-","_")).json"
-         Write-Host "Path: $($folderPath)ContainersWithAnonymousAccessOnStorage_$($SubscriptionId.Replace("-","_")).json"
+         $ContainersWithAnonymousAccessOnStorage | ConvertTo-Json | Out-File "$($folderPath)\ContainersWithAnonymousAccessOnStorage.json"
+         Write-Host "Path: $($folderPath)\ContainersWithAnonymousAccessOnStorage.json"
          Write-Host "======================================================"
       }
 
