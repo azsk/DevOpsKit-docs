@@ -154,7 +154,7 @@ function Remediate-DisableAnonymousAccessOnContainers
                         $item =  New-Object psobject -Property @{  
                             SubscriptionId = $SubscriptionId
                             ResourceGroupName = $_.ResourceGroupName
-                            StorageAccountName = $_.StorageAccountName
+                            ResourceName = $_.StorageAccountName
                             ResourceId = $_.id
                             }
 
@@ -167,7 +167,7 @@ function Remediate-DisableAnonymousAccessOnContainers
                     # Unable to disable containers anonymous access may be because of insufficient permission over storage account
                         $item =  New-Object psobject -Property @{
                             SubscriptionId = $SubscriptionId  
-                            StorageAccountName = $_.StorageAccountName
+                            ResourceName = $_.StorageAccountName
                             ResourceGroupName = $_.ResourceGroupName
                             ResourceId = $_.id
                         }
