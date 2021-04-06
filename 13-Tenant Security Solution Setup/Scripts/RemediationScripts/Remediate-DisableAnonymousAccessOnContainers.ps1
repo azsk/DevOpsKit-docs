@@ -43,12 +43,27 @@ function Remediate-DisableAnonymousAccessOnContainers
 {
     param (
         [string]
-        [Parameter(Mandatory = $true, HelpMessage="Json file path which contain failed controls detail to remediate")]
+        [Parameter(Mandatory = $true, HelpMessage="Enter subscription id on which remediation need to perform")]
+        $SubscriptionId,
+
+        [string]
+        [Parameter(Mandatory = $false, HelpMessage="Json file path which contain failed controls detail to remediate")]
         $ControlFilePath,
-        
+
+        [switch]
+        $RemediateForAllStorageAccount,
+
         [switch]
         $PerformPreReqCheck
     )
+
+    if($RemediateForAllStorageAccount -eq $false -and [string]::IsNullOrWhiteSpace($ControlFilePath))
+    {
+        Write-Host "Required Parameter not found to perform remediation." -ForegroundColor Red
+        Write-Host "Please check for control file path otherwise use switch RemediateForAllStorageAccount as value 'true' to perform remediation on all storage account for Subscription [$($SubscriptionId)]" -ForegroundColor Red
+        exit;
+    }
+
 
     Write-Host "======================================================"
     Write-Host "Starting to disable anonymous access on containers of storage account for subscription."
@@ -70,11 +85,6 @@ function Remediate-DisableAnonymousAccessOnContainers
         Write-Host "Connected to AzAccount" -ForegroundColor Green
     }
 
-    # Fetching failed controls details from given json file.
-    $ControlIds = "Azure_Storage_AuthN_Dont_Allow_Anonymous"
-    $controlForRemediation = Get-content -path $ControlFilePath | ConvertFrom-Json
-    $SubscriptionId = $controlForRemediation.SubscriptionId
-
     # Setting context for current subscription.
     $currentSub = Set-AzContext -SubscriptionId $SubscriptionId
 
@@ -95,18 +105,39 @@ function Remediate-DisableAnonymousAccessOnContainers
         
         Write-Host "Disabling anonymous access on all containers on storage...";
         Write-Host "------------------------------------------------------"
-        $controls = $controlForRemediation.FailedControlSet
-        $resourceDetails = $controls | Where-Object { $ControlIds -eq $_.ControlId};
-
-        if(($resourceDetails | Measure-Object).Count -eq 0)
-        {
-            Write-Host "No control found in input json file for remedition." -ForegroundColor Red
-            exit;
-        }
+        
+        # Array to store resource context
         $resourceContext = @()
-        $resourceDetails.ResourceDetails | ForEach-Object { 
-                              $resourceContext += Get-AzStorageAccount -Name $_.ResourceName -ResourceGroupName $_.ResourceGroupName    
-                        }
+
+        if($RemediateForAllStorageAccount)
+        {
+            $resourceContext = (Get-AzStorageAccount).context
+        }
+        else{
+            if (-not (Test-Path -Path $ControlFilePath))
+            {
+                Write-Host "Error: Control file path is not found." -ForegroundColor Red
+                exit;        
+            }
+
+            # Fetching failed controls details from given json file.
+            $ControlIds = "Azure_Storage_AuthN_Dont_Allow_Anonymous"
+            $controlForRemediation = Get-content -path $ControlFilePath | ConvertFrom-Json
+            # $SubscriptionId = $controlForRemediation.SubscriptionId
+            $controls = $controlForRemediation.FailedControlSet
+
+            $resourceDetails = $controls | Where-Object { $ControlIds -eq $_.ControlId};
+
+            if(($resourceDetails | Measure-Object).Count -eq 0)
+            {
+                Write-Host "No control found in input json file for remedition." -ForegroundColor Red
+                exit;
+            }
+            $resourceDetails.ResourceDetails | ForEach-Object { 
+                                $resourceContext += Get-AzStorageAccount -Name $_.ResourceName -ResourceGroupName $_.ResourceGroupName    
+                            }
+        }
+        
 
 
         # Performing remediation
@@ -202,7 +233,7 @@ function Remediate-DisableAnonymousAccessOnContainers
     Write-Host "------------------------------------------------------"
     if(($ContainersWithDisableAnonymousAccessOnStorage | Measure-Object).Count -ge 1)
       {
-         Write-Host "Generating the log file containing details of all the storage account with disabled anonymous access on containers for Subscription: [$($SubscriptionId)]..."
+         Write-Host "Taking backup of storage account details for Subscription: [$($SubscriptionId)] on which remediation is successfully performed. Please do not delete this file. Without this file you wont be able to rollback any changes done through Remediation script." -ForegroundColor Cyan
          $ContainersWithDisableAnonymousAccessOnStorage | ConvertTo-Json -Depth 10| Out-File "$($folderPath)\ContainersWithDisableAnonymousAccessOnStorage.json"
          Write-Host "Path: $($folderPath)\ContainersWithDisableAnonymousAccessOnStorage.json"
       }
@@ -223,4 +254,5 @@ function Remediate-DisableAnonymousAccessOnContainers
 # ***************************************************** #
 
 # Function calling with parameters.
-Remediate-DisableAnonymousAccessOnContainers -ControlFilePath "Enter json file containing failed storage accounts for remediation"
+Remediate-DisableAnonymousAccessOnContainers -SubscriptionId '<Sub_Id>' -ControlFilePath "Enter json file containing failed storage accounts for remediation" -RemediateForAllStorageAccount: $false -PerformPreReqCheck: $true
+
