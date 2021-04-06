@@ -2,7 +2,7 @@
 {
     Write-Host "Required modules are: Az.Account, Az.Resources, Az.Storage" -ForegroundColor Cyan
     Write-Host "Checking for required modules..."
-    $availableModules = $(Get-Module -ListAvailable Az.Resources, Az.Accounts)
+    $availableModules = $(Get-Module -ListAvailable Az.Resources, Az.Accounts,Az.Storage)
     
     # Checking if 'Az.Accounts' module is available or not.
     if($availableModules.Name -notcontains 'Az.Accounts')
@@ -48,7 +48,7 @@ function Remediate-DisableAnonymousAccessOnContainers
 
         [string]
         [Parameter(Mandatory = $false, HelpMessage="Json file path which contain failed controls detail to remediate")]
-        $ControlFilePath,
+        $Path,
 
         [switch]
         $RemediateForAllStorageAccount,
@@ -57,7 +57,7 @@ function Remediate-DisableAnonymousAccessOnContainers
         $PerformPreReqCheck
     )
 
-    if($RemediateForAllStorageAccount -eq $false -and [string]::IsNullOrWhiteSpace($ControlFilePath))
+    if($RemediateForAllStorageAccount -eq $false -and [string]::IsNullOrWhiteSpace($Path))
     {
         Write-Host "Required Parameter not found to perform remediation." -ForegroundColor Red
         Write-Host "Please check for control file path otherwise use switch RemediateForAllStorageAccount as value 'true' to perform remediation on all storage account for Subscription [$($SubscriptionId)]" -ForegroundColor Red
@@ -114,7 +114,7 @@ function Remediate-DisableAnonymousAccessOnContainers
             $resourceContext = (Get-AzStorageAccount).context
         }
         else{
-            if (-not (Test-Path -Path $ControlFilePath))
+            if (-not (Test-Path -Path $Path))
             {
                 Write-Host "Error: Control file path is not found." -ForegroundColor Red
                 exit;        
@@ -122,7 +122,7 @@ function Remediate-DisableAnonymousAccessOnContainers
 
             # Fetching failed controls details from given json file.
             $ControlIds = "Azure_Storage_AuthN_Dont_Allow_Anonymous"
-            $controlForRemediation = Get-content -path $ControlFilePath | ConvertFrom-Json
+            $controlForRemediation = Get-content -path $Path | ConvertFrom-Json
             # $SubscriptionId = $controlForRemediation.SubscriptionId
             $controls = $controlForRemediation.FailedControlSet
 
@@ -249,10 +249,132 @@ function Remediate-DisableAnonymousAccessOnContainers
 
 }
 
+# Script to Roll back changes done by remediation script
 
+function RollBack-DisableAnonymousAccessOnContainers
+{
+    param (
+        [string]
+        [Parameter(Mandatory = $true, HelpMessage="Enter subscription id on which roll back need to perform")]
+        $SubscriptionId,
+
+        [string]
+        [Parameter(Mandatory = $false, HelpMessage="Json file path which contain remediation logs to roll back remediation changes")]
+        $Path,
+
+        [switch]
+        $PerformPreReqCheck
+    )
+
+    Write-Host "======================================================"
+    Write-Host "Starting roll back: To disable anonymous access on containers of storage account for subscription."
+    Write-Host "------------------------------------------------------"
+
+    if($PerformPreReqCheck)
+    {
+       Write-Host "Checking for pre-requisites..."
+       Pre_requisites
+       Write-Host "------------------------------------------------------"
+    }
+
+    # Connect to AzAccount
+    $isContextSet = Get-AzContext
+    if ([string]::IsNullOrEmpty($isContextSet))
+    {       
+        Write-Host "Connecting to AzAccount..."
+        Connect-AzAccount
+        Write-Host "Connected to AzAccount" -ForegroundColor Green
+    }
+
+    # Setting context for current subscription.
+    $currentSub = Set-AzContext -SubscriptionId $SubscriptionId
+
+    Write-Host "Metadata Details: `n SubscriptionId: [$($SubscriptionId)] `n AccountName: [$($currentSub.Account.Id)] `n AccountType: [$($currentSub.Account.Type)]"
+    Write-Host "------------------------------------------------------"
+    Write-Host "Starting with Subscription [$($SubscriptionId)]..."
+
+    # Safe Check: Checking whether the current account is of type User and also grant the current user as UAA for the sub to support fallback
+    if($currentSub.Account.Type -ne "User")
+    {
+        Write-Host "Warning: This script can only be run by user account type." -ForegroundColor Yellow
+        exit;
+    }
+    Write-Host "`n"
+    Write-Host "*** To perform roll back for disabling anonymous access on containers user must have atleast contributor access on storage account of Subscription: [$($SubscriptionId)] ***" -ForegroundColor Yellow
+    Write-Host "`n"  
+    #  Getting all storage account with anonymous access on containers of Subscription.
+        
+        Write-Host "RollBack: Disabling anonymous access on all containers on storage...";
+        Write-Host "------------------------------------------------------"
+        
+        # Array to store resource context
+        $resourceContext = @()
+        if (-not (Test-Path -Path $Path))
+            {
+                Write-Host "Error: Control file path is not found." -ForegroundColor Red
+                exit;        
+            }
+
+            $remediatedResourceLog = Get-content -path $Path | ConvertFrom-Json
+            
+            $remediatedResourceLog | ForEach-Object { 
+                                $resourceContext += Get-AzStorageAccount -Name $_.ResourceName -ResourceGroupName $_.ResourceGroupName    
+                                $resourceContext | Add-Member -NotePropertyName AnonymousAccessContainer -NotePropertyValue $_.ContainersWithAnonymousAccess
+                            }
+    
+
+        # Performing remediation
+        try{
+            if($resourceContext)
+            {
+                $resourceContext | ForEach-Object{
+                    $flag = $true
+                    $context = $_.context;
+                    $containerWithAnonymousAccess = @();
+                    $containerWithAnonymousAccess += $_.AnonymousAccessContainer
+                    if(($containerWithAnonymousAccess | Measure-Object).Count -ne 0)
+                    {
+                        $containerWithAnonymousAccess | ForEach-Object {
+                            try{
+                                Set-AzStorageContainerAcl -Name $_.Name -Permission $_.PublicAccess -Context $context
+                            }
+                            catch
+                            {
+                                $flag = $false
+                                break;
+                            }
+                        };
+
+                        if($flag)
+                        {
+                            Write-Host "Successfully RollBacked: Anonymous access has been disabled on all containers on storage [Name]: [$($_.StorageAccountName)] [ResourceGroupName]: [$($_.ResourceGroupName)]";
+                        }
+                        else {
+                            Write-Host "RollBack Failed: Anonymous access has been disabled on all containers on storage [Name]: [$($_.StorageAccountName)] [ResourceGroupName]: [$($_.ResourceGroupName)]";
+                        }
+                    }
+                    else
+                    {
+                        Write-Host "There are no containers on storage account which have anonymous access enabled [Name]: [$($_.StorageAccountName)]";
+                    }	
+            }
+        }
+        else
+        {
+            Write-Host "Unable to fetch storage account";
+        }
+    }
+    catch
+    {
+        Write-Host "Error occured while roll back remediating changes. ErrorMessage [$($_)]" -ForegroundColor Red
+    }
+
+}
 
 # ***************************************************** #
 
-# Function calling with parameters.
-Remediate-DisableAnonymousAccessOnContainers -SubscriptionId '<Sub_Id>' -ControlFilePath "Enter json file containing failed storage accounts for remediation" -RemediateForAllStorageAccount: $false -PerformPreReqCheck: $true
+# Function calling with parameters for remediation.
+Remediate-DisableAnonymousAccessOnContainers -SubscriptionId '<Sub_Id>' -Path "Enter json file containing failed storage accounts for remediation" -RemediateForAllStorageAccount: $false -PerformPreReqCheck: $true
 
+# Function calling with parameters to roll back remediation changes.
+RollBack-DisableAnonymousAccessOnContainers -SubscriptionId '<Sub_Id>' -Path "Enter Json file path which contain remediation logs to roll back remediation changes" -PerformPreReqCheck: $true
