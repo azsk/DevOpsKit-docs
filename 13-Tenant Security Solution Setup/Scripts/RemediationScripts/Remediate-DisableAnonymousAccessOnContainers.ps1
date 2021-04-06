@@ -119,16 +119,25 @@ function Remediate-DisableAnonymousAccessOnContainers
             $resourceContext | ForEach-Object{
                 $flag = $true
                 $allContainers = @();
-                $containerWithAnonymousAccess = @();
+                $containersWithAnonymousAccess = @();
+                $anonymousAccessContainersNameAndPublicAccess = @();
 				$context = $_.context;
 	    		$allContainers += Get-AzStorageContainer -Context $context -ErrorAction Stop
                 if($allContainers.Count -ne 0)
 			    {
-                    $containerWithAnonymousAccess += $allContainers | Where-Object { $_.PublicAccess -ne "Off"}
-                    $containerWithAnonymousAccess | ForEach-Object {
+                    $containersWithAnonymousAccess += $allContainers | Where-Object { $_.PublicAccess -ne "Off"}
+                    $containersWithAnonymousAccess | ForEach-Object {
                         try
                         {
                             Set-AzStorageContainerAcl -Name $_.Name -Permission Off -Context $context
+                            
+                            # Creating object with container name and type of public access
+                            $item =  New-Object psobject -Property @{  
+                                    Name = $_.Name                
+                                    PublicAccess = $_.PublicAccess
+                                }
+                                $anonymousAccessContainersNameAndPublicAccess += $item
+
                         }
                         catch
                         {
@@ -147,9 +156,11 @@ function Remediate-DisableAnonymousAccessOnContainers
                             ResourceGroupName = $_.ResourceGroupName
                             StorageAccountName = $_.StorageAccountName
                             ResourceId = $_.id
-                        }
+                            }
 
-                        $ContainersWithDisableAnonymousAccessOnStorage += $item
+                            # Adding array of container name and public access
+                            $item | Add-Member -Name 'ContainersWithAnonymousAccess' -Type NoteProperty -Value $anonymousAccessContainersNameAndPublicAccess;
+                            $ContainersWithDisableAnonymousAccessOnStorage += $item
                     }
                     else
                     {
@@ -162,23 +173,22 @@ function Remediate-DisableAnonymousAccessOnContainers
                         }
 
                         $ContainersWithAnonymousAccessOnStorage += $item
-                    
                     }
                 }
                 else
 			    {
                     Write-Host "There are no containers on storage account which have anonymous access enabled [Name]: [$($_.StorageAccountName)]";
 			    }	
-            }
         }
-		else
+    }
+    else
 		{
 			Write-Host "Unable to fetch storage account";
 		}
     }
     catch
     {
-        Write-Host "Error occured while remediating control. ErrorMessage [$($_)]" -ForegroundColor $([Constants]::MessageType.Error)
+        Write-Host "Error occured while remediating control. ErrorMessage [$($_)]" -ForegroundColor Red
     }
 
     # Creating the log file
@@ -193,7 +203,7 @@ function Remediate-DisableAnonymousAccessOnContainers
     if(($ContainersWithDisableAnonymousAccessOnStorage | Measure-Object).Count -ge 1)
       {
          Write-Host "Generating the log file containing details of all the storage account with disabled anonymous access on containers for Subscription: [$($SubscriptionId)]..."
-         $ContainersWithDisableAnonymousAccessOnStorage | ConvertTo-Json | Out-File "$($folderPath)\ContainersWithDisableAnonymousAccessOnStorage.json"
+         $ContainersWithDisableAnonymousAccessOnStorage | ConvertTo-Json -Depth 10| Out-File "$($folderPath)\ContainersWithDisableAnonymousAccessOnStorage.json"
          Write-Host "Path: $($folderPath)\ContainersWithDisableAnonymousAccessOnStorage.json"
       }
 
@@ -201,7 +211,7 @@ function Remediate-DisableAnonymousAccessOnContainers
       {
          Write-Host "`n"
          Write-Host "Generating the log file containing details of all the storage account in which remediating script unable to disable containers anonymous access due to in sufficient permission over storage account for Subscription: [$($SubscriptionId)]..."
-         $ContainersWithAnonymousAccessOnStorage | ConvertTo-Json | Out-File "$($folderPath)\ContainersWithAnonymousAccessOnStorage.json"
+         $ContainersWithAnonymousAccessOnStorage | ConvertTo-Json -Depth 10 | Out-File "$($folderPath)\ContainersWithAnonymousAccessOnStorage.json"
          Write-Host "Path: $($folderPath)\ContainersWithAnonymousAccessOnStorage.json"
          Write-Host "======================================================"
       }
