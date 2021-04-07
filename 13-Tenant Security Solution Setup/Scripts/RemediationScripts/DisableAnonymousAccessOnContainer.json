@@ -1,5 +1,5 @@
 {
-    "SubscriptionId": "",
+    "SubscriptionId": "<Enter SubscriptionId>",
     "FailedControlSet": [
         {
             "ResourceType": "Microsoft.Storage/storageAccounts",
@@ -7,14 +7,9 @@
             "ControlId": "Azure_Storage_AuthN_Dont_Allow_Anonymous",
             "ResourceDetails": [
                 {
-                    "ResourceGroupName": "",
-                    "ResourceName": "",
-                    "ResourceId": ""
-                },
-                {
-                    "ResourceGroupName": "",
-                    "ResourceName": "",
-                    "ResourceId": ""
+                    "ResourceGroupName": "<Enter Resource Group Name>",
+                    "ResourceName": "<Enter Resource Name>",
+                    "ResourceId": "<Enter Resource Id>"
                 }
             ]
         }

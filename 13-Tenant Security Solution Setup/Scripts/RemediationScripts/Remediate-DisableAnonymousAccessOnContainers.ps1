@@ -103,7 +103,7 @@ function Remediate-DisableAnonymousAccessOnContainers
     Write-Host "`n"  
     #  Getting all storage account with anonymous access on containers of Subscription.
         
-        Write-Host "Disabling anonymous access on all containers on storage...";
+        Write-Host "Disabling anonymous access on all containers of storage...";
         Write-Host "------------------------------------------------------"
         
         # Array to store resource context
@@ -128,13 +128,19 @@ function Remediate-DisableAnonymousAccessOnContainers
 
             $resourceDetails = $controls | Where-Object { $ControlIds -eq $_.ControlId};
 
-            if(($resourceDetails | Measure-Object).Count -eq 0)
+            if(($resourceDetails | Measure-Object).Count -eq 0 -and ($resourceDetails.ResourceDetails | Measure-Object).Count -eq 0)
             {
                 Write-Host "No control found in input json file for remedition." -ForegroundColor Red
                 exit;
             }
             $resourceDetails.ResourceDetails | ForEach-Object { 
-                                $resourceContext += Get-AzStorageAccount -Name $_.ResourceName -ResourceGroupName $_.ResourceGroupName    
+                                try{
+                                    $resourceContext += Get-AzStorageAccount -Name $_.ResourceName -ResourceGroupName $_.ResourceGroupName
+                                }
+                                catch
+                                {
+                                    Write-Host "Valid resource group and resource name not found in input json file. ErrorMessage [$($_)]" -ForegroundColor Red  
+                                }
                             }
         }
         
@@ -214,7 +220,8 @@ function Remediate-DisableAnonymousAccessOnContainers
     }
     else
 		{
-			Write-Host "Unable to fetch storage account";
+			Write-Host "Unable to fetch storage account" -ForegroundColor Red;
+            exit;
 		}
     }
     catch
@@ -361,7 +368,7 @@ function RollBack-DisableAnonymousAccessOnContainers
         }
         else
         {
-            Write-Host "Unable to fetch storage account";
+            Write-Host "Unable to fetch storage account" -ForegroundColor Red;
         }
     }
     catch
@@ -374,7 +381,7 @@ function RollBack-DisableAnonymousAccessOnContainers
 # ***************************************************** #
 
 # Function calling with parameters for remediation.
-Remediate-DisableAnonymousAccessOnContainers -SubscriptionId '<Sub_Id>' -Path "Enter json file containing failed storage accounts for remediation" -RemediateForAllStorageAccount: $false -PerformPreReqCheck: $true
+Remediate-DisableAnonymousAccessOnContainers -SubscriptionId '<Sub_Id>' -Path "Enter json file path containing storage accounts detail for remediation" -RemediateForAllStorageAccount: $false -PerformPreReqCheck: $true
 
 # Function calling with parameters to roll back remediation changes.
 RollBack-DisableAnonymousAccessOnContainers -SubscriptionId '<Sub_Id>' -Path "Enter Json file path which contain remediation logs to roll back remediation changes" -PerformPreReqCheck: $true
