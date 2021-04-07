@@ -319,7 +319,7 @@ function RollBack-DisableAnonymousAccessOnContainers
             
             $remediatedResourceLog | ForEach-Object { 
                                 $resourceContext += Get-AzStorageAccount -Name $_.ResourceName -ResourceGroupName $_.ResourceGroupName    
-                                $resourceContext | Add-Member -NotePropertyName AnonymousAccessContainer -NotePropertyValue $_.ContainersWithAnonymousAccess
+                                $resourceContext | Add-Member -NotePropertyName AnonymousAccessContainer -NotePropertyValue $_.ContainersWithAnonymousAccess -ErrorAction SilentlyContinue
                             }
     
 
