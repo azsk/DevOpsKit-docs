@@ -92,19 +92,22 @@ function Remediate-DisableAnonymousAccessOnContainers
     Write-Host "------------------------------------------------------"
     Write-Host "Starting with Subscription [$($SubscriptionId)]..."
 
+    Write-Host "`n"
+    Write-Host "*** To perform remediation for disabling anonymous access on containers user must have atleast contributor access on storage account of Subscription: [$($SubscriptionId)] ***" -ForegroundColor Yellow
+    Write-Host "`n" 
+
+    Write-Host "Step 1 of 4: Validating whether the current user [$($currentSub.Account.Id)] have the required permissions to run the script for Subscription [$($SubscriptionId)]..."
+    
     # Safe Check: Checking whether the current account is of type User and also grant the current user as UAA for the sub to support fallback
     if($currentSub.Account.Type -ne "User")
     {
         Write-Host "Warning: This script can only be run by user account type." -ForegroundColor Yellow
         exit;
     }
-    Write-Host "`n"
-    Write-Host "*** To perform remediation for disabling anonymous access on containers user must have atleast contributor access on storage account of Subscription: [$($SubscriptionId)] ***" -ForegroundColor Yellow
-    Write-Host "`n"  
+    
     #  Getting all storage account with anonymous access on containers of Subscription.
         
-    Write-Host "Disabling anonymous access on all containers of storage...";
-    Write-Host "------------------------------------------------------"
+    Write-Host "Step 2 of 4: Getting all storage account from Subscription [$($SubscriptionId)]..."
     
     # Array to store resource context
     $resourceContext = @()
@@ -145,6 +148,8 @@ function Remediate-DisableAnonymousAccessOnContainers
                         }
     }
     
+    Write-Host "Step 3 of 4: Disabling anonymous access on containers of storage account from Subscription [$($SubscriptionId)]..."
+
     # Performing remediation
     try
     {
@@ -234,10 +239,9 @@ function Remediate-DisableAnonymousAccessOnContainers
         New-Item -ItemType Directory -Path $folderPath | Out-Null
     }
 
-    Write-Host "------------------------------------------------------"
     if(($ContainersWithDisableAnonymousAccessOnStorage | Measure-Object).Count -ge 1)
       {
-         Write-Host "Taking backup of storage account details for Subscription: [$($SubscriptionId)] on which remediation is successfully performed. Please do not delete this file. Without this file you wont be able to rollback any changes done through Remediation script." -ForegroundColor Cyan
+         Write-Host "Step 4 of 4: Taking backup of storage account details for Subscription: [$($SubscriptionId)] on which remediation is successfully performed. Please do not delete this file. Without this file you wont be able to rollback any changes done through Remediation script."
          $ContainersWithDisableAnonymousAccessOnStorage | ConvertTo-Json -Depth 10| Out-File "$($folderPath)\ContainersWithDisableAnonymousAccessOnStorage.json"
          Write-Host "Path: $($folderPath)\ContainersWithDisableAnonymousAccessOnStorage.json"
       }
@@ -297,20 +301,20 @@ function RollBack-DisableAnonymousAccessOnContainers
     Write-Host "------------------------------------------------------"
     Write-Host "Starting with Subscription [$($SubscriptionId)]..."
 
+    Write-Host "`n"
+    Write-Host "*** To perform roll back operation for disabling anonymous access on containers user must have atleast contributor access on storage account of Subscription: [$($SubscriptionId)] ***" -ForegroundColor Yellow
+    Write-Host "`n" 
+    Write-Host "Step 1 of 1: Validating whether the current user [$($currentSub.Account.Id)] have the required permissions to run the script for Subscription [$($SubscriptionId)]..."
+
     # Safe Check: Checking whether the current account is of type User and also grant the current user as UAA for the sub to support fallback
     if($currentSub.Account.Type -ne "User")
     {
         Write-Host "Warning: This script can only be run by user account type." -ForegroundColor Yellow
         exit;
     }
-    Write-Host "`n"
-    Write-Host "*** To perform roll back for disabling anonymous access on containers user must have atleast contributor access on storage account of Subscription: [$($SubscriptionId)] ***" -ForegroundColor Yellow
-    Write-Host "`n"  
-    #  Getting all storage account with anonymous access on containers of Subscription.
-        
-    Write-Host "RollBack: Disabling anonymous access on all containers on storage...";
-    Write-Host "------------------------------------------------------"
     
+    Write-Host "Step 2 of 2: Fetching remediation log to perform roll back operation on containers of storage account from Subscription [$($SubscriptionId)]..."
+ 
     # Array to store resource context
     $resourceContext = @()
     if (-not (Test-Path -Path $Path))
@@ -325,6 +329,8 @@ function RollBack-DisableAnonymousAccessOnContainers
                         $resourceContext += Get-AzStorageAccount -Name $_.ResourceName -ResourceGroupName $_.ResourceGroupName    
                         $resourceContext | Add-Member -NotePropertyName AnonymousAccessContainer -NotePropertyValue $_.ContainersWithAnonymousAccess -ErrorAction SilentlyContinue
                     }
+
+    Write-Host "Step 3 of 3: Performing roll back opeartion on containers of storage account from Subscription [$($SubscriptionId)]..."
 
     # Performing roll back
     try{
