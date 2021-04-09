@@ -388,6 +388,8 @@ function RollBack-AnonymousAccessOnContainers
     This command would help in performing roll back operation for 'Azure_Storage_AuthN_Dont_Allow_Anonymous' control.
     .PARAMETER SubscriptionId
         Enter subscription id on which roll back operation need to perform.
+    .PARAMETER RollBackType
+        Select rollback type to perform roll back operation from drop down menu.
     .PARAMETER Path
         Json file path which containing remediation log to perform roll back operation.
     .PARAMETER PerformPreReqCheck
