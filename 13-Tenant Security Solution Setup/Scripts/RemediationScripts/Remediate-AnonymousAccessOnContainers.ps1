@@ -103,7 +103,7 @@ function Remediate-AnonymousAccessOnContainers
         catch 
         {
             Write-Host "Error occured while checking pre-requisites. ErrorMessage [$($_)]" -ForegroundColor Red    
-            Exit
+            break
         }
     }
 
@@ -134,7 +134,7 @@ function Remediate-AnonymousAccessOnContainers
     if($currentSub.Account.Type -ne "User")
     {
         Write-Host "Warning: This script can only be run by user account type." -ForegroundColor Yellow
-        exit;
+        break;
     }
     
     Write-Host "Fetching storage account from Subscription [$($SubscriptionId)]..."
@@ -153,7 +153,7 @@ function Remediate-AnonymousAccessOnContainers
         if (-not (Test-Path -Path $Path))
         {
             Write-Host "Error: Json file containing storage account(s) detail not found for remediation." -ForegroundColor Red
-            exit;        
+            break;        
         }
 
         # Fetching storage accounts details for remediation.
@@ -164,7 +164,7 @@ function Remediate-AnonymousAccessOnContainers
         if(($resourceDetails | Measure-Object).Count -eq 0 -and ($resourceDetails.ResourceDetails | Measure-Object).Count -eq 0)
         {
             Write-Host "No storage account(s) found in input json file for remedition." -ForegroundColor Red
-            exit
+            break
         }
         $resourceDetails.ResourceDetails | ForEach-Object { 
             try
@@ -174,7 +174,7 @@ function Remediate-AnonymousAccessOnContainers
             catch
             {
                 Write-Host "Valid resource group and resource name not found in input json file. ErrorMessage [$($_)]" -ForegroundColor Red
-                exit  
+                break  
             }
         }
     }
@@ -243,7 +243,7 @@ function Remediate-AnonymousAccessOnContainers
                     {
                         Write-Host "No storage account found with enabled 'Allow Blob Public Access'."
                         Write-Host "======================================================"
-                        exit
+                        break
                     }
                 }
             }
@@ -328,7 +328,7 @@ function Remediate-AnonymousAccessOnContainers
                         {
                             Write-Host "There are no containers on storage account which have anonymous access enabled [Name]: [$($_.StorageAccountName)]";
                             Write-Host "======================================================"
-                            exit
+                            break
                         }	
                     }
                 }   
@@ -336,13 +336,13 @@ function Remediate-AnonymousAccessOnContainers
                 {
                     Write-Host "Unable to fetch storage account." -ForegroundColor Red;
                     Write-Host "======================================================"
-                    exit;
+                    break;
                 }
             }
             catch
             {
                 Write-Host "Error occured while remediating control. ErrorMessage [$($_)]" -ForegroundColor Red
-                exit
+                break
             }
 
             # Creating the log file
@@ -373,7 +373,7 @@ function Remediate-AnonymousAccessOnContainers
         Default {
 
             Write-Host "No Valid choice selected." -ForegroundColor Red
-            Exit;
+            break;
         }
     }
 }
@@ -428,7 +428,7 @@ function RollBack-AnonymousAccessOnContainers
         catch 
         {
             Write-Host "Error occured while checking pre-requisites. ErrorMessage [$($_)]" -ForegroundColor Red    
-            Exit
+            break
         }    
     }
 
@@ -457,7 +457,7 @@ function RollBack-AnonymousAccessOnContainers
     if($currentSub.Account.Type -ne "User")
     {
         Write-Host "Warning: This script can only be run by user account type." -ForegroundColor Yellow
-        exit;
+        break;
     }
     
     Write-Host "`n"
@@ -468,7 +468,7 @@ function RollBack-AnonymousAccessOnContainers
     if (-not (Test-Path -Path $Path))
     {
         Write-Host "Error: Control file path is not found." -ForegroundColor Red
-        exit;        
+        break;        
     }
 
     switch ($RollBackType) 
@@ -502,13 +502,13 @@ function RollBack-AnonymousAccessOnContainers
                 {
                     Write-Host "No storage account found to perform roll back operation."
                     Write-Host "======================================================"
-                    exit
+                    break
                 }
             }   
             catch
             {
                 Write-Host "Error occured while performing roll back opeartion for remediating changes. ErrorMessage [$($_)]" -ForegroundColor Red
-                exit
+                break
             }
         }
         "EnableAnonymousAccessOnContainers" 
@@ -525,7 +525,7 @@ function RollBack-AnonymousAccessOnContainers
             catch
             {
                 Write-Host "Input json file is not valid as per selected roll back type. ErrorMessage [$($_)]" -ForegroundColor Red
-                exit
+                break
             }
 
             $totalResourceToRollBack = ($resourceContext | Measure-Object).Count
@@ -573,7 +573,7 @@ function RollBack-AnonymousAccessOnContainers
                                 else
                                 {
                                     Write-Host "No containers found with enabled anonymous access [Name]: [$($_.StorageAccountName)] [ResourceGroupName]: [$($_.ResourceGroupName)]" -ForegroundColor Green;
-                                    exit
+                                    break
                                 }	
                             }
                             else 
@@ -587,19 +587,19 @@ function RollBack-AnonymousAccessOnContainers
                 else
                 {
                     Write-Host "Unable to fetch storage account." -ForegroundColor Red;
-                    exit
+                    break
                 }
             }   
             catch
             {
                 Write-Host "Error occured while performing roll back operation for remediating changes. ErrorMessage [$($_)]" -ForegroundColor Red
-                exit
+                break
             }
         }
         Default 
         {
             Write-Host "No Valid choice selected." -ForegroundColor Red
-            Exit;
+            break;
         }
     } 
 }
