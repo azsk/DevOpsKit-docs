@@ -320,7 +320,7 @@ function RollBack-ConfigASCTier
 
             if($remediatedLog.IsProviderRegister -eq $isProviderRegister)
             {
-                Write-Host "[$($reqProviderName)] provider state is same as before executing remediation script is same. No Action required to roll back for provider registration." -ForegroundColor Green
+                Write-Host "[$($reqProviderName)] provider registration state is same as before executing remediation script is same. No Action required to roll back." -ForegroundColor Green
                 Write-Host "======================================================"
             }
             else 
