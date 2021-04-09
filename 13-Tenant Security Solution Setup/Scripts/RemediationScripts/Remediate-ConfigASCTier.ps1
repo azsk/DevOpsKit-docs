@@ -177,7 +177,7 @@ function Remediate-ConfigASCTier
         New-Item -ItemType Directory -Path $folderPath | Out-Null
     }
 
-    Write-Host "Step 3 of 3: Taking backup of ASC type without 'Standard' tier and [$($reqProviderName)] provider registration status. Please do not delete this file. Without this file you wont be able to rollback any changes done through Remediation script." -ForegroundColor Cyan
+    Write-Host "Step 3 of 3: Taking backup of ASC type without [Standard] tier and [$($reqProviderName)] provider registration status. Please do not delete this file. Without this file you wont be able to rollback any changes done through Remediation script." -ForegroundColor Cyan
     $nonCompliantASCResource | ConvertTo-json | out-file "$($folderpath)\NonCompliantASCType.json"  
     Write-Host "Path: $($folderpath)\NonCompliantASCType.json"     
     Write-Host "`n"
@@ -195,8 +195,10 @@ function Remediate-ConfigASCTier
         catch 
         {
             Write-Host "Error occurred while setting $reqASCTier pricing tier. ErrorMessage [$($_)]" -ForegroundColor Red 
-            exit  
+            exit
         }
+        Write-Host "Successfuly set [$($reqASCTier)] pricing tier for non compliant ASC type [$($nonCompliantASCTierResourcetype)]" -ForegroundColor Green
+        Write-Host "======================================================"
     }
     else
     {
@@ -300,7 +302,6 @@ function RollBack-ConfigASCTier
     }
 
     # Declaring required ASC type and pricing tier
-    $reqASCTierResourceTypes = "VirtualMachines","SqlServers","AppServices","StorageAccounts","KubernetesService","ContainerRegistry","KeyVaults","SqlServerVirtualMachines";		
     $reqASCTier = "Standard";
     $reqProviderName = "Microsoft.Security"
     $remediatedLog = Get-Content -Raw -Path $Path | ConvertFrom-Json
