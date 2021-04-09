@@ -197,7 +197,7 @@ function Remediate-ConfigASCTier
             Write-Host "Error occurred while setting $reqASCTier pricing tier. ErrorMessage [$($_)]" -ForegroundColor Red 
             exit
         }
-        Write-Host "Successfuly set [$($reqASCTier)] pricing tier for non compliant ASC type [$($nonCompliantASCTierResourcetype)]" -ForegroundColor Green
+        Write-Host "Successfuly set [$($reqASCTier)] pricing tier for non compliant ASC type." -ForegroundColor Green
         Write-Host "======================================================"
     }
     else
@@ -316,12 +316,11 @@ function RollBack-ConfigASCTier
             Write-Host "Configuring ASC tier as per remediation log on subscription [$($SubscriptionId)]..."
             
             # Checking current registration state of provider i.e. 'Microsoft.Security' on subscription.
-            $isProviderRegister = (Get-AzResourceProvider -ListAvailable | Where-Object { $_.ProviderNamespace -eq $reqProviderName }).RegistrationState -ne "Registered"
+            $isProviderRegister = (Get-AzResourceProvider -ListAvailable | Where-Object { $_.ProviderNamespace -eq $reqProviderName }).RegistrationState -eq "Registered"
 
             if($remediatedLog.IsProviderRegister -eq $isProviderRegister)
             {
                 Write-Host "[$($reqProviderName)] provider registration state is same as before executing remediation script is same. No Action required to roll back." -ForegroundColor Green
-                Write-Host "======================================================"
             }
             else 
             {
@@ -338,7 +337,6 @@ function RollBack-ConfigASCTier
                     Write-Host "Error Occured while unregistering $reqProviderName provider. ErrorMessage [$($_)]" -ForegroundColor Red
                 }
                 Write-Host "$reqProviderName provider successfully unregistered." -ForegroundColor Green
-                Write-Host "======================================================"
             }
 
             if($null -ne $remediatedLog.NonCompliantASCType -and ($remediatedLog.NonCompliantASCType | Measure-Object).Count -gt 0)
@@ -361,8 +359,8 @@ function RollBack-ConfigASCTier
             else 
             {
                 Write-Host "Non compliant ASC type not found to perform roll back operation." -ForegroundColor Green
-                exit
                 Write-Host "======================================================"
+                exit                
             }
         }
         else 
