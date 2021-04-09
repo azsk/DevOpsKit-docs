@@ -82,7 +82,7 @@ function Remediate-ConfigASCTier
         catch 
         {
             Write-Host "Error occured while checking pre-requisites. ErrorMessage [$($_)]" -ForegroundColor Red    
-            Exit
+            break
         }
     }
 
@@ -109,7 +109,7 @@ function Remediate-ConfigASCTier
     if($currentSub.Account.Type -ne "User")
     {
         Write-Host "Warning: This script can only be run by user account type." -ForegroundColor Yellow
-        exit;
+        break;
     }
 
     # Safe Check: Current user need to be either Contributor or Owner for the subscription
@@ -118,7 +118,7 @@ function Remediate-ConfigASCTier
     if(($currentLoginRoleAssignments | Where { $_.RoleDefinitionName -eq "Owner"  -or $_.RoleDefinitionName -eq 'Contributor' } | Measure-Object).Count -le 0)
     {
         Write-Host "Warning: This script can only be run by an Owner or Contributor of subscription [$($SubscriptionId)] " -ForegroundColor Yellow
-        exit;
+        break;
     }
 
     # Declaring required ASC type and pricing tier
@@ -149,7 +149,7 @@ function Remediate-ConfigASCTier
         catch 
         {
             Write-Host "Error Occured while registering $reqProviderName provider. ErrorMessage [$($_)]" -ForegroundColor Red
-            exit
+            break
         }
         Write-Host "$reqProviderName provider successfully registered." -ForegroundColor Green
     }
@@ -195,7 +195,7 @@ function Remediate-ConfigASCTier
         catch 
         {
             Write-Host "Error occurred while setting $reqASCTier pricing tier. ErrorMessage [$($_)]" -ForegroundColor Red 
-            exit
+            break
         }
         Write-Host "Successfuly set [$($reqASCTier)] pricing tier for non compliant ASC type." -ForegroundColor Green
         Write-Host "======================================================"
@@ -204,7 +204,7 @@ function Remediate-ConfigASCTier
     {
         Write-Host "Required ASC type compliant with [$($reqASCTier)] pricing tier." -ForegroundColor Green
         Write-Host "======================================================"
-        exit   
+        break   
     }
 }
 
@@ -250,7 +250,7 @@ function RollBack-ConfigASCTier
         catch 
         {
             Write-Host "Error occured while checking pre-requisites. ErrorMessage [$($_)]" -ForegroundColor Red    
-            Exit
+            break
         }
     }
 
@@ -279,7 +279,7 @@ function RollBack-ConfigASCTier
     if($currentSub.Account.Type -ne "User")
     {
         Write-Host "Warning: This script can only be run by user account type." -ForegroundColor Yellow
-        exit;
+        break;
     }
 
     # Safe Check: Current user need to be either Contributor or Owner for the subscription
@@ -288,7 +288,7 @@ function RollBack-ConfigASCTier
     if(($currentLoginRoleAssignments | Where { $_.RoleDefinitionName -eq "Owner"  -or $_.RoleDefinitionName -eq 'Contributor' } | Measure-Object).Count -le 0)
     {
         Write-Host "Warning: This script can only be run by an Owner or Contributor of subscription [$($SubscriptionId)] " -ForegroundColor Yellow
-        exit;
+        break;
     }
 
     Write-Host "`n"
@@ -298,7 +298,7 @@ function RollBack-ConfigASCTier
     if (-not (Test-Path -Path $Path))
     {
         Write-Host "Warning: Rollback file is not found. Please check if the initial Remediation script has been run from the same machine. Exiting the process" -ForegroundColor Yellow
-        exit;        
+        break;        
     }
 
     # Declaring required ASC type and pricing tier
@@ -350,7 +350,7 @@ function RollBack-ConfigASCTier
                 catch 
                 {
                     Write-Host "Error occurred while performing roll back operation to configure ASC tier. ErrorMessage [$($_)]" -ForegroundColor Red 
-                    exit      
+                    break      
                 }
 
                 Write-Host "Roll back operation successfully performed." -ForegroundColor Green
@@ -360,20 +360,20 @@ function RollBack-ConfigASCTier
             {
                 Write-Host "Non compliant ASC type not found to perform roll back operation." -ForegroundColor Green
                 Write-Host "======================================================"
-                exit                
+                break                
             }
         }
         else 
         {
             Write-Host "ASC tier details not found to perform roll back operation."
             Write-Host "======================================================"
-            exit
+            break
         }
     }
     catch
     {
         Write-Host "Error occurred while performing roll back operation to configure ASC tier. ErrorMessage [$($_)]" -ForegroundColor Red 
-        exit
+        break
     }
 }
 
