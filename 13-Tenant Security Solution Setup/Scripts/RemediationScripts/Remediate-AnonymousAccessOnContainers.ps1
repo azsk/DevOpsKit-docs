@@ -72,7 +72,7 @@ function Remediate-AnonymousAccessOnContainers
 
     param (
         [string]
-        [Parameter(Mandatory = $true, HelpMessage="Enter subscription id on which remediation need to perform")]
+        [Parameter(Mandatory = $true, HelpMessage="Enter subscription id for remediation")]
         $SubscriptionId,
 
         [Parameter(Mandatory = $true, HelpMessage = "Select remediation type")]
@@ -397,7 +397,7 @@ function RollBack-AnonymousAccessOnContainers
 	#>
     param (
         [string]
-        [Parameter(Mandatory = $true, HelpMessage="Enter subscription id on which roll back need to perform")]
+        [Parameter(Mandatory = $true, HelpMessage="Enter subscription id to perform roll back operation")]
         $SubscriptionId,
 
         [Parameter(Mandatory = $true, HelpMessage = "Select rollback type")]
