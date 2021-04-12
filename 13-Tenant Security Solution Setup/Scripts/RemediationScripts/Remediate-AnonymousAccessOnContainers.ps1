@@ -127,7 +127,7 @@ function Remediate-AnonymousAccessOnContainers
     Write-Host "*** To perform remediation for disabling anonymous access on containers user must have atleast contributor access on storage account of Subscription: [$($SubscriptionId)] ***" -ForegroundColor $([Constants]::MessageType.Warning)
     Write-Host "`n" 
 
-    Write-Host "Validating whether the current user [$($currentSub.Account.Id)] have the required permissions to run the script for Subscription [$($SubscriptionId)]..."
+    Write-Host "Validating whether the current user [$($currentSub.Account.Id)] have the have valid account type [User] to run the script for Subscription [$($SubscriptionId)]..."
     Write-Host "`n"
 
     # Safe Check: Checking whether the current account is of type User
@@ -192,15 +192,14 @@ function Remediate-AnonymousAccessOnContainers
                     $stgWithEnableAllowBlobPublicAccess = @()
                     $stgWithDisableAllowBlobPublicAccess = @()
                     $resourceContext | ForEach-Object {
-                        $stg = Get-AzStorageAccount -ResourceGroupName $_.ResourceGroupName -StorageAccountName $_.StorageAccountName
-                        if(($null -eq $stg.allowBlobPublicAccess) -or ($stg.allowBlobPublicAccess))
+                        if(($null -eq $_.allowBlobPublicAccess) -or ($_.allowBlobPublicAccess))
                         {
                             
-                            $stgWithEnableAllowBlobPublicAccess += $stg | select -Property "StorageAccountName", "ResourceGroupName", "Id"
+                            $stgWithEnableAllowBlobPublicAccess += $_ | select -Property "StorageAccountName", "ResourceGroupName", "Id"
                         }
                         else 
                         {
-                            $stgWithDisableAllowBlobPublicAccess += $stg
+                            $stgWithDisableAllowBlobPublicAccess += $_
                         }   
                     }
         
