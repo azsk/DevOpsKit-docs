@@ -197,7 +197,7 @@ function Remediate-AnonymousAccessOnContainers
                             
                             $stgWithEnableAllowBlobPublicAccess += $_ | select -Property "StorageAccountName", "ResourceGroupName", "Id"
                         }
-                        else 
+                        else
                         {
                             $stgWithDisableAllowBlobPublicAccess += $_
                         }   
@@ -461,7 +461,7 @@ function RollBack-AnonymousAccessOnContainers
     Write-Host "`n"
     Write-Host "*** To perform roll back operation for enabling anonymous access on containers user must have atleast contributor access on storage account of Subscription: [$($SubscriptionId)] ***" -ForegroundColor $([Constants]::MessageType.Warning)
     Write-Host "`n" 
-    Write-Host "Validating whether the current user [$($currentSub.Account.Id)] have the required permissions to run the script for Subscription [$($SubscriptionId)]..."
+    Write-Host "Validating whether the current user [$($currentSub.Account.Id)] have valid account type [User] to run the script for Subscription [$($SubscriptionId)]..."
 
     # Safe Check: Checking whether the current account is of type User
     if($currentSub.Account.Type -ne "User")
