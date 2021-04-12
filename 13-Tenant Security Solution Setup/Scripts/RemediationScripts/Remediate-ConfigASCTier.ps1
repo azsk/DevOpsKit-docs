@@ -96,7 +96,7 @@ function Remediate-ConfigASCTier
     }
 
     # Setting context for current subscription.
-    $currentSub = Set-AzContext -SubscriptionId $SubscriptionId
+    $currentSub = Set-AzContext -SubscriptionId $SubscriptionId -ErrorAction Stop -Force
 
     Write-Host "Metadata Details: `n SubscriptionId: [$($SubscriptionId)] `n AccountName: [$($currentSub.Account.Id)] `n AccountType: [$($currentSub.Account.Type)]"
     Write-Host "------------------------------------------------------"
@@ -163,13 +163,14 @@ function Remediate-ConfigASCTier
         Write-Host "$reqProviderName provider successfully registered." -ForegroundColor Green
     }
 
-    Write-Host "Step 2 of 3: Checking [$($reqASCTier)] pricing tier for [$($reqASCTierResourceTypes)] ASC type..."
+    Write-Host "Step 2 of 3: Checking [$($reqASCTier)] pricing tier for [$($reqASCTierResourceTypes -join ", ")] ASC type..."
     $nonCompliantASCTierResourcetype = @()
-    $nonCompliantASCTierResourcetype = Get-AzSecurityPricing | Where-Object { $_.PricingTier -ne $reqASCTier -and $reqASCTierResourceTypes.Contains($_.Name) }
+    $nonCompliantASCTierResourcetype = Get-AzSecurityPricing | Where-Object { $_.PricingTier -ne $reqASCTier -and $reqASCTierResourceTypes.Contains($_.Name) } | select "Name", "PricingTier", "Id"
 
     $nonCompliantASCTypeCount = ($nonCompliantASCTierResourcetype | Measure-Object).Count
 
     Write-Host "Found [$($nonCompliantASCTypeCount)] ASC type without [$($reqASCTier)]"
+    Write-Host "[NonCompliantASCType]: [$($nonCompliantASCTierResourcetype.Name -join ", ")]"
 
     # If control is already in Passed state (i.e. 'Microsoft.Security' provider is already registered and no non-compliant ASC type found) then no need to execute below steps.
     if($isProviderRegister -and ($nonCompliantASCTypeCount -eq 0))
@@ -281,7 +282,7 @@ function RollBack-ConfigASCTier
     }
 
     # Setting context for current subscription.
-    $currentSub = Set-AzContext -SubscriptionId $SubscriptionId
+    $currentSub = Set-AzContext -SubscriptionId $SubscriptionId -ErrorAction Stop -Force
 
     
 
