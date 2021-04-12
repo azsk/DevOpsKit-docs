@@ -7,9 +7,9 @@ function Pre_requisites
     This command would check pre requisities modules to perform remediation.
 	#>
 
-    Write-Host "Required modules are: Az.Resources, Az.Security, Az.Account" -ForegroundColor Cyan
+    Write-Host "Required modules are: Az.Resources, Az.Security, Az.Accounts" -ForegroundColor Cyan
     Write-Host "Checking for required modules..."
-    $availableModules = $(Get-Module -ListAvailable Az.Resources, AzureAD, Az.Accounts)
+    $availableModules = $(Get-Module -ListAvailable Az.Resources, Az.Security, Az.Accounts)
     
     # Checking if 'Az.Accounts' module is available or not.
     if($availableModules.Name -notcontains 'Az.Accounts')
@@ -19,7 +19,7 @@ function Pre_requisites
     }
     else
     {
-        Write-Host "Az.Resources module is available." -ForegroundColor Green
+        Write-Host "Az.Accounts module is available." -ForegroundColor Green
     }
 
     # Checking if 'Az.Resources' module is available or not.
@@ -33,7 +33,7 @@ function Pre_requisites
         Write-Host "Az.Resources module is available." -ForegroundColor Green
     }
 
-    # Checking if 'AzureAD' module is available or not.
+    # Checking if 'Az.Security' module is available or not.
     if($availableModules.Name -notcontains 'Az.Security')
     {
         Write-Host "Installing module Az.Security..." -ForegroundColor Yellow
@@ -128,7 +128,7 @@ function Remediate-ConfigASCTier
     $isProviderRegister = $true
 
     # Checking IsProviderRegister with 'Microsoft.Security' provider
-    $registeredProvider =  Get-AzResourceProvider -ListAvailable | Where-Object { $_.RegistrationState -eq "Registered" -and $_.ProviderNamespace -eq $reqProviderName }
+    $registeredProvider =  Get-AzResourceProvider -ProviderNamespace $reqProviderName | Where-Object { $_.RegistrationState -eq "Registered" }
 
     if($null -eq $registeredProvider)
     {
@@ -140,11 +140,20 @@ function Remediate-ConfigASCTier
         try 
         {
             Register-AzResourceProvider -ProviderNamespace $reqProviderName
-            while((Get-AzResourceProvider -ListAvailable | Where-Object { $_.ProviderNamespace -eq $reqProviderName }).RegistrationState -ne "Registered")
+            while((Get-AzResourceProvider -ProviderNamespace $reqProviderName).RegistrationState -ne "Registered")
             {
-                Start-Sleep -Seconds 10
+                # Checking threshold time limit to avoid getting into infinite loop
+                if($thresholdTimeLimit -ge 300)
+                {
+                    Write-Host "Error occurred while registering [$($reqProviderName)] provider. It is taking more time then expected, Aborting process..." -ForegroundColor Red
+                    throw [System.ArgumentException] ($_)
+                }
+                Start-Sleep -Seconds 30
                 Write-Host "$reqProviderName registering..." -ForegroundColor Yellow
-            }    
+
+                # Incrementing threshold time limit by 30 sec in every iteration
+                $thresholdTimeLimit = $thresholdTimeLimit + 30
+            }
         }
         catch 
         {
@@ -161,6 +170,14 @@ function Remediate-ConfigASCTier
     $nonCompliantASCTypeCount = ($nonCompliantASCTierResourcetype | Measure-Object).Count
 
     Write-Host "Found [$($nonCompliantASCTypeCount)] ASC type without [$($reqASCTier)]"
+
+    # If control is already in Passed state (i.e. 'Microsoft.Security' provider is already registered and no non-compliant ASC type found) then no need to execute below steps.
+    if($isProviderRegister -and ($nonCompliantASCTypeCount -eq 0))
+    {
+        Write-Host "[$($reqProviderName)] provider is already registered and there is no non-compliant ASC type. In this case remediation not required." -ForegroundColor Green
+        Write-Host "======================================================"
+        break
+    }
 
     # Creating data object for ASC type without 'Standard' pricing tier to export into json, it will help while doing roll back opeartion. 
     $nonCompliantASCResource =  New-Object psobject -Property @{
@@ -197,7 +214,7 @@ function Remediate-ConfigASCTier
             Write-Host "Error occurred while setting $reqASCTier pricing tier. ErrorMessage [$($_)]" -ForegroundColor Red 
             break
         }
-        Write-Host "Successfuly set [$($reqASCTier)] pricing tier for non compliant ASC type." -ForegroundColor Green
+        Write-Host "Successfuly set [$($reqASCTier)] pricing tier for non-compliant ASC type." -ForegroundColor Green
         Write-Host "======================================================"
     }
     else
@@ -316,11 +333,10 @@ function RollBack-ConfigASCTier
             Write-Host "Configuring ASC tier as per remediation log on subscription [$($SubscriptionId)]..."
             
             # Checking current registration state of provider i.e. 'Microsoft.Security' on subscription.
-            $isProviderRegister = (Get-AzResourceProvider -ListAvailable | Where-Object { $_.ProviderNamespace -eq $reqProviderName }).RegistrationState -eq "Registered"
-
-            if($remediatedLog.IsProviderRegister -eq $isProviderRegister)
+            $isProviderRegister = (((Get-AzResourceProvider -ProviderNamespace $reqProviderName).RegistrationState -eq "Registered") | Measure-Object).Count -gt 0
+            if([System.Convert]::ToBoolean($remediatedLog.IsProviderRegister) -eq $isProviderRegister)
             {
-                Write-Host "[$($reqProviderName)] provider registration state is same as before executing remediation script is same. No Action required to roll back." -ForegroundColor Green
+                Write-Host "[$($reqProviderName)] provider registration state is same as before executing remediation script." -ForegroundColor Green
             }
             else 
             {
@@ -358,7 +374,7 @@ function RollBack-ConfigASCTier
             }
             else 
             {
-                Write-Host "Non compliant ASC type not found to perform roll back operation." -ForegroundColor Green
+                Write-Host "No non-compliant ASC type found to perform roll back operation." -ForegroundColor Green
                 Write-Host "======================================================"
                 break                
             }
