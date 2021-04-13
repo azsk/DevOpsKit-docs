@@ -34,7 +34,7 @@ function Pre_requisites
     }
 }
 
-function Remove-NonAADAccountsRBAC
+function Remove-AzTSNonAADAccountsRBAC
 {
     <#
     .SYNOPSIS
@@ -223,7 +223,7 @@ function Remove-NonAADAccountsRBAC
 }
 
 
-function Restore-AzTSInvalidAADAccounts
+function Restore-AzTSNonAADAccountsRBAC
 {
     <#
     .SYNOPSIS
@@ -322,10 +322,10 @@ function Restore-AzTSInvalidAADAccounts
 # ***************************************************** #
 <#
 Function calling with parameters.
-Remove-AzTSInvalidAADAccounts -SubscriptionId '<Sub_Id>' -ObjectIds @('<Object_Ids>')  -Force:$false -PerformPreReqCheck: $true
+Remove-AzTSNonAADAccountsRBAC -SubscriptionId '<Sub_Id>' -ObjectIds @('<Object_Ids>')  -Force:$false -PerformPreReqCheck: $true
 
 Function to roll back role assignments as per input remediated log
-Restore-AzTSInvalidAADAccounts -SubscriptionId '<Sub_Id>' -RollbackFilePath "<user Documents>\AzTS\Remediation\Subscriptions\<subscriptionId>\<JobDate>\InvalidAADAccounts\InvalidRoleAssignments.json"
+Restore-AzTSNonAADAccountsRBAC -SubscriptionId '<Sub_Id>' -RollbackFilePath "<user Documents>\AzTS\Remediation\Subscriptions\<subscriptionId>\<JobDate>\InvalidAADAccounts\InvalidRoleAssignments.json"
 
 Note: You can only rollback valid role assignments.
 #>
