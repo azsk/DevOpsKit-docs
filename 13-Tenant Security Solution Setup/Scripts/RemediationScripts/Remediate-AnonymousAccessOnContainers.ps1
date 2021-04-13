@@ -1,4 +1,4 @@
-﻿﻿function Pre_requisites
+﻿function Pre_requisites
 {
     <#
     .SYNOPSIS
@@ -51,7 +51,6 @@
         Write-Host "Az.Resources module is available." -ForegroundColor Green
     }
 }
-
 
 function Remediate-AnonymousAccessOnContainers
 {
