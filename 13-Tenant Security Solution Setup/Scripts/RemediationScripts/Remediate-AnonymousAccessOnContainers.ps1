@@ -126,7 +126,7 @@ function Remediate-AnonymousAccessOnContainers
     Write-Host "*** To perform remediation for disabling anonymous access on containers user must have atleast contributor access on storage account of Subscription: [$($SubscriptionId)] ***" -ForegroundColor $([Constants]::MessageType.Warning)
     Write-Host "`n" 
 
-    Write-Host "Validating whether the current user [$($currentSub.Account.Id)] have the have valid account type [User] to run the script for Subscription [$($SubscriptionId)]..."
+    Write-Host "Validating whether the current user [$($currentSub.Account.Id)] has valid account type [User] to run the script for Subscription [$($SubscriptionId)]..."
     Write-Host "`n"
 
     # Safe Check: Checking whether the current account is of type User
@@ -237,7 +237,6 @@ function Remediate-AnonymousAccessOnContainers
                                 Write-Host "Skipping to disable 'Allow Blob Public Access' due to insufficient access [Name]: [$($_.StorageAccountName)] [ResourceGroupName]: [$($_.ResourceGroupName)]" -ForegroundColor $([Constants]::MessageType.Warning)
                             }
                         }
-                        Write-Host "Successfully disabled 'Allow Blob Public Access' on [$($totalStgWithEnableAllowBlobPublicAccess)] storage account(s) from Subscription [$($SubscriptionId)]..." -ForegroundColor $([Constants]::MessageType.Update)
                         Write-Host $([Constants]::DoubleDashLine)
                     }
                     else
