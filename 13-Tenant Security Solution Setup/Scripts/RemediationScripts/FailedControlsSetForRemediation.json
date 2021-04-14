@@ -8,7 +8,7 @@
             "ResourceDetails": [
                 {
                     "ResourceGroupName": "<Enter Resource Group Name>",
-                    "ResourceName": "<Enter Resource Name>",
+                    "StorageAccountName": "<Enter Resource Name>",
                     "ResourceId": "<Enter Resource Id>"
                 }
             ]
