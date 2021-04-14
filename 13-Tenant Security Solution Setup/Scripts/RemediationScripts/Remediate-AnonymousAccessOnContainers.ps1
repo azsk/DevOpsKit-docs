@@ -32,7 +32,7 @@
     {
         Write-Host "Az.Storage module is available." -ForegroundColor Green
         $currentModule = $availableModules | Where-Object { $_.Name -eq "Az.Storage" }
-        $currentModuleVersion = $currentModule.Version -as [string]
+        $currentModuleVersion = ($currentModule.Version  | measure -Maximum).Maximum -as [string]
         if([version]('{0}.{1}.{2}' -f $currentModuleVersion.split('.')) -lt [version]('{0}.{1}.{2}' -f "3.5.0".split('.')))
         {
             Write-Host "Updating module Az.Storage..." -ForegroundColor Yellow
@@ -629,7 +629,7 @@ class Constants
 # ***************************************************** #
 
 # Function calling with parameters for remediation.
-Remediate-AnonymousAccessOnContainers -SubscriptionId '<Sub_Id>' -RollBackType '<DisableAnonymousAccessOnContainers>, <EnableAllowBlobPublicAccessOnStorage>'  -Path '<Json file path containing storage account detail>' -PerformPreReqCheck: $true
+Remediate-AnonymousAccessOnContainers -SubscriptionId '<Sub_Id>' -RemediationType '<DisableAnonymousAccessOnContainers>, <EnableAllowBlobPublicAccessOnStorage>'  -Path '<Json file path containing storage account detail>' -PerformPreReqCheck: $true
 
 # Function calling with parameters to roll back remediation changes.
 RollBack-AnonymousAccessOnContainers -SubscriptionId '<Sub_Id>' -RollBackType '<DisableAnonymousAccessOnContainers>, <EnableAllowBlobPublicAccessOnStorage>'  -Path '<Json file path containing Remediated log>' -PerformPreReqCheck: $true
