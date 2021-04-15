@@ -9,7 +9,9 @@
                 {
                     "ResourceGroupName": "<Enter Resource Group Name>",
                     "StorageAccountName": "<Enter Resource Name>",
-                    "ResourceId": "<Enter Resource Id>"
+                    "ContainersWithAnonymousAccess":[
+                        "<Enter container name to disable anonymous access>"
+                    ]
                 }
             ]
         }
