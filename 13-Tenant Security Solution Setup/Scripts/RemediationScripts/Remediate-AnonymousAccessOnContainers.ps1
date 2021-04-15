@@ -87,16 +87,16 @@ function Remediate-AnonymousAccessOnContainers
     Write-Host $([Constants]::SingleDashLine)
     
     try 
-        {
-            Write-Host "Checking for pre-requisites..."
-            Pre_requisites
-            Write-Host $([Constants]::SingleDashLine)     
-        }
-        catch 
-        {
-            Write-Host "Error occured while checking pre-requisites. ErrorMessage [$($_)]" -ForegroundColor $([Constants]::MessageType.Error)    
-            break
-        }
+    {
+        Write-Host "Checking for pre-requisites..."
+        Pre_requisites
+        Write-Host $([Constants]::SingleDashLine)     
+    }
+    catch 
+    {
+        Write-Host "Error occured while checking pre-requisites. ErrorMessage [$($_)]" -ForegroundColor $([Constants]::MessageType.Error)    
+        break
+    }
     
     # Connect to AzAccount
     $isContextSet = Get-AzContext
@@ -152,7 +152,7 @@ function Remediate-AnonymousAccessOnContainers
         $controls = $controlForRemediation.FailedControlSet
         $resourceDetails = $controls | Where-Object { $controlIds -eq $_.ControlId};
 
-        if(($resourceDetails | Measure-Object).Count -eq 0 -and ($resourceDetails.ResourceDetails | Measure-Object).Count -eq 0)
+        if(($resourceDetails | Measure-Object).Count -eq 0 -or ($resourceDetails.ResourceDetails | Measure-Object).Count -eq 0)
         {
             Write-Host "No storage account(s) found in input json file for remedition." -ForegroundColor $([Constants]::MessageType.Error)
             break
@@ -612,9 +612,9 @@ class Constants
 # ***************************************************** #
 
 # Function calling with parameters for remediation.
-Remediate-AnonymousAccessOnContainers -SubscriptionId '<Sub_Id>' -RemediationType '<DisableAnonymousAccessOnContainers>, <EnableAllowBlobPublicAccessOnStorage>'  -Path '<Json file path containing storage account detail>'
+Remediate-AnonymousAccessOnContainers -SubscriptionId '<Sub_Id>' -RemediationType '<DisableAnonymousAccessOnContainers>, <DisableAllowBlobPublicAccessOnStorage>'  -Path '<Json file path containing storage account detail>'
 
 # Function calling with parameters to roll back remediation changes.
-RollBack-AnonymousAccessOnContainers -SubscriptionId '<Sub_Id>' -RollBackType '<DisableAnonymousAccessOnContainers>, <EnableAllowBlobPublicAccessOnStorage>'  -Path '<Json file path containing Remediated log>'
+RollBack-AnonymousAccessOnContainers -SubscriptionId '<Sub_Id>' -RollBackType '<EnableAnonymousAccessOnContainers>, <EnableAllowBlobPublicAccessOnStorage>'  -Path '<Json file path containing Remediated log>'
 
 #>
