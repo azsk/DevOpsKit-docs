@@ -15,7 +15,7 @@ function Pre_requisites
     if($availableModules.Name -notcontains 'Az.Accounts')
     {
         Write-Host "Installing module Az.Accounts..." -ForegroundColor Yellow
-        Install-Module -Name Az.Accounts -Scope CurrentUser
+        Install-Module -Name Az.Accounts -Scope CurrentUser -Repository 'PSGallery'
     }
     else
     {
@@ -26,7 +26,7 @@ function Pre_requisites
     if($availableModules.Name -notcontains 'Az.Resources')
     {
         Write-Host "Installing module Az.Resources..." -ForegroundColor Yellow
-        Install-Module -Name Az.Resources -Scope CurrentUser
+        Install-Module -Name Az.Resources -Scope CurrentUser -Repository 'PSGallery'
     }
     else
     {
