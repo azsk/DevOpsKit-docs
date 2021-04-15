@@ -15,7 +15,7 @@ function Pre_requisites
     if($availableModules.Name -notcontains 'Az.Accounts')
     {
         Write-Host "Installing module Az.Accounts..." -ForegroundColor Yellow
-        Install-Module -Name Az.Accounts -Scope CurrentUser
+        Install-Module -Name Az.Accounts -Scope CurrentUser -Repository 'PSGallery'
     }
     else
     {
@@ -26,7 +26,7 @@ function Pre_requisites
     if($availableModules.Name -notcontains 'Az.Resources')
     {
         Write-Host "Installing module Az.Resources..." -ForegroundColor Yellow
-        Install-Module -Name Az.Resources -Scope CurrentUser
+        Install-Module -Name Az.Resources -Scope CurrentUser -Repository 'PSGallery'
     }
     else
     {
@@ -37,7 +37,7 @@ function Pre_requisites
     if($availableModules.Name -notcontains 'Az.Security')
     {
         Write-Host "Installing module Az.Security..." -ForegroundColor Yellow
-        Install-Module -Name Az.Security -Scope CurrentUser
+        Install-Module -Name Az.Security -Scope CurrentUser -Repository 'PSGallery'
     }
     else
     {
@@ -45,7 +45,7 @@ function Pre_requisites
     }
 }
 
-function Remediate-ConfigASCTier
+function Set-ConfigASCTier
 {
     <#
     .SYNOPSIS
@@ -227,7 +227,7 @@ function Remediate-ConfigASCTier
 }
 
 
-function RollBack-ConfigASCTier
+function Remove-ConfigASCTier
 {
     <#
     .SYNOPSIS
@@ -397,10 +397,10 @@ function RollBack-ConfigASCTier
 <#
 # ***************************************************** #
 # Function calling with parameters for remediation.
-Remediate-ConfigASCTier -SubscriptionId '<Sub_Id>' -PerformPreReqCheck: $true
+Set-ConfigASCTier -SubscriptionId '<Sub_Id>' -PerformPreReqCheck: $true
 
 # Function calling with parameters to roll back remediation changes.
-RollBack-ConfigASCTier -SubscriptionId '<Sub_Id>' -Path '<Json file path containing Remediated log>' -PerformPreReqCheck: $true
+Remove-ConfigASCTier -SubscriptionId '<Sub_Id>' -Path '<Json file path containing Remediated log>' -PerformPreReqCheck: $true
 #>
 
 
