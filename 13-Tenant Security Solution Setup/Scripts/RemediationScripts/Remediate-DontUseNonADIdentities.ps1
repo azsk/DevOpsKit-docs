@@ -199,7 +199,8 @@ function Remove-AzTSNonAADAccountsRBAC
     if ($liveAccounts.length -gt 0)
     {
         Write-Host "Taking backup of Non AAD Accounts role assignments that needs to be removed. Please do not delete this file. Without this file you wont be able to rollback any changes done through Remediation script." -ForegroundColor Cyan
-        $liveAccounts | ConvertTo-json -Depth 10 | out-file "$($folderpath)\NonAADAccountsRoleAssignments.json"       
+        $liveAccounts | ConvertTo-json -Depth 10 | out-file "$($folderpath)NonAADAccountsRoleAssignments.json"       
+        Write-Host "Path: $($folderpath)NonAADAccountsRoleAssignments.json"
     }
 
     if(-not $Force)
