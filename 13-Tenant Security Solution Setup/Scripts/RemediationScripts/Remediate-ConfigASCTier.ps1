@@ -121,7 +121,8 @@ function Set-ConfigASCTier
         break;
     }
 
-    # Declaring required pricing tier
+    # Declaring required ASC type and pricing tier
+    $reqASCTierResourceTypes = "VirtualMachines","SqlServers","AppServices","StorageAccounts","KubernetesService","ContainerRegistry","KeyVaults","SqlServerVirtualMachines";
     $reqASCTier = "Standard";
     $reqProviderName = "Microsoft.Security"
     $isProviderRegister = $true
@@ -162,9 +163,9 @@ function Set-ConfigASCTier
         Write-Host "$reqProviderName provider successfully registered." -ForegroundColor Green
     }
 
-    Write-Host "Step 2 of 3: Checking [$($reqASCTier)] pricing tier for ASC type..."
+    Write-Host "Step 2 of 3: Checking [$($reqASCTier)] pricing tier for [$($reqASCTierResourceTypes -join ", ")] ASC type..."
     $nonCompliantASCTierResourcetype = @()
-    $nonCompliantASCTierResourcetype = Get-AzSecurityPricing | Where-Object { $_.PricingTier -ne $reqASCTier } | select "Name", "PricingTier", "Id"
+    $nonCompliantASCTierResourcetype = Get-AzSecurityPricing | Where-Object { $_.PricingTier -ne $reqASCTier -and $reqASCTierResourceTypes.Contains($_.Name) } | select "Name", "PricingTier", "Id"
 
     $nonCompliantASCTypeCount = ($nonCompliantASCTierResourcetype | Measure-Object).Count
 
