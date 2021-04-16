@@ -1,0 +1,19 @@
+{
+    "SubscriptionId": "<Enter SubscriptionId>",
+    "FailedControlSet": [
+        {
+            "ResourceType": "Microsoft.Storage/storageAccounts",
+            "DisplayName": "Ensure secure access to storage account containers",
+            "ControlId": "Azure_Storage_AuthN_Dont_Allow_Anonymous",
+            "ResourceDetails": [
+                {
+                    "ResourceGroupName": "<Enter Resource Group Name>",
+                    "StorageAccountName": "<Enter Resource Name>",
+                    "ContainersWithAnonymousAccess":[
+                        "<Enter container name to disable anonymous access>"
+                    ]
+                }
+            ]
+        }
+    ]
+}
