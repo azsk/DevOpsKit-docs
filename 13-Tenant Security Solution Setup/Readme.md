@@ -1,13 +1,14 @@
 # Azure Tenant Security Solution (AzTS) [In Preview]
 
-## Azure Tenant Security
-### Contents
-- [Overview](Readme.md#overview)
-- [Why Azure Tenant Security Solution?](Readme.md#why-tenant-security-solution)
-- [Setting up Azure Tenant Security Solution - Step by Step](Readme.md#setting-up-tenant-security-solution---step-by-step)
-- [Tenant Security Solution - under the covers (how it works)](Readme.md#tenant-security-solution---under-the-covers-how-it-works)
-- [Create compliance and monitoring solutions](Readme.md#create-security-compliance-monitoring-solutions)
-- [Feedback](Readme.md#feedback)
+### [Overview](Readme.md#overview)
+### [Why Azure Tenant Security Solution?](Readme.md#why-tenant-security-solution)
+### [Setting up Azure Tenant Security Solution - Step by Step](Readme.md#setting-up-tenant-security-solution---step-by-step)
+ - [Installing AzTS Solution](Readme.md#1-installing-AzTS-Solution)
+ - [Verifying that Tenant Security Solution installation is complete](Readme.md#2-verifying-that-tenant-security-solution-installation-is-complete)
+ - [Visualization for AzTS scan result](Readme.md#3-visualization)
+### [Tenant Security Solution - under the covers (how it works)](Readme.md#tenant-security-solution---under-the-covers-how-it-works)
+### [Create compliance and monitoring solutions](Readme.md#create-security-compliance-monitoring-solutions)
+### [Feedback](Readme.md#feedback)
 
 -----------------------------------------------------------------
 ## Overview 
@@ -25,7 +26,7 @@ The AzTS Solution was created with the following explicit objectives (some of wh
  ![ProgressBar](../Images/12_TSS_ProgressBar1.png)
 
 
-## 1. Installation
+## 1. Installing AzTS Solution
 
 In this section, we will walk through the steps of setting up AzTS Solution. This setup can take up to 30 minutes.
 
@@ -325,15 +326,15 @@ The installation is complete with this step. The following steps will walk you t
 
 <br/>
 
-# 2. Validation
+
 
  ![ProgressBar](../Images/12_TSS_ProgressBar2.png)
 
-## Verifying that Tenant Security Solution installation is complete
+## 2. Verifying that Tenant Security Solution installation is complete
 
 Below steps will help you to verify and understand different resources and functions created as part of setup along with purpose. This step can take up to 30 minutes. 
 
-**Step 1 of 2: Verify resources created as part of setup**
+**Step 1 of 3: Verify resources created as part of setup**
 
 i) In the Azure portal, Go to hosting subscription, select the scan host resource group that has been created during the setup.
 
@@ -361,7 +362,7 @@ ii) Verify below resources got created.
 
 <br/>
 
- **Step 2 of 2: Verify below Functions got created**
+ **Step 2 of 3: Verify below Functions got created**
 
 **i) MetadataAggregator Functions:** 
 
@@ -421,22 +422,16 @@ After ATS_4_WorkItemScheduler completes pushing the messages in the queue, WorkI
 
 [Back to top…](Readme.md#contents)
 
-# 3. Visualization
+**Steps 3 of 3: Verify AzTS UI is working as expected**
 
- ![ProgressBar](../Images/12_TSS_ProgressBar3.png)
+**Prerequisite:**
 
-## 1. AzTS UI
+1. Signed in user must have one of the following permission at subscription or resource group scope: Owner, Contributor, ServiceAdministrator, CoAdministrator, AccountAdministrator, Security Reader, Security Admin.
+2. Subscription scan should have completed for the day. The steps to validate this has been specified under [this section](Readme.md#2-verifying-that-tenant-security-solution-installation-is-complete).
 
-Tenant reader solution provides a UI-based tool that can be used to submit "ad hoc" scan requests to AzTS. This tool leverages you current subscription permissions to show you subscriptions that you have the ability to request scans for.
+**Steps to load AzTS UI**
 
-**Note:**
-1.  Currently AzTS UI checks for PIM eligible or permanent memberships for the following roles: ['Owner','Contributor','ServiceAdministrator','CoAdministrator','AccountAdministrator','Security Reader','Security Admin'].)
-
-2. If you have been recently granted access, you either need to wait for the next scheduled scan to read the latest RBAC data or you can manually trigger the ATS_3_SubscriptionRBACProcessor function.
-
-**Steps to load AzTS UI:**
-
- **Step 1 of 2:** Validate that the scan has completed. To validate the scan result, Go to AzSK-AzTS-LAWorkspace-xxxxx Log Analytics workspace --> Logs --> Run the following queries.
+  **a)** Validate that the scan has completed. For validation, Go to AzSK-AzTS-LAWorkspace-xxxxx Log Analytics workspace --> Logs --> Run the following queries. If the queries listed below returns a response, AzTS UI is ready to be loaded.
 
     i) List subscription(s) that user-managed identity has access to.
     ```kql
@@ -459,20 +454,46 @@ Tenant reader solution provides a UI-based tool that can be used to submit "ad h
       AzSK_ControlResults_CL
     ```
 
-**Step 2 of 2:** Go to link provided at the end of ```Install-AzSKTenantSecuritySolution``` command (as shown below).
+  **b)** Go to link provided at the end of installation command ```Install-AzSKTenantSecuritySolution``` (as shown below).
 &nbsp;&nbsp;![UI](../Images/13_TSS_UIUrlPrintMessageInPSOutput.png) 
 
-The UI is fairly self-explanatory and also has a "Guided Tour" feature that should show you the basic usage workflow. We recommend that you create a custom domain name for your UI. For steps to create custom domain, refer [link](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain).
+[Back to top…](Readme.md#contents)
+
+
+# 3. Visualization
+
+ ![ProgressBar](../Images/12_TSS_ProgressBar3.png)
+
+## 1. AzTS UI
+
+Tenant reader solution provides a UI-based tool that can be used to perform on-demand scans to verify your fixes sooner, check reasons for control failures and view latest scan results. This tool leverages you current subscription permissions to show you subscriptions that you have the ability to request scans for. 
+
+**Prerequisite:**
+
+1. Signed in user must have one of the following permission at subscription or resource group scope: Owner, Contributor, ServiceAdministrator, CoAdministrator, AccountAdministrator, Security Reader, Security Admin.
+2. Subscription scan should have completed for the day. The steps to validate this has been specified under [this section](Readme.md#2-verifying-that-tenant-security-solution-installation-is-complete).
+
+Link to the AzTS UI is provided at the end of installation command ```Install-AzSKTenantSecuritySolution``` (as shown below).
+&nbsp;&nbsp;![UI](../Images/13_TSS_UIUrlPrintMessageInPSOutput.png) 
+
+The UI is fairly self-explanatory and also has a "Guided Tour" feature that should show you the basic usage workflow. We recommend that you create a custom domain name for your UI. For steps to create custom domain, refer this [link](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain).
 
 &nbsp;&nbsp;![UI](../Images/13_TSS_UIOverview.png) 
 
 TODO: Add UI walk through video.
 
+> **Note:**
+> 1. If you have been recently granted access, you either need to wait for the next scheduled scan to read the latest RBAC data or request an existing owner of a subscription to perform an ad hoc scan for the subscription using AzTS UI.
+>
+> </br>
+
+</br>
+
 **Add org-subscription mapping for your subscription(s)**:
 
 By default, there is no service mapping for your subscription. Therefore, you see the 'Unknown' value is the Service Filter dropdown. To add service mapping, follow the steps below:
 
-#### Step 1: Prepare your org-subscription mapping
+#### Step 1 of 2: Prepare your org-subscription mapping
 In this step you will prepare the data file with the mapping from subscription ids to the org hierarchy within your environment. The file is in a simple CSV form and should appear like the one below. 
 
 > Note: You may want to create a small CSV file with just a few subscriptions for a trial pass and then update it with the full subscription list for your org after getting everything working end-to-end.
@@ -499,7 +520,7 @@ The table below describes the different columns in the CSV file and their intent
 
 <br/>
 
-#### Step 2: Upload your mapping to the Log Analytics (LA) workspace
+#### Step 2 of 2: Upload your mapping to the Log Analytics (LA) workspace
 
 In this step you will import the data above into the LA workspace created during Tenant Security setup. 
 
