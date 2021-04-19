@@ -26,15 +26,20 @@ The AzTS Solution was created with the following explicit objectives (some of wh
  * Enable incremental transition of our controls from custom code to Azure/ASC policy-based approach (using ASC/policy-based controls where available today and continue to migrate as more controls become available)
 
 ## Setting up Azure Tenant Security Solution - Step by Step
-In this section, we will walk through the steps of setting up AzTS Solution.
+
+ ![ProgressBar](../Images/12_TSS_ProgressBar1.png)
 
 
-**Note:** You can download execution script present [here](https://github.com/azsk/DevOpsKit-docs/raw/users/TenantSecurity/13-Tenant%20Security%20Solution%20Setup/Scripts/ExecutionScript.ps1) which has all commands mentioned in below steps
+## 1. Installation
+
+In this section, we will walk through the steps of setting up AzTS Solution. This setup can take up to 30 minutes.
+
+**Note:** You can download execution script present [here](Scripts/ExecutionScript.ps1?raw=1) which has all commands mentioned in below steps
 
 
 Setup is divided into five steps:
 
-**1. Validate prerequisites on machine**  
+**Step 1 of 6. Validate prerequisites on machine**  
 
   i) Installation steps are supported using following OS options: 	
 
@@ -50,7 +55,7 @@ Setup is divided into five steps:
   ![PowerShell Version](../Images/00_PS_Version.PNG)   
 
 
-**2. Installing Az Modules:**
+**Step 2 of 6. Installing Az Modules:**
 
 Az modules contains cmdlet to deploy Azure resources. These cmdlets is used to create AzTS scan solution resources with the help of ARM template.
 Install Az Powershell Modules using below command. 
@@ -62,6 +67,8 @@ Install-Module -Name Az.Accounts -AllowClobber -Scope CurrentUser -repository PS
 Install-Module -Name Az.Resources -AllowClobber -Scope CurrentUser -repository PSGallery
 Install-Module -Name Az.Storage -AllowClobber -Scope CurrentUser -repository PSGallery
 Install-Module -Name Az.ManagedServiceIdentity -AllowClobber -Scope CurrentUser -repository PSGallery
+Install-Module -Name Az.Monitor -AllowClobber -Scope CurrentUser -repository PSGallery
+
 ```
 
 ``` Powershell
@@ -69,61 +76,14 @@ Install-Module -Name Az.ManagedServiceIdentity -AllowClobber -Scope CurrentUser 
 Install-Module -Name AzureAD -AllowClobber -Scope CurrentUser -repository PSGallery
 ```
 
-**3. Setting up scanning identity**  
 
-The AzTS setup basically provisions your subscriptions with the ability to do daily scans for security controls.
-To do the scanning, it requires a [User-assigned Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) (central scanning identity owned by you) and 'Reader' access to target subscriptions on which scan needs to be performed. 
-
-Before creating user-assigned managed identity, please connect to AzureAD and AzAccount with the tenant Id where you want to use AzTS solution.
-
-
-``` Powershell
-Connect-AzAccount -Tenant <TenantId>
-Connect-AzureAD -TenantId <TenantId>
-```
-
-i) You can create user-assigned managed identity with below PowerShell command or Portal steps [here](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-portal)
-
-``` Powershell
-
-# Step 1: Set context to subscription where user-assigned managed identity needs to be created
-Set-AzContext -SubscriptionId <MIHostingSubId>
-
-# Step 2: Create resource group where user-assigned MI resource will be created. 
-New-AzResourceGroup -Name <MIHostingRGName> -Location <Location> 
-
-# Step 3: Create user-assigned managed identity 
-$UserAssignedIdentity = New-AzUserAssignedIdentity -ResourceGroupName <MIHostingRGName> -Name <USER ASSIGNED IDENTITY NAME>
-
-# Step 4: Save resource id generated for user identity using below command. This will be used in AzTS Soln installation. 
-
-$UserAssignedIdentity.Id
-
-```
-
-ii) Assign reader access to user-assigned managed identity on target subscriptions needs to be scanned. 
-
-
-``` Powershell
-
-# Add target subscriptionds in place of <SubIdx>
-$TargetSubscriptionIds = @("<SubId1>","<SubId2>","<SubId3>")
-
-$TargetSubscriptionIds | % {
-New-AzRoleAssignment -ApplicationId $UserAssignedIdentity.ClientId -Scope "/subscriptions/$_" -RoleDefinitionName "Reader"
-}
-
-```
-
-  **Note:** If subscriptions are organized under [Management Groups](https://docs.microsoft.com/en-us/azure/governance/management-groups/overview) (MG), you can assign reader role for user-assigned identity using MG role assignment. You need to be 'Owner' on target subscription to perform role assignment.  
-
-**4. Download and extract deployment package**
+**Step 3 of 6. Download and extract deployment package**
  
  Deployment packages mainly contains 
  ARM template: Contains resource configuration details that needs to be created as part of setup
  Deployment setup script: Provides the cmdlet to run installation. 
 
-i) Download deployment package zip from [here](https://github.com/azsk/DevOpsKit-docs/raw/users/TenantSecurity/13-Tenant%20Security%20Solution%20Setup/TemplateFiles/Deploy.zip) to your local machine.  
+i) Download deployment package zip from [here](TemplateFiles/DeploymentFiles.zip?raw=1) to your local machine. 
 
 ii) Extract zip to local folder location
 
@@ -137,7 +97,7 @@ iv) Point current path to deployment folder and load AzTS setup script
 ``` PowerShell
 # Point current path to extracted folder location and load setup script from deploy folder 
 
-CD "<LocalExtractedFolderPath>\Deploy"
+CD "<LocalExtractedFolderPath>\DeploymentFiles"
 
 # Load AzTS Setup script in session
 . ".\AzTSSetup.ps1"
@@ -148,41 +108,201 @@ CD "<LocalExtractedFolderPath>\Deploy"
 
 [Back to top…](Readme.md#contents)
 
-**5. Run Setup Command** 
+**Step 4 of 6. Setting up scanning identity**  
+
+The AzTS setup basically provisions your subscriptions with the ability to do daily scans for security controls.
+To do the scanning, it requires a [User-assigned Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) (central scanning identity owned by you) and 'Reader' access to target subscriptions on which scan needs to be performed. 
+
+Before creating user-assigned managed identity, please connect to AzureAD and AzAccount with the tenant Id where you want to use AzTS solution.
+
+``` Powershell
+
+# Clear existing login, if any
+
+Disconnect-AzAccount
+Disconnect-AzureAD
+
+# Connect to AzureAD and AzAccount
+
+Connect-AzAccount -Tenant <TenantId>
+Connect-AzureAD -TenantId <TenantId>
+```
+
+i) You can create user-assigned managed identity (MI) with below PowerShell command or Portal steps [here](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-portal). This PowerShell command assigns 'Reader' access to user-assigned managed identity on target subscriptions. You need to be 'Owner' on target subscription to perform role assignment.
+
+``` Powershell
+
+# Subscription id in which scanner MI needs to be created.
+$MIHostingSubId = "<MIHostingSubId>"
+
+# Resource group name in which scanner MI needs to be created.
+$MIHostingRGName = "<MIHostingRGName>"
+
+# Location in which scanner MI needs to be created.
+# Note: For better performance, we recommend hosting the MI and resources setup using AzTS Soln installation command in one location.
+$Location = "<Location>"
+
+# Name of the scanner MI.
+$MIName = "<USER ASSIGNED IDENTITY NAME>"
+
+# List of target subscription(s) that needs to be scanned by AzTS. This command assigns reader access to user-assigned managed identity on target subscriptions. Add target subscriptionds in place of <SubIdx>
+$TargetSubscriptionIds = @("<SubId1>","<SubId2>","<SubId3>")
+
+# Step 1: Create user-assigned managed identity
+$UserAssignedIdentity = Set-AzSKTenantSecuritySolutionScannerIdentity `
+                                                -SubscriptionId $MIHostingSubId `
+                                                -ResourceGroupName $MIHostingRGName `
+                                                -Location $Location `
+                                                -UserAssignedIdentityName $MIName `
+                                                -TargetSubscriptionIds $TargetSubscriptionIds
+
+# Step 2: Save resource id and principal Id generated for user identity using below command. This will be used in AzTS Soln installation. 
+
+$UserAssignedIdentity.Id
+$UserAssignedIdentity.PrincipalId 
+
+```
+
+> **NOTE:**
+> 1. _For better performance, we recommend using one location of user-assigned MI and resource hosting AzTS setup._
+>
+>  2. _If subscriptions are organized under [Management Groups](https://docs.microsoft.com/en-us/azure/governance/management-groups/overview) (MG), you can assign reader role for user-assigned identity using MG role assignment. You need to be 'Owner' on management group to perform role assignment._
+>
+> &nbsp;
+
+
+ii) The Role-based access control (RBAC) validation performed by AzTS requires privileged permission. In this step, you grant user-assigned MI read access to Privileged Identity Management APIs for Azure resources. Note that granting this permission requires admin consent. Therefore, the signed-in user must be a member of one of the following administrator roles: Global Administrator, Security Administrator, Security Reader or User Administrator. If you do not have the required permission, please contact your administrator to get "PrivilegedAccess.Read.AzureResources" permission for your scanner MI in Azure Active Directory.
+
+``` Powershell
+
+# Grant Graph Permission to the user-assigned managed identity.
+# Required Permission: Global Administrator, Security Administrator, Security Reader or User Administrator.
+
+Grant-AzSKGraphPermissionToUserAssignedIdentity -ScanIdentityObjectId $UserAssignedIdentity.PrincipalId -AppPermissionsRequired "PrivilegedAccess.Read.AzureResources"
+
+```
+> **Can you proceed without this step? What is the impact?** </br>
+Yes, you can proceed without this step. However, in this case, you will have to disable features dependent on Graph API. To disable this feature, set the value of '-ScanIdentityHasGraphPermission' parameter to false in AzTS installation command. Example:   ```-ScanIdentityHasGraphPermission:$false```.
+>
+> On disabling this feature, RBAC controls that are evaluated based on Graph API response will be excluded from AzTS scan result. In addition to this, if a user is classic administrator on a subscription, they will not be able to view its scan result in AzTS UI.
+
+
+**Step 5 of 6. Setup Azure AD application for AzTS UI and API**
+
+AzTS UI and API require Azure AD applications for authentication. Use the below PowerShell command to perform the following operations:
+
+   1. Create Azure AD application for UI, if it does not exist. 
+   2. Create Azure AD application for API, if it does not exist. 
+   3. Update UI AD application redirection URL. 
+   4. Grant AD applications permission to request OAuth2.0 implicit flow access tokens. This is required for browser-based apps. 
+   5. Grant 'User.Read' permission to UI AD application. This permission is used to read logged in user's details such as name, email, and photo.
+
+Optionally, you can create AD application directly from Portal using steps provided [here](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#permissions-required-for-registering-an-app) and then run the following PowerShell command to update the application.
+
+``` Powershell
+
+# Step 1: Setup AD application for AzTS UI and API
+
+# OPTION 1: Use following command to use an existing AD application or provide a custom name for Azure AD application.
+$ADApplicationDetails = Set-AzSKTenantSecurityADApplication -WebAPIAzureADAppName "<WebAPIAzureADAppName>" -UIAzureADAppName "<UIAzureADAppName>"
+
+
+# OPTION 2: Use the default naming convention.
+# <HostSubscriptionId>: Add subscription id in which Azure Tenant Security Solution needs to be installed.
+# <HostResourceGroupName>: Add resource group name in which Azure Tenant Security Solution needs to be installed.
+$ADApplicationDetails = Set-AzSKTenantSecurityADApplication -SubscriptionId "<HostSubscriptionId>" -ScanHostRGName "<HostResourceGroupName>"
+
+
+
+# Step 2: Save WebAPIAzureADAppId and UIAzureADAppId generated for Azure AD application using below command. This will be used in AzTS Soln installation. 
+
+$ADApplicationDetails.WebAPIAzureADAppId
+$ADApplicationDetails.UIAzureADAppId 
+
+```
+
+**Step 6 of 6. Run Setup Command** 
 
 This is the last step. You need to run install command present as part setup scription with host subscription id (sub where scanning infra resources will get created). 
-Setup will create infra resources and schedule daily security control scan on target subscriptions.
+Setup will create infra resources and schedule daily security control scan on target subscriptions. Please validate you have 'Owner' access on subscrption where solution needs to be installed.
 
 **Note:** Setup may take upto 5 minutes to complete.
 
+
+i) Run installation command with required parameters. 
+
   ``` PowerShell
 
-  # Set the context to hosting subscription
-  Set-AzContext -SubscriptionId <HostingSubId>
+    # Step 1: Set the context to hosting subscription
+    Set-AzContext -SubscriptionId <HostingSubId>
 
+    # Step 2: Run installation command. 
 
-  2. Run installation command with required parameters given. 
+    $DeploymentResult = Install-AzSKTenantSecuritySolution `
+                    -SubscriptionId <HostingSubId> `
+                    -ScanHostRGName <HostingResourceGroupName> `
+                    -Location <ResourceLocation> `
+                    -ScanIdentityId <ManagedIdentityResourceId> `
+                    -WebAPIAzureADAppId <WebAPIAzureADApplicationId> `
+                    -UIAzureADAppId <UIAzureADApplicationId> `
+                    -SendUsageTelemetry:$true `
+                    -ScanIdentityHasGraphPermission:$true `
+                    -SendAlertNotificationToEmailIds @('<EmailId1>', '<EmailId2>', '<EmailId3>') `
+                    -Verbose
 
-  # Step 2: Run installation command. 
+    # For ScanIdentityId parameter, use value created for "$UserAssignedIdentity.Id" from prerequisite section step 4 or you can get this resources id by going into Azure Portal --> Subscription where user-assigned MI resource created --> MIHostingRG --> Click on MI resource --> Properties --> Copy ResourceId. 
 
-  Install-AzSKTenantSecuritySolution `
-                  -SubscriptionId <HostingSubId> `
-                  -ScanHostRGName <HostingResourceGroupName> `
-                  -ScanIdentityId <ManagedIdentityResourceId> `
-                  -Location <ResourceLocation> `
-                  -Verbose
+    # For WebAPIAzureADAppId and UIAzureADAppId parameter, use value created for "$ADApplicationDetails.WebAPIAzureADAppId" and "$ADApplicationDetails.UIAzureADAppId" respectively from step 5 or you can get this application ids by going into Azure Portal --> Azure Active Directory --> App registrations --> All applications --> Search the application by name --> Click on the AD application --> Overview --> Copy Application (client) ID. 
 
-  # For ScanIdentityId parameter, use value created for "$UserAssignedIdentity.Id" from prerequisite section step 3 or you can get this resources id by going into Azure Portal --> Subscription where user-assigned MI resource created --> MIHostingRG --> Click on MI resource --> Properties --> Copy ResourceId. 
+    # Example:
 
-  # Example:
+    $DeploymentResult = Install-AzSKTenantSecuritySolution `
+                    -SubscriptionId bbbe2e73-fc26-492b-9ef4-adec8560c4fe `
+                    -ScanHostRGName AzSK-AzTS-Solution-RG `
+                    -ScanIdentityId '/subscriptions/bbbe2e73-fc26-492b-9ef4-adec8560c4fe/resourceGroups/TenantReaderRG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/TenantReaderUserIdentity' `
+                    -Location EastUS2 `
+                    -WebAPIAzureADAppId '000000xx-00xx-00xx-00xx-0000000000xx' `
+                    -UIAzureADAppId '000000yy-00yy-00yy-00yy-0000000000yy' `
+                    -SendUsageTelemetry:$true `
+                    -ScanIdentityHasGraphPermission:$true `
+                    -SendAlertNotificationToEmailIds @('User1@Contoso.com', 'User2@Contoso.com', 'User3@Contoso.com') `
+                    -Verbose
 
-  Install-AzSKTenantSecuritySolution `
-                  -SubscriptionId bbbe2e73-fc26-492b-9ef4-adec8560c4fe `
-                  -ScanHostRGName AzSK-AzTS-Solution-RG `
-                  -ScanIdentityId '/subscriptions/bbbe2e73-fc26-492b-9ef4-adec8560c4fe/resourceGroups/TenantReaderRG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/TenantReaderUserIdentity' `
-                  -Location EastUS2 `
-                  -Verbose
+# Step 3: Save internal user-assigned managed identity name generated using below command. This will be used to grant Graph permission to internal MI.
+
+  $InternalIdentityName = $DeploymentResult.Outputs.internalMIName.Value
+                  
   ```
+
+  3. Grant internal MI 'User.Read.All' permission. This permission is required by AzTS UI to read all the groups that the user is a member of. </br>
+  **Note:** To complete this step, signed-in user must be a member of one of the following administrator roles: </br>
+  Required Permission: Global Administrator, Security Administrator, Security Reader or User Administrator.</br>If you do not have the required permission, please contact your administrator.
+
+  ``` PowerShell
+      Grant-AzSKGraphPermissionToUserAssignedIdentity `
+                          -SubscriptionId "<HostingSubId>" `
+                          -ResourceGroupName "<HostingResourceGroupName>" `
+                          -IdentityName $InternalIdentityName `
+                          -AppPermissionsRequired @('User.Read.All')
+
+  ```
+
+  > #### **Can you proceed without this step? What is the impact?** </br>
+  > Yes, you can proceed without this step.
+  > However, please note that if this permission is not granted, users who log in to the AzTS UI will not be able to view subscriptions where they have been granted access to a subscription through a group.
+
+</br>
+
+The installation is complete with this step. The following steps will walk you through the steps to validate the setup.
+
+</br>
+
+> **Note:** 
+>
+> 1. Tenant Security Solution does not support customization of app service name.
+>
+> 2. By default max timeout limit of function app is set to 9 minute. This can be modified based on requirement of your orgnization. To increase function timeout, you can upgrade to a higher App Service plan and use ``` AzureFunctionsJobHost__functionTimeout ``` app setting in App service to set the timeout value.
+
   Output looks like below
 
   ![Resources](../Images/12_TSS_CommandOutput.png)
@@ -197,21 +317,35 @@ Setup will create infra resources and schedule daily security control scan on ta
 |ScanHostRGName| Name of ResourceGroup where setup resources will be created |TRUE|
 |ScanIdentityId| Resource id of user managed identity used to scan subscriptions  |TRUE|
 |Location|Location where all resources will get created |TRUE|
+|WebAPIAzureADAppId| Application (client) id of the Azure AD application to be used by the API. | TRUE |
+| UIAzureADAppId | Application (client) id of the Azure AD application to be used by the UI. | TRUE|
+| SendAlertNotificationToEmailIds| Send monitoring alerts notification to the specified email ids. | TRUE | 
+|ScanIdentityHasGraphPermission|Switch to enable features dependent on Microsoft Graph API from the scan. Set this to false if user-assigned managed identity does not have Graph permission. Default value is false.|FALSE|
+|SendUsageTelemetry| Permit application to send usage telemetry to Microsoft server. Usage telemetry captures anonymous usage data and sends it to Microsoft servers. This will help in improving the product quality and prioritize meaning fully on the highly used features. Default value is false.|FALSE|
 |Verbose| Switch used to output detailed log |FALSE|
 
+<br/>
 
+[Back to top…](Readme.md#contents)
+
+<br/>
+
+# 2. Validation
+
+ ![ProgressBar](../Images/12_TSS_ProgressBar2.png)
 
 ## Verifying that Tenant Security Solution installation is complete
 
-Below steps will help you to verify and understand different resources and functions created as part of setup along with purpose. 
+Below steps will help you to verify and understand different resources and functions created as part of setup along with purpose. This step can take up to 30 minutes. 
 
-**1: Verify resources created as part of setup** 
+**Step 1 of 2: Verify resources created as part of setup**
 
 i) In the Azure portal, Go to hosting subscription, select the scan host resource group that has been created during the setup.
 
-**2:** Verify below resources got created. 
+ii) Verify below resources got created.
 
-![Resources](../Images/12_TSS_Resource_Group.png)	
+  ![Resources](../Images/12_TSS_Resource_Group_1.png)	
+  ![Resources](../Images/12_TSS_Resource_Group_2.png)	
 
 **Resources details:**
 
@@ -219,24 +353,31 @@ i) In the Azure portal, Go to hosting subscription, select the scan host resourc
 |----|----|----|
 |AzSK-AzTS-MetadataAggregator-xxxxx|Function App| Contains functions to get inventory (subscription, baseline controls and RBAC) and queue subscription for scan |
 |AzSK-AzTS-WorkItemProcessor-xxxxx|Function App | Contains function to scan subscription with baseline control |
+|AzSK-AzTS-WebApi-xxxxx|App Service| Contains API consumed by the AzTS user interface |
+|AzSK-AzTS-WebApp-xxxxx|App Service| Contains AzTS user interface which can used to view the scan result |
+|AzSK-AzTS-WebApp-xxxxx/Staging-xxxxx| App service slot| Staging slot created to prevent UI downtime during auto-update|
 |AzSK-AzTS-AutoUpdater-xxxxx|Function App | Contains function to scan automatically updater function apps and web service apps |
 |AzSK-AzTS-LAWorkspace-xxxxx|Log Analytics workspace| Used to store scan events, inventory, subscription scan progress details|
 |AzSK-AzTS-InternalMI|Managed Identity | Internal MI identity used to access LA workspace and storage for sending scan results|
-|AzSK-AzTS-AppServicePlan | Function App Service Plan| Function app service plan|
+|AzSK-AzTS-AppServicePlan | Web App Service Plan| Web app service plan|
+|AzSK-AzTS-API-AppServicePlan | Function App Service Plan| Function app service plan|
 |azsktsstoragexxxxx|Storage Account| Used to store the daily results of subscriptions scan|
 |AzSK-AzTS-AppInsights |App Insight| Used to collect telemetry logs from functions |
 
- **3:** Verify below Functions got created
+<br/>
 
- **i) MetadataAggregator Functions:** 
+ **Step 2 of 2: Verify below Functions got created**
 
-Metadata aggregator function performs two tasks: 
+**i) MetadataAggregator Functions:** 
+
+&nbsp;&nbsp;&nbsp;Metadata aggregator function performs two tasks: 
 1. Collects inventory required for scanning (Target subscription list to be scanned, baseline controls list and subscription RBAC details)
 2. Queue subscriptions for scanning
+<br/>
 
-Click on 'AzSK-AzTS-MetadataAggregator-xxxxx' function app present in scan hosting RG --> Click on 'Functions' tab in left menu
+&nbsp;&nbsp;&nbsp;Click on 'AzSK-AzTS-MetadataAggregator-xxxxx' function app present in scan hosting RG --> Click on 'Functions' tab in left menu
 
-![ProcessorWebjobs](../Images/12_TSS_Processor_WebJobs.png)
+&nbsp;&nbsp;&nbsp;&nbsp;![ProcessorWebjobs](../Images/12_TSS_Processor_WebJobs_1.png)
 
 |Function Name|Description|
 |----|----|
@@ -244,6 +385,7 @@ Click on 'AzSK-AzTS-MetadataAggregator-xxxxx' function app present in scan hosti
 |ATS_2_BaselineControlsInvProcessor| Responsible to push baseline controls metadata to LA and storage account
 |ATS_3_SubscriptionRBACProcessor| Collects RBAC details of subscription to be scanned. RBAC collected used to scan the control like "Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities" 
 |ATS_4_WorkItemScheduler|  Responsible to queue up subscriptions as workitems for scanning. It also reconciles the errored subscriptions through retries in the end. By default it would retry to scan for 5 times for each error subscription. IF there is nothing to process for the day, it would simply ignore the run.
+|ATS_5_MGTreeProcessor| Responsible to fetch details about all the management group that has been granted access as Reader using central MI. All these management group will be fetched by the job and persisted into LA. This function is disabled by default. To enable this function, you need to add ``` FeatureManagement__ManagementGroups : true ``` and ``` ManagementGroupConfigurations__ManagementGroupId : <Root_Management_Group_id> ``` to the Application settings on Azure Portal. To update application settings in the app service, go to Configuration --> New application settings --> Save after adding/updating the setting.
 
  **ii) WorkItemProcessor Functions:** 
  
@@ -270,9 +412,9 @@ After ATS_4_WorkItemScheduler completes pushing the messages in the queue, WorkI
 
  **iii) AutoUpdater Functions:** 
  
- Timer based function app to automatically update other function apps(Metadataaggregator and WorkItemProcessor) and azure web service app(UI and API). User has the option to configure AutoUpdater settings like isAutoUpdateOn(user wants to auto update with new releases), VersionType(user wants to install the latest release/stable release/specific version).
+ Timer based function app to automatically update other function apps (Metadataaggregator and WorkItemProcessor) and azure web service app(UI and API). User has the option to configure AutoUpdater settings like isAutoUpdateOn (user wants to auto update with new releases), VersionType (user wants to install the latest release/stable release/specific version).
  
- AutoUpdater is a cron job which runs every 5 hrs automatically to check for new release to update the apps. You can also manually trigger the AutoUpdater function if needed.
+ AutoUpdater is a cron job which runs twice a day at 02:00 PM and 04:00 PM (UTC) to check for new release to update the apps. You can also manually trigger the AutoUpdater function if needed.
  Our AutoUpdater is robust enough to handle different configuration for each function apps or web service apps.
 
 > **Note:** If you want to install specific version for each different apps(or a specific version for all) follow the below steps,
@@ -280,7 +422,105 @@ After ATS_4_WorkItemScheduler completes pushing the messages in the queue, WorkI
 (ii) Manually trigger the AutoUpdate function app. You can view the console/monitor logs to see appropriate status of AutoUpdater function.
 (iii) After AutoUpdater function execution gets complete, you need to change **isAutoUpdateOn** to **false** through the app configuration setting for the apps where you want to keep custom version installed.
 
-## Log Analytics Visualization
+<br/>
+
+[Back to top…](Readme.md#contents)
+
+# 3. Visualization
+
+ ![ProgressBar](../Images/12_TSS_ProgressBar3.png)
+
+## 1. AzTS UI
+
+Tenant reader solution provides a UI-based tool that can be used to submit "ad hoc" scan requests to AzTS. This tool leverages you current subscription permissions to show you subscriptions that you have the ability to request scans for.
+
+**Note:**
+1.  Currently AzTS UI checks for PIM eligible or permanent memberships for the following roles: ['Owner','Contributor','ServiceAdministrator','CoAdministrator','AccountAdministrator','Security Reader','Security Admin'].)
+
+2. If you have been recently granted access, you either need to wait for the next scheduled scan to read the latest RBAC data or you can manually trigger the ATS_3_SubscriptionRBACProcessor function.
+
+**Steps to load AzTS UI:**
+
+ **Step 1 of 2:** Validate that the scan has completed. To validate the scan result, Go to AzSK-AzTS-LAWorkspace-xxxxx Log Analytics workspace --> Logs --> Run the following queries.
+
+    i) List subscription(s) that user-managed identity has access to.
+    ```kql
+      AzSK_SubInventory_CL
+      | distinct SubscriptionId, Name_s
+    ```
+
+    ii) List controls supported by Tenant Security solution.
+    ```kql
+      AzSK_BaselineControlsInv_CL
+      | distinct ControlId_s, DisplayName_s
+    ```
+    iii) List role-based access control (RBAC) inventory.
+    ```kql
+      AzSK_RBAC_CL
+    ```
+
+    iv) List control scan result.
+    ```kql
+      AzSK_ControlResults_CL
+    ```
+
+**Step 2 of 2:** Go to link provided at the end of ```Install-AzSKTenantSecuritySolution``` command (as shown below).
+&nbsp;&nbsp;![UI](../Images/13_TSS_UIUrlPrintMessageInPSOutput.png) 
+
+The UI is fairly self-explanatory and also has a "Guided Tour" feature that should show you the basic usage workflow. We recommend that you create a custom domain name for your UI. For steps to create custom domain, refer [link](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain).
+
+&nbsp;&nbsp;![UI](../Images/13_TSS_UIOverview.png) 
+
+TODO: Add UI walk through video.
+
+**Add org-subscription mapping for your subscription(s)**:
+
+By default, there is no service mapping for your subscription. Therefore, you see the 'Unknown' value is the Service Filter dropdown. To add service mapping, follow the steps below:
+
+#### Step 1: Prepare your org-subscription mapping
+In this step you will prepare the data file with the mapping from subscription ids to the org hierarchy within your environment. The file is in a simple CSV form and should appear like the one below. 
+
+> Note: You may want to create a small CSV file with just a few subscriptions for a trial pass and then update it with the full subscription list for your org after getting everything working end-to-end.
+
+A sample template for the CSV file is [here](TemplateFiles/OrgMapping.csv):
+
+![Org-Sub metadata json](../Images/13_TSS_OrgMappingCSV.png) 
+
+The table below describes the different columns in the CSV file and their intent.
+
+| ColumnName  | Description | Required?	|Comments|
+| ---- | ---- | ---- | ---- |
+| OrganizationName | Name of Organization(s) within your enterprise | No | This you can consider as level 1 hierarchy for your enterprise |
+| DivisionName | Name of Division(s) within your organization | No | This you can consider as level 2 hierarchy for your enterprise |
+| ServiceGroupName | Name of Service Line/ Business Unit within an organization | No | This you can consider as level 3 hierarchy for your enterprise |
+| TeamGroupName | Name of Team(s) within an organization | No | This you can consider as level 4 hierarchy for your enterprise |
+| ServiceName | Name of Service(s) within your organization | No | This you can consider as level 5 hierarchy for your enterprise |
+| SubscriptionId | Subscription Id belonging to a org/servicegroup | Yes |
+| SubscriptionName | Subscription Name | Yes |
+
+<br/>
+
+> **Note**: Ensure you follow the correct casing for all column names as shown in the table above.
+
+<br/>
+
+#### Step 2: Upload your mapping to the Log Analytics (LA) workspace
+
+In this step you will import the data above into the LA workspace created during Tenant Security setup. 
+
+ **(a)** Locate the LA resource that was created during Tenant Security setup in your subscription. This should be present under Tenant Security resource group. After selecting the LA resource, copy the Workspace ID and primary key from the portal as shown below:
+
+ ![capture Workspace ID](../Images/13_TSS_LAWS_AgentManagement.png)
+ 
+ **(b)** To push org Mapping details, copy and execute the script available [here](Scripts/AzTSPushOrgMappingEvents.ps1) (for Gov subs use script [here](Scripts/AzTSPushOrgMappingEvents.Gov.ps1)) in Powershell. You will need to replace the CSV path, Workspace ID, and primary key with its approriate value in this PowerShell script.
+
+<br/>
+
+ > **Note**: Due to limitation of Log Analytics workspace, you will need to repeat this step every 90 days interval.
+
+<br/>
+
+## 2. Log Analytics Visualization
 
 For understanding the collected data, use the querying and visualization capabilities provided by Log Analytics. 
 To start, go to **Log Analytics workspace** created during setup --> Select **Logs**. 
@@ -360,8 +600,8 @@ AzSK_ControlResults_CL
 | take 10
 ```
 
-
 [Back to top…](Readme.md#contents)
+
 ## Tenant Security Solution - under the covers (how it works)
  Tenant Security Solution is built by extending what the DevOps Kit has been doing and leveraging the best of Azure native features. It is a hybrid model, which leverages the native Azure security capabilities like Azure Security Center (ASC), Azure Policies, etc., to evaluate the security controls and continue to leverage DevOps Kit scanning capabilities in the form of custom code controls to address any coverage gaps.  
 
@@ -394,20 +634,23 @@ In this step you will prepare the data file which will be fed to the PowerBI das
 
 > Note: You may want to create a small CSV file with just a few subscriptions for a trial pass and then update it with the full subscription list for your org after getting everything working end-to-end.
 
-A sample template for the CSV file is [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/users/TenantSecurity/13-Tenant%20Security%20Solution%20Setup/TemplateFiles/OrgMapping.csv):
+A sample template for the CSV file is [here](TemplateFiles/OrgMapping.csv):
 
-![Org-Sub metadata json](../Images/07_OrgPolicy_PBI_OrgMetadata.PNG) 
+![Org-Sub metadata json](../Images/13_TSS_OrgMappingCSV.png) 
 
 The table below describes the different columns in the CSV file and their intent.
 
-| ColumnName  | Description | Required? | Comments |
-| ---- | ---- | ---- |---- |
-| BGName | Name of business group (e.g., Finance, HR, Marketing, etc.) within your enterprise | Yes |  This you can consider as level 1 hierarchy for your enterprise | 
-| ServiceGroupName | Name of Service Line/ Business Unit within an organization | Yes |  This you can consider as level 2 hierarchy for your enterprise | 
-| SubscriptionId | Subscription Id belonging to a org/servicegroup | Yes |   | 
-| SubscriptionName | Subscription Name | Yes | This should match the actual subscription name. If it does not, then the actual name will be used  | 
-| IsActive | Use "Y" for Active Subscription and "N" for Inactive Subscription  | Yes | This will be used to filter active and inactive subscriptions | 
-| OwnerDetails | List of subscription owners separated by semi-colons (;)  | Yes | These are people accountable for security of the subscription  | 
+| ColumnName  | Description | Required?	|Comments|
+| ---- | ---- | ---- | ---- |
+| OrganizationName | Name of Organization(s) within your enterprise | No | This you can consider as level 1 hierarchy for your enterprise |
+| DivisionName | Name of Division(s) within your organization | No | This you can consider as level 2 hierarchy for your enterprise |
+| ServiceGroupName | Name of Service Line/ Business Unit within an organization | No | This you can consider as level 3 hierarchy for your enterprise |
+| TeamGroupName | Name of Team(s) within an organization | No | This you can consider as level 4 hierarchy for your enterprise |
+| ServiceName | Name of Service(s) within your organization | No | This you can consider as level 5 hierarchy for your enterprise |
+| SubscriptionId | Subscription Id belonging to a org/servicegroup | Yes |
+| SubscriptionName | Subscription Name | Yes |
+
+<br/>
 
 > **Note**: Ensure you follow the correct casing for all column names as shown in the table above. The 'out-of-box' PowerBI template is bound to these columns. If you need additional columns to represent your org hierarchy then you may need to modify the template/report as well.
 
@@ -416,11 +659,11 @@ The table below describes the different columns in the CSV file and their intent
 
 In this step you will import the data above into the LA workspace created during Tenant Security setup. 
 
- **(a)** Locate the LA resource that was created during Tenant Security setup in your subscription. This should be present under Tenant Security resource group. After selecting the LA resource, copy the Workspace ID from the portal as shown below:
+ **(a)** Locate the LA resource that was created during Tenant Security setup in your subscription. This should be present under Tenant Security resource group. After selecting the LA resource, copy the Workspace ID and primary key from the portal as shown below:
 
  ![capture Workspace ID](../Images/13_TSS_LAWS_AgentManagement.png)
  
- **(b)** To push org Mapping details, copy and execute the script available [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/13-Tenant%20Security%20Solution%20Setup/Scripts/AzTSPushOrgMappingEvents.ps1) (for Gov subs use script [here](https://raw.githubusercontent.com/azsk/DevOpsKit-docs/master/13-Tenant%20Security%20Solution%20Setup/Scripts/AzTSPushOrgMappingEvents.Gov.ps1)) in Powershell.
+ **(b)** To push org Mapping details, copy and execute the script available [here](Scripts/AzTSPushOrgMappingEvents.ps1) (for Gov subs use script [here](Scripts/AzTSPushOrgMappingEvents.Gov.ps1)) in Powershell. You will need to replace the CSV path, Workspace ID, and primary key with its approriate value in this PowerShell script.
 
  > **Note**: Due to limitation of Log Analytics workspace, you will need to repeat this step every 90 days interval. 
 

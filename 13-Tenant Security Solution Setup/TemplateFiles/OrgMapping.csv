@@ -1,2 +1,3 @@
-BGName,ServiceGroupName,SubscriptionId,SubscriptionName,IsActive,OwnerDetails
-BGName1,Sg1,SubId1,SubName1,Y,Owner@Contoso.com;Owner1@Contoso.com
+﻿OrganizationName,DivisionName,ServiceGroupName,TeamGroupName,ServiceName,SubscriptionId,SubscriptionName
+OrgName1,DivisionName1,ServiceGroupName1,TeamGroupName1,ServiceName1,SubscriptionId1,SubscriptionName1
+OrgName2,DivisionName2,ServiceGroupName2,TeamGroupName2,ServiceName2,SubscriptionId2,SubscriptionName2

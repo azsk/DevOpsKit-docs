@@ -57,7 +57,15 @@ function PushOrgMappingEvents([string] $OrgMappingFilePath, [string] $LogAnaytic
 	      $body = Get-Content $FilePath | ConvertFrom-Csv
           $body | ForEach-Object {
 
-                $OrgMappingList+= @{ "BGName" = $_.BGName; "ServiceGroupName" = $_.ServiceGroupName; "SubscriptionId" =$_.SubscriptionId; "SubscriptionName" = $_.SubscriptionName; "IsActive" = $_.IsActive; "OwnerDetails" = $_.OwnerDetails }
+                $OrgMappingList+= @{
+                    "OrganizationName"	= $_.OrganizationName  ;
+                    "DivisionName"	    = $_.DivisionName      ;
+                    "ServiceGroupName"	= $_.ServiceGroupName  ;
+                    "TeamGroupName"	    = $_.TeamGroupName     ;
+                    "ServiceName"	    = $_.ServiceName       ;
+                    "SubscriptionId"	= $_.SubscriptionId    ;
+                    "SubscriptionName"	= $_.SubscriptionName  ;
+                 }
           }
           $postbody =  $OrgMappingList | ConvertTo-Json
           $lawsBodyByteArray = ([System.Text.Encoding]::UTF8.GetBytes($postbody))
