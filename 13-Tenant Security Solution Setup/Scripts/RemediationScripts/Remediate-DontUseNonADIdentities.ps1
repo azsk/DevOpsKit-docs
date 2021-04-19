@@ -38,9 +38,9 @@ function Remove-AzTSNonAADAccountsRBAC
 {
     <#
     .SYNOPSIS
-    This command would help in remediating 'Azure_Storage_AuthN_Dont_Allow_Anonymous' control.
+    This command would help in remediating 'Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities' control.
     .DESCRIPTION
-    This command would help in remediating 'Azure_Storage_AuthN_Dont_Allow_Anonymous' control.
+    This command would help in remediating 'Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities' control.
     .PARAMETER SubscriptionId
         Enter subscription id on which remediation need to perform.
     .PARAMETER ObjectIds
@@ -151,7 +151,44 @@ function Remove-AzTSNonAADAccountsRBAC
             }  
         }
     }
-   
+
+    # Adding PIM api call to fetch eligible role assignment
+    try
+    {
+        # PIM api
+        $resourceAppIdUri = "https://management.core.windows.net/"
+        $rmContext = Get-AzContext
+        [Microsoft.Azure.Commands.Common.Authentication.AzureSession]
+        $authResult = [Microsoft.Azure.Commands.Common.Authentication.AzureSession]::Instance.AuthenticationFactory.Authenticate(
+        $rmContext.Account,
+        $rmContext.Environment,
+        $rmContext.Tenant,
+        [System.Security.SecureString] $null,
+        "Never",
+        $null,
+        $resourceAppIdUri); 
+
+        $header = "Bearer " + $authResult.AccessToken
+        $headers = @{"Authorization"=$header;"Content-Type"="application/json";}
+        $method = [Microsoft.PowerShell.Commands.WebRequestMethod]::Get
+
+        # API to get eligible PIM assignment
+        $armUri = "https://management.azure.com/subscriptions/$($SubscriptionId)/providers/Microsoft.Authorization/roleEligibilityScheduleInstances?api-version=2020-10-01-preview"
+        $eligiblePIMRoleAssignments = Invoke-WebRequest -Method $method -Uri $armUri -Headers $headers -UseBasicParsing
+        $res = ConvertFrom-Json $eligiblePIMRoleAssignments.Content
+
+        # Exclude MG scope assignment
+        $excludedMGScopeAssignment =  $res.value.properties | where-object { !$_.scope.contains("/providers/Microsoft.Management/managementGroups/") }
+        $pimDistinctRoleAssignmentList += $excludedMGScopeAssignment.expandedProperties.principal | Where-Object { ![string]::IsNullOrWhiteSpace($_.email) }
+        
+        # Renaming property name
+        $distinctRoleAssignmentList += $pimDistinctRoleAssignmentList | select @{N='SignInName'; E={$_.email}}, @{N='ObjectId'; E={$_.id}}, @{N='DisplayName'; E={$_.displayName}}, @{N='ObjectType'; E={$_.type }}
+    }
+    catch
+    {
+        Write-Host "Error occured while fetching eligible PIM role assignment. ErrorMessage [$($_)]" -ForegroundColor Red
+    }
+    
     # Defining regex to filter Non AAD Identities 
     $NonADIdentitiesPatterns = @( "(.)*#ext(.)*" )
 
@@ -185,7 +222,7 @@ function Remove-AzTSNonAADAccountsRBAC
     }
     else
     {
-        Write-Host "Found [$(($liveAccounts | Measure-Object).Count)] Non AAD role assingments for the subscription [$($SubscriptionId)]" -ForegroundColor Cyan
+        Write-Host "Found [$(($liveAccounts | Measure-Object).Count)] Non AAD role assignments for the subscription [$($SubscriptionId)]" -ForegroundColor Cyan
     }
 
     $folderPath = [Environment]::GetFolderPath("MyDocuments") 
@@ -228,9 +265,9 @@ function Restore-AzTSNonAADAccountsRBAC
 {
     <#
     .SYNOPSIS
-    This command would help in performing roll back operation for 'Azure_Storage_AuthN_Dont_Allow_Anonymous' control.
+    This command would help in performing roll back operation for 'Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities' control.
     .DESCRIPTION
-    This command would help in performing roll back operation for 'Azure_Storage_AuthN_Dont_Allow_Anonymous' control.
+    This command would help in performing roll back operation for 'Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities' control.
     .PARAMETER SubscriptionId
         Enter subscription id on which roll back operation need to perform.
     .PARAMETER RollbackFilePath
