@@ -124,12 +124,8 @@ function Remove-AzTSNonAADAccountsRBAC
 
     #  Getting all role assignments (ARM, Classic) of subscription.
     $currentRoleAssignmentList = Get-AzRoleAssignment -IncludeClassicAdministrators  
-    # filter-out classic admins
-    $currentRoleAssignmentList = $currentRoleAssignmentList | where {$_.ObjectId -ne [Guid]::Empty};
+    
     $distinctRoleAssignmentList = @();
-
-    # adding one valid role assignment, so that even if graph call works, it has to get atleast 1. If we dont get any, means Graph API failed.
-    $distinctRoleAssignmentList += $currentLoginRoleAssignments;
 
     # Getting role assignment and filtering service principal object type
     if(($ObjectIds | Measure-Object).Count -eq 0)
