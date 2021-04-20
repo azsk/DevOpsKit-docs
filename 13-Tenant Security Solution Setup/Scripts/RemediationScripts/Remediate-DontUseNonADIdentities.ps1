@@ -195,30 +195,30 @@ function Remove-AzTSNonAADAccountsRBAC
     $NonADIdentitiesPattern = (('^' + (($NonADIdentitiesPatterns | foreach {[regex]::escape($_)}) -join '|') + '$')) -replace '[\\]',''
 
     # Filtering Non AAD Identities
-    $liveAccounts = [array]($distinctRoleAssignmentList | Where-Object {$_.SignInName -and $_.SignInName.ToLower() -imatch $NonADIdentitiesPattern} )
+    $liveAccountsRoleAssignments = [array]($distinctRoleAssignmentList | Where-Object {$_.SignInName -and $_.SignInName.ToLower() -imatch $NonADIdentitiesPattern} )
 
-    # Exclude whitelisted patterns for non AAD identities
-    if( ($liveAccounts | Measure-Object).Count -gt 0 -and ($ApprovedNonADIndentitiesPatterns | Measure-Object).Count -ne 0)
+    # Exclude exempted patterns for non AAD identities
+    if( ($liveAccountsRoleAssignments | Measure-Object).Count -gt 0 -and ($ApprovedNonADIndentitiesPatterns | Measure-Object).Count -ne 0)
     {
         $ApprovedNonADIndentitiesPattern = (('^' + (($ApprovedNonADIndentitiesPatterns | foreach {[regex]::escape($_)}) -join '|') + '$')) -replace '[\\]',''
-        $liveAccounts = [array]($liveAccounts | Where-Object {$_.SignInName -and $_.SignInName.ToLower() -inotmatch $ApprovedNonADIndentitiesPattern} )
+        $liveAccountsRoleAssignments = [array]($liveAccountsRoleAssignments | Where-Object {$_.SignInName -and $_.SignInName.ToLower() -inotmatch $ApprovedNonADIndentitiesPattern} )
     }	
 
     # Safe Check: Check whether the current user accountId is part of Invalid AAD ObjectGuids List 
-    if(($liveAccounts | where { $currentLoginRoleAssignments.ObjectId -contains $_.ObjectId } | Measure-Object).Count -gt 0)
+    if(($liveAccountsRoleAssignments | where { $currentLoginRoleAssignments.ObjectId -contains $_.ObjectId } | Measure-Object).Count -gt 0)
     {
         Write-Host "Warning: Current User account is found as part of the Non AAD Account. This is not expected behaviour. This can happen typically during Graph API failures. Aborting the operation. Reach out to aztssup@microsoft.com" -ForegroundColor Yellow
         break;
     }
 
-    if(($liveAccounts | Measure-Object).Count -le 0)
+    if(($liveAccountsRoleAssignments | Measure-Object).Count -le 0)
     {
         Write-Host "No Non AAD accounts found for the subscription [$($SubscriptionId)]. Exiting the process." -ForegroundColor Cyan
         break;
     }
     else
     {
-        Write-Host "Found [$(($liveAccounts | Measure-Object).Count)] Non AAD role assignments for the subscription [$($SubscriptionId)]" -ForegroundColor Cyan
+        Write-Host "Found [$(($liveAccountsRoleAssignments | Measure-Object).Count)] Non AAD role assignments for the subscription [$($SubscriptionId)]" -ForegroundColor Cyan
     }
 
     $folderPath = [Environment]::GetFolderPath("MyDocuments") 
@@ -229,10 +229,10 @@ function Remove-AzTSNonAADAccountsRBAC
     }
 
     # Safe Check: Taking backup of Non AAD identities    
-    if ($liveAccounts.length -gt 0)
+    if ($liveAccountsRoleAssignments.length -gt 0)
     {
         Write-Host "Taking backup of Non AAD Accounts role assignments that needs to be removed. Please do not delete this file. Without this file you wont be able to rollback any changes done through Remediation script." -ForegroundColor Cyan
-        $liveAccounts | ConvertTo-json -Depth 10 | out-file "$($folderpath)NonAADAccountsRoleAssignments.json"       
+        $liveAccountsRoleAssignments | ConvertTo-json -Depth 10 | out-file "$($folderpath)NonAADAccountsRoleAssignments.json"       
         Write-Host "Path: $($folderpath)NonAADAccountsRoleAssignments.json"
     }
 
@@ -252,7 +252,7 @@ function Remove-AzTSNonAADAccountsRBAC
     
     # Start deletion of all Non AAD Accounts.
     Write-Host "Starting to delete Non AAD Accounts role assignments..." -ForegroundColor Cyan
-    $liveAccounts | Remove-AzRoleAssignment -Verbose
+    $liveAccountsRoleAssignments | Remove-AzRoleAssignment -Verbose
     Write-Host "Completed deleting Non AAD Accounts role assignments." -ForegroundColor Green    
 }
 
