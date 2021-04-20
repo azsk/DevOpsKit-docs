@@ -197,7 +197,7 @@ function Remove-AzTSNonAADAccountsRBAC
     # Filtering Non AAD Identities
     $liveAccounts = [array]($distinctRoleAssignmentList | Where-Object {$_.SignInName -and $_.SignInName.ToLower() -imatch $NonADIdentitiesPattern} )
 
-    #Exclude whitelisted patterns for non AAD identities
+    # Exclude whitelisted patterns for non AAD identities
     if( ($liveAccounts | Measure-Object).Count -gt 0 -and ($ApprovedNonADIndentitiesPatterns | Measure-Object).Count -ne 0)
     {
         $ApprovedNonADIndentitiesPattern = (('^' + (($ApprovedNonADIndentitiesPatterns | foreach {[regex]::escape($_)}) -join '|') + '$')) -replace '[\\]',''
@@ -205,7 +205,7 @@ function Remove-AzTSNonAADAccountsRBAC
     }	
 
     # Safe Check: Check whether the current user accountId is part of Invalid AAD ObjectGuids List 
-    if(($liveAccounts | where { $_.ObjectId -eq $currentLoginRoleAssignments.ObjectId} | Measure-Object).Count -gt 0)
+    if(($liveAccounts | where { $currentLoginRoleAssignments.ObjectId -contains $_.ObjectId } | Measure-Object).Count -gt 0)
     {
         Write-Host "Warning: Current User account is found as part of the Non AAD Account. This is not expected behaviour. This can happen typically during Graph API failures. Aborting the operation. Reach out to aztssup@microsoft.com" -ForegroundColor Yellow
         break;
@@ -345,7 +345,7 @@ function Restore-AzTSNonAADAccountsRBAC
     }
     $backedUpRoleAssingments = Get-Content -Raw -Path $RollbackFilePath | ConvertFrom-Json     
 
-    Write-Host "Step 3 of 3: Restore role assingments [$($SubscriptionId)]..."
+    Write-Host "Step 3 of 3: Restore role assignments [$($SubscriptionId)]..."
     $backedUpRoleAssingments | ForEach-Object {
         $roleAssignment = $_;
         New-AzRoleAssignment -ObjectId $roleAssignment.ObjectId -Scope $roleAssignment.Scope -RoleDefinitionName $roleAssignment.RoleDefinitionName -ErrorAction SilentlyContinue | Out-Null;
@@ -359,7 +359,6 @@ Function calling with parameters.
 Remove-AzTSNonAADAccountsRBAC -SubscriptionId '<Sub_Id>' -ObjectIds @('<Object_Ids>')  -Force:$false -PerformPreReqCheck: $true
 
 Function to roll back role assignments as per input remediated log
-Restore-AzTSNonAADAccountsRBAC -SubscriptionId '<Sub_Id>' -RollbackFilePath "<user Documents>\AzTS\Remediation\Subscriptions\<subscriptionId>\<JobDate>\InvalidAADAccounts\InvalidRoleAssignments.json"
-
+Restore-AzTSNonAADAccountsRBAC -SubscriptionId '<Sub_Id>' -RollbackFilePath "<user Documents>\AzTS\Remediation\Subscriptions\<subscriptionId>\<JobDate>\NonAADAccounts\NonAADAccountsRoleAssignments.json"
 Note: You can only rollback valid role assignments.
 #>
