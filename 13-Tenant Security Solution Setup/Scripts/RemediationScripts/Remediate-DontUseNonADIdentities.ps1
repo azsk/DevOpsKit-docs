@@ -19,7 +19,7 @@ function Pre_requisites
     }
     else
     {
-        Write-Host "Az.Resources module is available." -ForegroundColor Green
+        Write-Host "Az.Accounts module is available." -ForegroundColor Green
     }
 
     # Checking if 'Az.Resources' module is available or not.
