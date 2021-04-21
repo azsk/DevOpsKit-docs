@@ -96,6 +96,8 @@ function Remove-AzTSNonAADAccountsRBAC
     # Setting context for current subscription.
     $currentSub = Set-AzContext -SubscriptionId $SubscriptionId
 
+    Write-Host "Note: `n 1. Exclude check to remediate PIM assignment for external identities due to insufficient privilege. `n 2. Exclude check to remediate external identities at MG scope." -ForegroundColor Yellow
+    Write-Host "------------------------------------------------------"
 
     Write-Host "Metadata Details: `n SubscriptionId: [$($SubscriptionId)] `n AccountName: [$($currentSub.Account.Id)] `n AccountType: [$($currentSub.Account.Type)]"
     Write-Host "------------------------------------------------------"
@@ -257,7 +259,10 @@ function Remove-AzTSNonAADAccountsRBAC
     
     # Start deletion of all Non AAD Accounts.
     Write-Host "Starting to delete Non AAD Accounts role assignments..." -ForegroundColor Cyan
-    $liveAccountsRoleAssignments | Remove-AzRoleAssignment -Verbose
+    $liveAccountsRoleAssignments | ForEach-Object {
+        $_ | Select-Object -Property "DisplayName", "SignInName", "Scope"
+        Remove-AzRoleAssignment $_
+    }
     Write-Host "Completed deleting Non AAD Accounts role assignments." -ForegroundColor Green    
 }
 
