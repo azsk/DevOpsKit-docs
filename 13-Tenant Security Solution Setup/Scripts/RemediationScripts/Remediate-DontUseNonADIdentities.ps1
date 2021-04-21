@@ -124,6 +124,9 @@ function Remove-AzTSNonAADAccountsRBAC
 
     #  Getting all role assignments (ARM, Classic) of subscription.
     $currentRoleAssignmentList = Get-AzRoleAssignment -IncludeClassicAdministrators  
+
+    # Excluding MG scoped role assignment
+    $currentRoleAssignmentList = $currentRoleAssignmentList | Where-Object { !$_.Scope.Contains("/providers/Microsoft.Management/managementGroups/") }
     
     $distinctRoleAssignmentList = @();
 
