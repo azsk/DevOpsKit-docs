@@ -148,7 +148,8 @@ function Remove-AzTSNonAADAccountsRBAC
         }
     }
 
-    # Adding PIM api call to fetch eligible role assignment
+    # Adding ARM API call to fetch eligible role assignment [Commenting this part because used ARM API is currently in preview state, we can officially start supporting once it is publicly available]
+    <#
     try
     {
         # PIM api
@@ -184,6 +185,7 @@ function Remove-AzTSNonAADAccountsRBAC
     {
         Write-Host "Error occured while fetching eligible PIM role assignment. ErrorMessage [$($_)]" -ForegroundColor Red
     }
+    #>
     
     # Defining regex to filter Non AAD Identities 
     $NonADIdentitiesPatterns = @( "(.)*#ext(.)*" )
