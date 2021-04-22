@@ -358,6 +358,7 @@ function Restore-AzTSNonAADAccountsRBAC
     Write-Host "Step 3 of 3: Restore role assignments [$($SubscriptionId)]..."
     $backedUpRoleAssingments | ForEach-Object {
         $roleAssignment = $_;
+        $roleAssignment | Select-Object -Property "DisplayName", "SignInName", "Scope"
         New-AzRoleAssignment -ObjectId $roleAssignment.ObjectId -Scope $roleAssignment.Scope -RoleDefinitionName $roleAssignment.RoleDefinitionName -ErrorAction SilentlyContinue | Out-Null;
     }    
     Write-Host "Completed restoring role assignments." -ForegroundColor Green
