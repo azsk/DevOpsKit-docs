@@ -48,7 +48,7 @@ function Remove-AzTSNonAADAccountsRBAC
     .Parameter Force
         Enter force parameter value to remove non ad identities
     .PARAMETER PerformPreReqCheck
-        Perform pre requisities check to ensure all required module to perform roll back operation is available.
+        Perform pre requisities check to ensure all required module to perform rollback operation is available.
     #>
 
     param (
@@ -220,7 +220,7 @@ function Remove-AzTSNonAADAccountsRBAC
 
     if(($liveAccountsRoleAssignments | Measure-Object).Count -le 0)
     {
-        Write-Host "No Non AAD accounts found for the subscription [$($SubscriptionId)]. Exiting the process." -ForegroundColor Cyan
+        Write-Host "No Non AAD identities found for the subscription [$($SubscriptionId)]. Exiting the process." -ForegroundColor Cyan
         break;
     }
     else
@@ -238,7 +238,7 @@ function Remove-AzTSNonAADAccountsRBAC
     # Safe Check: Taking backup of Non AAD identities    
     if ($liveAccountsRoleAssignments.length -gt 0)
     {
-        Write-Host "Taking backup of Non AAD Accounts role assignments that needs to be removed. Please do not delete this file. Without this file you wont be able to rollback any changes done through Remediation script." -ForegroundColor Cyan
+        Write-Host "Taking backup of role assignments for Non AAD identities that needs to be removed. Please do not delete this file. Without this file you wont be able to rollback any changes done through Remediation script." -ForegroundColor Cyan
         $liveAccountsRoleAssignments | ConvertTo-json -Depth 10 | out-file "$($folderpath)NonAADAccountsRoleAssignments.json"       
         Write-Host "Path: $($folderpath)NonAADAccountsRoleAssignments.json"
     }
@@ -255,15 +255,34 @@ function Remove-AzTSNonAADAccountsRBAC
     }
    
 
-    Write-Host "Step 3 of 3: Clean up Non AAD Accounts for Subscription [$($SubscriptionId)]..."
+    Write-Host "Step 3 of 3: Clean up Non AAD identities for Subscription [$($SubscriptionId)]..."
     
-    # Start deletion of all Non AAD Accounts.
-    Write-Host "Starting to delete Non AAD Accounts role assignments..." -ForegroundColor Cyan
+    # Start deletion of all Non AAD identities.
+    Write-Host "Starting to delete role assignments for Non AAD identities..." -ForegroundColor Cyan
+    
+    $isRemoved = $true
     $liveAccountsRoleAssignments | ForEach-Object {
-        $_ | Select-Object -Property "DisplayName", "SignInName", "Scope"
-        Remove-AzRoleAssignment $_
+        try 
+        {
+            Remove-AzRoleAssignment $_
+            $_ | Select-Object -Property "DisplayName", "SignInName", "Scope"
+        }
+        catch 
+        {
+            $isRemoved = $false
+            Write-Host "Error occurred while removing role assignments for Non AAD identities. ErrorMessage [$($_)]" -ForegroundColor Red   
+        }
     }
-    Write-Host "Completed deleting Non AAD Accounts role assignments." -ForegroundColor Green    
+
+    if($isRemoved)
+    {
+        Write-Host "Completed deleting role assignments for Non AAD identities." -ForegroundColor Green
+    }
+    else 
+    {
+        Write-Host "`n"
+        Write-Host "Not able to successfully delete role assignments for Non AAD identities." -ForegroundColor Red
+    }    
 }
 
 
@@ -271,15 +290,15 @@ function Restore-AzTSNonAADAccountsRBAC
 {
     <#
     .SYNOPSIS
-    This command would help in performing roll back operation for 'Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities' control.
+    This command would help in performing rollback operation for 'Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities' control.
     .DESCRIPTION
-    This command would help in performing roll back operation for 'Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities' control.
+    This command would help in performing rollback operation for 'Azure_Subscription_AuthZ_Dont_Use_NonAD_Identities' control.
     .PARAMETER SubscriptionId
-        Enter subscription id on which roll back operation need to perform.
+        Enter subscription id on which rollback operation need to perform.
     .PARAMETER RollbackFilePath
-        Json file path which containing remediation log to perform roll back operation.
+        Json file path which containing remediation log to perform rollback operation.
     .PARAMETER PerformPreReqCheck
-        Perform pre requisities check to ensure all required module to perform roll back operation is available.
+        Perform pre requisities check to ensure all required module to perform rollback operation is available.
 	#>
 
     param (
@@ -294,7 +313,7 @@ function Restore-AzTSNonAADAccountsRBAC
     )
 
     Write-Host "======================================================"
-    Write-Host "Starting with restore invalid AAD object guids from subscriptions..."
+    Write-Host "Starting with restore role assignments for Non AAD identities from subscriptions..."
     Write-Host "------------------------------------------------------"
     
     if($PerformPreReqCheck)
@@ -342,7 +361,7 @@ function Restore-AzTSNonAADAccountsRBAC
 
     if(($currentLoginRoleAssignments | Where { $_.RoleDefinitionName -eq "Owner"  -or $_.RoleDefinitionName -eq 'CoAdministrator' -or $_.RoleDefinitionName -eq "User Access Administrator" } | Measure-Object).Count -le 0)
     {
-        Write-Host "Warning: This script can only be run by an Owner or User Access Administrator" -ForegroundColor Yellow
+        Write-Host "Warning: This script can only be run by an Owner/CoAdministrator/User Access Administrator." -ForegroundColor Yellow
         break;
     }
 
@@ -356,12 +375,32 @@ function Restore-AzTSNonAADAccountsRBAC
     $backedUpRoleAssingments = Get-Content -Raw -Path $RollbackFilePath | ConvertFrom-Json     
 
     Write-Host "Step 3 of 3: Restore role assignments [$($SubscriptionId)]..."
+    
+    $isRestored = $true
+    
     $backedUpRoleAssingments | ForEach-Object {
-        $roleAssignment = $_;
-        $roleAssignment | Select-Object -Property "DisplayName", "SignInName", "Scope"
-        New-AzRoleAssignment -ObjectId $roleAssignment.ObjectId -Scope $roleAssignment.Scope -RoleDefinitionName $roleAssignment.RoleDefinitionName -ErrorAction SilentlyContinue | Out-Null;
-    }    
-    Write-Host "Completed restoring role assignments." -ForegroundColor Green
+        try
+        {
+            $roleAssignment = $_;
+            New-AzRoleAssignment -ObjectId $roleAssignment.ObjectId -Scope $roleAssignment.Scope -RoleDefinitionName $roleAssignment.RoleDefinitionName -ErrorAction SilentlyContinue | Out-Null;    
+            $roleAssignment | Select-Object -Property "DisplayName", "SignInName", "Scope"
+        }
+        catch 
+        {
+            $isRestored = $false
+            Write-Host "Error occurred while restoring role assignments for Non AAD identities. ErrorMessage [$($_)]" -ForegroundColor Red
+        }
+    }
+    
+    if($isRestored)
+    {
+        Write-Host "Completed restoring role assignments for Non AAD identities." -ForegroundColor Green
+    }
+    else 
+    {
+        Write-Host "`n"
+        Write-Host "Not able to successfully restore role assignments for Non AAD identities." -ForegroundColor Red   
+    }
 }
 
 # ***************************************************** #
@@ -369,7 +408,7 @@ function Restore-AzTSNonAADAccountsRBAC
 Function calling with parameters.
 Remove-AzTSNonAADAccountsRBAC -SubscriptionId '<Sub_Id>' -ObjectIds @('<Object_Ids>')  -Force:$false -PerformPreReqCheck: $true
 
-Function to roll back role assignments as per input remediated log
+Function to rollback role assignments as per input remediated log
 Restore-AzTSNonAADAccountsRBAC -SubscriptionId '<Sub_Id>' -RollbackFilePath "<user Documents>\AzTS\Remediation\Subscriptions\<subscriptionId>\<JobDate>\NonAADAccounts\NonAADAccountsRoleAssignments.json"
 Note: You can only rollback valid role assignments.
 #>
