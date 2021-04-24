@@ -245,6 +245,7 @@ function Remove-AzTSNonAADAccountsRBAC
 
     if(-not $Force)
     {
+        Write-Host "Note:`n Skip deleting Non AAD identities having 'CoAdministrator' role assignments." -ForegroundColor Yellow
         Write-Host "Do you want to delete the above listed role assignment? " -ForegroundColor Yellow -NoNewline
         $UserInput = Read-Host -Prompt "(Y|N)"
 
@@ -264,7 +265,7 @@ function Remove-AzTSNonAADAccountsRBAC
     $liveAccountsRoleAssignments | ForEach-Object {
         try 
         {
-            Remove-AzRoleAssignment $_
+            Remove-AzRoleAssignment $_ -ErrorAction SilentlyContinue
             $_ | Select-Object -Property "DisplayName", "SignInName", "Scope"
         }
         catch 
@@ -342,6 +343,8 @@ function Restore-AzTSNonAADAccountsRBAC
     # Setting context for current subscription.
     $currentSub = Set-AzContext -SubscriptionId $SubscriptionId
 
+    Write-Host "Note: `n Skip restoring Non AAD identities having 'CoAdministrator' role assignments." -ForegroundColor Yellow
+    Write-Host "------------------------------------------------------"
     Write-Host "Metadata Details: `n SubscriptionId: [$($SubscriptionId)] `n AccountName: [$($currentSub.Account.Id)] `n AccountType: [$($currentSub.Account.Type)]"
     Write-Host "------------------------------------------------------"
     Write-Host "Starting with Subscription [$($SubscriptionId)]..."
