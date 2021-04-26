@@ -124,11 +124,22 @@ function Remove-AzTSNonAADAccountsRBAC
     
     Write-Host "Step 2 of 3: Fetching all the role assignments for Subscription [$($SubscriptionId)]..."
 
-    #  Getting all role assignments (ARM, Classic) of subscription.
-    $currentRoleAssignmentList = Get-AzRoleAssignment -IncludeClassicAdministrators  
+    #  Getting all role assignments from ARM source.
+    $currentRoleAssignmentList = Get-AzRoleAssignment 
 
     # Excluding MG scoped role assignment
     $currentRoleAssignmentList = $currentRoleAssignmentList | Where-Object { !$_.Scope.Contains("/providers/Microsoft.Management/managementGroups/") }
+    
+    # API call to get classic role assignment
+    $classicAssignments = $null
+    $armUri = "https://management.azure.com/subscriptions/$($subscriptionId)/providers/Microsoft.Authorization/classicadministrators?api-version=2015-06-01"
+    $method = "Get"
+    $classicAssignments = [ClassicRoleAssignments]::new()
+    $headers = $classicAssignments.GetAuthHeader()
+    $res = $classicAssignments.GetClassicRoleAssignmnets([string] $armUri, [string] $method, [psobject] $headers)
+    $classicDistinctRoleAssignmentList = $res.value | Where-Object { ![string]::IsNullOrWhiteSpace($_.properties.emailAddress) }
+     # Renaming property name
+    $currentRoleAssignmentList += $classicDistinctRoleAssignmentList | select @{N='SignInName'; E={$_.properties.emailAddress}},  @{N='RoleDefinitionName'; E={$_.properties.role}}, @{N='NameId'; E={$_.name}}, @{N='Type'; E={$_.type }}, @{N='Scope'; E={$_.id }}
     
     $distinctRoleAssignmentList = @();
 
@@ -245,7 +256,6 @@ function Remove-AzTSNonAADAccountsRBAC
 
     if(-not $Force)
     {
-        Write-Host "Note:`n Skip deleting Non AAD identities having 'CoAdministrator' role assignments." -ForegroundColor Yellow
         Write-Host "Do you want to delete the above listed role assignment? " -ForegroundColor Yellow -NoNewline
         $UserInput = Read-Host -Prompt "(Y|N)"
 
@@ -263,15 +273,32 @@ function Remove-AzTSNonAADAccountsRBAC
     
     $isRemoved = $true
     $liveAccountsRoleAssignments | ForEach-Object {
-        try 
+        try
         {
-            Remove-AzRoleAssignment $_ -ErrorAction SilentlyContinue
-            $_ | Select-Object -Property "DisplayName", "SignInName", "Scope"
+            if($_.RoleDefinitionName -eq "CoAdministrator" -and $_.Scope.contains("/providers/Microsoft.Authorization/classicAdministrators/"))
+            {
+                $armUri = "https://management.azure.com" + $_.Scope + "?api-version=2015-06-01"
+                $method = "Delete"
+                $classicAssignments = $null
+                $classicAssignments = [ClassicRoleAssignments]::new()
+                $headers = $classicAssignments.GetAuthHeader()
+                $res = $classicAssignments.DeleteClassicRoleAssignmnets([string] $armUri, [string] $method,[psobject] $headers)
+
+                if($res.StatusCode -eq 202 -or $res.StatusCode -eq 200)
+                {
+                    $_ | Select-Object -Property "SignInName", "Scope", "RoleDefinitionName"
+                }
+            }
+            else 
+            {
+                Remove-AzRoleAssignment $_ -ErrorAction SilentlyContinue
+                $_ | Select-Object -Property "DisplayName", "SignInName", "Scope"
+            }
         }
-        catch 
+        catch
         {
             $isRemoved = $false
-            Write-Host "Error occurred while removing role assignments for Non AAD identities. ErrorMessage [$($_)]" -ForegroundColor Red   
+            Write-Host "Error occurred while removing role assignments for Non AAD identities. ErrorMessage [$($_)]" -ForegroundColor Red
         }
     }
 
@@ -380,7 +407,48 @@ function Restore-AzTSNonAADAccountsRBAC
     Write-Host "Step 3 of 3: Restore role assignments [$($SubscriptionId)]..."
     
     $isRestored = $true
-    
+
+    $backedUpRoleAssingments | ForEach-Object {
+        try
+        {
+            if($_.RoleDefinitionName -eq "CoAdministrator" -and $_.Scope.contains("/providers/Microsoft.Authorization/classicAdministrators/"))
+            {
+                $armUri = "https://management.azure.com" + $_.Scope + "?api-version=2015-06-01"
+                $method = "PUT"
+
+                # Create body for making PUT request
+                $body = ([PSCustomObject]@{
+                    properties = @{
+                      "emailAddress"= $_.SignInName;
+                       "role"=$_.RoleDefinitionName;
+                    }
+                  } | ConvertTo-Json)
+
+                $classicAssignments = $null
+                $classicAssignments = [ClassicRoleAssignments]::new()
+                $headers = $classicAssignments.GetAuthHeader()
+                $res += $classicAssignments.PutClassicRoleAssignmnets([string] $armUri, [string] $method, [psobject] $headers,[System.Object] $body)
+                if($res.StatusCode -eq 202 -or $res.StatusCode -eq 200)
+                {
+                    $_ | Select-Object -Property "SignInName", "Scope", "RoleDefinitionName"
+                }
+            }
+            else 
+            {
+                Remove-AzRoleAssignment $_ -ErrorAction SilentlyContinue
+                $_ | Select-Object -Property "DisplayName", "SignInName", "Scope"
+            }
+        }
+        catch
+        {
+            $isRemoved = $false
+            Write-Host "Error occurred while removing role assignments for Non AAD identities. ErrorMessage [$($_)]" -ForegroundColor Red
+        }
+    }
+
+
+
+
     $backedUpRoleAssingments | ForEach-Object {
         try
         {
@@ -403,6 +471,94 @@ function Restore-AzTSNonAADAccountsRBAC
     {
         Write-Host "`n"
         Write-Host "Not able to successfully restore role assignments for Non AAD identities." -ForegroundColor Red   
+    }
+}
+
+
+class ClassicRoleAssignments
+{
+    [PSObject] GetAuthHeader()
+    {
+        [psobject] $headers = $null
+        try 
+        {
+            $resourceAppIdUri = "https://management.core.windows.net/"
+            $rmContext = Get-AzContext
+            [Microsoft.Azure.Commands.Common.Authentication.AzureSession]
+            $authResult = [Microsoft.Azure.Commands.Common.Authentication.AzureSession]::Instance.AuthenticationFactory.Authenticate(
+            $rmContext.Account,
+            $rmContext.Environment,
+            $rmContext.Tenant,
+            [System.Security.SecureString] $null,
+            "Never",
+            $null,
+            $resourceAppIdUri); 
+
+            $header = "Bearer " + $authResult.AccessToken
+            $headers = @{"Authorization"=$header;"Content-Type"="application/json";}
+        }
+        catch 
+        {
+            Write-Host "Error occured while fetching auth header. ErrorMessage [$($_)]" -ForegroundColor Red   
+        }
+        return($headers)
+    }
+
+    [PSObject] GetClassicRoleAssignmnets([string] $armUri, [string] $method, [psobject] $headers)
+    {
+        $content = $null
+        try
+        {
+            $method = [Microsoft.PowerShell.Commands.WebRequestMethod]::$method
+            
+            # API to get classic role assignments
+            $response = Invoke-WebRequest -Method $method -Uri $armUri -Headers $headers -UseBasicParsing
+            $content = ConvertFrom-Json $response.Content
+        }
+        catch
+        {
+            Write-Host "Error occured while fetching classic role assignment. ErrorMessage [$($_)]" -ForegroundColor Red
+        }
+        
+        return($content)
+    }
+
+    [PSObject] DeleteClassicRoleAssignmnets([string] $armUri, [string] $method, [psobject] $headers)
+    {
+        $content = $null
+        try
+        {
+            $method = [Microsoft.PowerShell.Commands.WebRequestMethod]::$method
+            
+            # API to get classic role assignments
+            $response = Invoke-WebRequest -Method $method -Uri $armUri -Headers $headers -UseBasicParsing
+            $content = ConvertFrom-Json $response.Content
+        }
+        catch
+        {
+            Write-Host "Error occured while deleting classic role assignment. ErrorMessage [$($_)]" -ForegroundColor Red
+        }
+        
+        return($content)
+    }
+
+    [PSObject] PutClassicRoleAssignmnets([string] $armUri, [string] $method, [psobject] $headers, [System.Object] $body)
+    {
+        $content = $null
+        try
+        {
+            $method = [Microsoft.PowerShell.Commands.WebRequestMethod]::$method
+            
+            # API to get classic role assignments
+            $response = Invoke-WebRequest -Method $method -Uri $armUri -Headers $headers -Body $body -UseBasicParsing
+            $content = ConvertFrom-Json $response.Content
+        }
+        catch
+        {
+            Write-Host "Error occured while adding classic role assignment. ErrorMessage [$($_)]" -ForegroundColor Red
+        }
+        
+        return($content)
     }
 }
 
