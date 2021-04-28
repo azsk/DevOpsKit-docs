@@ -84,7 +84,7 @@
            
             # Grant Graph Permission to the user-assigned managed identity.
             # NOTE: This step requires admin consent. Therefore, the signed-in user must be a member of one of the following administrator roles:
-            # Required Permission: Global Administrator, Security Administrator, Security Reader or User Administrator.
+            # Required Permission: Global Administrator, Privileged Role Administrator, Application Administrator or Cloud Application Administrator.
             Grant-AzSKGraphPermissionToUserAssignedIdentity -ScanIdentityObjectId $UserAssignedIdentity.PrincipalId -AppPermissionsRequired @("PrivilegedAccess.Read.AzureResources", "Directory.Read.All")
 
             # If you do not have the permission required to complete this step, please contact your administrator.
@@ -153,7 +153,7 @@
         # iv) Grant internal MI 'User.Read.All' permission.
 
         # **Note:** To complete this step, signed-in user must be a member of one of the following administrator roles: </br>
-        # Required Permission: Global Administrator, Security Administrator, Security Reader or User Administrator. 
+        # Required Permission: Global Administrator, Privileged Role Administrator, Application Administrator or Cloud Application Administrator. 
         # If you do not have the required permission, please contact your administrator.
         # Read more about this under the section "Step 6 of 6. Run Setup Command" in GitHub doc.
 
