@@ -85,7 +85,7 @@
             # Grant Graph Permission to the user-assigned managed identity.
             # NOTE: This step requires admin consent. Therefore, the signed-in user must be a member of one of the following administrator roles:
             # Required Permission: Global Administrator, Security Administrator, Security Reader or User Administrator.
-            Grant-AzSKGraphPermissionToUserAssignedIdentity -ScanIdentityObjectId $UserAssignedIdentity.PrincipalId -AppPermissionsRequired "PrivilegedAccess.Read.AzureResources"
+            Grant-AzSKGraphPermissionToUserAssignedIdentity -ScanIdentityObjectId $UserAssignedIdentity.PrincipalId -AppPermissionsRequired @("PrivilegedAccess.Read.AzureResources", "Directory.Read.All")
 
             # If you do not have the permission required to complete this step, please contact your administrator.
             # To proceed without this step, set the value of "-ScanIdentityHasGraphPermission" parameter to false in AzTS installation command. Example: -ScanIdentityHasGraphPermission:$false.
@@ -143,7 +143,7 @@
                         -WebAPIAzureADAppId $ADApplicationDetails.WebAPIAzureADAppId `
                         -UIAzureADAppId $ADApplicationDetails.UIAzureADAppId `
                         -SendUsageTelemetry:$true `
-                        -ScanIdentityHasGraphPermission:$true `
+                        -ScanIdentityHasGraphPermission:$false `
                         -SendAlertNotificationToEmailIds $EmailIds `
                         -Verbose
 
