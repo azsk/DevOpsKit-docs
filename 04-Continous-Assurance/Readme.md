@@ -650,7 +650,7 @@ The clean-up script will delete following resources under resource group 'AzSKRG
 
 |Type|Name|Points to consider?|
 |----|----|----|
-|Microsoft.Storage/storageAccounts|azsk*|Avoid deleting, if Want to keep previous AzSK CA scan logs or Want to keep attestation of non-baseline controls or Using AzSK Cred Hygiene feature|
+|Microsoft.Storage/storageAccounts|azsk*|Avoid deleting, if: <br> a) You want to keep previous AzSK CA scan logs <br> b) You want to keep attestation of non-baseline controls <br> c) You are using AzSK Cred Hygiene feature|
 |Microsoft.Automation/automationAccounts/runbooks|Continuous_Assurance_Runbook, Alert_Runbook, Continuous_Assurance_ScanOnTrigger_Runbook|NA|
 |Microsoft.Automation/automationAccounts|AzSKContinuousAssurance|Avoid deleting, if You have deployed any custom runbook in AzSK Automation account. |
 |Microsoft.Insights/activityLogAlerts|AzSK_*|Avoid deleting, if dependent on AzSK alerts for alerting & monitoring.|
