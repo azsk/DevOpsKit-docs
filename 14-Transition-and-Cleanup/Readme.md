@@ -26,11 +26,11 @@
 
   ii) Click on the file ('Remove_AzSK_Deployed_Resources.ps1') to view the contents.
 
-  iii) Right click on the 'Raw' icon and and select 'Save as...' to save file in your local directory.
+  iii) Right click on the 'Raw' icon and and select 'Save link as...' to save file in your local directory.
 
 **2. Unblock downloaded remediation script:**
 
-i) Unblock the content. Below command will help to unblock files
+i) Unblock the content. Below command will help to unblock file
 
 ``` PowerShell
 Unblock-File -Path "<Downloaded script file path>"
@@ -81,6 +81,6 @@ Yes, you can run the script in non interactive mode to perform the clean up with
 ``` PowerShell
 Remove-AzSKReosurces -SubscriptionId "<SubscriptionId>" -PerformPreReqCheck -Force
 ```
-Please be carefull while using '-Force' switch as this will delete all AzSK deployed resources (including AzSK CA SPN & AAD App) without any further consent from the user.
+Please be careful while using '-Force' switch as this will delete all AzSK deployed resources (including AzSK CA SPN & AAD App) without any further consent from the user.
 
 
