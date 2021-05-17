@@ -22,14 +22,11 @@ As "Secure DevOps Kit for Azure (AzSK)" is on the path of sunset, and being tran
   
   To download clean-up script to your local machine,
 
-  i) Open GitHub page from [here](https://github.com/azsk/DevOpsKit-docs/tree/master/14-Transition-and-Cleanup/scripts).
+  i) Access scripts folder from [here](https://github.com/azsk/DevOpsKit-docs/tree/master/14-Transition-and-Cleanup/scripts).
 
   ii) Click on the file ('Remove_AzSK_Deployed_Resources.ps1') to view the contents.
 
-  iii) Right click the Raw button.
-
-  iv) Left click on file content and select 'Save as...' to save file in your local directory.
-
+  iii) Right click on the 'Raw' icon and and select 'Save as...' to save file in your local directory.
 
 **2. Unblock downloaded remediation script:**
 
