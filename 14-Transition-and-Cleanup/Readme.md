@@ -28,7 +28,7 @@
 
   iii) Right click on the 'Raw' icon and and select 'Save link as...' to save file in your local directory.
 
-**2. Unblock downloaded remediation script:**
+**2. Unblock and run downloaded script:**
 
 i) Unblock the content. Below command will help to unblock file
 
@@ -36,7 +36,7 @@ i) Unblock the content. Below command will help to unblock file
 Unblock-File -Path "<Downloaded script file path>"
 ```
 
-ii) Point current path to downloaded script's folder location and load remediation script in PowerShell session
+ii) Point current path to downloaded script's folder location and load clean-up script in PowerShell session
 ``` PowerShell
 
 # Point current path to location where script is downloaded and load script from folder
