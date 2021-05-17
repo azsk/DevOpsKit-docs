@@ -187,7 +187,7 @@ function Remove-AzSKReosurces
     # Safe Check: Current user need to have Owner role for the subscription
     $currentLoginRoleAssignments = Get-AzRoleAssignment -SignInName $currentSub.Account.Id -Scope "/subscriptions/$($SubscriptionId)" -IncludeClassicAdministrators;
 
-    if(($currentLoginRoleAssignments | Where-Object { $_.RoleDefinitionName -eq "Owner"} | Measure-Object).Count -le 0)
+    if(($currentLoginRoleAssignments | Where-Object { $_.RoleDefinitionName -eq "Owner" -or $_.RoleDefinitionName -match 'CoAdministrator' -or $_.RoleDefinitionName -like '*ServiceAdministrator*'} | Measure-Object).Count -le 0)
     {
         Write-Host "WARNING: This script can only be run by an Owner of subscription [$($SubscriptionId)] " -ForegroundColor Yellow
         break;
