@@ -48,7 +48,7 @@ CD "<CleanupScriptFilePath>"
 
 # Run the command to start clean-up
 
-Remove-AzSKReosurces -SubscriptionId "<SubscriptionId>" -PerformPreReqCheck
+Remove-AzSKResources -SubscriptionId "<SubscriptionId>" -PerformPreReqCheck
 
 ```
 ### What all resources will be deleted?

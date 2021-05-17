@@ -111,7 +111,7 @@ function Delete_AADApplication
     Write-Host "Successfully deleted AAD application of AzSK CA SPN." -ForegroundColor Green
 }
 
-function Remove-AzSKReosurces
+function Remove-AzSKResources
 {
     <#
     .SYNOPSIS
