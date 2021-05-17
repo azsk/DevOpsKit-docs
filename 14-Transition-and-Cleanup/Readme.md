@@ -12,7 +12,7 @@
 - [FAQ](Readme.md#faq)
 -----------------------------------------------------------------
 ## Remove AzSK deployed resources
-As "Secure DevOps Kit for Azure (AzSK)" is on the path of sunset, and being transitioned to more robust & scalable solution called Azure Tenant Security scanner (AzTS). If transition from AzSK to AzTS is done for your organization and tenant, you can follow below mentioned steps to clean up AzSK deployed resources in your subscription.
+"Secure DevOps Kit for Azure (AzSK)" is on the path of sunset, and being transitioned to more robust & scalable solution called Azure Tenant Security scanner (AzTS). If transition from AzSK to AzTS is done for your organization and tenant, you can follow below mentioned steps to clean up AzSK deployed resources in your subscription.
 
 >**Note** Before running script to clean-up AzSK deployed resources, please do have a look on the section below (post the steps to run script) which lists all the resources which will be deleted as part of clean-up and points to consider before deletion. 
 
