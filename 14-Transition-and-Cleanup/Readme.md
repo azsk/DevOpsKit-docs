@@ -63,15 +63,15 @@ The clean-up script will delete following resources under resource group 'AzSKRG
 |Microsoft.Insights/activityLogAlerts|AzSK_*|Avoid deleting, if dependent on AzSK alerts for alerting & monitoring.|
 |Microsoft.Insights/actionGroups|AzSKAlertActionGroup, AzSKCriticalAlertActionGroup, ResourceDeploymentActionGroup|Avoid deleting, if used same action groups for any non-AzSK deployed alerts.|
 
-Apart from deleting above mentioned resources, script will also remove,
+Apart from deleting above mentioned resources, script will also remove:
 - Role assignments of current SPN (service principal) associated with AzSK Automation account.
-  - 'Reader' role at subscrition scope, and
+  - 'Reader' role at subscrition scope and
   - 'Contributor' at 'AzSKRG' resource group scope
 - Azure AD Application (AzSK_CA_SPN_*) and SPN associated with AzSK Automation account. 
 
->**Note-1:** To clean AAD application you must have "Owner" access to the AAD application and ability to remove AAD application in the tenant. 
+>**Note 1:** To clean AAD application you must have "Owner" access to the AAD application and ability to remove AAD application in the tenant. 
 
->**Note-2:** During AzSK CA set up separate AAD application & SPN gets created so, it's safe to delete AAD application & SPN associated with the automation account. But if you had manually added same SPN/AAD application to some other application or AzSK CAs then please avoid deleting AAD application.
+>**Note 2:** During AzSK CA set up separate AAD application & SPN gets created. So, it is safe to delete AAD application & SPN associated with the automation account. But if you had manually added same SPN/AAD application to some other application or AzSK CAs then please avoid deleting AAD application.
 
 ### FAQ
 
