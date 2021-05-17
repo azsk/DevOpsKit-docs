@@ -14,7 +14,7 @@
 ## Remove AzSK deployed resources
 As "Secure DevOps Kit for Azure (AzSK)" is on the path of sunset, and being transitioned to more robust & scalable solution called Azure Tenant Security scanner (AzTS). If transition from AzSK to AzTS is done for your organization and tenant, you can follow below mentioned steps to clean up AzSK deployed resources in your subscription.
 
->**Note** Before running script to clean-up AzSK deployed, please do have a look on the section below (post the steps to run script) which lists all the resources which will be deleted as part of clean-up and points to consider before deletion. 
+>**Note** Before running script to clean-up AzSK deployed resources, please do have a look on the section below (post the steps to run script) which lists all the resources which will be deleted as part of clean-up and points to consider before deletion. 
 
 ### Steps to clean AzSK deployed resources:
 
@@ -72,11 +72,18 @@ Apart from deleting above mentioned resources, script will also remove,
   - 'Contributor' at 'AzSKRG' resource group scope
 - Azure AD Application (AzSK_CA_SPN_*) and SPN associated with AzSK Automation account. 
 
->**Note** Before deleting Azure AD Application created by AzSK, please make sure that same Azure AD App and SPN must not be used anywhere else (like for some other application or other AzSK CA setups).
+>**Note-1:** To clean AAD application you must have "Owner" access to the AAD application and ability to remove AAD application in the tenant. 
+
+>**Note-2:** Before deleting Azure AD application created by AzSK, please make sure that same Azure AD App and SPN must not be used anywhere else (like for some other application or other AzSK CA setups).
 
 ### FAQ
 
-#### What permission do I need to setup CA?
-You need to be 'Owner' on the subscription.
-This is required because, during CA setup, we add RBAC access to an Azure AD App (SPN) that's utilized for running the 'security scan' runbooks in Azure Automation. Only an'Owner' for a subscription has the right to change subscription RBAC.  
+#### Can I run the script in non interactive manner, so that I don't need to provide any further input/confirmation?
+Yes, you can run the script in non interactive mode to perform the clean up without any prompt for confirmation/input. For this please include '-Force' switch while running 'Remove-AzSKReosurces' command as showon in example below.
+
+``` PowerShell
+Remove-AzSKReosurces -SubscriptionId "<SubscriptionId>" -PerformPreReqCheck -Force
+```
+Please be carefull while using '-Force' switch as this will delete all AzSK deployed resources (including AzSK CA SPN & AAD App) without any further consent from the user.
+
 
