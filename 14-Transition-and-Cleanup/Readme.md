@@ -79,7 +79,7 @@ Apart from deleting above mentioned resources, script will also remove:
 Yes, you can run the script in non interactive mode to perform the clean up without any prompt for confirmation/input. For this please include '-Force' switch while running 'Remove-AzSKReosurces' command as showon in example below.
 
 ``` PowerShell
-Remove-AzSKReosurces -SubscriptionId "<SubscriptionId>" -PerformPreReqCheck -Force
+Remove-AzSKResources -SubscriptionId "<SubscriptionId>" -PerformPreReqCheck -Force
 ```
 Please be careful while using '-Force' switch as this will delete all AzSK deployed resources (including AzSK CA SPN & AAD App) without any further consent from the user.
 
