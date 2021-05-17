@@ -74,7 +74,7 @@ Apart from deleting above mentioned resources, script will also remove,
 
 >**Note-1:** To clean AAD application you must have "Owner" access to the AAD application and ability to remove AAD application in the tenant. 
 
->**Note-2:** Before deleting Azure AD application created by AzSK, please make sure that same Azure AD App and SPN must not be used anywhere else (like for some other application or other AzSK CA setups).
+>**Note-2:** During AzSK CA set up separate AAD application & SPN gets created so, it's safe to delete AAD application & SPN associated with the automation account. But if you manually added same SPN/AAD application to some other application or AzSK CAs then please avoid deleting AAD application.
 
 ### FAQ
 
