@@ -4,7 +4,7 @@ function Pre_requisites
     .SYNOPSIS
     This command would check pre requisities modules.
     .DESCRIPTION
-    This command would check pre requisities modules to perform remediation.
+    This command would check pre requisities modules to perform clean-up.
 	#>
 
     Write-Host "Required modules are: Az.Resources, Az.Accounts, Az.Automation" -ForegroundColor Cyan
@@ -122,7 +122,7 @@ function Remove-AzSKReosurces
     .PARAMETER SubscriptionId
         Enter subscription id of the subscription for which clean-up need to be performed.
     .PARAMETER PerformPreReqCheck
-        Perform pre requisities check to ensure all required module to perform roll back operation is available.
+        Perform pre requisities check to ensure all required module to perform clean-up operation is available.
     .PARAMETER Force
         Switch to force deletion of AzSK resources without further user consent.
     #>
