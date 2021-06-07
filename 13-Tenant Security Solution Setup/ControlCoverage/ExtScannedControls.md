@@ -10,7 +10,7 @@ Following controls in AzTS are currently externally scanned:
 
 | ControlId | DisplayName | Description |
 |-----------|-------------|-------------|
-| Azure_VirtualMachine_SI_Enable_Monitoring_Agent|System updates on virtual machine scale sets must be installed.|Virtual Machine Scale Set must have all the required OS patches installed.|
-| Azure_VirtualMachine_SI_Enable_Vuln_Solution|System updates on virtual machine scale sets must be installed.|Virtual Machine Scale Set must have all the required OS patches installed.|
-| Azure_VirtualMachine_SI_Missing_OS_Patches|System updates on virtual machine scale sets must be installed.|Virtual Machine Scale Set must have all the required OS patches installed.|
-| Azure_VirtualMachine_SI_Enable_Antimalware|System updates on virtual machine scale sets must be installed.|Virtual Machine Scale Set must have all the required OS patches installed.|
+| Azure_VirtualMachine_SI_Enable_Monitoring_Agent|All VMs must have Monitoring Agent enabled|All VMs must have Monitoring Agent enabled|
+| Azure_VirtualMachine_SI_Enable_Vuln_Solution|Install DSRE Qualys Cloud Agent on assets|Vulnerability assessment solution should be installed on VM|
+| Azure_VirtualMachine_SI_Missing_OS_Patches|Patch assets to protect against vulnerabilities|Virtual Machine must have all the required OS patches installed|
+| Azure_VirtualMachine_SI_Enable_Antimalware|Ensure all devices have anti-malware protection installed and enabled|Antimalware must be enabled with real time protection on Virtual Machine|
