@@ -223,4 +223,28 @@ Steps to remediate:
 
 - Run 'Import-Module' AzSK in a fresh PowerShell session as the first command.
 
-- Use 'Connect-AzAccount' to login to your subscription (if using AzSK v3.11.0). 
+- Use 'Connect-AzAccount' to login to your subscription (if using AzSK v3.11.0).
+
+### How to update policy endpoint to latest policy store location?
+While running AzSK commands, if you get warning like this,
+> **Important**: Your AzSK setup is using a policy endpoint that may be deprecated soon as part of AzSK sunset. Please use steps here: https://aka.ms/devopskit/sunset/osspolicy to use a stable policy store location.
+
+then this indicates that online policy store url in your environment is pointing to policy endpoint which might get deprecated soon as part of AzSK sunset. To keep using AzSK cmdlets without any issues, you need to update policy endpoint to stable policy store location by following below mentioned steps:
+
+**Step 1**: Import 'AzSK' module in a fresh session.
+
+  ```PowerShell
+  Import-Module AzSK
+  ```
+
+**Step 2**: Run following command to update policy endpoint.
+
+```PowerShell
+  Set-AzSKPolicySettings -OnlinePolicyStoreUrl "https://raw.githubusercontent.com/azsk/DevOpsKit/master/src/oss-config/`$Version/`$FileName"
+```
+**Step 3**: Clear the current session state.
+
+```PowerShell
+  Clear-AzSKSessionState
+```
+
