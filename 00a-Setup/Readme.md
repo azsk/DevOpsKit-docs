@@ -229,18 +229,18 @@ Steps to remediate:
 
 This warning pops up because online policy store url in your environment is pointing to policy endpoint which might get deprecated soon as part of AzSK sunset. To keep using AzSK cmdlets without any issues, you need to update policy endpoint to stable policy store location by following below mentioned steps:
 
-- Import 'AzSK' module in a fresh session.
+**Step 1**: Import 'AzSK' module in a fresh session.
 
   ```PowerShell
   Import-Module AzSK
   ```
 
-- Run following command to update policy endpoint.
+**Step 2**: Run following command to update policy endpoint.
 
 ```PowerShell
   Set-AzSKPolicySettings -OnlinePolicyStoreUrl "https://raw.githubusercontent.com/azsk/DevOpsKit/master/src/oss-config/`$Version/`$FileName"
 ```
-- Clear the current session state.
+**Step 3**: Clear the current session state.
 
 ```PowerShell
   Clear-AzSKSessionState
