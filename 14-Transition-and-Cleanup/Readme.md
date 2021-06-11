@@ -53,7 +53,7 @@ Apart from deleting above mentioned resources, command will also remove:
 ### FAQ
 
 #### Can I run the command in non interactive manner, so that I don't need to provide any further input/confirmation?
-Yes, you can run the command in non interactive mode to perform the clean up without any prompt for confirmation/input. For this please include '-Force' switch while running 'Remove-AzSKReosurces' command as showon in example below.
+Yes, you can run the command in non interactive mode to perform the clean up without any prompt for confirmation/input. For this please include '-Force' switch while running the command as showon in example below.
 
 ``` PowerShell
 Remove-AzSKContinuousAssurance -SubscriptionId "<SubscriptionId>" -CleanUpAllAzSKResources -Force
