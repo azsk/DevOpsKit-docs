@@ -216,7 +216,6 @@ Function        Get-AzSKControlsStatus                            3.11.0     AzS
 Function        Get-AzSKExpressRouteNetworkSecurityStatus         3.11.0     AzSK
 Function        Get-AzSKInfo                                      3.11.0     AzSK
 Function        Get-AzSKOrganizationPolicyStatus                  3.11.0     AzSK
-Function        Get-AzSKSecurityRecommendationReport              3.11.0     AzSK
 Function        Get-AzSKSubscriptionSecurityStatus                3.11.0     AzSK
 Function        Get-AzSKSupportedResourceTypes                    3.11.0     AzSK
 ```
