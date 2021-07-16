@@ -375,7 +375,7 @@ This list continues to grow so best way to confirm is to look at the output of t
  ```PowerShell  
 Get-AzSKSupportedResourceTypes  
  ```    
->  We regularly add SVT coverage for more Azure features. Please write to us (mailto:AzSDKSupExt@microsoft.com) if you are looking for SVTs for a service not listed here.  
+>  We regularly add SVT coverage for more Azure features. Please write to us (mailto:azsksup@microsoft.com) if you are looking for SVTs for a service not listed here.  
 
 #### What do the different columns in the status report mean?
 Status report will be in CSV format and will contain below columns 
