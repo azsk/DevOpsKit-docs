@@ -57,7 +57,7 @@ function Delete_RoleAssignments
 
     Write-Host "Deleting role assignments of AzSK CA SPN..." 
     $azskRoleAssignments | Remove-AzRoleAssignment
-    Write-Host "Successfully deleted role assignment of AzSK CA SPN." -ForegroundColor Green
+    Write-Host "Successfully deleted role assignments for AzSK CA SPN." -ForegroundColor Green
 }
 
 
@@ -68,13 +68,13 @@ function Remove-AzSKSPNAccess
     .SYNOPSIS
     This command would help in removing access for AzSK deployed SPNs in subscription.Please make sure to confirm these SPNs are not used for other purpose prior to running this script.
     .DESCRIPTION
-    This command will list all resources deployed in AzSKRG and divide them in two list a). AzSK deployed resources b). Non-AzSK deployed resources and will provide option to clean AzSK deployed resources.
+    This command will remove access for AzSK deployed SPNs in subscription.Please make sure to confirm these SPNs are not used for other purpose prior to running this script.
     .PARAMETER SubscriptionId
-        Enter subscription id of the subscription for which clean-up need to be performed.
+        Enter subscription id of the subscription for which role assignments need to be removed .
     .PARAMETER PerformPreReqCheck
-        Perform pre requisities check to ensure all required module to perform clean-up operation is available.
+        Perform pre requisities check to ensure all required modules are available.
     .PARAMETER Force
-        Switch to force deletion of AzSK resources without further user consent.
+        Switch to force removal of AzSK SPN access without further user consent.
     #>
 
     param (
