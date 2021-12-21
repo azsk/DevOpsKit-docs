@@ -36,7 +36,8 @@
 
     }
 }
-
+Function Remove-AzSKSPN
+{
   Connect-AzureAD
   Connect-AzAccount
   #List SPNs
@@ -49,4 +50,5 @@
     $appId= Get-AzADApplication -ApplicationId $spn.AppId
     Delete_AADApplication($spn.AppId)
   }
+}
   
