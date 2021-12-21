@@ -55,7 +55,6 @@ function Remove-AzSKResourceGroups {
     .PARAMETER Force
         Switch to force deletion of AzSK resources without further user consent.
     #>
-
     param (
         [string]
         [Parameter(Mandatory = $true, HelpMessage = "Enter subscription id to delete resource groups for AzSK related resources: ")]
@@ -155,7 +154,7 @@ function Remove-AzSKResourceGroups {
         RemoveAzSKRG 
     }
     if ($azsdkRG) {
-        RemoveAzSDRG
+        RemoveAzSDKRG
     }
     #End block
 }
@@ -419,7 +418,7 @@ Function RemoveAzSDKRG {
             Write-Host "WARNING: Following Non-AzSDK deployed resources are also present in AzSDKRG resource group, if you choose to delete resource group, these resources will also be deleted." -ForegroundColor Yellow
             $nonAzSDKResources | Select-Object Name, ResourceType | Format-Table
             Write-Host "`nPlease confirm deletion of all above listed resources: `n[Y]: Yes`n[N]: No" -ForegroundColor Cyan 
-            userChoice=""
+            $userChoice=""
             $userChoice = Read_UserChoice
             if ($userChoice -ne 'Y') {
                 Write-Host "Skipped deletion of $($azsdkRGName) group." -ForegroundColor Yellow
@@ -472,7 +471,6 @@ Function RemoveAzSDKRG {
             }
  
             # Next Steps
-            Write-Host "*** Next steps ***" -ForegroundColor Cyan
             $success = $true
             if (-not $azsdkRGDeleted) {
                 Write-Host "[$($azsdkRGName)] is not removed from subscription [$($SubscriptionId)], please look at the wanrings/errors listed above after step #3."
