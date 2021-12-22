@@ -1,4 +1,42 @@
-﻿function Read_UserChoice {
+﻿function Pre_requisites {
+  <#
+  .SYNOPSIS
+  This command would check pre requisities modules.
+  .DESCRIPTION
+  This command would check pre requisities modules to perform clean-up.
+#>
+
+  Write-Host "Required modules are: Az.Resources, Az.Accounts, AzureAD" -ForegroundColor Cyan
+  Write-Host "Checking for required modules..."
+  $availableModules = $(Get-Module -ListAvailable Az.Resources, Az.Accounts, AzureAD)
+  
+  # Checking if 'Az.Accounts' module is available or not.
+  if ($availableModules.Name -notcontains 'Az.Accounts') {
+    Write-Host "Installing module Az.Accounts..." -ForegroundColor Yellow
+    Install-Module -Name Az.Accounts -Scope CurrentUser -Repository 'PSGallery'
+  }
+  else {
+    Write-Host "Az.Accounts module is available." -ForegroundColor Green
+  }
+
+  # Checking if 'Az.Resources' module is available or not.
+  if ($availableModules.Name -notcontains 'Az.Resources') {
+    Write-Host "Installing module Az.Resources..." -ForegroundColor Yellow
+    Install-Module -Name Az.Resources -Scope CurrentUser -Repository 'PSGallery'
+  }
+  else {
+    Write-Host "Az.Resources module is available." -ForegroundColor Green
+  }
+  # Checking if 'AzureAD' module is available or not.
+  if ($availableModules.Name -notcontains 'AzureAD') {
+    Write-Host "Installing module AzureAD..." -ForegroundColor Yellow
+    Install-Module -Name AzureAD -Scope CurrentUser -Repository 'PSGallery'
+  }
+  else {
+    Write-Host "AzureAD module is available." -ForegroundColor Green
+  }
+}
+function Read_UserChoice {
   $userSelection = ""
   while ($userSelection -ne 'Y' -and $userSelection -ne 'N') {
     $userSelection = Read-Host "User choice"
@@ -31,6 +69,15 @@ function Delete_AADApplication {
   }
 }
 Function Remove-AzSKSPN {
+  try {
+    Write-Host "Checking for pre-requisites..."
+    Pre_requisites
+    Write-Host "------------------------------------------------------"     
+  }
+  catch {
+    Write-Host "Error occured while checking pre-requisites. ErrorMessage [$($_)]" -ForegroundColor Red    
+    break
+  }
   Connect-AzureAD
   Connect-AzAccount
   #List SPNs
