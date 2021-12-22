@@ -7,9 +7,9 @@ function Pre_requisites {
     This command would check pre requisities modules to perform clean-up.
 	#>
 
-    Write-Host "Required modules are: Az.Resources, Az.Accounts, Az.Automation" -ForegroundColor Cyan
+    Write-Host "Required modules are: Az.Resources, Az.Accounts" -ForegroundColor Cyan
     Write-Host "Checking for required modules..."
-    $availableModules = $(Get-Module -ListAvailable Az.Resources, Az.Accounts, Az.Automation)
+    $availableModules = $(Get-Module -ListAvailable Az.Resources, Az.Accounts)
     
     # Checking if 'Az.Accounts' module is available or not.
     if ($availableModules.Name -notcontains 'Az.Accounts') {
@@ -68,8 +68,6 @@ function Remove-AzSKResourceGroups {
     )
 
     Write-Host "======================================================"
-    Write-Host "Starting to delete AzSK deployed resource groups for subscription [$($SubscriptionId)]..."
-    Write-Host "------------------------------------------------------"
 
     if ($PerformPreReqCheck) {
         try {
@@ -99,7 +97,7 @@ function Remove-AzSKResourceGroups {
     Write-Host "Starting with Subscription [$($SubscriptionId)]..."
 
 
-    Write-Host "`nStep 1 of 5: Validating whether the current user [$($currentSub.Account.Id)] have the required permissions to run the script for Subscription [$($SubscriptionId)]..."
+    Write-Host "`nStep 1: Validating whether the current user [$($currentSub.Account.Id)] have the required permissions to run the script for Subscription [$($SubscriptionId)]..."
 
     # Safe Check: Checking whether the current account is of type User
     if ($currentSub.Account.Type -ne "User") {
@@ -129,23 +127,22 @@ function Remove-AzSKResourceGroups {
     $azskLocalSPNFormatString = "AzSK_CA_SPN_*"
     $azskActionGroupNames = @("AzSKAlertActionGroup", "AzSKCriticalAlertActionGroup", "ResourceDeploymentActionGroup")
 
-    Write-Host "`nStep 2 of 5: Listing AzSK related resource groups in Subscription [$($SubscriptionId)]..."
+    Write-Host "`nStep 2: Listing AzSK related resource groups in Subscription [$($SubscriptionId)]..."
 
     # Get AzSK RG
     $azskRG = Get-AzResourceGroup $azskRGName -ErrorAction SilentlyContinue
 
     if (-not $azskRG) {
-        Write-Host "AzSKRG is not present in subscription [$($SubscriptionId)]" -ForegroundColor Red
+        Write-Host "$($azskRGName) is not present in subscription [$($SubscriptionId)]" -ForegroundColor Green
     }
-    # Get AzSDK RG :additions
+    # Get AzSDK RG 
     $azsdkRG = Get-AzResourceGroup $azsdkRGName -ErrorAction SilentlyContinue
 
     if (-not $azsdkRG) {
-        Write-Host "AzSDKRG is not present in subscription [$($SubscriptionId)]" -ForegroundColor Red
+        Write-Host "$($azsdkRGName) is not present in subscription [$($SubscriptionId)]" -ForegroundColor Green
    
     }
-   
-
+  
     if (-not $azsdkRG -and -not $azskRG) { 
         Write-Host "No resource groups found to be deleted." -ForegroundColor Red
         return
@@ -252,16 +249,16 @@ Function RemoveAzSKRG {
             Write-Host "WARNING: Following Non-AzSK deployed resources are also present in AzSKRG resource group, if you choose to delete resource group, these resources will also be deleted." -ForegroundColor Yellow
             $nonAzSKResources | Select-Object Name, ResourceType | Format-Table
             Write-Host "`nPlease confirm deletion of all above listed resources: `n[Y]: Yes`n[N]: No" -ForegroundColor Cyan 
-            $userChoice=""
+            $userChoice = ""
             $userChoice = Read_UserChoice
             if ($userChoice -ne 'Y') {
-                Write-Host "Skipped deletion of AzSKRG $($azskRGName) group." -ForegroundColor Yellow
+                Write-Host "Skipped deletion of $($azskRGName) group." -ForegroundColor Yellow
                 return
             }
         }
         Write-Host "------------------------------------------------------"
 
-        Write-Host "`nStep 3 of 3: Cleaning resources present under resource group [$($azskRGName)] in Subscription [$($SubscriptionId)]..."
+        Write-Host "`nStep 3:Cleaning resources present under resource group [$($azskRGName)] in Subscription [$($SubscriptionId)]..."
        
         if ($azskResources) {
             $userChoice = "" 
@@ -293,7 +290,7 @@ Function RemoveAzSKRG {
                             throw;
                         }
                         $azskRGDeleted = $true
-                        Write-Host "Successfully deleted AzSK resource group [$($azskRGName)] from subscription [$($SubscriptionId)]" -ForegroundColor Green
+                        
                     }
                     catch {
                         Write-Host "ERROR: Error occurred while deleting resource group [$($azskRGName)], please contact support team." -ForegroundColor Red
@@ -305,7 +302,6 @@ Function RemoveAzSKRG {
             }
  
             # Next Steps
-            Write-Host "*** Next steps ***" -ForegroundColor Cyan
             $success = $true
             if (-not $azskRGDeleted) {
                 Write-Host "[$($azskRGName)] is not removed from subscription [$($SubscriptionId)], please look at the wanrings/errors listed above after step #3."
@@ -418,7 +414,7 @@ Function RemoveAzSDKRG {
             Write-Host "WARNING: Following Non-AzSDK deployed resources are also present in AzSDKRG resource group, if you choose to delete resource group, these resources will also be deleted." -ForegroundColor Yellow
             $nonAzSDKResources | Select-Object Name, ResourceType | Format-Table
             Write-Host "`nPlease confirm deletion of all above listed resources: `n[Y]: Yes`n[N]: No" -ForegroundColor Cyan 
-            $userChoice=""
+            $userChoice = ""
             $userChoice = Read_UserChoice
             if ($userChoice -ne 'Y') {
                 Write-Host "Skipped deletion of $($azsdkRGName) group." -ForegroundColor Yellow
@@ -427,7 +423,7 @@ Function RemoveAzSDKRG {
         }
         Write-Host "------------------------------------------------------"
 
-        Write-Host "`nStep 3 of 3: Cleaning resources present under resource group [$($azsdkRGName)] in Subscription [$($SubscriptionId)]..."
+        Write-Host "`nStep 4: Cleaning resources present under resource group [$($azsdkRGName)] in Subscription [$($SubscriptionId)]..."
        
         if ($azsdkResources) {
             $userChoice = "" 
@@ -453,20 +449,20 @@ Function RemoveAzSDKRG {
 
                     Write-Host "------------------------------------------------------"
                     try {
-                        Write-Host "Deleting AzSDK resource group [$($azsdkRGName)] from subscription [$($SubscriptionId)].This might take few minutes.."
+                        Write-Host "Deleting resource group [$($azsdkRGName)] from subscription [$($SubscriptionId)].This might take few minutes.."
                         $success = Remove-AzResourceGroup -Name $azsdkRGName -Force
                         if (-not $success) {
                             throw;
                         }
                         $azsdkRGDeleted = $true
-                        Write-Host "Successfully deleted AzSDK resource group [$($azsdkRGName)] from subscription [$($SubscriptionId)]" -ForegroundColor Green
+                        
                     }
                     catch {
                         Write-Host "ERROR: Error occurred while deleting resource group [$($azsdkRGName)], please contact support team." -ForegroundColor Red
                     }
                 }
                 Default {
-                    Write-Host "WARNING: Deletion of AzSDK resource group [$($azsdkRGName)] skipped." -ForegroundColor Yellow
+                    Write-Host "WARNING: Deletion of resource group [$($azsdkRGName)] skipped." -ForegroundColor Yellow
                 }
             }
  
