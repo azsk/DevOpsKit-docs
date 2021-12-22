@@ -1,6 +1,5 @@
 ﻿
-function Pre_requisites
-{
+function Pre_requisites {
     <#
     .SYNOPSIS
     This command would check pre requisities modules.
@@ -8,101 +7,79 @@ function Pre_requisites
     This command would check pre requisities modules to perform clean-up.
 	#>
 
-    Write-Host "Required modules are: Az.Resources, Az.Accounts, Az.Automation" -ForegroundColor Cyan
+    Write-Host "Required modules are: Az.Resources, Az.Accounts" -ForegroundColor Cyan
     Write-Host "Checking for required modules..."
-    $availableModules = $(Get-Module -ListAvailable Az.Resources, Az.Accounts, Az.Automation)
+    $availableModules = $(Get-Module -ListAvailable Az.Resources, Az.Accounts)
     
     # Checking if 'Az.Accounts' module is available or not.
-    if($availableModules.Name -notcontains 'Az.Accounts')
-    {
+    if ($availableModules.Name -notcontains 'Az.Accounts') {
         Write-Host "Installing module Az.Accounts..." -ForegroundColor Yellow
         Install-Module -Name Az.Accounts -Scope CurrentUser -Repository 'PSGallery'
     }
-    else
-    {
+    else {
         Write-Host "Az.Accounts module is available." -ForegroundColor Green
     }
 
     # Checking if 'Az.Resources' module is available or not.
-    if($availableModules.Name -notcontains 'Az.Resources')
-    {
+    if ($availableModules.Name -notcontains 'Az.Resources') {
         Write-Host "Installing module Az.Resources..." -ForegroundColor Yellow
         Install-Module -Name Az.Resources -Scope CurrentUser -Repository 'PSGallery'
     }
-    else
-    {
+    else {
         Write-Host "Az.Resources module is available." -ForegroundColor Green
     }
 
 }
 
-function Read_UserChoice
-{
+function Read_UserChoice {
     $userSelection = ""
-    while($userSelection -ne 'Y' -and $userSelection -ne 'N')
-    {
+    while ($userSelection -ne 'Y' -and $userSelection -ne 'N') {
         $userSelection = Read-Host "User choice"
-        if(-not [string]::IsNullOrWhiteSpace($userSelection))
-		{
-			$userSelection = $userSelection.Trim();
-		}
+        if (-not [string]::IsNullOrWhiteSpace($userSelection)) {
+            $userSelection = $userSelection.Trim();
+        }
     }
-
     return $userSelection;
 }
 
-function Delete_RoleAssignments
-{
+function Delete_RoleAssignments {
     param ($AzskRoleAssignments)
-
-    Write-Host "Deleting role assignments of AzSK CA SPN..." 
+    Write-Host "Deleting role assignments for AzSK CA SPNs..." 
     $azskRoleAssignments | Remove-AzRoleAssignment
-    Write-Host "Successfully deleted role assignments for AzSK CA SPN." -ForegroundColor Green
 }
 
-
-
-function Remove-AzSKSPNAccess
-{
+function Remove-AzSKSPNAccess {
     <#
     .SYNOPSIS
-    This command would help in removing access for AzSK deployed SPNs in subscription.Please make sure to confirm these SPNs are not used for other purpose prior to running this script.
-    .DESCRIPTION
     This command will remove access for AzSK deployed SPNs in subscription.Please make sure to confirm these SPNs are not used for other purpose prior to running this script.
+    .DESCRIPTION
+    This command will removing access for AzSK deployed SPNs in subscription.Please make sure to confirm these SPNs are not used for other purpose prior to running this script.
     .PARAMETER SubscriptionId
-        Enter subscription id of the subscription for which role assignments need to be removed .
+        Enter subscription id of the subscription for which clean-up need to be performed.
     .PARAMETER PerformPreReqCheck
-        Perform pre requisities check to ensure all required modules are available.
-    .PARAMETER Force
-        Switch to force removal of AzSK SPN access without further user consent.
+        Perform pre requisities check to ensure all required module to perform clean-up operation is available.
     #>
 
     param (
-    [string]
-    [Parameter(Mandatory = $true, HelpMessage="Enter subscription id for which AzSK SPN access to be removed")]
-    $SubscriptionId,
+        [string]
+        [Parameter(Mandatory = $true, HelpMessage = "Enter subscription id for which AzSK SPN access to be removed")]
+        $SubscriptionId,
 
-    [switch]
-    $PerformPreReqCheck,
-
-    [switch]
-    $Force
+        [switch]
+        $PerformPreReqCheck
     )
 
     Write-Host "======================================================"
     Write-Host "If you have access to the subscription using Privileged Identity Management(PIM), please make sure to elevate access before running the script." -ForegroundColor Yellow
     Write-Host "------------------------------------------------------"
 
-    if($PerformPreReqCheck)
-    {
-        try 
-        {
+    if ($PerformPreReqCheck) {
+        try {
             Write-Host "Checking for pre-requisites..."
             Pre_requisites
             Write-Host "------------------------------------------------------"     
         }
-        catch 
-        {
+        catch {
             Write-Host "Error occured while checking pre-requisites. ErrorMessage [$($_)]" -ForegroundColor Red    
             break
         }
@@ -110,8 +87,7 @@ function Remove-AzSKSPNAccess
 
     # Connect to AzAccount
     $isContextSet = Get-AzContext
-    if ([string]::IsNullOrEmpty($isContextSet))
-    {       
+    if ([string]::IsNullOrEmpty($isContextSet)) {       
         Write-Host "Connecting to AzAccount..."
         Connect-AzAccount
         Write-Host "Connected to AzAccount" -ForegroundColor Green
@@ -122,14 +98,12 @@ function Remove-AzSKSPNAccess
 
     Write-Host "Metadata Details: `n SubscriptionId: [$($SubscriptionId)] `n AccountName: [$($currentSub.Account.Id)] `n AccountType: [$($currentSub.Account.Type)]"
     Write-Host "------------------------------------------------------"
-    Write-Host "Starting with Subscription [$($SubscriptionId)]..."
 
 
     Write-Host "`nStep 1 of 3: Validating whether the current user [$($currentSub.Account.Id)] have the required permissions to run the script for Subscription [$($SubscriptionId)]..."
 
     # Safe Check: Checking whether the current account is of type User
-    if($currentSub.Account.Type -ne "User")
-    {
+    if ($currentSub.Account.Type -ne "User") {
         Write-Host "WARNING: This script can only be run by user account type." -ForegroundColor Yellow
         break;
     }
@@ -137,62 +111,47 @@ function Remove-AzSKSPNAccess
     # Safe Check: Current user need to have Owner role for the subscription
     $currentLoginRoleAssignments = Get-AzRoleAssignment -SignInName $currentSub.Account.Id -Scope "/subscriptions/$($SubscriptionId)" -IncludeClassicAdministrators;
 
-    if(($currentLoginRoleAssignments | Where-Object { $_.RoleDefinitionName -eq "Owner" -or $_.RoleDefinitionName -match 'CoAdministrator' -or $_.RoleDefinitionName -like '*ServiceAdministrator*'} | Measure-Object).Count -le 0)
-    {
+    if (($currentLoginRoleAssignments | Where-Object { $_.RoleDefinitionName -eq "Owner" -or $_.RoleDefinitionName -match 'CoAdministrator' -or $_.RoleDefinitionName -like '*ServiceAdministrator*' } | Measure-Object).Count -le 0) {
         Write-Host "WARNING: This script can only be run by an Owner of subscription [$($SubscriptionId)] " -ForegroundColor Yellow
         break;
     }
-    else{
+    else {
         Write-Host "User has all required permissions." -ForegroundColor Green
     }
 
-    # Declaring all AzSK resources name/pattern
-    $azskRGName = "AzSKRG"
+    # Declaring all AzSK and AzSDK SPN resources name/pattern
     $azskLocalSPNFormatString = "AzSK_CA_SPN_*"
+    $azsdkLocalSPNFormatString = "AzSDK_CA_SPN_*"
 
     Write-Host "`nStep 2 of 3:Checking role assignments for subscription [$($SubscriptionId)] for AzSK SPNs..."
-    # check subscription scope 'reader' role assignment
-    $azskSPNRoleAssignments += Get-AzRoleAssignment |Where-Object -Property DisplayName -Like $azskLocalSPNFormatString 
-
+    # check subscription scope role assignments
+    $azskSPNRoleAssignments = @()
+    $azskSPNRoleAssignments += Get-AzRoleAssignment | Where-Object { ($_.DisplayName -Like $azskLocalSPNFormatString) -or ($_.DisplayName -Like $azsdkLocalSPNFormatString ) }
+    
        
-        if($azskSPNRoleAssignments)
-        {
-            Write-Host "`tRole assignments for SPN:"
-            $azskSPNRoleAssignments | Select-Object "DisplayName", "RoleDefinitionName", "Scope" | Format-Table
-            Write-host "WARNING: Before deleting role assignments please make sure that this AAD application & SPN is not used anywhere else." -ForegroundColor Yellow
-            Write-Host "------------------------------------------------------"
-            Write-Host "`nPlease confirm deletion of all above assignemnts: `n[Y]: Yes`n[N]: No" -ForegroundColor Cyan 
-             $userChoice=""
-             if($force)
-                    {
-                        $userChoice="Y" # No further user consent required as 'Force' switch is enabled
-                    }
-                    else
-                    {
-                        $userChoice = Read_UserChoice
-                    }
-                        if($userChoice -eq 'Y')
-                        {
-                            try
-                            {
-                                Delete_RoleAssignments -AzskRoleAssignments $azskSPNRoleAssignments
-                                $roleAssignmentRemoved = $true
-                            }
-                            catch
-                            {
-                                Write-Host "ERROR: There was some error while removing role assignment for AzSK SPNs." -ForegroundColor DarkYellow
-                            }
-                        }
-                        else
-        {
+    if ($azskSPNRoleAssignments) {
+        Write-Host "`tRole assignments for SPNs are:`n"
+        $azskSPNRoleAssignments | Select-Object "DisplayName", "RoleDefinitionName", "Scope" | Format-Table
+        Write-host "WARNING: Before deleting role assignments please make sure that AAD applications & SPNs are not used anywhere else." -ForegroundColor Yellow
+        Write-Host "------------------------------------------------------"
+        Write-Host "`nStep 3 of 3:Please confirm deletion of all above listed assignemnts: `n[Y]: Yes`n[N]: No" -ForegroundColor Cyan 
+        $userChoice = ""
+            
+        $userChoice = Read_UserChoice
+        if ($userChoice -eq 'Y') {
+            try {
+                Delete_RoleAssignments -AzskRoleAssignments $azskSPNRoleAssignments
+                Write-Host "Successfully deleted role assignments for AzSK CA SPNs." -ForegroundColor Green
+            }
+            catch {
+                Write-Host "ERROR: There was error while removing role assignments for AzSK SPNs." -ForegroundColor DarkYellow
+            }
+        }
+        else {
             Write-Host "Skipped deletion for role assignments." -ForegroundColor Yellow
         }
-
-        }
-        else
-        {
-            Write-Host "No role assignemnts exists for AzSK deployed SPNs." -ForegroundColor Green
-        }
-
-        
+    }
+    else {
+        Write-Host "No role assignemnts exists for AzSK SPNs." -ForegroundColor Green
+    }        
 }
