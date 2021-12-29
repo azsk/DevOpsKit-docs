@@ -2,9 +2,9 @@
 function Pre_requisites {
     <#
     .SYNOPSIS
-    This command would check pre requisities modules.
+    This function would check pre requisities modules.
     .DESCRIPTION
-    This command would check pre requisities modules to perform clean-up.
+    This function would check pre requisities modules to perform clean-up.
 	#>
 
     Write-Host "Required modules are: Az.Resources, Az.Accounts" -ForegroundColor Cyan
@@ -31,6 +31,7 @@ function Pre_requisites {
 }
 
 function Read_UserChoice {
+    #This function would read user input and return trimmed value
     $userSelection = ""
     while ($userSelection -ne 'Y' -and $userSelection -ne 'N') {
         $userSelection = Read-Host "User choice"
@@ -47,7 +48,7 @@ function Remove-AzSKResourceGroups {
     .SYNOPSIS
     This command would help in deleting the AzSK deployed Azure resources in subscription.
     .DESCRIPTION
-    This command will list all resources deployed in AzSKRG and divide them in two list a). AzSK deployed resources b). Non-AzSK deployed resources and will provide option to clean AzSK deployed resources.
+    This command will list all resources deployed in AzSKRG nd AzSDKRG and divide them in two list a). AzSK deployed resources b). Non-AzSK deployed resources and will provide option to delete RG
     .PARAMETER SubscriptionId
         Enter subscription id of the subscription for which clean-up need to be performed.
     .PARAMETER PerformPreReqCheck
@@ -59,27 +60,23 @@ function Remove-AzSKResourceGroups {
         [string]
         [Parameter(Mandatory = $true, HelpMessage = "Enter subscription id to delete resource groups for AzSK related resources: ")]
         $SubscriptionId,
-
-        [switch]
-        $PerformPreReqCheck,
-
+        [Parameter(Mandatory = $false, HelpMessage = "Use this switch to avoid user confimration before deletion of resource groups")]
         [switch]
         $Force
     )
 
     Write-Host "======================================================"
 
-    if ($PerformPreReqCheck) {
-        try {
-            Write-Host "Checking for pre-requisites..."
-            Pre_requisites
-            Write-Host "------------------------------------------------------"     
-        }
-        catch {
-            Write-Host "Error occured while checking pre-requisites. ErrorMessage [$($_)]" -ForegroundColor Red    
-            break
-        }
+    try {
+        Write-Host "Checking for pre-requisites..."
+        Pre_requisites
+        Write-Host "------------------------------------------------------"     
     }
+    catch {
+        Write-Host "Error occured while checking pre-requisites. ErrorMessage [$($_)]" -ForegroundColor Red    
+        break
+    }
+    
 
     # Connect to AzAccount
     $isContextSet = Get-AzContext
@@ -119,14 +116,7 @@ function Remove-AzSKResourceGroups {
     # Declaring all AzSK resources name/pattern
     $azskRGName = "AzSKRG"
     $azsdkRGName = "AzSDKRG"
-    $automationAccountName = "AzSKContinuousAssurance"
-    $azskRunbookNames = @('AzSKContinuousAssurance/Continuous_Assurance_Runbook', 'AzSKContinuousAssurance/Alert_Runbook', 'AzSKContinuousAssurance/Continuous_Assurance_ScanOnTrigger_Runbook')
-    $connectionAssetName = "AzureRunAsConnection"
-    $StorageAccountNamePattern = "^azsk\d{14}$"
-    $alertNamePattern = "AzSK_*_Alert*"
-    $azskLocalSPNFormatString = "AzSK_CA_SPN_*"
-    $azskActionGroupNames = @("AzSKAlertActionGroup", "AzSKCriticalAlertActionGroup", "ResourceDeploymentActionGroup")
-
+    
     Write-Host "`nStep 2: Listing AzSK related resource groups in Subscription [$($SubscriptionId)]..."
 
     # Get AzSK RG
@@ -142,7 +132,7 @@ function Remove-AzSKResourceGroups {
         Write-Host "$($azsdkRGName) is not present in subscription [$($SubscriptionId)]" -ForegroundColor Green
    
     }
-  
+    #No resource groups found to be cleaned up
     if (-not $azsdkRG -and -not $azskRG) { 
         Write-Host "No resource groups found to be deleted." -ForegroundColor Red
         return
@@ -160,31 +150,18 @@ Function RemoveAzSKRG {
     # declare all required variables
 
     $azskRGName = "AzSKRG"
-    $azsdkRGName = "AzSDKRG"
     $automationAccountName = "AzSKContinuousAssurance"
     $azskRunbookNames = @('AzSKContinuousAssurance/Continuous_Assurance_Runbook', 'AzSKContinuousAssurance/Alert_Runbook', 'AzSKContinuousAssurance/Continuous_Assurance_ScanOnTrigger_Runbook')
-    $connectionAssetName = "AzureRunAsConnection"
     $StorageAccountNamePattern = "^azsk\d{14}$"
     $alertNamePattern = "AzSK_*_Alert*"
-    $azskLocalSPNFormatString = "AzSK_CA_SPN_*"
     $azskActionGroupNames = @("AzSKAlertActionGroup", "AzSKCriticalAlertActionGroup", "ResourceDeploymentActionGroup")
 
     $allResources = @()
     $azskResources = @()
     $nonAzSKResources = @()
-    $errorCollection = @()
-    $userSkippedResources = @()
-    $existingAzSKRunbooks = @()
-    $nonAzSKRunbooks = @()
-    $azskRoleAssignments = @()
-    $deleteAzSKRG = $false
-    $caSPN = $null
-    $aadApp = $null
-    $aadAppDeleted = $false
-    $roleAssignmentRemoved = $false
     $azskRGDeleted = $false
 
-    # Get All resource in AzSKRG 
+    # Get all resources in AzSKRG 
     $allResources += Get-AzResource -ResourceGroupName $azskRGName -ErrorAction Stop
 
     if (($allResources | Measure-Object).Count -gt 0) {
@@ -328,25 +305,13 @@ Function RemoveAzSDKRG {
     $azsdkRGName = "AzSDKRG"
     $automationAccountName = "AzSDKContinuousAssurance"
     $azsdkRunbookNames = @('AzSDKContinuousAssurance/Continuous_Assurance_Runbook', 'AzSDKContinuousAssurance/Alert_Runbook', 'AzSDKContinuousAssurance/Continuous_Assurance_ScanOnTrigger_Runbook')
-    $connectionAssetName = "AzureRunAsConnection"
     $StorageAccountNamePattern = "^azsdk\d{14}$"
     $alertNamePattern = "AzSDK_*_Alert*"
-    $azsdkLocalSPNFormatString = "AzSDK_CA_SPN_*"
     $azsdkActionGroupNames = @("AzSDKAlertActionGroup", "AzSDKCriticalAlertActionGroup", "ResourceDeploymentActionGroup")
 
     $allResources = @()
     $azsdkResources = @()
     $nonAzSDKResources = @()
-    $errorCollection = @()
-    $userSkippedResources = @()
-    $existingAzSDKRunbooks = @()
-    $nonAzSDKRunbooks = @()
-    $azsdkRoleAssignments = @()
-    $deleteAzSDKRG = $false
-    $caSPN = $null
-    $aadApp = $null
-    $aadAppDeleted = $false
-    $roleAssignmentRemoved = $false
     $azsdkRGDeleted = $false
 
     # Get All resource in AzSDKRG 

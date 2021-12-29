@@ -48,10 +48,16 @@ function Read_UserChoice {
   return $userSelection;
 }
 function Delete_AADApplication {
-  param ($AadAppId)
+  param ($AadAppId, $force)
 
-  Write-Host "Deleting AAD application of AzSK CA SPN $($AadAppId).Do You want to continue?`n[Y]: Yes`n[N]: No"
-  $userChoice = Read_UserChoice 
+  Write-Host "Deleting AAD application of AzSK SPN $($AadAppId).Do You want to continue?`n[Y]: Yes`n[N]: No"
+  if($force){
+    $userChoice ='Y'
+  }
+  else {
+    Write-Host "`nPlease confirm deletion of SPN $($AadAppId).: `n[Y]: Yes`n[N]: No" -ForegroundColor Cyan 
+    $userChoice = Read_UserChoice 
+  }
   if ($userChoice -eq 'Y') {
     try {
       $success = Remove-AzADApplication -ApplicationId $AadAppId -Force
@@ -60,15 +66,28 @@ function Delete_AADApplication {
       if ($appStillExist) {
         throw;
       }
-      Write-Host "Successfully deleted AAD application of AzSK CA SPN $($AadAppId)" -ForegroundColor Green
+      Write-Host "Successfully deleted AAD application of AzSK SPN $($AadAppId)" -ForegroundColor Green
     }
     catch {
-      Write-Host "Error while deleting AAD application of AzSK CA SPN." -ForegroundColor DarkYellow
+      Write-Host "Error while deleting AAD application of AzSK SPN." -ForegroundColor DarkYellow
     }
 
   }
 }
 Function Remove-AzSKSPN {
+  <#
+    .SYNOPSIS
+    This command will remove AzSK/AzSDK deployed SPNs from AAD.Please make sure to confirm these SPNs are not used for other purpose prior to running this script.
+    .DESCRIPTION
+    This command will remove AzSK/AzSDK deployed SPNs from AAD.Please make sure to confirm these SPNs are not used for other purpose prior to running this script.
+    .PARAMETER Force
+        Use this switch to avoid user confimration before deletion of SPNs.
+    #>
+  param (
+    [switch]
+    $force
+  )
+
   try {
     Write-Host "Checking for pre-requisites..."
     Pre_requisites
@@ -78,15 +97,25 @@ Function Remove-AzSKSPN {
     Write-Host "Error occured while checking pre-requisites. ErrorMessage [$($_)]" -ForegroundColor Red    
     break
   }
+  Write-Host "Connecting to AzureAD..."
   Connect-AzureAD
-  Connect-AzAccount
+  Write-Host "Connected to AzureAD" -ForegroundColor Green
+  
+  # Connect to AzAccount
+  $isContextSet = Get-AzContext
+  if ([string]::IsNullOrEmpty($isContextSet)) {
+    Write-Host "Connecting to AzAccount..."
+    Connect-AzAccount
+    Write-Host "Connected to AzAccount" -ForegroundColor Green
+  }
+  
   #List SPNs
   $objectId = (Get-AzureADUser  -Filter "UserPrincipalName eq '$($(Get-AzContext).Account)'").ObjectId
   $spnList = Get-AzureADUserOwnedObject -ObjectId $objectId | Where-Object { ($_.ObjectType -eq "ServicePrincipal") -and (($_.DisplayName -like "AzSK_CA_SPN*") -or ($_.DisplayName -like "AzSDK_CA_SPN*") ) } 
   Write-Host("`nList of SPNs for which current logged in user is Owner`n")
   $spnList | Select-Object "DisplayName", "ObjectId", "AppId" | Format-Table
   foreach ($spn in $spnList) {
-    Delete_AADApplication($spn.AppId)
+    Delete_AADApplication($spn.AppId, $force)
   } 
 }
 
