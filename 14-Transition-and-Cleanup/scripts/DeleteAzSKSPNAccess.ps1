@@ -2,9 +2,9 @@
 function Pre_requisites {
     <#
     .SYNOPSIS
-    This command would check pre requisities modules.
+    This function would check pre requisities modules.
     .DESCRIPTION
-    This command would check pre requisities modules to perform clean-up.
+    This function would check pre requisities modules to perform clean-up.
 	#>
 
     Write-Host "Required modules are: Az.Resources, Az.Accounts" -ForegroundColor Cyan
@@ -51,13 +51,13 @@ function Delete_RoleAssignments {
 function Remove-AzSKSPNAccess {
     <#
     .SYNOPSIS
-    This command will remove access for AzSK deployed SPNs in subscription.Please make sure to confirm these SPNs are not used for other purpose prior to running this script.
+    This command will remove access for AzSK/AzSDK deployed SPNs in subscription.Please make sure to confirm these SPNs are not used for other purpose prior to running this script.
     .DESCRIPTION
-    This command will removing access for AzSK deployed SPNs in subscription.Please make sure to confirm these SPNs are not used for other purpose prior to running this script.
+    This command will removing access for AzSK/AzSDK deployed SPNs in subscription.Please make sure to confirm these SPNs are not used for other purpose prior to running this script.
     .PARAMETER SubscriptionId
-        Enter subscription id of the subscription for which clean-up need to be performed.
-    .PARAMETER PerformPreReqCheck
-        Perform pre requisities check to ensure all required module to perform clean-up operation is available.
+        Enter subscription id of the subscription for which access needs to be removed for AzSK/AzSDK SPNs.
+    .PARAMETER Force
+        Use this switch to avoid user confimration before deletion for role assignments.
     #>
 
     param (
@@ -66,24 +66,23 @@ function Remove-AzSKSPNAccess {
         $SubscriptionId,
 
         [switch]
-        $PerformPreReqCheck
+        $force
     )
 
     Write-Host "======================================================"
     Write-Host "If you have access to the subscription using Privileged Identity Management(PIM), please make sure to elevate access before running the script." -ForegroundColor Yellow
     Write-Host "------------------------------------------------------"
 
-    if ($PerformPreReqCheck) {
-        try {
-            Write-Host "Checking for pre-requisites..."
-            Pre_requisites
-            Write-Host "------------------------------------------------------"     
-        }
-        catch {
-            Write-Host "Error occured while checking pre-requisites. ErrorMessage [$($_)]" -ForegroundColor Red    
-            break
-        }
+    try {
+        Write-Host "Checking for pre-requisites..."
+        Pre_requisites
+        Write-Host "------------------------------------------------------"     
     }
+    catch {
+        Write-Host "Error occured while checking pre-requisites. ErrorMessage [$($_)]" -ForegroundColor Red    
+        break
+    }
+    
 
     # Connect to AzAccount
     $isContextSet = Get-AzContext
@@ -141,7 +140,7 @@ function Remove-AzSKSPNAccess {
         if ($userChoice -eq 'Y') {
             try {
                 Delete_RoleAssignments -AzskRoleAssignments $azskSPNRoleAssignments
-                Write-Host "Successfully deleted role assignments for AzSK CA SPNs." -ForegroundColor Green
+                Write-Host "Successfully deleted role assignments for AzSK SPNs." -ForegroundColor Green
             }
             catch {
                 Write-Host "ERROR: There was error while removing role assignments for AzSK SPNs." -ForegroundColor DarkYellow
