@@ -425,7 +425,8 @@ The Set-AzSKAzureSecurityCenterPolicies provisions the following for Azure Secur
 Set-AzSKAzureSecurityCenterPolicies -SubscriptionId <SubscriptionId> `
         -SecurityContactEmails <ContactEmails> `
         -SecurityPhoneNumber <ContactPhone> `
-        [-OptionalPolicies]
+        [-OptionalPolicies] `
+        [-SetASCTier]
 ```
 |Config Param Name	|Purpose	|
 | --------------- | -------- |
@@ -433,6 +434,7 @@ Set-AzSKAzureSecurityCenterPolicies -SubscriptionId <SubscriptionId> `
 |SecurityContactEmails 	|Comma-separated list of emails (e.g., 'abc@microsoft.com, def@microsoft.com')	for contact preference|
 |SecurityPhoneNumber 	|Single phone number (e.g., '425-882-8080' or '+91-98765-43210' or '+1-425-882-8080')	for contact preference|
 |OptionalPolicies       |Switch to enable policies which are marked as optional|
+|SetASCTier |Switch for configuring standard pricing tiers for all the resource types supported in Azure Security Center (ASC) |
 
 This command will *overwrite* the contact emails and contact phone previously set in Azure Security Center. Here is the [list](../01-Subscription-Security/ASCPoliciesCoverage.md) of all the policies (both mandatory & optional) that are enabled via this command.
 
